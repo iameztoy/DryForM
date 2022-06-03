@@ -1,0 +1,887 @@
+var clip_area = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[31.22314453125, -9.318990192397905],
+          [32.301326336732814, -9.68543220037525],
+          [33.02565099128378, -9.976914556538624],
+          [33.77045974374482, -10.126788407797683],
+          [33.98718890593216, -10.878839745255767],
+          [34.35805151455702, -11.904393310335093],
+          [37.30030654599295, -11.936443183680801],
+          [39.35154311139297, -11.69206634461339],
+          [40.968017578125, -10.433793243184434],
+          [40.040775112734536, -9.212343219404524],
+          [39.99082195545236, -8.433949965278641],
+          [40.2043058327165, -8.133560807979011],
+          [40.02836725042778, -6.564367960108331],
+          [40.29120803655917, -4.759706808077629],
+          [38.249043322535044, -3.446643387892991],
+          [37.84496795792393, -2.799880003228823],
+          [37.2216796875, -2.30650568382911],
+          [34.29779631703377, -0.8047004041947718],
+          [32.34848777463105, -0.7928242629776605],
+          [30.377197265625, -0.8129610018708315],
+          [30.195427070219466, -1.3557314371578337],
+          [30.563013508046993, -1.9753790207542914],
+          [30.18353171601916, -2.6828834164268933],
+          [30.155353028944205, -3.5000935974687972],
+          [29.39471542575143, -4.119087735603128],
+          [28.964498239169302, -5.2436380639091755],
+          [29.542944359420062, -6.9894456585667895],
+          [30.309659349874664, -8.204907888372865],
+          [30.55697725701816, -8.642764844527619]]]);
+
+//Production of the optical dataset necessery to run the RF algorithm 
+
+// GEE script https://code.earthengine.google.com/c327d60734ee720f13d2d3599ca95e27
+
+//dataset 1 - time series of 12 images of monthly NDVI - not used in final map
+
+//dataset 2 - time series of 6 images of bimonthly NDVI
+
+//dataset 3 - shadowMax
+
+//dataset 4 - shadow for the dry season - not used in final map
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Two options for cloud masking - cloudscore or pino
+
+//processing for the second Tanzania map (february 2019) was done with
+//cloud mask: cloudscore of a value 40
+//ndvi filter for monthly composites (test) - drop ndvi :0.15
+
+///////////////////////////FOLDERS/////////////////////////////////////////////////////////////////////////
+//Asset folder with the data - to change according to where are the data
+var folderasset='Tanzania2/'
+
+//Folder to export - folder name to have the files exported on Google Drive
+var GEEExportDir='GEE_forestMask';
+
+///////////////////////////PARAMETERS/////////////////////////////////////////////////////////////////////
+
+// 1) Study area
+
+var country = 'Tanzania'
+
+//To ensure a better processing - draw an area of interest and add a buffer - S2 images collection will be more complete
+var clip_area = ee.Geometry(clip_area);
+var clip_area_buffer = clip_area.buffer(100000);
+Map.addLayer(clip_area_buffer)
+
+Map.centerObject(clip_area,6);
+
+// 2) Period of analysis
+
+var yyyy='2018';
+var eeYYYY = ee.String(yyyy);
+
+//Dictionary used for the map of Tanzania (second version of december 2018)
+var oneMonth={"Jan":['01-01','01-31'],"Feb":['02-01','02-28'],"Mar":['03-01','03-31'],"Avr":['04-01','04-30'],"May":['05-01','05-31'],"Jun":['06-01','06-30'],"Jul":['07-01','07-31'],"Aug":['08-01','08-31'],"Sep":['09-01','09-30'],"Oct":['10-01','10-31'],"Nov":['11-01','11-30'],"Dec":['12-01','12-31']};
+var twoMonth={"JF":['01-01','02-28'], "MA":['03-01','04-30'], "MJ":['05-01','06-30'], "JA":['07-01','08-31'], "SO":['09-01','10-31'], "ND":['11-01','12-31']};
+var drySeason={"JJAS":['06-01','09-30']};
+
+var oneMonthDict = ee.Dictionary(oneMonth);
+print(oneMonthDict,'oneMonthDict')
+
+var TwoMonthDict = ee.Dictionary(twoMonth);
+print(TwoMonthDict,'TwoMonthDict')
+
+var drySeasonDict = ee.Dictionary(drySeason);
+print(drySeasonDict,'drySeasonDict')
+
+//other dictionaries
+var dryOneMonth={"Jun":['06-01','06-30'],"Jul":['07-01','07-31'],"Aug":['08-01','08-31'],"Sep":['09-01','09-30']};
+var dryTwoMonth={"MJ":['05-01','06-30'], "JA":['07-01','08-31'], "SO":['09-01','10-31']};
+var sixMonth={"JFMAMJ":['01-01','06-30'],"JASOND":['07-01','12-31']};
+var fourMonth={"JFMA":['01-01','04-30'],"MJJA":['05-01','08-31'],"SOND":['09-01','12-31']};
+var threeMonth={"JFM":['01-01','03-31'], "AMJ":['04-01','06-30'], "JAS":['07-01','09-30'], "OND":['10-01','12-31']};
+var irregularMonth={"JFMA":['01-01','04-30'],"May":['05-01','05-31'],"Jun":['06-01','06-30'],"Jul":['07-01','07-31'],"Aug":['08-01','08-31'],"Sep":['09-01','09-30'],"Oct":['10-01','10-31'],"Nov":['11-01','11-30'],"Dec":['12-01','12-31']};
+
+
+// 3) Choice of the cloud mask - choice of the mask and parameters
+
+//choice of the cloudscore mask - need of parameters
+var cloud_mask ='cloudscore' 
+//var cloud_mask ='PINO_CM'  
+
+//Parameters for the cloudscore (from GEE forum post)
+var cloudThresh = 40;//Ranges from 1-100.Lower value will mask more pixels out. Generally 10-30 works well with 20 being used most commonly 
+var cloudHeights = ee.List.sequence(200,10000,500);//Height of clouds to use to project cloud shadows
+var irSumThresh = 0.35;//Sum of IR bands to include as shadows within TDOM and the shadow shift method (lower number masks out less)
+var dilatePixels = 5; //Pixels to dilate around clouds
+var contractPixels = 1;//Pixels to reduce cloud mask and dark shadows by to reduce inclusion of single-pixel comission errors
+//second choice is PINO (simonetti et al. 2015)'PINO_CM' 
+
+// 4) Parameters for the smoothing of the monthly NDVI time series
+
+var DropNdvi= 0.15
+var numberFiles=12
+
+// 5) Visualization of S2
+var vizParams = {'min': 0.05,'max': [0.3,0.6,0.35],   'bands':'swir2,nir,red'};
+
+///////////////////////////PROCESSING OF S2/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////// Dataset 1 - Time series of monthly NDVI (12 images)
+// Monthly NDVI -  can be mask (function - ndviS2cloud) or not (function - ndviS2) before computing the maximum NDVI
+
+if(cloud_mask == 'cloudscore')
+{var ndviCollRaw = oneMonthDict.keys().map(function(month){
+  var dateStart = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(0));
+  var dateEnd = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(1));
+  return ndviS2cloudscore(dateStart, dateEnd, clip_area_buffer,cloud_mask).clip(clip_area).set('system:time_start',dateStart);//cloud masking
+  //return ndviS2(dateStart, dateEnd, clip_area_buffer).clip(clipper).set('system:time_start',dateStart);//no cloud masking
+});
+}
+
+else if (cloud_mask =='PINO_CM')
+{var ndviCollRaw = oneMonthDict.keys().map(function(month){
+  var dateStart = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(0));
+  var dateEnd = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(1));
+  return ndviS2cloudpino(dateStart, dateEnd, clip_area_buffer,cloud_mask).clip(clip_area).set('system:time_start',dateStart);//cloud masking
+  //return ndviS2(dateStart, dateEnd, clip_area_buffer).clip(clipper).set('system:time_start',dateStart);//no cloud masking
+});
+}
+
+//Interpol NDVI montly time series
+var ndviColl = filterNdvi(ee.ImageCollection.fromImages(ndviCollRaw),numberFiles);
+
+//Vizualize NDVI months after the interpolation
+print('Monthly NDVI')
+for (var ii=0; ii<12; ii++){
+  var thisImage = ee.Image(ndviColl.get(ii));
+  var thisDate = thisImage.get('system:time_start');
+  print(thisDate)
+  Map.addLayer(thisImage, {min:0.1, max:0.75, palette: ['white', 'yellow', '#3fff0f', 'green','#203d0e']}, 'ndvi '+ii,0);
+}
+
+//////////////////////////////// Dataset 2 - Time series of bi-montlhy NDVI (12 images)
+if(cloud_mask == 'cloudscore')
+{var ndviCollRawTwoMonth = TwoMonthDict.keys().map(function(month){
+  var dateStart = eeYYYY.cat('-').cat(ee.List(TwoMonthDict.get(month)).get(0));
+  var dateEnd = eeYYYY.cat('-').cat(ee.List(TwoMonthDict.get(month)).get(1));
+  return ndviS2cloudscore(dateStart, dateEnd, clip_area_buffer,cloud_mask).clip(clip_area).set('system:time_start',dateStart);//cloud masking
+  //return ndviS2(dateStart, dateEnd, clip_area_buffer).clip(clipper).set('system:time_start',dateStart);//no cloud masking
+});
+}
+else if (cloud_mask =='PINO_CM')
+{var ndviCollRawTwoMonth = TwoMonthDict.keys().map(function(month){
+  var dateStart = eeYYYY.cat('-').cat(ee.List(TwoMonthDict.get(month)).get(0));
+  var dateEnd = eeYYYY.cat('-').cat(ee.List(TwoMonthDict.get(month)).get(1));
+  return ndviS2cloudpino(dateStart, dateEnd, clip_area_buffer,cloud_mask).clip(clip_area).set('system:time_start',dateStart);//cloud masking
+  //return ndviS2(dateStart, dateEnd, clip_area_buffer).clip(clipper).set('system:time_start',dateStart);//no cloud masking
+});
+}
+//Creation of a collection with bi-monthly NDVI - important to sort the bi-month composite by time start!!
+var ndviCollTwoMonth=ee.ImageCollection.fromImages(ndviCollRawTwoMonth).sort('system:time_start', true).toList(6)
+
+//vizualize NDVI time series 2 months
+print('Bi-monthly NDVI - check order')
+
+for (var ii=0; ii<6; ii++){
+  var thisImage = ee.Image(ndviCollTwoMonth.get(ii));
+  var thisDate = thisImage.get('system:time_start');
+  print(thisDate)
+  Map.addLayer(thisImage, {min:0.1, max:0.75, palette: ['white', 'yellow', '#3fff0f', 'green','#203d0e']}, 'ndvi '+ii,0);
+}
+
+/////////////////////////////////// Dataset 3 - Shadow index for the whole year
+// We select the maximum value from monthly composites obtained taking the perc 90
+if(cloud_mask == 'cloudscore')
+{var shadowColl = oneMonthDict.keys().map(function(month) {
+  var dateStart = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(0));
+  var dateEnd = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(1));
+  return shadowS2cloudscore(dateStart, dateEnd, clip_area_buffer).clip(clip_area).set('system:time_start',dateStart);
+});}
+else if(cloud_mask == 'PINO_CM')
+{var shadowColl = oneMonthDict.keys().map(function(month) {
+  var dateStart = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(0));
+  var dateEnd = eeYYYY.cat('-').cat(ee.List(oneMonthDict.get(month)).get(1));
+  return shadowS2cloudpino(dateStart, dateEnd, clip_area_buffer).clip(clip_area).set('system:time_start',dateStart);
+});}
+
+//Creation of a collection with Monthly Shadow Index - important to sort the collection by time start!!
+var shadowColl_month = ee.ImageCollection.fromImages(shadowColl).sort('system:time_start', true).toList(12);
+
+//vizualize shadow max (perc 90) time series
+print('Monthly shadow - check order')
+for (var ii=0; ii<12; ii++){
+  var thisImage = ee.Image(shadowColl_month.get(ii));
+  var thisDate = thisImage.get('system:time_start');
+  print(thisDate)
+  Map.addLayer(thisImage, {min:0.1, max:0.75}, 'shadowColl_month '+ii,0);
+}
+
+Map.addLayer(ee.ImageCollection.fromImages(shadowColl_month), {min:0.05, max:0.95}, 'shadowColl',0);
+
+//Shadow max
+var shadowMaxAnnual = ee.ImageCollection.fromImages(shadowColl).sort('system:time_start', true).max();
+Map.addLayer(shadowMaxAnnual,{min:0.75, max:0.9},"shadow max",0);
+
+
+/////////////////////////////////// Dataset 4 - Shadow index percentile 80 for the dry season
+// shadow for the dry season - 80 percentile
+
+//Season
+var startDate = eeYYYY.cat('-').cat(ee.List(drySeasonDict.get("JJAS")).get(0)); //'2018-01-01'
+print('start date dry season',startDate)
+var endDate = eeYYYY.cat('-').cat(ee.List(drySeasonDict.get("JJAS")).get(1)); //2018-12-31'
+print('end date dry season',endDate)
+
+var collection_shadow_dry = ee.ImageCollection('COPERNICUS/S2')
+                  .filterBounds(clip_area_buffer)
+                  .filterDate(startDate,endDate)
+                  .map(function(img){
+                    var t = img.select([ 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']).divide(10000);//Rescale to 0-1
+                    t = t.addBands(img.select(['QA60']));
+                    var out = t.copyProperties(img).copyProperties(img,['system:time_start']);
+                  return out;
+                    })
+                    .select(['QA60', 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']
+                    ,['QA60','cb', 'blue', 'green', 'red', 're1','re2','re3','nir', 'nir2', 'waterVapor', 'cirrus','swir1', 'swir2'])
+                    .map(shadow)
+                    .map(wrapIt)
+                    .select('shadow');
+
+var shadow_dry_Perc80 = collection_shadow_dry.reduce(ee.Reducer.percentile([80]))
+Map.addLayer(shadow_dry_Perc80,{min:0.75, max:0.9},"shadowPerc80",0);
+
+////////////////////////for visualisation - spectral three month composites
+var monthSpectr = threeMonth;
+for (var ii in monthSpectr){
+  var thisImage = spectralMedian(yyyy+'-'+monthSpectr[ii][0],yyyy+'-'+monthSpectr[ii][1], clip_area_buffer, clip_area);
+  Map.addLayer(thisImage, vizParams, "spectral "+monthSpectr[ii][0]+':'+monthSpectr[ii][1],0);
+}
+
+//////////////////// prepare layers for export to make a multi band image (to run the RF)
+print (country)
+var totalBBX = getCountryBBX(country);
+print (totalBBX)
+
+
+var shadowMaxAnnualToStack = shadowMaxAnnual.rename('shadow').multiply(255).toByte();
+var shadow_dry_Perc80_ToStack = shadow_dry_Perc80.rename('shadow_dry').multiply(255).toByte();
+
+/////////////////////////////export to asset///////////////////////////////////////////////////////////////////
+// NDVI coll
+exportToAsset(ee.Image(ndviColl.get(0)).multiply(100).toByte().rename('ndvi_jan').clip(clip_area),'ndvi_January_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(1)).multiply(100).toByte().rename('ndvi_fev').clip(clip_area),'ndvi_February_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(2)).multiply(100).toByte().rename('ndvi_mar').clip(clip_area),'ndvi_March_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(3)).multiply(100).toByte().rename('ndvi_apr').clip(clip_area),'ndvi_April_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(4)).multiply(100).toByte().rename('ndvi_may').clip(clip_area),'ndvi_May_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(5)).multiply(100).toByte().rename('ndvi_jun').clip(clip_area),'ndvi_June_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(6)).multiply(100).toByte().rename('ndvi_jul').clip(clip_area),'ndvi_July_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(7)).multiply(100).toByte().rename('ndvi_aug').clip(clip_area),'ndvi_August_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(8)).multiply(100).toByte().rename('ndvi_sep').clip(clip_area),'ndvi_September_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(9)).multiply(100).toByte().rename('ndvi_oct').clip(clip_area),'ndvi_October_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(10)).multiply(100).toByte().rename('ndvi_nov').clip(clip_area),'ndvi_November_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviColl.get(11)).multiply(100).toByte().rename('ndvi_dec').clip(clip_area),'ndvi_December_'+yyyy, country, 1,1);
+
+//NDVI bimonthly
+
+exportToAsset(ee.Image(ndviCollTwoMonth.get(0)).add(1).multiply(100).toByte().rename('ndvi_jan_fev').clip(clip_area),'ndvi_January-February_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviCollTwoMonth.get(1)).add(1).multiply(100).toByte().rename('ndvi_mar_apr').clip(clip_area),'ndvi_March-April_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviCollTwoMonth.get(2)).add(1).multiply(100).toByte().rename('ndvi_may_jun').clip(clip_area),'ndvi_May-June_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviCollTwoMonth.get(3)).add(1).multiply(100).toByte().rename('ndvi_jul_aug').clip(clip_area),'ndvi_July-August_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviCollTwoMonth.get(4)).add(1).multiply(100).toByte().rename('ndvi_sep_oct').clip(clip_area),'ndvi_September-October_'+yyyy, country, 1,1);
+exportToAsset(ee.Image(ndviCollTwoMonth.get(5)).add(1).multiply(100).toByte().rename('ndvi_nov_dec').clip(clip_area),'ndvi_November-December_'+yyyy, country, 1,1);
+
+//shadowMaxToStack
+exportToAsset(shadow_dry_Perc80_ToStack.clip(clip_area),'shadowPerc80ToStack_June-Sept'+yyyy, country, 1,1)
+exportToAsset(shadowMaxAnnualToStack.clip(clip_area),'shadowAnnualMaxToStack_'+yyyy, country, 1,1)
+
+///////////////////////////export to drive//////////////////////////////////////////////////////////////////////////
+// NDVI coll
+exportToDrive(ee.Image(ndviColl.get(0)).add(1).multiply(100).toByte().rename('ndvi_jan').clip(clip_area),GEEExportDir,'ndvi_January_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(1)).add(1).multiply(100).toByte().rename('ndvi_fev').clip(clip_area),GEEExportDir,'ndvi_February_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(2)).add(1).multiply(100).toByte().rename('ndvi_mar').clip(clip_area),GEEExportDir,'ndvi_March_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(3)).add(1).multiply(100).toByte().rename('ndvi_apr').clip(clip_area),GEEExportDir,'ndvi_April_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(4)).add(1).multiply(100).toByte().rename('ndvi_may').clip(clip_area),GEEExportDir,'ndvi_May_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(5)).add(1).multiply(100).toByte().rename('ndvi_jun').clip(clip_area),GEEExportDir,'ndvi_June_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(6)).add(1).multiply(100).toByte().rename('ndvi_jul').clip(clip_area),GEEExportDir,'ndvi_July_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(7)).add(1).multiply(100).toByte().rename('ndvi_aug').clip(clip_area),GEEExportDir,'ndvi_August_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(8)).add(1).multiply(100).toByte().rename('ndvi_sep').clip(clip_area),GEEExportDir,'ndvi_September_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(9)).add(1).multiply(100).toByte().rename('ndvi_oct').clip(clip_area),GEEExportDir,'ndvi_October_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(10)).add(1).multiply(100).toByte().rename('ndvi_nov').clip(clip_area),GEEExportDir,'ndvi_November_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviColl.get(11)).add(1).multiply(100).toByte().rename('ndvi_dec').clip(clip_area),GEEExportDir,'ndvi_December_'+yyyy, country, 1,1);
+
+//NDVI bimonthly
+exportToDrive(ee.Image(ndviCollTwoMonth.get(0)).add(1).multiply(100).toByte().rename('ndvi_jan_fev').clip(clip_area),GEEExportDir,'ndvi_January-February_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviCollTwoMonth.get(1)).add(1).multiply(100).toByte().rename('ndvi_mar_apr').clip(clip_area),GEEExportDir,'ndvi_March-April_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviCollTwoMonth.get(2)).add(1).multiply(100).toByte().rename('ndvi_may_jun').clip(clip_area),GEEExportDir,'ndvi_May-June_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviCollTwoMonth.get(3)).add(1).multiply(100).toByte().rename('ndvi_jul_aug').clip(clip_area),GEEExportDir,'ndvi_July-August_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviCollTwoMonth.get(4)).add(1).multiply(100).toByte().rename('ndvi_sep_oct').clip(clip_area),GEEExportDir,'ndvi_September-October_'+yyyy, country, 1,1);
+exportToDrive(ee.Image(ndviCollTwoMonth.get(5)).add(1).multiply(100).toByte().rename('ndvi_nov_dec').clip(clip_area),GEEExportDir,'ndvi_November-December_'+yyyy, country, 1,1);
+
+//shadowMaxToStack
+exportToDrive(shadowMaxAnnualToStack.clip(clip_area),GEEExportDir,'shadowAnnualMaxToStack_'+yyyy, country, 1,1)
+exportToDrive(shadow_dry_Perc80_ToStack.clip(clip_area),GEEExportDir,'shadow_dry_Perc80_ToStack_'+yyyy, country, 1,1)
+
+////////////////////////////////////FUNCTIONS used in the script////////////////////////////////////////////////////////////////////////
+
+function rescale (img, exp, thresholds) {
+    return img.expression(exp, {img: img})
+        .subtract(thresholds[0]).divide(thresholds[1] - thresholds[0]);
+  }
+
+//CloudScore originally written by Matt Hancher and adapted for S2 data by Ian Housman
+//////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////
+////////////////////////////////////////
+// Cloud masking algorithm for Sentinel2
+//Built on ideas from Landsat cloudScore algorithm
+//Currently in beta and may need tweaking for individual study areas
+function sentinelCloudScore(img) {
+  
+
+  // Compute several indicators of cloudyness and take the minimum of them.
+  var score = ee.Image(1);
+  
+  // Clouds are reasonably bright in the blue and cirrus bands.
+  score = score.min(rescale(img, 'img.blue', [0.1, 0.5]));
+  score = score.min(rescale(img, 'img.cb', [0.1, 0.3]));
+  score = score.min(rescale(img, 'img.cb + img.cirrus', [0.15, 0.2]));
+  
+  // Clouds are reasonably bright in all visible bands.
+  score = score.min(rescale(img, 'img.red + img.green + img.blue', [0.2, 0.8]));
+
+  
+  //Clouds are moist
+  var ndmi = img.normalizedDifference(['nir','swir1']);
+  score=score.min(rescale(ndmi, 'img', [-0.1, 0.1]));
+  
+  // However, clouds are not snow.
+  var ndsi = img.normalizedDifference(['green', 'swir1']);
+  score=score.min(rescale(ndsi, 'img', [0.8, 0.6]));
+  
+  score = score.multiply(100).byte();
+ 
+  return img.addBands(score.rename('cloudScore'));
+}
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
+/////////////////////////////////////////////
+/***
+ * Implementation of Basic cloud shadow shift
+ * 
+ * Author: Gennadii Donchyts
+ * License: Apache 2.0
+ */
+function projectShadows(cloudMask,image,cloudHeights){
+  var meanAzimuth = image.get('MEAN_SOLAR_AZIMUTH_ANGLE');
+  var meanZenith = image.get('MEAN_SOLAR_ZENITH_ANGLE');
+  ///////////////////////////////////////////////////////
+  
+  
+  //Find dark pixels
+  var darkPixels = image.select(['nir','swir1','swir2']).reduce(ee.Reducer.sum()).lt(irSumThresh)
+    .focal_min(contractPixels).focal_max(dilatePixels)
+  ;//.gte(1);
+    
+  
+  //Get scale of image
+  var nominalScale = cloudMask.projection().nominalScale();
+
+  //Find where cloud shadows should be based on solar geometry
+  //Convert to radians
+  var azR =ee.Number(meanAzimuth).multiply(Math.PI).divide(180.0).add(ee.Number(0.5).multiply(Math.PI ));
+  var zenR  =ee.Number(0.5).multiply(Math.PI ).subtract(ee.Number(meanZenith).multiply(Math.PI).divide(180.0));
+  
+  //Find the shadows
+  var shadows = cloudHeights.map(function(cloudHeight){
+    cloudHeight = ee.Number(cloudHeight);
+    
+    var shadowCastedDistance = zenR.tan().multiply(cloudHeight);//Distance shadow is cast
+    var x = azR.cos().multiply(shadowCastedDistance).divide(nominalScale).round();//X distance of shadow
+    var y = azR.sin().multiply(shadowCastedDistance).divide(nominalScale).round();//Y distance of shadow
+    return cloudMask.changeProj(cloudMask.projection(), cloudMask.projection().translate(x, y));
+  });
+
+  var shadowMask = ee.ImageCollection.fromImages(shadows).max();
+ 
+  //Create shadow mask
+  shadowMask = shadowMask.and(cloudMask.not());
+  shadowMask = shadowMask.and(darkPixels);
+  
+  var cloudShadowMask = shadowMask.or(cloudMask);
+  
+  image = image.updateMask(cloudShadowMask.not()).addBands(shadowMask.rename(['cloudShadowMask']));
+  return image;
+}
+
+//Function for wrapping the entire process to be applied across collection
+function wrapIt(img){
+  img = sentinelCloudScore(img);
+  var cloudMask = img.select(['cloudScore']).gt(cloudThresh)
+    .focal_min(contractPixels)
+    .focal_max(dilatePixels)
+
+  img = projectShadows(cloudMask,img,cloudHeights);
+
+  return img;
+}
+
+function getCountryBBX(countryName){
+  var country = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017")
+              .filterMetadata('country_na', 'equals',countryName);
+  return country.first().geometry().bounds().coordinates().getInfo()[0];
+}
+
+function exportToDrive(image, folder, description, countryName, latN, lonN){
+
+  if (typeof countryName === 'string') {
+    var totalBBX = getCountryBBX(countryName);
+  } else {// assume it is a geometry
+    totalBBX = countryName.coordinates().getInfo()[0];
+  }
+  var lonStep = (totalBBX[1][0] - totalBBX[0][1])/lonN;
+  var latStep = (totalBBX[2][1] - totalBBX[0][1])/latN;
+
+  for(var ii=0; ii<lonN; ii++) {
+    var xoff = ii*lonStep;
+    for(var jj=0; jj<latN; jj++) {
+      var yoff = jj*lonStep;
+      var thisAOI = ee.Geometry.Polygon([
+         [totalBBX[0][0] + xoff, totalBBX[0][1] + yoff],
+         [totalBBX[1][0] + xoff, totalBBX[1][1] + yoff],
+         [totalBBX[2][0] + xoff, totalBBX[2][1] + yoff],
+         [totalBBX[3][0] + xoff, totalBBX[3][1] + yoff],
+         [totalBBX[4][0] + xoff, totalBBX[4][1] + yoff] ]);
+      Export.image.toDrive({image:image,
+        description:description+'_'+ii+'_'+jj,
+        folder:folder,
+        'region':thisAOI,
+        'scale':10,
+        'maxPixels': 1e13});
+    }
+  }
+}
+          
+
+function exportToAsset(image,description, countryName, latN, lonN){
+
+  if (typeof countryName === 'string') {
+    var totalBBX = getCountryBBX(countryName);
+  } else {// assume it is a geometry
+    totalBBX = countryName.coordinates().getInfo()[0];
+  }
+  var lonStep = (totalBBX[1][0] - totalBBX[0][1])/lonN;
+  var latStep = (totalBBX[2][1] - totalBBX[0][1])/latN;
+
+  for(var ii=0; ii<lonN; ii++) {
+    var xoff = ii*lonStep;
+    for(var jj=0; jj<latN; jj++) {
+      var yoff = jj*lonStep;
+      var thisAOI = ee.Geometry.Polygon([
+         [totalBBX[0][0] + xoff, totalBBX[0][1] + yoff],
+         [totalBBX[1][0] + xoff, totalBBX[1][1] + yoff],
+         [totalBBX[2][0] + xoff, totalBBX[2][1] + yoff],
+         [totalBBX[3][0] + xoff, totalBBX[3][1] + yoff],
+         [totalBBX[4][0] + xoff, totalBBX[4][1] + yoff] ]);
+      Export.image.toAsset({image:image,
+        description:description+'_'+ii+'_'+jj,
+        'region':thisAOI,
+        'scale':10,
+        'maxPixels': 1e13});
+    }
+  }
+}
+
+
+function ndvi(img){
+  var thisNDVI = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  return img.addBands(thisNDVI);
+}
+function ndviCloud(img){
+  var thisNDVI = img.normalizedDifference(['nir', 'red']).rename('NDVI');
+  return img.addBands(thisNDVI);
+}
+
+function shadow(img){
+  //( (1-b2)*(1-b3)*(1-b4) )^(1/3)
+  var si = img.expression(
+    '( (1-red)*(1-green)*(1-blue)**(0.333333) )', {
+      'red': img.select('red'),
+      'green': img.select('green'),
+      'blue': img.select('blue')}).rename('shadow');
+  return img.addBands(si);
+}
+
+function ndviS2cloudscore(startDate, endDate, area){
+  //var country = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+  //  .filterMetadata('Country', 'Contains', countryName);
+  var collection = ee.ImageCollection('COPERNICUS/S2')
+                  .filterBounds(area)
+                  .filterDate(startDate,endDate)
+                  
+                  .map(function(img){
+                    var t = img.select([ 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']).divide(10000);//Rescale to 0-1
+                    t = t.addBands(img.select(['QA60']));
+                    var out = t.copyProperties(img).copyProperties(img,['system:time_start']);
+                  return out;
+                    })
+                  .select(['QA60', 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']
+                  ,['QA60','cb', 'blue', 'green', 'red', 're1','re2','re3','nir', 'nir2', 'waterVapor', 'cirrus','swir1', 'swir2'])
+                  .map(wrapIt)
+                  .select(['blue', 'green', 'red', 're1','re2','re3','nir', 'nir2','swir1', 'swir2']);
+  var maxNdviColl = collection.map(ndviCloud);
+  var maxNdvi = maxNdviColl.select('NDVI').max();
+  return maxNdvi;
+}    
+
+function ndviS2cloudpino(startDate, endDate, area){
+  var collection = ee.ImageCollection('COPERNICUS/S2')
+                  .filterBounds(area)
+                  .filterDate(startDate,endDate)
+                  
+                  .map(function(img){
+                    var t = img.select([ 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']).divide(10000);//Rescale to 0-1
+                    t = t.addBands(img.select(['QA60']));
+                    var out = t.copyProperties(img).copyProperties(img,['system:time_start']);
+                  return out;
+                    })
+                  .select(['QA60', 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']
+                  ,['QA60','cb', 'blue', 'green', 'red', 're1','re2','re3','nir', 'nir2', 'waterVapor', 'cirrus','swir1', 'swir2'])
+                  .map(Pino_CM)
+                  .select(['blue', 'green', 'red', 're1','re2','re3','nir', 'nir2','swir1', 'swir2']);
+  var maxNdviColl = collection.map(ndviCloud);
+  var maxNdvi = maxNdviColl.select('NDVI').max();
+  return maxNdvi;
+}
+
+function ndviS2(startDate, endDate, countryName){
+  var country = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+    .filterMetadata('Country', 'Contains', countryName);
+  var collection = ee.ImageCollection('COPERNICUS/S2').filterBounds(country).filterDate(startDate, endDate);
+  var maxNdviColl = collection.map(ndvi);
+  var maxNdvi = maxNdviColl.select('NDVI').max();
+  //var maxNdvi = maxNdviColl.select('NDVI').median();
+
+  return maxNdvi;
+}
+
+function spectralMedian(startDate, endDate, area, clipper){
+  //var country = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+  //  .filterMetadata('Country', 'Contains', countryName);
+    
+  var collection = ee.ImageCollection('COPERNICUS/S2')
+                  .filterBounds(area)
+                  .filterDate(startDate,endDate)
+                  //.filterBounds(geometry)
+                  .map(function(img){
+                    
+                    var t = img.select([ 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']).divide(10000);//Rescale to 0-1
+                    t = t.addBands(img.select(['QA60']));
+                    var out = t.copyProperties(img).copyProperties(img,['system:time_start']);
+                  return out;
+                    })
+                    .select(['QA60', 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']
+                    ,['QA60','cb', 'blue', 'green', 'red', 're1','re2','re3','nir', 'nir2', 'waterVapor', 'cirrus','swir1', 'swir2']);
+  return collection.map(wrapIt).median().clip(clipper).select(['blue', 'green', 'red', 're1','re2','re3','nir', 'nir2','swir1', 'swir2']);
+}
+
+function shadowS2cloudscore(startDate, endDate, area){
+  //var country = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+  //  .filterMetadata('Country', 'Contains', countryName);
+  var collection = ee.ImageCollection('COPERNICUS/S2')
+                  .filterBounds(area)
+                  .filterDate(startDate,endDate)
+                  //.filterBounds(geometry)
+                  .map(function(img){
+                    
+                    var t = img.select([ 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']).divide(10000);//Rescale to 0-1
+                    t = t.addBands(img.select(['QA60']));
+                    var out = t.copyProperties(img).copyProperties(img,['system:time_start']);
+                  return out;
+                    })
+                    .select(['QA60', 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']
+                    ,['QA60','cb', 'blue', 'green', 'red', 're1','re2','re3','nir', 'nir2', 'waterVapor', 'cirrus','swir1', 'swir2']);
+  var shadowMax = collection.map(shadow)
+  .map(wrapIt).select('shadow').reduce(ee.Reducer.percentile([90]));
+  return shadowMax;
+}
+
+function shadowS2cloudpino(startDate, endDate, area){
+  //var country = ee.FeatureCollection('ft:1tdSwUL7MVpOauSgRzqVTOwdfy17KDbw-1d9omPw')
+  //  .filterMetadata('Country', 'Contains', countryName);
+  var collection = ee.ImageCollection('COPERNICUS/S2')
+                  .filterBounds(area)
+                  .filterDate(startDate,endDate)
+                  //.filterBounds(geometry)
+                  .map(function(img){
+                    
+                    var t = img.select([ 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']).divide(10000);//Rescale to 0-1
+                    t = t.addBands(img.select(['QA60']));
+                    var out = t.copyProperties(img).copyProperties(img,['system:time_start']);
+                  return out;
+                    })
+                    .select(['QA60', 'B1','B2','B3','B4','B5','B6','B7','B8','B8A', 'B9','B10', 'B11','B12']
+                    ,['QA60','cb', 'blue', 'green', 'red', 're1','re2','re3','nir', 'nir2', 'waterVapor', 'cirrus','swir1', 'swir2']);
+  var shadowMax = collection.map(shadow)
+  .map(Pino_CM).select('shadow').reduce(ee.Reducer.percentile([90]));
+  return shadowMax;
+}
+
+function filterNdvi(input,nbFiles){
+  // sort input in chronological order
+  var collection = input.sort('system:time_start', true).toList(nbFiles);
+  var resultFilter = ee.List.sequence(1, nbFiles-2, 1).map(function(ii){
+
+    var img  = ee.Image(collection.get(ee.Number(ii)));
+    var img1 = ee.Image(collection.get(ee.Number(ii).subtract(ee.Number(1))));
+    var img2 = ee.Image(collection.get(ee.Number(ii).add(ee.Number(1))));
+    var difa = img1.subtract(img).divide(img1);
+    var difb = img2.subtract(img).divide(img2);
+  
+    var interpol= img.where(difa.gt(DropNdvi).multiply(difb.gt(DropNdvi)), img1.add(img2).multiply(0.5)); //ne fonctionne que s'il y a des valeurs dans les deux images
+    return interpol.copyProperties(img)
+  })
+  
+  // rajout des mois de janv et decembre qui n'ont pas été interpolés
+  resultFilter = ee.List(resultFilter).insert(0, ee.Image(collection.get(ee.Number(0))));
+  resultFilter = ee.List(resultFilter).insert(nbFiles-1, ee.Image(collection.get(ee.Number(nbFiles-1))));//verify
+  
+  return resultFilter
+}
+
+function PINO1(image,BANDS){
+    
+    
+    var BLU=image.select(BANDS[0]).divide(10000);
+    var GREEN=image.select(BANDS[1]).divide(10000);
+    var RED=image.select(BANDS[2]).divide(10000);
+    var NIR=image.select(BANDS[3]).divide(10000);
+    var SWIR1=image.select(BANDS[4]).divide(10000);
+    var SWIR2=image.select(BANDS[5]).divide(10000);
+
+    var OUT=ee.Image(0);
+    
+    var th_NDVI_MAX_WATER=0;
+    var th_NDVI_SATURATION=0.0037;
+    var th_NDVI_MIN_CLOUD_BARE=0.35;
+    var th_NDVI_MIN_VEGE=0.45;
+    
+    var th_SHALLOW_WATER=-0.1;
+    var th_RANGELAND=0.49;
+    var th_GRASS=0.53;
+    var th_SHRUB=0.63;
+    var th_TREES=0.78 ;
+    //var th_TREES=0.85 ;
+    
+   
+     
+    var min123=BLU.min(GREEN).min(RED);
+     
+    var min1234=min123.min(NIR);
+    var min12345=min1234.min(SWIR1);
+    var min123457=min12345.min(SWIR2);
+    
+    //Map.addLayer(min123457,{},'min123457',true)
+    
+    var min234=GREEN.min(RED).min(NIR);
+    
+    var max234=GREEN.max(RED).max(NIR);
+    var max1234=max234.max(BLU);
+    
+    var max57=SWIR1.max(SWIR2);
+    var max457=max57.max(NIR);
+    
+    var max123457= max1234.max(max57);
+    
+    
+    var BLUgtGREEN  = BLU.gt(GREEN);
+    var BLUgteGREEN = BLU.gte(GREEN);
+    var BLUlteNIR   = BLU.lte(NIR);
+    
+    var GREENgtRED  = GREEN.gt(RED);
+    var GREENlteRED = GREEN.lte(RED);
+    var GREENgteRED = GREEN.gte(RED);
+    var REDlteNIR= RED.lte(NIR);
+    
+    var REDsubtractGREEN = (RED.subtract(GREEN)).abs();
+    var BLUsubtractNIR   = BLU.subtract(NIR)
+    
+    var BLUgtGREENgtRED=BLUgtGREEN.and(GREENgtRED)
+    
+    var growing14=(BLU.lte(GREEN)).and(GREENlteRED).and(REDlteNIR);
+    var growing15=growing14.and(NIR.lte(SWIR1));
+    
+    var decreasing2345=(GREENgteRED).and(RED.gte(NIR)).and(NIR.gte(SWIR2));   // DS
+    
+    
+    var SATURATION=(max234.subtract(min234)).divide(max234);
+//0.15092b+0.19733g+0.32794r+0.34068n−0.711211s1−0.457212s2
+    // var WETNESS= image.expression('byte(b("'+BANDS[0]+'")*255)*0.2626 + byte(b("'+BANDS[1]+'")*255)*0.21 + byte(b("'+BANDS[2]+'")*255)*0.0926 + byte(b("'+BANDS[3]+'")*255)*0.0656 - byte(b("'+BANDS[4]+'")*255)*0.7629 - byte(b("'+BANDS[5]+'")*255)*0.5388');
+    
+    //var WETNESS= (BLU.multiply(0.2626*255)).add(GREEN.multiply(0.21*255)).add(RED.multiply(0.0926*255)).add(NIR.multiply(0.056*255)).subtract(SWIR1.multiply(0.7629*255)).subtract(SWIR2.multiply(0.5388*255))
+    var WETNESS= (BLU.multiply(0.15092)).add(GREEN.multiply(0.19733)).add(RED.multiply(0.32794)).add(NIR.multiply(0.34068)).subtract(SWIR1.multiply(0.711211)).subtract(SWIR2.multiply(0.457212))
+    
+    var NDVI=(NIR.subtract(RED)).divide(NIR.add(RED));
+    var NDSI=(GREEN.subtract(SWIR1)).divide(GREEN.add(SWIR1));
+    
+    var BRIGTSOIL=((BLU.lt(0.27)).and(growing15)).or((BLU.lt(0.27)).and(growing14).and(  ((NIR.subtract(SWIR1)).gt(0.038)))); 
+    
+    
+    var WATER_NOT_SHADOW = GREEN.gte((BLU.add(RED)).divide(2.0).multiply(0.95)).and(NIR.lte((RED.add(SWIR1)).divide(2.0).multiply(1.10))).and(SWIR1.lt(0.7));
+    var WATERSHAPE= ((BLU.subtract(GREEN)).gt(-0.2)).and(decreasing2345).and(WETNESS.gt(0)); //add other cond
+    var OTHERWATERSHAPE= (BLUgteGREEN).and(GREENgteRED).and(NIR.gte(RED)).and(SWIR1.lt(NIR)).and(SWIR2.lte(SWIR1)).and(NIR.lt((RED).multiply(1.3)).and(NIR.lt(0.12)).and(SWIR1.lt(RED)).and(NIR.lte(GREEN)).and(NIR.gt(0.039)).and(WETNESS.gt(0))  ); //add other cond  07/10 (add replaced with and  :) and(NIR.lte(GREEN))
+    
+    
+    
+    var SNOWSHAPE=((min1234.gt(0.30)).and(NDSI.gt(0.65))).or(WETNESS.gt(1).and(WATERSHAPE.eq(0)));
+    
+    var CLOUDSHAPE = ((SNOWSHAPE.eq(0)).and(BRIGTSOIL.eq(0))).and(
+                  ((max123457.gt(0.47)).and(min1234.gt(0.37))).or(
+                    
+                                                                  ((min123.gt(0.17)).and(SWIR1.gt(min123))).and(
+                                                                      ((SATURATION.gte(0.2)).and(SATURATION.lte(0.4)).and(max234.gte(0.35)) )
+                                                                      .or((NDSI.lt(0.65)).and(max1234.gt(0.30)).and( (NIR.divide(RED)).gte(1.3) ).and((NIR.divide(GREEN)).gte(1.3)).and( (NIR.divide(SWIR1)).gte(0.95)  )) 
+                                                                   )
+                                                                   
+                                                                  ) 
+                                                              ) 
+    
+    min123=0
+    
+    BRIGTSOIL=0
+    SATURATION=0
+    //decreasing2345=0
+    // main groups based on ndvi
+    var ndvi_1 = NDVI.lte(th_NDVI_MAX_WATER);
+    var ndvi_2 = NDVI.lt(th_NDVI_MIN_VEGE).and(ndvi_1.eq(0));
+    var ndvi_3 = NDVI.gte(th_NDVI_MIN_VEGE);
+    
+    
+    //-------------------------------------------------------------------------------------------------------------
+		//----------------------  SECTION 1 : WATER  ---------------------------------------------------------
+		//-------------------------------------------------------------------------------------------------------------
+    
+    OUT=(ndvi_1.and(SNOWSHAPE)).multiply(1);
+    OUT=OUT.where( OUT.eq(0).and(ndvi_1).and(
+                    (WATERSHAPE.and(BLU.gt(0.078)).and(GREEN.gt(0.04)).and(GREEN.lte(0.15)).and(max57.lt(0.1)))//.or(
+                    //(RED.gte(max457)).and(RED.lte(0.19)).and(RED.gt(0.04)).and(BLU.gt(0.078)).and(max57.lt(0.1))) )
+                    )//.and(BLU.subtract(GREEN).lte(0.02))
+                    .and(SWIR1.lt(0.05))
+                    .and(BLU.lt(0.118))
+                    ,8);
+    
+    
+    OUT=OUT.where( ndvi_1.and(OUT.eq(0)).and(BLU.gt(0.94)).and(GREEN.gt(0.94)).and(RED.gt(0.94)).and(NIR.gt(0.94)) ,1);  // TEST CLOUDS L8
+    OUT=OUT.where( ndvi_1.and(OUT.eq(0)).and(min123457.gt(0.18)).and(max1234.gt(SWIR2)),1); 
+    OUT=OUT.where(( (ndvi_1).and(OUT.eq(0)).and(
+                      CLOUDSHAPE.or(
+                      (BLUgtGREENgtRED.and(NIR.gt(0.254)).and( BLU.gt(0.165)).and(NDVI.lt(0.40))).or(
+                      (BLUgtGREEN.and(BLU.gt(0.27)).and(GREEN.gt(0.21)).and( REDsubtractGREEN.lte(0.1)).and(NIR.gt(0.35)))).or(
+                      (BLU.gt(0.94)).and(GREEN.gt(0.94)).and(RED.gt(0.94)).and(NIR.gt(0.94))))
+                      
+                      )),1);
+
+    
+		OUT=OUT.where(OUT.eq(0).and(ndvi_1).and(SWIR2.lt(0.07)).and(BLU.lte(0.11)).and(WATER_NOT_SHADOW.eq(0)),2);  // TE
+		
+    //OUT=OUT.where((OUT.eq(0)).and(ndvi_1).and(REDlteNIR),41);
+    //OUT=OUT.where((OUT.eq(0)).and(ndvi_1).and(RED.subtract(NIR).gt(0)),35);
+    OUT=OUT.where( ndvi_1.and(OUT.eq(0)).and(RED.gt(NIR)).and(WETNESS.gte(0.10)),8);
+    //OUT=OUT.where( ndvi_1.and(OUT.eq(0)).and(RED.gt(NIR)).and(WETNESS.lt(0.13)),42); 
+    
+    OUT=OUT.where( ndvi_1.and(OUT.eq(0)).and(WATER_NOT_SHADOW).and(SWIR1.lt(0.07)),8); 
+    OUT=OUT.where( ndvi_1.and(OUT.eq(0).and(RED.lt(0.26))),41);  // split dark soil 
+    //OUT=OUT.where( ndvi_1.and(OUT.eq(0)),34);
+    //OUT=OUT.where((OUT.eq(35)).and(min123457.gt(0.250)),2); 
+    
+    //OUT=OUT.where(QA.gt(1024),2);
+    //-------------------------------------------------------------------------------------------------------------
+		//---------------------  SECTION 2 : CLOUDS or SOIL  ---------------------------------------------------------
+		//------------------------------------------------------------------------------------------------------------
+    
+     OUT=OUT.where(( (ndvi_2).and(SNOWSHAPE)),1);
+    
+     OUT=OUT.where(( (ndvi_2).and(OTHERWATERSHAPE).and(BLU.gt(0.078)).and(max57.lt(0.058))),8 );
+    
+     OUT=OUT.where(( (ndvi_2).and(
+                      CLOUDSHAPE.or(
+                      (BLUgtGREENgtRED.and(NIR.gt(0.254)).and( BLU.gt(0.165)).and(NDVI.lt(0.40))).or(
+                      (BLUgtGREEN.and(BLU.gt(0.27)).and(GREEN.gt(0.21)).and( REDsubtractGREEN.lte(0.1)).and(NIR.gt(0.35)))).or(
+                      (BLU.gt(0.94)).and(GREEN.gt(0.94)).and(RED.gt(0.94)).and(NIR.gt(0.94))))
+                      
+                      )),1);
+
+    CLOUDSHAPE=0
+     //OUT=OUT.where(  (ndvi_2.and(OUT.eq(0))).and(min123457.gt(0.25)).and(max1234.gt(SWIR2)),1); 
+ 
+     OUT=OUT.where(( (ndvi_2).and(BLU.lt(0.13)).and(BLUgtGREENgtRED).and(RED.lt(0.05)).and( BLUsubtractNIR.lt(-0.04))     ),40);    //similar 2 cl 42 simplify
+     
+     OUT=OUT.where(( (OUT.eq(0)).and(ndvi_2).and(WETNESS.gt(0.05))),8   ); //only at this point to avoid confusion with shadows
+     //WETNESS=0
+   
+     OUT=OUT.where(( (ndvi_2).and(BLU.lt(0.13)).and(BLUgtGREENgtRED).and(RED.lt(0.05)).and( BLUsubtractNIR.lt(0.04))        ),42   );
+    
+     OUT=OUT.where(( (OUT.eq(0)).and(ndvi_2).and(
+                    ((BLU.lt(0.14)).and(BLU.gt(0.10)).and(BLUgtGREENgtRED).and(RED.lt(0.06)).and(NIR.lt(0.14)).and( ((NIR).subtract(BLU)).lt(0.02))).or(
+                    ( ((((NIR.subtract(GREEN)).abs().lte(0.01)).add( BLUsubtractNIR.gte(0.01))).gt(0)).and(BLUgtGREENgtRED).and(NIR.gte(0.06)) )).or(
+                    ( (OUT.eq(0)).and(ndvi_2).and(NDVI.lte(0.09)).and(NIR.lt(0.4)).and(GREENlteRED).and(REDlteNIR)) )
+                   )),41);
+
+     
+     REDsubtractGREEN=0
+     BLUgteGREEN=0
+     
+    //-------------------------------------------------------------------------------------------------------------
+		//----------------------  SECTION 3 : VEGETATION  -------------------------------------------------------------
+		//-------------------------------------------------------------------------------------------------------------
+    
+    var MyCOND=(ndvi_3).and(NDVI.lt(th_RANGELAND));
+
+    //OUT=OUT.where(( (MyCOND).and(NIR.gte(0.16)) ),16);
+    OUT=OUT.where(( (MyCOND).and(NIR.lt(0.15))  ),42);
+    
+    
+    OUT=OUT.where(OUT.eq(8),0);
+    
+    return OUT.select([0],["Class"])
+
+}   // SINGLE DATE CLASSIFICATION
+
+//////PINO////////////////////////////////////////////
+function Pino_CM (img) {
+  
+  // var B1   = img.select('cb');
+  // var B2   = img.select('blue');
+  // var B3   = img.select('green');
+  // var B5   = img.select('re1');
+  // var B7   = img.select('re3');
+  // var B8A  = img.select('nir2');
+  // var B9   = img.select('waterVapor');
+  // var B10  = img.select('cirrus');
+  // var B11  = img.select('swir1');
+  
+   var classif = PINO1(img,['blue','green','red','nir','swir1','swir2']);
+   var OUT = classif.select("Class");
+  // Buffer, python version has sun azi for better shadow detection 
+   var clouds_filter_size = 50;
+   var shadow_filter_size = 50;
+   var CM=OUT.eq(1);
+   // snow
+   //var SNOW = (OUT.eq(3)).or(OUT.eq(7)); 
+   CM = CM.focal_max(clouds_filter_size,'circle','meters',1);  // mask cloud pixels close to snow 
+   // possible clouds 
+   var SH=OUT.gte(40).focal_min(10,'circle','meters',1);                             
+   SH = SH.focal_max(shadow_filter_size,'circle','meters',1);   //possible shadows 
+   //CM=CM.focal_min(200,'circle','meters',1);                             
+   //CM=CM.focal_max(clouds_filter_size,'circle','meters',1);                             
+   //var CMextent=CM.focal_max(500,'circle','meters',1);                                 // max distance of SH from CL --- better number can be defined usinf sun elevation
+  // CM = CM.where(SH.and(CMextent),2);
+   //CM = CM.where(SH.and(CMextent),2);
+   
+   //OUT=OUT.where(SH.and(CMextent),2);                                      // recode SH falling in the buffer to final SH class  
+   //OUT=OUT.where(OUT.eq(1),0);
+   
+   
+   //OUT1 = OUT.where(CM,1);
+   
+   CM = CM.where(SH,2)
+   var image_CM = img.updateMask(CM.neq(1).and(CM.neq(2)))
+   return image_CM
+}
