@@ -21,7 +21,7 @@ var precip = ee.Image("OpenLandMap/CLM/CLM_PRECIPITATION_SM2RAIN_M/v01");
 var countries = ee.FeatureCollection("FAO/GAUL/2015/level0");
 
 var proj = precip.projection();
-var raint1 = 100;
+var raint1 = 120;
 
 var jan = precip.select("jan").clip(tropic);
 var jan_cl = ee.Image(1).where(jan.gt(raint1), 0).where(jan.lte(raint1), 1);
@@ -62,13 +62,18 @@ var visu_p = {
   palette: ['ecffbd', 'ffff00', '3af6ff', '467aff', '313eff', '0008ff']
 };
 
+var visu_rec = {"opacity":0.70,
+  "bands":["constant"],
+  "palette":["ff4812","ffa39f","ffd3c6","ffcb0c","ffdf41","f7ff7e","d2ff97",
+              "98ff58","08ff26","83f4ff","64b7ff","235dff"]};
+
 
 
 Map.addLayer(jan, visu_p, "Precipitation monthly in mm");
-Map.addLayer(AR100, {}, "AR100", false);
+Map.addLayer(AR100, visu_rec, "AR100", true);
 Map.addLayer(AR100r, {}, "AR100r", false)
 //Map.addLayer(tropic);
-Map.addLayer(countries,{}, "Country Boundaries", true)
+Map.addLayer(countries,{}, "Country Boundaries", false)
 
 
 
