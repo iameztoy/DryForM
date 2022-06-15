@@ -56,7 +56,7 @@ var AR100r = ee.Image(1).where(AR100.lt(4), 0).where(AR100.gte(4),1).where(AR100
 
 //Visu and add
 var visu_p = {
-  bands: ['jan'],
+  //bands: ['jan'],
   min: 0.0,
   max: 380.0,
   palette: ['ecffbd', 'ffff00', '3af6ff', '467aff', '313eff', '0008ff']
@@ -69,18 +69,18 @@ var visu_rec = {"opacity":0.70,
 
 
 
-Map.addLayer(jan, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(feb, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(mar, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(apr, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(may, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(jun, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(jul, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(aug, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(sep, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(oct, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(nov, visu_p, "Precipitation monthly in mm", false);
-Map.addLayer(dec, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(jan, visu_p, "Jan mm", false);
+Map.addLayer(feb, visu_p, "Feb mm", false);
+Map.addLayer(mar, visu_p, "Mar mm", false);
+Map.addLayer(apr, visu_p, "Apr mm", false);
+Map.addLayer(may, visu_p, "May mm", false);
+Map.addLayer(jun, visu_p, "Jun mm", false);
+Map.addLayer(jul, visu_p, "Jul mm", false);
+Map.addLayer(aug, visu_p, "Aug mm", false);
+Map.addLayer(sep, visu_p, "Sep mm", false);
+Map.addLayer(oct, visu_p, "Oct mm", false);
+Map.addLayer(nov, visu_p, "Nov mm", false);
+Map.addLayer(dec, visu_p, "Dec mm", false);
 Map.addLayer(AR100, visu_rec, "AR100", true);
 Map.addLayer(AR100r, {}, "AR100r", false)
 //Map.addLayer(tropic);
