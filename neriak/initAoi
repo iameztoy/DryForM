@@ -70,6 +70,17 @@ var visu_rec = {"opacity":0.70,
 
 
 Map.addLayer(jan, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(feb, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(mar, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(apr, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(may, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(jun, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(jul, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(aug, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(sep, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(oct, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(nov, visu_p, "Precipitation monthly in mm", false);
+Map.addLayer(dec, visu_p, "Precipitation monthly in mm", false);
 Map.addLayer(AR100, visu_rec, "AR100", true);
 Map.addLayer(AR100r, {}, "AR100r", false)
 //Map.addLayer(tropic);
