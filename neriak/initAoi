@@ -73,7 +73,7 @@ Map.addLayer(jan, visu_p, "Precipitation monthly in mm", false);
 Map.addLayer(AR100, visu_rec, "AR100", true);
 Map.addLayer(AR100r, {}, "AR100r", false)
 //Map.addLayer(tropic);
-Map.addLayer(countries,{}, "Country Boundaries", true)
+Map.addLayer(countries,{}, "Country Boundaries", false)
 
 
 
