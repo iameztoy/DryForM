@@ -21,7 +21,7 @@ var precip = ee.Image("OpenLandMap/CLM/CLM_PRECIPITATION_SM2RAIN_M/v01");
 var countries = ee.FeatureCollection("FAO/GAUL/2015/level0");
 
 var proj = precip.projection();
-var raint1 = 120;
+var raint1 = 100;
 
 var jan = precip.select("jan").clip(tropic);
 var jan_cl = ee.Image(1).where(jan.gt(raint1), 0).where(jan.lte(raint1), 1);
