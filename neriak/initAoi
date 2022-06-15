@@ -48,7 +48,7 @@ var nov_cl = ee.Image(1).where(nov.gt(raint1), 0).where(nov.lte(raint1), 1);
 var dec = precip.select("dec").clip(tropic);
 var dec_cl = ee.Image(1).where(dec.gt(raint1), 0).where(dec.lte(raint1), 1);
 
-//Sum of montly reclassified rainfall raint1
+//Sum of monthly reclassified rainfall raint1
 var AR100 = jan_cl.add(feb_cl).add(mar_cl).add(apr_cl).add(may_cl).add(jun_cl)
             .add(jul_cl).add(aug_cl).add(sep_cl).add(oct_cl).add(nov_cl).add(dec_cl);
 //Reclassify to 1 values falling between 4 and 7. These are pixels with 4 or 7 months with montly precipitation below 100mm
