@@ -64,8 +64,8 @@ var visu_p = {
 
 var visu_rec = {"opacity":0.70,
   "bands":["constant"],
-  "palette":["ff4812","ffa39f","ffd3c6","ffcb0c","ffdf41","f7ff7e","d2ff97",
-              "98ff58","08ff26","83f4ff","64b7ff","235dff"]};
+  "palette":["235dff","64b7ff","83f4ff","08ff26","98ff58","d2ff97","f7ff7e",
+  "ffdf41","ffcb0c","ffd3c6","ffa39f","ff4812",]};
 
 
 
