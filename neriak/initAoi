@@ -20,6 +20,17 @@ var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]]
 var precip = ee.Image("OpenLandMap/CLM/CLM_PRECIPITATION_SM2RAIN_M/v01");
 var countries = ee.FeatureCollection("FAO/GAUL/2015/level0");
 
+//From https://code.earthengine.google.com/cf527407b6bb54cbb957bb4a5c5d5145 MapBiomas
+var chaco = ee.FeatureCollection("projects/mapbiomas-chaco/DATOS_AUXILIARES/ESTADISTICAS/limite-chaco");
+/*
+                'projects/mapbiomas-chaco/DATOS_AUXILIARES/ESTADISTICAS/paises',
+                'projects/mapbiomas-chaco/DATOS_AUXILIARES/ESTADISTICAS/limite-chaco',
+                'projects/mapbiomas-chaco/DATOS_AUXILIARES/ESTADISTICAS/departamentos',
+                'projects/mapbiomas-chaco/DATOS_AUXILIARES/ESTADISTICAS/provincias',
+                'projects/mapbiomas-chaco/DATOS_AUXILIARES/ESTADISTICAS/biomas',
+*/
+
+
 var proj = precip.projection();
 var raint1 = 100;
 
@@ -52,7 +63,9 @@ var dec_cl = ee.Image(1).where(dec.gt(raint1), 0).where(dec.lte(raint1), 1);
 var AR100 = jan_cl.add(feb_cl).add(mar_cl).add(apr_cl).add(may_cl).add(jun_cl)
             .add(jul_cl).add(aug_cl).add(sep_cl).add(oct_cl).add(nov_cl).add(dec_cl);
 //Reclassify to 1 values falling between 4 and 7. These are pixels with 4 or 7 months with montly precipitation below 100mm
-var AR100r = ee.Image(1).where(AR100.lt(4), 0).where(AR100.gte(4),1).where(AR100.lte(7),1).where(AR100.gt(7),0);
+var AR100r = ee.Image(1).where(AR100.lt(4), 0)
+                        .where(AR100.gte(4).and(AR100.lte(7)),1)
+                        .where(AR100.gt(7),0);
 
 //Visu and add
 var visu_p = {
@@ -84,7 +97,8 @@ Map.addLayer(dec, visu_p, "Dec mm", false);
 Map.addLayer(AR100, visu_rec, "AR100", true);
 Map.addLayer(AR100r, {}, "AR100r", false)
 //Map.addLayer(tropic);
-Map.addLayer(countries,{}, "Country Boundaries", false)
+Map.addLayer(countries,{}, "Country Boundaries", false);
+Map.addLayer(chaco,{}, "Chaco", true);
 
 
 
