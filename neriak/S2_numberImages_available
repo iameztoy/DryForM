@@ -17,7 +17,7 @@ var s2Sr = ee.ImageCollection('COPERNICUS/S2_SR');
 var s2Clouds = ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY');
 
 var START_DATE = ee.Date('2015-01-01');
-var END_DATE = ee.Date('2017-03-01');
+var END_DATE = ee.Date('2020-01-01');
 var MAX_CLOUD_PROBABILITY = 65;
 
 function maskClouds(img) {
@@ -52,7 +52,7 @@ var s2SrWithCloudMask = ee.Join.saveFirst('cloud_mask').apply({
 var s2CloudMasked =
     ee.ImageCollection(s2SrWithCloudMask).map(maskClouds);
     
-var bands = ['B4'];
+var bands = ['B4', 'B3', 'B2'];
 var collection = s2CloudMasked.select(bands);
 
 // Turn the collection into an ArrayImage
