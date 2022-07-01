@@ -69,5 +69,6 @@ var arrayImageCollectionPB = collection.toArrayPerBand(0);
 var axis0pb = arrayImageCollectionPB.arrayLength(0);  // 6-band image, each band length N+ array
 var axis1pb = arrayImageCollectionPB.arrayLength(1);  // error
 
-
-Map.addLayer(axis0coll, {}, 'axis0coll');
+var palettes = require('users/gena/packages:palettes');
+var palette = palettes.misc.tol_rainbow[7];
+Map.addLayer(axis0coll, {{min: 0, max: 50, palette: palette}}, 'axis0coll');
