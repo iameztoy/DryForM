@@ -71,4 +71,4 @@ var axis1pb = arrayImageCollectionPB.arrayLength(1);  // error
 
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.misc.tol_rainbow[7];
-Map.addLayer(axis0coll, {{min: 0, max: 50, palette: palette}}, 'axis0coll');
+Map.addLayer(axis0coll, {min: 0, max: 50, palette: palette}, 'axis0coll');
