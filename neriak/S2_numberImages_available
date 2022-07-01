@@ -16,8 +16,8 @@ var region =
 var s2Sr = ee.ImageCollection('COPERNICUS/S2_SR');
 var s2Clouds = ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY');
 
-var START_DATE = ee.Date('2019-01-01');
-var END_DATE = ee.Date('2019-03-01');
+var START_DATE = ee.Date('2015-01-01');
+var END_DATE = ee.Date('2022-03-01');
 var MAX_CLOUD_PROBABILITY = 65;
 
 function maskClouds(img) {
@@ -71,4 +71,4 @@ var axis1pb = arrayImageCollectionPB.arrayLength(1);  // error
 
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.misc.tol_rainbow[7];
-Map.addLayer(axis0coll, {min: 0, max: 50, palette: palette}, 'axis0coll');
+Map.addLayer(axis0coll, {min: 0, max: 500, palette: palette}, 'axis0coll');
