@@ -70,5 +70,5 @@ var axis0pb = arrayImageCollectionPB.arrayLength(0);  // 6-band image, each band
 var axis1pb = arrayImageCollectionPB.arrayLength(1);  // error
 
 var palettes = require('users/gena/packages:palettes');
-var palette = palettes.misc.tol_rainbow[7];
+var palette = palettes.matplotlib.plasma[7];
 Map.addLayer(axis0coll, {min: 0, max: 300, palette: palette}, 'axis0coll'); // Max value should be 365 / temp res. (5) x number of years in the col.
