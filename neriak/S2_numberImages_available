@@ -1,0 +1,73 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var region = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-71.00603728913433, -7.308796177263458],
+          [-71.00603728913433, -33.239371731497215],
+          [-53.076349789134326, -33.239371731497215],
+          [-53.076349789134326, -7.308796177263458]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var s2Sr = ee.ImageCollection('COPERNICUS/S2_SR');
+var s2Clouds = ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY');
+
+var START_DATE = ee.Date('2019-01-01');
+var END_DATE = ee.Date('2019-03-01');
+var MAX_CLOUD_PROBABILITY = 65;
+
+function maskClouds(img) {
+  var clouds = ee.Image(img.get('cloud_mask')).select('probability');
+  var isNotCloud = clouds.lt(MAX_CLOUD_PROBABILITY);
+  return img.updateMask(isNotCloud);
+}
+
+// The masks for the 10m bands sometimes do not exclude bad data at
+// scene edges, so we apply masks from the 20m and 60m bands as well.
+// Example asset that needs this operation:
+// COPERNICUS/S2_CLOUD_PROBABILITY/20190301T000239_20190301T000238_T55GDP
+function maskEdges(s2_img) {
+  return s2_img.updateMask(
+      s2_img.select('B8A').mask().updateMask(s2_img.select('B9').mask()));
+}
+
+// Filter input collections by desired data range and region.
+var criteria = ee.Filter.and(
+    ee.Filter.bounds(region), ee.Filter.date(START_DATE, END_DATE));
+s2Sr = s2Sr.filter(criteria).map(maskEdges);
+s2Clouds = s2Clouds.filter(criteria);
+
+// Join S2 SR with cloud probability dataset to add cloud mask.
+var s2SrWithCloudMask = ee.Join.saveFirst('cloud_mask').apply({
+  primary: s2Sr,
+  secondary: s2Clouds,
+  condition:
+      ee.Filter.equals({leftField: 'system:index', rightField: 'system:index'})
+});
+
+var s2CloudMasked =
+    ee.ImageCollection(s2SrWithCloudMask).map(maskClouds);
+    
+var bands = ['B4', 'B3', 'B2'];
+var collection = s2CloudMasked.select(bands);
+
+// Turn the collection into an ArrayImage
+var arrayImageCollection = collection.toArray();
+
+// Get the array axis lengths as images.
+var axis0coll = arrayImageCollection.arrayLength(0);  // N+ (Image axis)
+var axis1coll = arrayImageCollection.arrayLength(1);  // 6  (Band axis)
+
+// Turn the collection into an ArrayImage
+var arrayImageCollectionPB = collection.toArrayPerBand(0);
+
+// Get the array axis lengths as images.
+var axis0pb = arrayImageCollectionPB.arrayLength(0);  // 6-band image, each band length N+ array
+var axis1pb = arrayImageCollectionPB.arrayLength(1);  // error
+
+
+Map.addLayer(axis0coll, {}, 'axis0coll');
