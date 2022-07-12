@@ -8,10 +8,10 @@ var region =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-71.00603728913433, -7.308796177263458],
-          [-71.00603728913433, -33.239371731497215],
-          [-53.076349789134326, -33.239371731497215],
-          [-53.076349789134326, -7.308796177263458]]], null, false);
+        [[[-61.887384945384326, -17.885437690292694],
+          [-61.887384945384326, -24.157524637373033],
+          [-54.636408382884326, -24.157524637373033],
+          [-54.636408382884326, -17.885437690292694]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var s2Sr = ee.ImageCollection('COPERNICUS/S2_SR');
 var s2Clouds = ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY');
@@ -68,6 +68,10 @@ var arrayImageCollectionPB = collection.toArrayPerBand(0);
 // Get the array axis lengths as images.
 var axis0pb = arrayImageCollectionPB.arrayLength(0);  // 6-band image, each band length N+ array
 var axis1pb = arrayImageCollectionPB.arrayLength(1);  // error
+
+//Alternative to the array reducer (much faster) is to apply a count reducer
+var count = collection.count();
+Map.addLayer(count, {min: 1, max: 100}, 'Count (not cloud observations)');
 
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.matplotlib.plasma[7];
