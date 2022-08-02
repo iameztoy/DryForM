@@ -14,6 +14,8 @@ var mariupol_aoi =
           [38.33774591187382, 47.421494535603784]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
+// https://medium.com/@gglemoine62/12-day-sentinel-1-coherence-a-test-case-for-ukraine-998488bf589
+
 // The COH12 test set has mixed VV (majority) and VH images, both with a single band
 // This is why ee.Image.select('VV') does not work. Filter by polarization as follows:
 var c12 = ee.ImageCollection('JRC/S1_COH_TEST').
