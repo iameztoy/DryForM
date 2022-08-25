@@ -1,3 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var table = ee.FeatureCollection("USDOS/LSIB_SIMPLE/2017");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 //GEE code
 // RF over dry forests
 // Producing the datasets for the classification from Sentinel 1 and slope and aspect
@@ -33,7 +36,7 @@ var oneMonth={"Jan":['01-01','01-31'],"Feb":['02-01','02-28'],"Mar":['03-01','03
 // When the collection is filtered by the country name - the images on the border not falling with their centroid in the limit may not be taken into account 
 var country = 'Tanzania';
 
-var clipper = countries.filterMetadata('country_na', 'Contains',country);
+var clipper = table.filterMetadata('country_na', 'Contains',country);
 print(clipper)
 
 var clip_area = clipper.geometry();
@@ -258,7 +261,7 @@ function erodeGeometry(image) {
 }
 
 function getCountryBBX(countryName){
-  var country = countries
+  var country = table
               .filterMetadata('country_na', 'Contains',countryName);
   return country.first().geometry().bounds().coordinates().getInfo()[0];
 }
@@ -326,7 +329,7 @@ function exportToAsset(image, description, countryName, latN, lonN){
 function radarViewVV(startDate, endDate, clipper, polarisation, orbit){
   
   if (typeof clipper === 'string') {
-    var thisArea = countries
+    var thisArea = table
       .filterMetadata('country_na', 'Contains', clipper);
   } else {thisArea = clipper}
   
