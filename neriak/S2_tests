@@ -8,10 +8,10 @@ var aoi =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-59.101834123543505, -19.694373148665267],
-          [-59.101834123543505, -21.16654220389597],
-          [-57.294583146981005, -21.16654220389597],
-          [-57.294583146981005, -19.694373148665267]]], null, false),
+        [[[-67.67117006104351, -0.5823279316147755],
+          [-67.67117006104351, -7.84167716689453],
+          [-59.623684709481026, -7.84167716689453],
+          [-59.623684709481026, -0.5823279316147755]]], null, false),
     im = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 function maskS2clouds(image) {
@@ -39,9 +39,17 @@ var r = im.filterBounds(aoi)
       
 
 var rm = r.select("NDVI")
-var ndvim = rm.max();
-print(ndvim)
+print(rm)
+
+var rmax = rm.max();
+var rmin = rm.min();
+var rmed = rm.median();
+
+var sub = rmax.subtract(rmin)
 
 
 
-Map.addLayer(ndvim, {min: 0.1, max: 0.9, palette: ['white', 'green']}, 'NDVI Max');
+Map.addLayer(rmax, {min: 0.1, max: 0.9, palette: ['white', 'green']}, 'NDVI Max indiv', 0);
+Map.addLayer(rmin, {min: 0.1, max: 0.9, palette: ['white', 'green']}, 'NDVI Min indiv', 0);
+Map.addLayer(rmed, {min: 0.1, max: 0.9, palette: ['white', 'green']}, 'NDVI Med indiv', 0);
+Map.addLayer(sub, {min: 0.1, max: 0.9, palette: ['white', 'green']}, 'NDVI Sub');
