@@ -1,0 +1,47 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var aoi = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-59.101834123543505, -19.694373148665267],
+          [-59.101834123543505, -21.16654220389597],
+          [-57.294583146981005, -21.16654220389597],
+          [-57.294583146981005, -19.694373148665267]]], null, false),
+    im = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+function maskS2clouds(image) {
+  var qa = image.select('QA60');
+  // Bits 10 and 11 are clouds and cirrus, respectively.
+  var cloudBitMask = 1 << 10;
+  var cirrusBitMask = 1 << 11;
+
+  // Both flags should be set to zero, indicating clear conditions.
+  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
+      .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
+
+  return image.updateMask(mask).divide(10000);
+}
+
+function ndvi(image) {
+  return image.addBands(image.normalizedDifference(['B8', 'B4']).rename('NDVI'))}
+
+
+var r = im.filterBounds(aoi)
+      .filterDate("2022-01-01", "2022-12-31")
+      .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+      .map(maskS2clouds)
+      .map(ndvi);
+      
+
+var rm = r.select("NDVI")
+var ndvim = rm.max();
+print(ndvim)
+
+
+
+Map.addLayer(ndvim, {min: 0.1, max: 0.9, palette: ['white', 'green']}, 'NDVI Max');
