@@ -1,0 +1,164 @@
+//Phenology from https://groups.google.com/g/google-earth-engine-developers/c/zoo4NYRHqWo/m/yrttXqPWBgAJ 
+
+//integral NDVI
+var pt = ee.Geometry.Point(17.747801, -17.815338).buffer(500)
+Map.centerObject(pt, 11)
+
+var mod13q1 = ee.ImageCollection("MODIS/006/MOD13A2").select("NDVI").filterBounds(pt)
+
+var rescale = function(image) {
+  return image.divide(10000).copyProperties(image, ["system:time_start", "system:time_end"])
+}
+
+var mod13q1 = mod13q1.map(rescale)
+
+var years = ee.List.sequence(2000, 2020);  
+var oeel=require('users/OEEL/lib:loadAll'); 
+
+var stepInDay=1;
+
+var enddoy=181;
+
+//Use two whole years 
+var emptyimgs=ee.FeatureCollection(ee.List.sequence(ee.Date.fromYMD(2000, 1, 1).millis(),null,1000*3600*24*stepInDay,7300).
+      map(function(t){return ee.Feature(null,{'system:time_start':t})}));
+
+var mod13q1_oeel = oeel.ImageCollection.SavatskyGolayFilter({
+        collection: mod13q1,
+        filter: ee.Filter.maxDifference(1000*3600*24*16*3, 'system:time_start', null, 'system:time_start'),
+        distanceFunction: function(infromedImage,estimationImage){
+          return ee.Image.constant(ee.Number(infromedImage.get('system:time_start'))
+            .subtract(ee.Number(estimationImage.get('system:time_start'))));},
+        degree: 3,
+        bandOfInterest:["NDVI"], 
+        EstimationCollection:emptyimgs
+  
+}); 
+        
+var mod13q1_oeel=mod13q1_oeel.map(function(im){return im.updateMask(im.select('extrapolate_flag').not())});
+
+var filtered = mod13q1_oeel.map(function(img) {
+  var fitted = img.select("d_0_NDVI")
+  var timestamp = img.metadata('system:time_start')
+  //var doy = ee.Image(ee.Number.parse(img.date().getRelative("day","years")))
+  var doy_austral = ee.Image(ee.Number.parse(img.date().getRelative("day","years")).subtract(enddoy)).uint16()
+     
+      return fitted
+      .addBands(timestamp)
+      .addBands(doy_austral)
+      .rename('NDVI','timestamp', 'doy');
+
+})
+
+//var fittedNDVIandTimes= mod13q1_oeel.map(austral);
+print(filtered.first(), "fittedNDVIandTimes")
+
+
+/*
+print(Chart.image.doySeries(fittedNDVIandTimes.select('NDVI'), pt, ee.Reducer.mean(), 500)//.select('NDVI')
+    //.setSeriesNames(['fitted'])
+    .setOptions({
+      title: 'SG model: fitted NDVI',
+      lineWidth: 1,
+      pointSize: 3,
+}));
+
+
+print(Chart.image.doySeries(fittedNDVIandTimes.select('timestamp'), pt, ee.Reducer.mean(), 500)//.select('NDVI')
+    //.setSeriesNames(['fitted'])
+    .setOptions({      title: 'SG model: time stamp',
+      lineWidth: 1,
+      pointSize: 3,
+}));
+
+print(Chart.image.doySeries(fittedNDVIandTimes.select('doy_austral'), pt, ee.Reducer.mean(), 500)//.select('NDVI')
+    //.setSeriesNames(['fitted'])
+    .setOptions({
+      title: 'SG model: doy austral',
+      lineWidth: 1,
+      pointSize: 3,
+}))
+*/
+
+
+
+//function for computing mean NDVI per summer season
+var yearly = function(y) {
+  var start = ee.Date.fromYMD(2000, 1, 1);
+  var stop = start.advance(1, 'year');
+  var fittedNDVIandTimes = filtered.filterDate(start, stop)
+
+//Get maximum NDVI and doy and date at which it occurs
+var maxNDVItime=fittedNDVIandTimes.reduce(ee.Reducer.max(3)).rename('maxNDVI','maxTimestamp', 'maxDoy');
+
+//Get minimum NDVI and doy and date at which it occurs
+var minNDVItime=fittedNDVIandTimes.reduce(ee.Reducer.min(3)).rename('minNDVI','minTimestamp', 'minDoy');
+
+//Calculate the mid-point. 
+var midpoint = maxNDVItime.select('maxNDVI').add(minNDVItime.select('minNDVI')).divide(2);
+
+//masks all values after season maximum
+var preSeasonMax= fittedNDVIandTimes.map(function(img){
+  var preMask=img.select('doy').lte(maxNDVItime.select('maxDoy'));
+  return img.updateMask(preMask);
+});
+
+//mask all values previous to season max
+var postSeasonMax= fittedNDVIandTimes.map(function(img){
+  var postMask=img.select('doy').gt(maxNDVItime.select('maxDoy'));
+  return img.updateMask(postMask);
+});
+
+
+var addMidpointProximity = function(img){
+  var midpointProxNeg = img.select('NDVI').subtract(midpoint).abs().multiply(-1).rename('midpointProxNeg')
+  return img.addBands(midpointProxNeg);
+}
+
+
+var forSOSretrieval = preSeasonMax.map(addMidpointProximity);
+
+var forEOSretrieval = postSeasonMax.map(addMidpointProximity);
+
+//composite images based on NDVI minimal distance from midpoint. 
+var SOSmidp= forSOSretrieval.qualityMosaic('midpointProxNeg');
+var EOSmidp= forEOSretrieval.qualityMosaic('midpointProxNeg');
+var LOSmidp = EOSmidp.select('doy').subtract(SOSmidp.select('doy'));
+
+
+var LSP = SOSmidp.select("doy").addBands(EOSmidp.select("doy")).addBands(LOSmidp.select("doy"))
+.rename('SOS','EOS', 'LOS').set('year', y,
+                    "system:time_start", start.millis(),
+                    "system:time_end", stop.millis());
+
+return LSP
+  
+}
+
+
+var LSP = ee.ImageCollection(years.map(yearly));
+print(LSP, "LPS");
+
+ // Get a palette: a list of hex strings
+var palettes = require('users/gena/packages:palettes');
+var palette = palettes.matplotlib.viridis[7];
+ 
+
+
+Map.addLayer(LSP.first().reproject(LSP.first().projection(), null, 1000), 
+{bands: ['LOS'],min: 1, max: 365, palette: palette}, 
+"LSP")
+
+
+/*
+var years = ee.List.sequence(1981, 2013); 
+var ndviI = years.map(function(y) {
+  var start = ee.Date.fromYMD(y, 7, 1);
+  var stop = start.advance(1, 'year');
+  var sumVeg = vegf2.filterDate(start, stop).sum();
+
+return sumVeg.set('year', y);
+})
+*/
+
+//Map.addLayer(SOSmidp.select("doy").reproject(SOSmidp.projection(), null, 500),{min:124, max:236, palette: palette},'Start of Season [days]');
