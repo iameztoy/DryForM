@@ -1,0 +1,465 @@
+function rgb(r,g,b){
+          var bin = r << 16 | g << 8 | b;
+          return (function(h){
+          return new Array(7-h.length).join("0")+h;
+          })(bin.toString(16).toUpperCase());
+} 
+
+var PALETTE_IIASA = [
+rgb(255,255,255),       // value 0 background
+rgb(0,80,0),      // value 1. Closed evergreen lowland forest
+rgb(210,250,60),  // value 2 Degraded evergreen lowland forest
+rgb(0,80,0),      // value 3.Submontane forest (900 -1500 m)
+rgb(0,80,0),      // value 4 Montane forest (>1500 m)
+rgb(40,100,50),   // value 5. Tree cover, regularly flooded, Swamp
+rgb(40,100,50),   // value 6. Tree cover, regularly flooded, Mangrove
+rgb(255,240,200), // val 7. Mosaic Forest / Croplands
+rgb(255,240,200), // val 8. Mosaic Forest / Savanna
+rgb(0,80,0),      // value 9. Closed deciduous forest
+
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255)
+//value 10-27 other values
+];  
+
+var PALETTEGLC2000_AFR = [
+rgb(255,255,255),       // value 0 background
+rgb(0,80,0),      // value 1. Closed evergreen lowland forest
+rgb(210,250,60),  // value 2 Degraded evergreen lowland forest
+rgb(0,80,0),      // value 3.Submontane forest (900 -1500 m)
+rgb(0,80,0),      // value 4 Montane forest (>1500 m)
+rgb(40,100,50),   // value 5. Tree cover, regularly flooded, Swamp
+rgb(40,100,50),   // value 6. Tree cover, regularly flooded, Mangrove
+rgb(255,240,200), // val 7. Mosaic Forest / Croplands
+rgb(255,240,200), // val 8. Mosaic Forest / Savanna
+rgb(0,80,0),      // value 9. Closed deciduous forest
+
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255)
+//value 10-27 other values
+];
+
+var PALETTEGLC2000_ASIA = [
+rgb(0,0,0), // value 0 Sea
+
+rgb(0,80,0),    // value 1. Tree cover, broadleaved, evergreen, closed and closed to open
+rgb(210,250,60),   // value 2 Mosaic: Tree cover / Other nat. vegetation or Cropland (incl.very degraded and open tree cover)
+rgb(150,180,50),      // value 3. Tree cover, broadleaved, deciduous, mainly open (incl. Dry Dipterocarpus)
+rgb(40,100,50),      // value 4. Tree cover, regularly flooded, Mangrove
+rgb(40,100,50),      // value 5. Tree cover, regularly flooded, Swamp
+
+rgb(255,240,200), // val 6. Mosaics & Shrub Cover, shrub component dominant, mainly evergreen
+rgb(255,240,200), // val 7. Mosaics & Shrub Cover, shrub component dominant, mainly deciduous
+rgb(255,240,200),       // value 8. Shrub cover, mainly deciduous, (Dry or burnt) 
+
+rgb(255,240,200),      //value 9 Mosaic sof Cropland / Other natural vegetation (Shifting cultivation in maountains) 
+rgb(255,240,200),        // value 10. Herbaceous Cover (incl.alpine grassland)
+rgb(255,240,200),         // value 11. Sparse herbaceous cover > 3000m
+rgb(255,240,200),      // value 12 Cultivated and managed, non irrigated (mixed)
+rgb(255,240,200),        // value 13. Cultivated and managed, irrigated (flooded, rice, shrimp farms)
+rgb(255,255,255),     // value 14. Bare Areas (Rock: Lime stone )
+rgb(255,255,255),     // value 15. Snow and Ice 
+rgb(237,255,215),     // value 16.  Artificial surfaces
+rgb(0,50,150),        // value 17. Water Bodies     
+rgb(255,255,255)     // value 18. No data
+];
+
+var PALETTEGLC2000_SAM = [
+  
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255), // value 0 -9
+
+rgb(0,80,0),    // 10. Closed evergreen tropical forest
+rgb(0,80,0),    // 11. Open evergreen tropical forest
+rgb(0,80,0),    // 12.Bamboo dominated forest
+rgb(0,80,0),    //13. Closed semi-humid forest
+rgb(0,80,0),    //14. Open semi-humid forest
+
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),
+
+rgb(150,180,50),      // 20. Closed deciduous forest
+rgb(150,180,50),      // 21.Open deciduous forest
+rgb(150,180,50),      // 22.Closed semi deciduous forest
+rgb(150,180,50),      // 23.Open semi deciduous forest
+rgb(150,180,50),      // 24.Semi deciduous transition forest
+
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),
+
+rgb(40,100,50),      // value 30. Mangrove
+rgb(40,100,50),      // value 31. Fresh water flooded forests
+rgb(0,0,0),
+rgb(40,100,50),      // value 33. Permanent swamp forests
+
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),
+
+
+rgb(120,170,40), // value 40. Temperate closed evergreen broadleaf forest
+rgb(0,0,0),
+rgb(120,170,40), // value 42. Temperate mixed evergreen broadleaf forests
+rgb(120,170,40), // value 43. Temperate closed deciduous broadleaf forests
+rgb(120,170,40), // value 44. Temperate open deciduous broadleaf forests
+
+rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),rgb(255,255,255),
+
+// values from 49 to 194 to add
+];
+
+
+////////////////////////////////////////////
+////SPDT WRI
+////////////////////////////////////////////
+
+var arg =  (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/arg')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var aus = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/aus')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var bra = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/bra')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var chl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/chl')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var civ = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/civ')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var cmr = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/cmr')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var cod = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/cod')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var col = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/col')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var cri = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/cri')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ecu = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ecu')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var eu =  (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/eu')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var gab = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/gab')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var gha = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/gha')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var gtm = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/gtm')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var hnd = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/hnd')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var idn = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/idn')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ind = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ind')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var jpn = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/jpn')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ken = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ken')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var khm = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/khm')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var kor = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/kor')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var lbr = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/lbr')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var lka = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/lka')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mex = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mex')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mmr = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mmr')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mwi = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mwi')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mys = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mys')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var nga = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/nga')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var nic = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/nic')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var npl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/npl')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var nzl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/nzl')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var pak = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/pak')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var pan = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/pan')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var per = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/per')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var phl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/phl')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var rwa = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/rwa')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var slb = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/slb')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var tha = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/tha')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ury = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ury')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ven = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ven')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var vnm = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/vnm')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var zaf = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/zaf')).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+
+var SDPT_ori = arg.or(aus).or(bra).or(chl).or(civ).or(cmr).or(cod).or(col)
+          .or(cri).or(ecu).or(eu).or(gab).or(gha).or(gtm).or(hnd).or(idn)
+          .or(ind).or(jpn).or(ken).or(khm).or(kor).or(lbr).or(lka).or(mex)
+          .or(mmr).or(mwi).or(mys).or(nga).or(nic).or(npl).or(nzl).or(pak)
+          .or(pan).or(per).or(phl).or(rwa).or(slb).or(tha).or(ury).or(usa)
+          .or(ven).or(vnm).or(zaf);
+
+//Map.addLayer(SDPT_ori.updateMask(SDPT_ori),{},'SDPT_ori')
+
+////////////////////////////////////////////
+////IIASA Forest Management 2015 https://pure.iiasa.ac.at/id/eprint/17994/1/s41597-022-01332-3.pdf
+////////////////////////////////////////////
+
+// 11 - Naturally regenerating forest without any signs of human activities, e.g., primary forests.  
+// 20 - Naturally regenerating forest with signs of human activities, e.g., logging, clear cuts etc.  
+// 31 - Planted forest.  
+// 32 - Short rotation plantations for timber.  
+// 40 - Oil palm plantations.  
+// 53 - Agroforestry. 
+var IIASA_FML = ee.Image('projects/tmf-monitoring/assets/IIASAForestManagement2015/FML');
+
+var forest_IIASA = (IIASA_FML.eq(11)).or(IIASA_FML.eq(20))
+//Map.addLayer(forest_IIASA.updateMask(forest_IIASA),{min:1, max:1, palette:['green']},'forest_IIASA')
+
+////////////////////////////////////////////
+////MapBiomas Brazil https://plataforma.panamazonia.mapbiomas.org/ https://mapbiomas-br-site.s3.amazonaws.com/Legenda/C%C3%B3digos_Classes_Legenda_Cole%C3%A7%C3%A3o_7_-__PT__.docx__1___1_.pdf
+////////////////////////////////////////////
+
+var MapBiomasBR= ee.Image('projects/mapbiomas-workspace/public/collection7/mapbiomas_collection70_integration_v2').unmask();
+
+var MapBiomasBR_Forest2020=(((MapBiomasBR.select('classification_2020')).unmask()).eq(3))
+          .or(((MapBiomasBR.select('classification_2020')).unmask()).eq(4))
+                    .or(((MapBiomasBR.select('classification_2020')).unmask()).eq(5))
+                              .or(((MapBiomasBR.select('classification_2020')).unmask()).eq(49));
+
+var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+var Brazil = worldcountries.filter(ee.Filter.inList('country_co',(ee.List(['BR']))));
+var Brazil_img = ee.Image.constant(1).clip(Brazil);
+
+var MapBiomasBR_Forest2020 = MapBiomasBR_Forest2020.updateMask(Brazil_img)
+
+////////////////////////////////////////////
+////MapBiomas Indonesia  https://mapbiomas.nusantara.earth/assets/files/Kode%20Legenda%20-%20Legend%20Code.pdf
+////////////////////////////////////////////
+
+var MapBiomasIND =  ee.Image('projects/mapbiomas-indonesia/public/collection1/post_Integration_filter_rev_2_10_3').unmask().select('classification_2019')
+var MapBiomasIND_Forest2019 = (MapBiomasIND.eq(2)).or(MapBiomasIND.eq(3)).or(MapBiomasIND.eq(5)).or(MapBiomasIND.eq(9))
+var IND = worldcountries.filter(ee.Filter.inList('country_co',(ee.List(['ID']))));
+
+var IND_img = ee.Image.constant(1).clip(IND)
+var MapBiomasIND_Forest2019 = MapBiomasIND_Forest2019.updateMask(IND_img)
+
+////////////////////////////////////////////
+////MapBiomas Chaco  https://drive.google.com/file/d/1qQv36XwB6RvnoF6ABV8fbbop2BFrQAJH/view
+////////////////////////////////////////////
+
+var MapBiomasChaco =  ee.Image('projects/mapbiomas-chaco/public/collection3/mapbiomas_chaco_collection3_integration_v2').unmask().select('classification_2020');
+var MapBiomasChaco_foret = (MapBiomasChaco.eq(3)).or(MapBiomasChaco.eq(4)).or(MapBiomasChaco.eq(45))
+//Map.addLayer(MapBiomasChaco_foret.updateMask(MapBiomasChaco_foret),{min:1, max:1, palette:['green']},'MapBiomasChaco_foret');
+
+////////////////////////////////////////////
+////MapBiomas Pampa 
+////////////////////////////////////////////
+
+
+////////////////////////////////////////////
+////Global Land Cover 2000
+////////////////////////////////////////////
+
+var glc2000_SAM = ee.ImageCollection('users/vancuch/GLC2000_Regional')
+//Map.addLayer(glc2000_SAM,{min:0, max:50, palette:PALETTEGLC2000_SAM},'glc2000_SAM')
+
+var glc2000_ASIA = ee.Image('projects/tmf-monitoring/assets/GLC2000/se_asia_v3')
+//Map.addLayer(glc2000_ASIA.updateMask(glc2000_ASIA),{min:1, max:18, palette:PALETTEGLC2000_ASIA},'glc2000_ASIA')
+
+var glc2000_AFR = ee.Image('projects/tmf-monitoring/assets/GLC2000/Africa_v5')
+//Map.addLayer(glc2000_AFR.updateMask(glc2000_AFR),{min:0, max:27, palette:PALETTEGLC2000_AFR},'glc2000_AFR')
+
+
+////////////////////////////////////////////
+////JRC_TMF 2020
+////////////////////////////////////////////
+
+var Transition2020 = ee.ImageCollection('projects/JRC/TMF/v1_2020/TransitionMap_Subtypes').mosaic();
+var Transition2021 =ee.ImageCollection('users/bourgoinclement2/TMF2021/TransitionMap_C2').mosaic();
+var DegradationYear = ee.ImageCollection('projects/JRC/TMF/v1_2021/DegradationYear').mosaic();
+Map.addLayer(Transition2021,{},'Transition2021',false)
+var AnnualChange = ee.ImageCollection('projects/JRC/TMF/v1_2021/AnnualChanges').mosaic();
+var TMF_foret2020 = (AnnualChange.select('Dec2020').eq(1)).or(AnnualChange.select('Dec2020').eq(2)); 
+
+var TMF_foret2019 = (AnnualChange.select('Dec2019').eq(1)).or(AnnualChange.select('Dec2019').eq(2));
+Map.addLayer(TMF_foret2020.updateMask(TMF_foret2020) ,{min:1, max:1, palette:['green']}, "TMF Forest 2020",false);
+var TMFdomain2020 = (((AnnualChange.select('Dec2020')).gte(1)).and((AnnualChange.select('Dec2020')).lte(4)));
+TMFdomain2020=TMFdomain2020.or((Transition2021.gte(93)).and(Transition2021.lte(94))) //-48.8128099, -3.6451432
+
+////////////////////////////////////////////
+////GFC 2020
+////////////////////////////////////////////
+
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+//var gfcImageRegistered = gfcImage.reproject({crs: 'EPSG:4326',	scale: 30}).unmask();
+var treeCover = gfcImage.select(['treecover2000']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+Map.addLayer(lossYear,{},'lossYear Hansen',false);
+var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossYear.gte(1)).and(lossYear.lte(20));
+//GFC fire
+var fire_loss = ee.ImageCollection('users/sashatyu/2001-2020_fire_forest_loss').mosaic();
+var fire_loss_all = (fire_loss.gte(2)).and(fire_loss.lte(5));
+
+
+
+//From Guido:
+var forest2000 = ee.Image('users/guidolavespa2511/forest2000_at_1km');
+var threshold = 1600/2;
+var forest2000mask = forest2000.gte(threshold);
+
+////////////////////////////////////////////
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+////////////////////////////////////////////
+
+// Data values: 0 – no croplands or no data; 1 – croplands.
+// We define cropland as land used for annual and perennial herbaceous crops for human consumption, forage (including hay) and biofuel. 
+// Perennial woody crops, permanent pastures and shifting cultivation are excluded from the definition. 
+// The fallow length is limited to 4 years for the cropland class
+// 4-year epochs: 2000-2003, 2004-2007, 2008-2011, 2012-2015, 2016-2019
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
+
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
+
+////////////////////////////////////////////
+////Soja crops (South America)
+////////////////////////////////////////////
+
+var UMD_Soy = ee.ImageCollection('projects/glad/soy_annual_SA').sum();
+UMD_Soy = UMD_Soy.gte(1);
+
+////////////////////////////////////////////
+////Land use IC
+////////////////////////////////////////////
+
+
+////////////////////////////////////////////
+////Cocoa crops (IC, Ghana)
+////////////////////////////////////////////
+var cocoa_map_th = ee.Image('projects/ee-nk-cocoa/assets/cocoa_map_threshold_065');
+
+////////////////////////////////////////////
+////GEDI CH
+////////////////////////////////////////////
+//Lang et al. https://zenodo.org/record/5704852#.Y-pV_3aZNaQ
+
+var CH = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic()
+var CH_5m= CH.gt(5);
+
+Map.addLayer(CH.updateMask(CH),{},'CH',false);
+
+////////////////////////////////////////////
+////Copernicus 2019
+////////////////////////////////////////////
+
+var lc2019 = ee.Image("COPERNICUS/Landcover/100m/Proba-V-C3/Global/2019");
+Map.addLayer(lc2019.select('discrete_classification'),{},'lc2019 class',false)
+Map.addLayer(lc2019.select('tree-coverfraction'),{},'lc2019 tree cover',false)
+
+var lc2019_foret_Vogt=  ((lc2019.select('tree-coverfraction')).gte(30)).or((lc2019.select('discrete_classification').gte(111).and(lc2019.select('discrete_classification').lte(116))));
+//Map.addLayer(lc2019_foret_Vogt.updateMask(lc2019_foret_Vogt) ,{min:1, max:1, palette:['green']}, "Copernicus Forest Vogt 2019",true)
+
+var lc2019_foret= ((lc2019.select('tree-coverfraction')).gte(10)).and((lc2019.select('discrete_classification').gte(111).and(lc2019.select('discrete_classification').lte(116))).or(lc2019.select('discrete_classification').gte(121).and(lc2019.select('discrete_classification').lte(126))))    
+//Map.addLayer(lc2019_foret.updateMask(lc2019_foret) ,{min:1, max:1, palette:['green']}, "Copernicus Forest 2019",true)
+
+var lc2019_foret_outTMFdomain = lc2019_foret.where(TMFdomain2020,0);
+Map.addLayer(lc2019_foret_outTMFdomain.updateMask(lc2019_foret_outTMFdomain) ,{min:1, max:1, palette:['green']}, "Copernicus Forest outTMF 2019",true)
+
+lossYearGFC2000_2020 = lossYearGFC2000_2020.where(fire_loss_all.and(lc2019_foret_outTMFdomain.not()),0); // mask out GFC loss due to fire for non TMF forests
+
+//var lc2019_foret_TMFdomain = TMF_foret2019;
+//var lc2019_foret = lc2019_foret_TMFdomain.unmask().where(lc2019_foret_outTMFdomain,1);
+
+////////////////////////////////////////////
+////Oil palm plantation Descals
+////////////////////////////////////////////
+
+var dataset = ee.ImageCollection('BIOPAMA/GlobalOilPalm/v1').select('classification').mosaic();
+var opClass = ((dataset.eq(1)).or(dataset.eq(2))).rename('b1').unmask();
+
+//https://essd.copernicus.org/preprints/essd-2022-463/
+var COCONUTfinal = ee.ImageCollection('projects/ee-globaloilpalm/assets/_COCONUT/results/GCL_2020_v1-1') // same as '_COCONUT/shared/GCL_2020_v1-1'
+  .mosaic();
+
+
+////////////////////////////////////////////
+////Cropland Mask AFR 250m (JRC-D5)  https://www.mdpi.com/2072-4292/5/1/19
+////////////////////////////////////////////
+
+//var cropmaskAFR_JRC2013=ee.Image('users/vancuch/Cropland/AFR2013').unmask(); 
+//Map.addLayer(cropmaskAFR_JRC2013.updateMask(cropmaskAFR_JRC2013),{'min':0, 'max': 1, 'palette': 'red'}, "Cropland mask 2013 (250m)",true);
+
+
+////////////////////////////////////////////
+////Forest map Tanzania (Astrid)
+////////////////////////////////////////////
+ 
+    // '<ColorMapEntry color="#267300" quantity="101" label="101 Tree Cover > 80% (Closed forest Evergreen)"/>' +
+    // '<ColorMapEntry color="#38a800" quantity="102" label="102 Tree Cover > 80% (Closed forest Deciduous)"/>' +          
+          
+    // '<ColorMapEntry color="#425600" quantity="11" label="11 Tree Cover 40-80 % (Closed Woodland/Bushland)"/>' +
+    // '<ColorMapEntry color="#a9ca00" quantity="12" label="12 10-40 % Tree Cover (Open woodland/ Bushland)"/>' +
+    // '<ColorMapEntry color="#e3ff73" quantity="21" label="21 Grassland with Tree Cover 5-10% (Trees outside forest)"/>' +
+    // '<ColorMapEntry color="#e3bdff" quantity="32" label="32  Grassland and Agriculture"/>' +
+    // '<ColorMapEntry color="#5d0003" quantity="33" label="33 Settlements and Bare soil"/>' +
+    
+    // '<ColorMapEntry color="#0300ff" quantity="34" label="34 Water"/>' +
+    
+var Tanzania = ee.Image('projects/ee-baudi/assets/tz_2018_verh_win_RF');
+Map.addLayer(Tanzania.updateMask(Tanzania),{},'Tanzania',false)
+
+//var forest_Tanzania = (Tanzania.eq(11)).or(Tanzania.eq(12)).or(Tanzania.eq(101)).or(Tanzania.eq(102))
+var forest_Tanzania = (Tanzania.eq(11)).or(Tanzania.eq(101)).or(Tanzania.eq(102))
+
+//Map.addLayer(forest_Tanzania.updateMask(forest_Tanzania),{min:1, max:1, palette:['red']},'forest_Tanzania')
+
+
+
+////////////////////////////////////////////
+////CAFI FAO forest map
+////////////////////////////////////////////
+
+var CAFI_FAO = ee.Image('projects/cafi_fao_congo/classification/FNF_2015')
+//Map.addLayer(CAFI_FAO.updateMask(CAFI_FAO),{min:1, max:1, palette:['green']},'CAFI_FAO')
+
+////////////////////////////////////////////
+////WorldCover 2020
+////////////////////////////////////////////
+
+var visualization = {
+  bands: ['Map'],
+};
+
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first();
+//var WC2020 = ee.ImageCollection("ESA/WorldCover/v200").first();
+
+//Map.addLayer(WC2020,visualization,'WC 2020')
+
+var WC2020_foret = WC2020.eq(10);
+Map.addLayer(WC2020_foret.updateMask(WC2020_foret),{min:1, max:1, palette:['green']},'WC2020_foret 2020')
+
+
+
+////////////////////////////////////////////
+////Harmonized forest map 2020
+////////////////////////////////////////////
+
+// ‘forest’ means land spanning more than 0,5 hectares with trees higher than 5 metres and a 
+// canopy cover of more than 10%, or trees able to reach those thresholds in situ, excluding 
+// land that is predominantly under agricultural or urban land use;
+
+//* TMF domain
+var WC2020_foret_TMF= WC2020_foret.updateMask(TMF_foret2020);
+
+//* out TMF domain
+var WC2020_foret_outTMF = WC2020_foret.where(TMFdomain2020,0); //Issue here: (-48.717811, -3.624817)
+Map.addLayer(WC2020_foret_outTMF.updateMask(WC2020_foret_outTMF),{min:1, max:1, palette:['green']},'Step0 WC2020 foret outTMF')
+
+WC2020_foret_outTMF = WC2020_foret_outTMF.where(lc2019_foret_outTMFdomain.not(),0);
+Map.addLayer(WC2020_foret_outTMF.updateMask(WC2020_foret_outTMF),{min:1, max:1, palette:['green']},'Step1 mask WC2020_foret_outTMF using Copernicus')
+
+WC2020_foret_outTMF = WC2020_foret_outTMF.where(lossYearGFC2000_2020,0); //we want to exclude degraded forest detected as GFC loss except in the TM domain
+Map.addLayer(WC2020_foret_outTMF.updateMask(WC2020_foret_outTMF),{min:1, max:1, palette:['green']},'Step2 mask WC2020_foret_outTMF using GFC')
+
+//WC2020_foret_outTMF = WC2020_foret_outTMF.where(IIASA_FML.gt(11),0); //Guido look if worth integrating
+
+
+
+//* Combination two domains
+var WC2020_foret_final =WC2020_foret_TMF.unmask().where(WC2020_foret_outTMF,1);
+
+//*Additional rules at the global level
+//Mask land that is predominantly under agricultural use
+WC2020_foret_final = WC2020_foret_final.where(SDPT_ori,0);
+WC2020_foret_final = WC2020_foret_final.where(opClass,0);
+WC2020_foret_final = WC2020_foret_final.where(cropmask_UMD,0);
+WC2020_foret_final = WC2020_foret_final.where(UMD_Soy,0);
+WC2020_foret_final = WC2020_foret_final.where(cocoa_map_th,0);
+//WC2020_foret_final = WC2020_foret_final.where(cropmaskAFR_JRC2013,0);
+WC2020_foret_final = WC2020_foret_final.where(COCONUTfinal,0);
+
+//Mask tree cover less than 5m + MMU
+WC2020_foret_final = WC2020_foret_final.where(CH_5m.not(),0);
+//WC2020_foret_final = WC2020_foret_final.updateMask(forest2000mask);
+
+
+
+
+// WC2020_foret_final = WC2020_foret_final.where((MapBiomasBR_Forest2020.not()).and(Brazil_img),0);
+// WC2020_foret_final = WC2020_foret_final.where((MapBiomasIND_Forest2019.not()).and(IND_img),0);
+
+
+Map.addLayer(WC2020_foret_final.updateMask(WC2020_foret_final),{min:1, max:1, palette:['green']},'WC2020_foret FINAL 2020')
+
+var planet = ee.ImageCollection("projects/planet-nicfi/assets/basemaps/americas").filter(ee.Filter.eq('cadence','monthly')) //resp. change continents + biannual
+              .filterDate('2021-01-01','2021-02-01').first(); //'2022-11-01','2022-12-01'
+
+Map.addLayer(planet, {"opacity":1,"bands":["R","G","B"],"min":405.79,"max":4499.71,"gamma":2.331},'Planet',false);
+
