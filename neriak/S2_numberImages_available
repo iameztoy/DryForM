@@ -1,17 +1,16 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var region = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-61.887384945384326, -17.885437690292694],
-          [-61.887384945384326, -24.157524637373033],
-          [-54.636408382884326, -24.157524637373033],
-          [-54.636408382884326, -17.885437690292694]]], null, false);
+        [[[-86.49675994538433, 16.22443815935565],
+          [-86.49675994538433, -50.142230153176236],
+          [-31.609064632884326, -50.142230153176236],
+          [-31.609064632884326, 16.22443815935565]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var s2Sr = ee.ImageCollection('COPERNICUS/S2_SR');
 var s2Clouds = ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY');
