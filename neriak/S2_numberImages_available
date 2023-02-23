@@ -16,8 +16,8 @@ var region =
 var s2Sr = ee.ImageCollection('COPERNICUS/S2_SR');
 var s2Clouds = ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY');
 
-var START_DATE = ee.Date('2015-01-01');
-var END_DATE = ee.Date('2020-01-01');
+var START_DATE = ee.Date('2020-01-01');
+var END_DATE = ee.Date('2021-01-01');
 var MAX_CLOUD_PROBABILITY = 65;
 
 function maskClouds(img) {
