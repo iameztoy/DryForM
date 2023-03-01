@@ -2,7 +2,8 @@
 var co = ee.FeatureCollection("users/iameztoy/dryform/fn1d"),
     xsei = ee.FeatureCollection("users/iameztoy/1degx6"),
     xhogei = ee.FeatureCollection("users/iameztoy/1degx20"),
-    img = ee.Image("DLR/WSF/WSF2015/v1");
+    img = ee.Image("DLR/WSF/WSF2015/v1"),
+    table = ee.FeatureCollection("users/iameztoy/1degx20str");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Fishnet + GADM spatial join
 var cont = ["Africa"];
@@ -11,10 +12,39 @@ Map.addLayer(sel);
 
 
 
+////// BACKUP /////////
+
+var colFunc = function(f) {
+  var dis = f.get("idstr");
+  var clipped = img.clip(f).set("idstr", dis);
+  return clipped;
+};
+
+var ic = ee.ImageCollection(table.map(colFunc));
+
+print(ic);
+
+////////////// EXPORTING ///////////////////////
+var featlist = table.getInfo()["features"];
+for (var f in featlist) {
+  var f = ee.Feature(featlist[f]);
+  var dis = f.get("idstr");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: img,
+    description: name+disS,
+    folder: "EEtest",
+    fileNamePrefix: name+disS,
+    region: f.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+////////////////////////////////////////////////
 
 
-
-
+/*
 ////// BACKUP /////////
 
 var colFunc = function(feat) {
@@ -45,5 +75,5 @@ for (var f in featlist) {
   });
 }
 ////////////////////////////////////////////////
-
+*/
 
