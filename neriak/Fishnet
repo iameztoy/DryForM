@@ -9,9 +9,12 @@ var co = ee.FeatureCollection("users/iameztoy/dryform/fn1d"),
 //Fishnet + GADM spatial join
 var cont = ["Africa"];
 var sel = table2.filter(ee.Filter.inList('CONTINENT', cont));
-var seld = sel.filter(ee.Filter.lt("id"), 500)
+print(sel)
+var seld = sel.filter(ee.Filter.lt("id", 7800));
 Map.addLayer(sel);
+Map.addLayer(seld);
 
+/*
 
 var colFunc = function(f) {
   var dis = f.get("idstr");
