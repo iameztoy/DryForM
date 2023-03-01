@@ -1,14 +1,46 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var co = ee.FeatureCollection("users/iameztoy/dryform/fn1d");
+var co = ee.FeatureCollection("users/iameztoy/dryform/fn1d"),
+    xsei = ee.FeatureCollection("users/iameztoy/1degx6"),
+    xhogei = ee.FeatureCollection("users/iameztoy/1degx20"),
+    img = ee.Image("DLR/WSF/WSF2015/v1");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Fishnet + GADM spatial join
-
 var cont = ["Africa"];
 var sel = co.filter(ee.Filter.inList('CONTINENT', cont));
+Map.addLayer(sel);
 
 
-Map.addLayer(sel)
+////////
 
+/////////////// TO IMAGECOLLECTION //////////////////////// 
+// Function to make the Image Collection
+var colFunc = function(feat) {
+  var dis = feat.get("myname");
+  var clipped = img.clip(feat).set("myname", dis);
+  return clipped;
+};
+// Map the FC to an IC 
+var imcol = ee.ImageCollection(xhogei.map(colFunc));
 
+print(imcol);
+
+////////////// EXPORTING ///////////////////////
+var featlist = xhogei.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("myname");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: img,
+    description: name+disS.toString(),
+    folder: "EEtest",
+    fileNamePrefix: name+disS.toString(),
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+////////////////////////////////////////////////
 
 
