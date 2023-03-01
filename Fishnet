@@ -1,10 +1,14 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var co = ee.FeatureCollection("users/iameztoy/dryform/fn1d");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Fishnet + GADM spatial join
 
+var cont = ["Africa"];
+var sel = co.filter(ee.Filter.inList('CONTINENT', cont));
 
-var cont = ["Africa"]; // for "NAME_0" attribute
 
-var sel = ee.FeatureCollection('users/iameztoy/dryform/fn1d')
-        .filter(ee.Filter.inList('CONTINENT', cont));
 Map.addLayer(sel)
-//Map.addLayer(table)
+
+
+
 
