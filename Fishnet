@@ -1,0 +1,10 @@
+//Fishnet + GADM spatial join
+
+
+var cont = ["Africa"]; // for "NAME_0" attribute
+
+var sel = ee.FeatureCollection('users/iameztoy/dryform/fn1d')
+        .filter(ee.Filter.inList('CONTINENT', cont));
+Map.addLayer(sel)
+//Map.addLayer(table)
+
