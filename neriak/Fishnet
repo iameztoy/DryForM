@@ -18,31 +18,31 @@ Map.addLayer(seld);
 var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean')
 
 
-/*
 
-var colFunc = function(f) {
-  var dis = f.get("idstr");
-  var clipped = img.clip(f).set("idstr", dis);
+
+var colFunc = function(feat) {
+  var dis = feat.get("id");
+  var clipped = img.clip(feat).set("id", dis);
   return clipped;
 };
 
-var ic = ee.ImageCollection(sel.map(colFunc));
+var imcol = ee.ImageCollection(Zones.map(colFunc));
 
-print(ic);
+print(imcol);
 
 ////////////// EXPORTING ///////////////////////
-var featlist = sel.getInfo()["features"];
+var featlist = Zones.getInfo()["features"];
 for (var f in featlist) {
-  var f = ee.Feature(featlist[f]);
-  var dis = f.get("idstr");
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toDrive({
     image: img,
-    description: name+disS,
+    description: name+disS.toString(),
     folder: "EEtest",
-    fileNamePrefix: name+disS,
-    region: f.geometry().bounds(),
+    fileNamePrefix: name+disS.toString(),
+    region: feat.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
   });
