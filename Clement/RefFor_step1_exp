@@ -59,9 +59,9 @@ Global_forest_step1 = Global_forest_step1.where(CH_GEDI.lt(5),0);
 // In order to avoid manual work to start the Tasks, EE extension for Chrome can be used (i.e RUN ALL option). 
 // If this is used, its convenient to filter the tiles per id e.g. from 0 to 150 and from 151 to 301. Files should be downloaded and removed from Drive before launching the second round.
 
-var img = Global_forest_step1.updateMask(Global_forest_step1)
-print(img)
-var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean')
+var img = Global_forest_step1.updateMask(Global_forest_step1);
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+
 
 var colFunc = function(feat) {
   var dis = feat.get("id");
