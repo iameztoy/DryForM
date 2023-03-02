@@ -14,6 +14,10 @@ var seld = sel.filter(ee.Filter.lt("id", 7800));
 Map.addLayer(sel);
 Map.addLayer(seld);
 
+//FN 10 deg.
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean')
+
+
 /*
 
 var colFunc = function(f) {
