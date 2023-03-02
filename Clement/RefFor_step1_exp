@@ -63,12 +63,12 @@ var img = Global_forest_step1.updateMask(Global_forest_step1);
 var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
 
 // to further develop
-var len = Zones.toList(1000).length().subtract(1)
+var len = Zones.toList(1000).length().subtract(150)
 var idList = ee.List.sequence(0,len)
 print(idList)
 
-var tableWithId = table.set('id',idList)
-print(tableWithId.get('id'))
+var fil = Zones.filter(ee.Filter.inList('id', idList))
+print(fil)
 // END //
 
 var colFunc = function(feat) {
