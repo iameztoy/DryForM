@@ -45,15 +45,13 @@ Global_forest_step1 = Global_forest_step1.where(lossYearGFC2000_2020,0);
 Global_forest_step1 = Global_forest_step1.where(cropmask_UMD,0);
 Global_forest_step1 = Global_forest_step1.where(CH_GEDI.lt(5),0);
 
-//Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1)) 
+Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1)) 
 
 var img = Global_forest_step1.updateMask(Global_forest_step1)
 print(img)
 
 
 //////////// CLIP and Export 10deg tiles
-
-
 //FN 10 deg. (301 features) 
 //Note: this method may trigger browser error. If so, use python API version
 
@@ -86,4 +84,5 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
+
 
