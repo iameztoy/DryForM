@@ -51,8 +51,13 @@ Global_forest_step1 = Global_forest_step1.where(CH_GEDI.lt(5),0);
 // END v1 //
 
 //////////// CLIP and Export 10deg tiles
-//FN 10 deg. (301 features) 
-//Note: this method may trigger browser error. If so, use python API version
+
+// NOTES (IAA 2023/03/02):
+// 10 deg. fishnet with 301 features. Unique identifier attribute: id
+// Note: this method may trigger browser error. If so, use python API version alternativelly. 
+// Each tile exported is 80 Mb approx. With 15Gb drive storage, the entire process could be completed in two runs, i.e 150 tiles each (+1)
+// In order to avoid manual work to start the Tasks, EE extension for Chrome can be used (i.e RUN ALL option). 
+// If this is used, its convenient to filter the tiles per id e.g. from 0 to 150 and from 151 to 301. Files should be downloaded and removed from Drive before launching the second round.
 
 var img = Global_forest_step1.updateMask(Global_forest_step1)
 print(img)
