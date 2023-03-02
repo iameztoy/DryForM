@@ -48,7 +48,7 @@ Global_forest_step1 = Global_forest_step1.where(CH_GEDI.lt(5),0);
 //Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1)) 
 
 
-
+// END v1 //
 
 //////////// CLIP and Export 10deg tiles
 //FN 10 deg. (301 features) 
