@@ -1,0 +1,9 @@
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+
+Export.table.toDrive({
+  collection: Zones,
+  description: 'zones10deg',
+  folder: 'eeTable',
+  fileFormat: 'SHP',
+  //selectors: ['B8', 'B11', 'B12', '.geo']
+});
