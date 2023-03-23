@@ -1,6 +1,8 @@
-var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/arc_deforestation");
-var roii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
+var roii = ee.FeatureCollection("users/cyberiba/LegalAmazon/arc_deforestation");
+var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
 var roiii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Amazon_biome");
+
+//edit sum, mean lines 64 and 104
 
 var chirps = ee.ImageCollection('UCSB-CHG/CHIRPS/PENTAD');
 print(chirps)
@@ -61,7 +63,7 @@ print(annualPrecip)
 var chart = ui.Chart.image.seriesByRegion({
   imageCollection: annualPrecip, 
   regions: roi,
-  reducer: ee.Reducer.mean(),
+  reducer: ee.Reducer.sum(),
   band: 'precipitation',
   scale: projection.nominalScale(), // original 2500
   xProperty: 'system:time_start',
