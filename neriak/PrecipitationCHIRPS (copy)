@@ -1,0 +1,142 @@
+var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/arc_deforestation");
+var roii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
+var roiii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Amazon_biome");
+
+var chirps = ee.ImageCollection('UCSB-CHG/CHIRPS/PENTAD');
+print(chirps)
+
+// set the projection variable so we can use to the reducer
+// afterwards with the nominal scale
+var projection = ee.Image(chirps.first()).projection()  
+
+
+
+//defines period of interest
+var startyear = 1981; 
+var endyear = 2023; 
+
+var startmonth = 1;
+var endmonth = 12;
+
+var startdate = ee.Date.fromYMD(startyear, startmonth, 1);
+var enddate = ee.Date.fromYMD(endyear , endmonth, 1);
+
+var years = ee.List.sequence(startyear, endyear);
+
+//select data for the period of interest and place
+var precip = chirps.filterDate(startdate, enddate)
+  .sort('system:time_start', false)
+  .filterBounds(roi);
+
+//function for calculating the annual precipitation
+var annualPrecip = ee.ImageCollection.fromImages(
+  years.map(function (year) {
+    var annual = precip
+        .filter(ee.Filter.calendarRange(year, year, 'year'))
+        .sum();
+    return annual
+        .set('year', year)
+        .set('system:time_start', ee.Date.fromYMD(year, 1, 1));
+}));
+
+//set up visualiztion parameter for the image and bar chart
+
+
+var pViz = {
+  min: -1, 
+  max: 1, 
+  palette: '000000, 0000FF, FDFF92, FF2700, FF00E7'
+};
+
+var title = {
+  title: 'Annual precipitation',
+  hAxis: {title: 'Time'},
+  vAxis: {title: 'Precipitation (mm)'},
+};
+
+
+//crate a chart for yearly precipitation data ,using the geometry, and a reducer for 
+//calculating mean precipitation area
+print(annualPrecip)
+var chart = ui.Chart.image.seriesByRegion({
+  imageCollection: annualPrecip, 
+  regions: roi,
+  reducer: ee.Reducer.mean(),
+  band: 'precipitation',
+  scale: projection.nominalScale(), // original 2500
+  xProperty: 'system:time_start',
+  seriesProperty: 'SITE'
+}).setOptions(title)
+  .setChartType('ColumnChart');
+
+//display the results by printing the chart and adding mean precipitation to the map
+
+print(chart);
+
+/*
+var annualMean = annualPrecip.mean().clip(roi);
+Map.centerObject(roi, 7);
+Map.addLayer(annualMean, pViz, 'mean yearly P');
+*/
+
+//calculating monthly precipitation for the region
+
+var months = ee.List.sequence(1, 12);
+var monthlyPrecip =  ee.ImageCollection.fromImages(
+  years.map(function (y) {
+    return months.map(function(m) {
+    // var n=m+1;
+     //print(m)
+      var w = precip.filter(ee.Filter.calendarRange(y, y, 'year'))
+                    .filter(ee.Filter.calendarRange(m, m, 'month'))
+                    .sum();
+      return w.set('year', y)
+              .set('month', m)
+              .set('system:time_start', ee.Date.fromYMD(y, m, 1));
+                        
+    });
+  }).flatten()
+);
+
+//var monthlyMean = monthlyPrecip.mean().clip(roi);
+
+
+print(ui.Chart.image.series(monthlyPrecip , roi, ee.Reducer.sum(), projection.nominalScale()) // original 2500
+.setOptions({
+  title: "Precipitation mean by month of the year ",
+  hAxis: {title: 'Time'},
+  vAxis: {title: 'Precipitation (mm)'},
+  colors: ['#EF851C'],
+  pointSize: 3}));
+  
+/////////////////////////////////////////
+
+var chirps2021 = chirps.filterDate('2021-01-01', '2021-12-31');
+var rainfall2021 = chirps2021.sum().clip(roi);
+
+
+var chirpsbaseline = chirps.filterDate('1980-01-01', '2010-12-31').sum();
+var baseline = chirpsbaseline.divide(20)
+var anom2021 = rainfall2021.subtract(baseline)
+
+//Palettes from https://github.com/gee-community/ee-palettes
+var palettes = require('users/gena/packages:palettes');
+var palette = palettes.colorbrewer.RdBu[9];
+
+/////////////////////////
+
+var dataset = ee.ImageCollection('FIRMS').filter(
+    ee.Filter.date('2021-01-01', '2021-12-31'));
+var fires = dataset.select('T21');
+
+
+var firesVis = {
+  min: 325.0,
+  max: 400.0,
+  palette: ['red', 'orange', 'yellow'],
+};
+
+Map.addLayer(baseline, {'min': 0, 'max': 4000, 'palette':"CCFFCC,00CC66,006600"}, "baseline 1980-2010", false);
+Map.addLayer(rainfall2021, {'min': 0, 'max': 4000, 'palette':"CCFFCC,00CC66,006600"}, "2021", false);
+Map.addLayer(anom2021, {'min': -1500, 'max': 200, palette: palette}, "anom2021");
+Map.addLayer(fires, firesVis, 'Fires');
