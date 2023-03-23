@@ -1,3 +1,5 @@
+//Region of Interest variable is roi | 
+
 var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/arc_deforestation");
 var roii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
 var roiii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Amazon_biome");
