@@ -1,8 +1,8 @@
 var roii = ee.FeatureCollection("users/cyberiba/LegalAmazon/arc_deforestation");
-var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
-var roiii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Amazon_biome");
+var roiii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
+var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/Amazon_biome");
 
-//edit sum, mean lines 64 and 104
+//edit sum, mean lines 66 and 106 and stdDev for annual values
 
 var chirps = ee.ImageCollection('UCSB-CHG/CHIRPS/PENTAD');
 print(chirps)
@@ -63,7 +63,7 @@ print(annualPrecip)
 var chart = ui.Chart.image.seriesByRegion({
   imageCollection: annualPrecip, 
   regions: roi,
-  reducer: ee.Reducer.sum(),
+  reducer: ee.Reducer.mean(),
   band: 'precipitation',
   scale: projection.nominalScale(), // original 2500
   xProperty: 'system:time_start',
@@ -103,7 +103,7 @@ var monthlyPrecip =  ee.ImageCollection.fromImages(
 //var monthlyMean = monthlyPrecip.mean().clip(roi);
 
 
-print(ui.Chart.image.series(monthlyPrecip , roi, ee.Reducer.sum(), projection.nominalScale()) // original 2500
+print(ui.Chart.image.series(monthlyPrecip , roi, ee.Reducer.mean(), projection.nominalScale()) // original 2500
 .setOptions({
   title: "Precipitation mean by month of the year ",
   hAxis: {title: 'Time'},
@@ -113,7 +113,7 @@ print(ui.Chart.image.series(monthlyPrecip , roi, ee.Reducer.sum(), projection.no
   
 /////////////////////////////////////////
 
-var chirps2021 = chirps.filterDate('2021-01-01', '2021-12-31');
+var chirps2021 = chirps.filterDate('2022-01-01', '2022-12-31');
 var rainfall2021 = chirps2021.sum().clip(roi);
 
 
@@ -128,7 +128,7 @@ var palette = palettes.colorbrewer.RdBu[9];
 /////////////////////////
 
 var dataset = ee.ImageCollection('FIRMS').filter(
-    ee.Filter.date('2021-01-01', '2021-12-31'));
+    ee.Filter.date('2022-01-01', '2022-12-31'));
 var fires = dataset.select('T21');
 
 
