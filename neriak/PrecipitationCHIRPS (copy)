@@ -1,7 +1,7 @@
 //Region of Interest variable is roi | 
 
-var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/arc_deforestation");
-var roii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
+var roii = ee.FeatureCollection("users/cyberiba/LegalAmazon/arc_deforestation");
+var roi = ee.FeatureCollection("users/cyberiba/LegalAmazon/Brazil_amazonia_legal");
 var roiii = ee.FeatureCollection("users/cyberiba/LegalAmazon/Amazon_biome");
 
 //edit sum, mean lines 66 and 106 and stdDev for annual values
