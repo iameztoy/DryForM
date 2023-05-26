@@ -1,21 +1,17 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AOI = 
-    /* color: #98ff00 */
-    /* shown: false */
+    /* color: #ffc82d */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-2.607457627365215, 43.525397511477244],
-          [-2.607457627365215, 42.84852962626335],
-          [-1.607701767990215, 42.84852962626335],
-          [-1.607701767990215, 43.525397511477244]]], null, false),
-    p = 
-    /* color: #0b4a8b */
-    /* shown: false */
-    ee.Geometry.Point([-2.063634385177715, 43.20191815560486]);
+        [[[-6.42888147043225, 37.0178412098387],
+          [-6.42888147043225, 37.00276281760778],
+          [-6.410342041721313, 37.00276281760778],
+          [-6.410342041721313, 37.0178412098387]]], null, false),
+    p = /* color: #00ffff */ee.Geometry.Point([-6.425054993365427, 37.00678265664458]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Phenology metrics from https://www.mdpi.com/2673-7418/3/1/12
 //A Google Earth Engine Algorithm to Map Phenological Metrics in Mountain Areas Worldwide with Landsat Collection and Sentinel-2
@@ -529,7 +525,7 @@ Map.add(ui.Panel([ui.Label('Length of Season', LEGEND_TITLE_STYLE),makeLegend(vi
 var titleLabel = ui.Label('PHENOLOGICAL METRICS ESTIMATOR IN MOUNTAIN AREAS (PMEMA)'+year1+'', {fontWeight: 'bold', fontSize: '20px'});
 
 Map.add(titleLabel);
-Map.addLayer(geometry,{min:0,max:1},'point',true);
+Map.addLayer(AOI,{min:0,max:1},'point',true);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////
