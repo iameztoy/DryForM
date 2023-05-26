@@ -7,10 +7,10 @@ var AOI =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-63.118000157615946, -18.81238721326395],
-          [-63.118000157615946, -28.11044066114034],
-          [-53.054523595115946, -28.11044066114034],
-          [-53.054523595115946, -18.81238721326395]]], null, false),
+        [[[-58.174152501365946, -23.281398314694723],
+          [-58.174152501365946, -24.826307934507852],
+          [-56.130695470115946, -24.826307934507852],
+          [-56.130695470115946, -23.281398314694723]]], null, false),
     p = /* color: #ff0000 */ee.Geometry.Point([-56.91057456328611, -23.279441411461253]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // IAA Feb. 2023
@@ -518,9 +518,32 @@ var LEGEND_FOOTNOTE_STYLE = {
       margin: '4px',
 };
 
-Map.add(ui.Panel([ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-EOS['min'],visEOS['max']), ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
-Map.add(ui.Panel([ui.Label('Start of Season', LEGEND_TITLE_STYLE),makeLegend(visSOS['min'],visSOS['max']),ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
-Map.add(ui.Panel([ui.Label('Length of Season', LEGEND_TITLE_STYLE),makeLegend(visLOS['min'],visLOS['max']),ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel(
+[
+ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-
+EOS['min'],visEOS['max']),
+ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)
+],
+ui.Panel.Layout.flow('vertical'),
+{width: '230px', position: 'bottom-left'}));
+
+Map.add(ui.Panel(
+[
+ui.Label('Start of Season', LEGEND_TITLE_STYLE),
+makeLegend(visSOS['min'],visSOS['max']),
+ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)
+],
+ui.Panel.Layout.flow('vertical'),
+{width: '230px', position: 'bottom-left'}));
+
+Map.add(ui.Panel(
+[
+ui.Label('Length of Season', LEGEND_TITLE_STYLE),
+makeLegend(visLOS['min'],visLOS['max']),
+ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)
+],
+ui.Panel.Layout.flow('vertical'),
+{width: '230px', position: 'bottom-left'}));
 
 var titleLabel = ui.Label('PHENOLOGICAL METRICS ESTIMATOR IN MOUNTAIN AREAS (PMEMA)'+year1+'', {fontWeight: 'bold', fontSize: '20px'});
 
