@@ -63,23 +63,31 @@ print(parts);
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // SET AREA - your Area of Interest (AOI) as feture collection by importing into the Assets or drawing it
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 var ROI = AOI;
 Map.centerObject(ROI,6);
+
 // (Optional) Set a point in which you want to compute PME or a polygon
 // WARNING if noting it will be set indicate the same name of the ROI it will return
 //errors in the console if the areas are too wide but the code works perfectly you o0nly have to export
 var point = p;
 //var geometry = g;
+
 /////////////////////////////////////////////////////////////////////////
 // SET TIME
 //////////////////////////////////////////////////////////////////////////
+
 // Set processing year of interest
 var year1 = 2020;
+
 // Set composites temporal resolution - LAG
 var lag = 20;
+
 // Define the time range to compute the PME. As Phenological Active Season it is suggested
 var startDate = year1+'-01-31'; // YYY-MM-DD start YYYY-03-01
 var endDate = year1+'-12-31'; // YYY-MM-DD start YYYY-12-20
+
+
 //////////////////////////////////////////////////////////////////////////////////////////
 // SET VI - the vegetation index (VI) on which you like to compute PME
 // (VI) options:
@@ -88,6 +96,8 @@ var endDate = year1+'-12-31'; // YYY-MM-DD start YYYY-12-20
 // 'ndpi' : normalized difference phenology index
 // 'gcc' : Green chromatic coordinate
 // For further information please see: https://www.indexdatabase.de/
+
+
 var VI_index = 'ndvi' ;
 // Set the percentage of amplitude for the estimation of the threshold
 var th = 0.5; // advice 0.2-0.8
@@ -101,6 +111,7 @@ var scale = 1000;
 // PART II -- FUNCTION SETTINGS TO PERFORM CUBIC INTERPOLATION
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////
+
 var cubicInterpolation = function(collection,step){
 var listDekads = ee.List.sequence(1, collection.size().subtract(3), 1);
 var colInterp = listDekads.map(function(ii){
@@ -125,7 +136,9 @@ var b = (f0.multiply(-3)).add(f1.multiply(3)).subtract(f0p.multiply(2)).subtract
 f1p);
 var c = f0p;
 var d = f0;
+
 //////////////
+
 var xValues = ee.List.sequence(0,diff12.subtract(1),step); ////!!!!!!!!!!!!!!!
 var xDates = ee.List.sequence(p1.get('system:time_start'),p2.get('system:time_start'),86400000);
 print(xDates);
@@ -151,12 +164,14 @@ return colInterp;
 // at the beginning /* at the end */ only in the collection!!!
 /// SELECT SENTINEL-2 or LANDSAT
 // Sentinel-2 Collection
+
 var S2 = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED")
 .filterDate(startDate,endDate)
 .filterBounds(ROI)
 .filterMetadata('CLOUD_COVERAGE_ASSESSMENT','less_than',50);
 //.filterMetadata('SNOW_ICE_PERCENTAGE','less_than',70);
 // Mask clouds, snow, shadows
+
 var S2 = S2.map(function(im){
 // Adopt SCL mask
 var SCL = im.select('SCL');
@@ -168,16 +183,16 @@ var green = im.select('B3').multiply(0.0001);
 var red = im.select('B4').multiply(0.0001);
 var nir = im.select('B8').multiply(0.0001);
 var swir = im.select('B12').multiply(0.0001);
+
 // Generate VIs
+
 var ndvi = im.normalizedDifference(['B8','B4']).rename('ndvi');
-var evi = (ee.Image(2.5).multiply(nir.subtract(red))).divide(nir.add(red.multiply(
-6)).subtract(blue.multiply(7.5)).add(1)).rename('evi');
+var evi = (ee.Image(2.5).multiply(nir.subtract(red))).divide(nir.add(red.multiply(6)).subtract(blue.multiply(7.5)).add(1)).rename('evi');
 var gcc = green.divide(green.add(red).add(blue)).rename('gcc');
 var alpha = ee.Image(0.51); // alpha variable in NDPI formula
-var ndpi = (nir.subtract(alpha.multiply(red).add((ee.Image(1).subtract(alpha)).multiply(
-swir)))).divide(nir.add(alpha.multiply(red).add((ee.Image(1).subtract(alpha)).multiply(
-swir)))).rename('ndpi');
+var ndpi = (nir.subtract(alpha.multiply(red).add((ee.Image(1).subtract(alpha)).multiply(swir)))).divide(nir.add(alpha.multiply(red).add((ee.Image(1).subtract(alpha)).multiply(swir)))).rename('ndpi');
 // https://www.pucv.cl/uuaa/labgrs/proyectos/avocado
+
 // Set VI of interest
 var bio = ndvi.addBands(evi).addBands(ndpi).addBands(gcc).select(VI_index).rename('bio');
 return bio.where(bio.lt(threshMin),threshMin) // force low values to threshMin
@@ -185,6 +200,8 @@ return bio.where(bio.lt(threshMin),threshMin) // force low values to threshMin
 .updateMask(SCLmask) // mask non-valid observations
 .set('system:time_start', im.get('system:time_start'));
 });
+
+
 /////////////////////////////////////
 /*
 // Landsat Collection Merged
@@ -270,26 +287,28 @@ return bio.where(bio.lt(threshMin),threshMin) // force low values to threshMin
 // PART IV ---- COMPOSITES CREATION
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////
-// Generate a list of dates
-var listDates = ee.List.sequence(ee.Date(startDate).millis(), ee.Date(endDate).millis(),
-86400000*lag);
 
-// Map the dates
-var colDekadsRaw = ee.ImageCollection(listDates.map(function(dd){
-// Moving window central day
-var date_window = ee.Date(ee.Number(dd));
-// Moving window first day
-var date_startW = date_window.advance(-lag/2, 'days');
-// Moving window last day
-var date_endW = date_window.advance(lag/2, 'days');
-// Filter the collection for a period equal to lag
-var col_window = S2.filterDate(date_startW,date_endW);
-// Mean computation
-var out = col_window.reduce(ee.Reducer.mean());
-return out
-.set('system:time_start',date_window.millis()) // Define time property
-.set('empty', col_window.size().eq(0)); // Flag dates without images
+// Generate a list of dates
+var listDates = ee.List.sequence(ee.Date(startDate).millis(), ee.Date(endDate).millis(),86400000*lag);
+
+    // Map the dates
+    var colDekadsRaw = ee.ImageCollection(listDates.map(function(dd){
+    // Moving window central day
+    var date_window = ee.Date(ee.Number(dd));
+    // Moving window first day
+    var date_startW = date_window.advance(-lag/2, 'days');
+    // Moving window last day
+    var date_endW = date_window.advance(lag/2, 'days');
+    // Filter the collection for a period equal to lag
+    var col_window = S2.filterDate(date_startW,date_endW);
+    // Mean computation
+    var out = col_window.reduce(ee.Reducer.mean());
+    return out
+    .set('system:time_start',date_window.millis()) // Define time property
+    .set('empty', col_window.size().eq(0)); // Flag dates without images
 }).flatten());
+
+
 // filter dates without images and fill them with the minimum NDVI value
 var colDekadsEmpty = colDekadsRaw.filterMetadata('empty', 'equals', 1).map(function(
 im){
