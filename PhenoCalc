@@ -522,20 +522,9 @@ var LEGEND_FOOTNOTE_STYLE = {
       margin: '4px',
 };
 
-Map.add(ui.Panel([
-      ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-EOS['min'],visEOS['max']),
-      ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
-      ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
-
-Map.add(ui.Panel([
-      ui.Label('Start of Season', LEGEND_TITLE_STYLE),makeLegend(visSOS['min'],visSOS['max']),
-      ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
-      ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
-
-Map.add(ui.Panel([
-      ui.Label('Length of Season', LEGEND_TITLE_STYLE),makeLegend(visLOS['min'],visLOS['max']),
-      ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
-      ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-EOS['min'],visEOS['max']), ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([ui.Label('Start of Season', LEGEND_TITLE_STYLE),makeLegend(visSOS['min'],visSOS['max']),ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([ui.Label('Length of Season', LEGEND_TITLE_STYLE),makeLegend(visLOS['min'],visLOS['max']),ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
 
 var titleLabel = ui.Label('PHENOLOGICAL METRICS ESTIMATOR IN MOUNTAIN AREAS (PMEMA)'+year1+'', {fontWeight: 'bold', fontSize: '20px'});
 
