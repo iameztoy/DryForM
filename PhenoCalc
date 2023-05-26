@@ -1,18 +1,23 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AOI = 
-    /* color: #ffc82d */
+    /* color: #bf04c2 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-6.42888147043225, 37.0178412098387],
-          [-6.42888147043225, 37.00276281760778],
-          [-6.410342041721313, 37.00276281760778],
-          [-6.410342041721313, 37.0178412098387]]], null, false),
-    p = /* color: #00ffff */ee.Geometry.Point([-6.425054993365427, 37.00678265664458]);
+        [[[-66.63362515761595, -14.561979619708879],
+          [-66.63362515761595, -31.240686725411567],
+          [-47.605304845115946, -31.240686725411567],
+          [-47.605304845115946, -14.561979619708879]]], null, false),
+    g = 
+    /* color: #ff0000 */
+    /* shown: false */
+    ee.Geometry.Point([-56.91057456328611, -23.279441411461253]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// IAA Feb. 2023
 // Phenology metrics from https://www.mdpi.com/2673-7418/3/1/12
 //A Google Earth Engine Algorithm to Map Phenological Metrics in Mountain Areas Worldwide with Landsat Collection and Sentinel-2
 
@@ -33,11 +38,10 @@ var AOI =
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////
 // EO data have been processed in by performing a time series smoothing (with 20-
-//day composition and cubic interpolation) and
-// a threhsold method can be applied
-// Author: Tommaso Orusa tommaso.orusa@gmail.com or torusa@invallee.it
-// or tommaso.orusa@unito.it
+//day composition and cubic interpolation) anda threhsold method can be applied
+// Author: Tommaso Orusa tommaso.orusa@gmail.com or torusa@invallee.it or tommaso.orusa@unito.it
 // the present code was implemented starting from the work of A. Descals
+
 var parts = '' +
 "\n - PARAMETERS SETTINGS (PART I)" +
 "\n -- FUNCTION SETTINGS TO PERFORM CUBIC INTERPOLATION (PART II)" +
@@ -65,9 +69,9 @@ Map.centerObject(ROI,6);
 
 // (Optional) Set a point in which you want to compute PME or a polygon
 // WARNING if noting it will be set indicate the same name of the ROI it will return
-//errors in the console if the areas are too wide but the code works perfectly you o0nly have to export
-var point = p;
-//var geometry = g;
+//errors in the console if the areas are too wide but the code works perfectly you only have to export
+var point = g;
+var geometry = g;
 
 /////////////////////////////////////////////////////////////////////////
 // SET TIME
@@ -80,8 +84,8 @@ var year1 = 2020;
 var lag = 20;
 
 // Define the time range to compute the PME. As Phenological Active Season it is suggested
-var startDate = year1+'-01-31'; // YYY-MM-DD start YYYY-03-01
-var endDate = year1+'-12-31'; // YYY-MM-DD start YYYY-12-20
+var startDate = year1+'-03-31'; // YYY-MM-DD start YYYY-03-01
+var endDate = year1+'-07-31'; // YYY-MM-DD start YYYY-12-20
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
