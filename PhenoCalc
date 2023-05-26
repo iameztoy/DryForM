@@ -310,44 +310,45 @@ var listDates = ee.List.sequence(ee.Date(startDate).millis(), ee.Date(endDate).m
 
 
 // filter dates without images and fill them with the minimum NDVI value
-var colDekadsEmpty = colDekadsRaw.filterMetadata('empty', 'equals', 1).map(function(
-im){
-return ee.Image(threshMin).rename('bio_mean').copyProperties(im,['system:time_start']);
+var colDekadsEmpty = colDekadsRaw.filterMetadata('empty', 'equals', 1).map(function(im){
+    return ee.Image(threshMin).rename('bio_mean').copyProperties(im,['system:time_start']);
 });
+
 var colDekads = colDekadsRaw.filterMetadata('empty', 'equals', 0).merge(colDekadsEmpty);
+
 // plot composite
 var chart1 = ui.Chart.image.series(colDekads.select('bio_mean'), point, ee.Reducer.
-first(), scale)
-.setOptions({title: 'Moving average every '+lag+' days',
-lineWidth: 0,
-pointSize: 4});
+first(), scale).setOptions({title: 'Moving average every '+lag+' days',lineWidth: 0,pointSize: 4});
 // print(chart1)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 // PART V ----- WINDOW SIZE SETTINGS FOR EMPTY COMPOSITES
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 var colDekads = colDekads.map(function(im){
-// Window central day
-var date_window = ee.Date(im.get('system:time_start'));
-// Window first day
-var date_startW = date_window.advance(-lag*2, 'days');
-// Window last day
-var date_endW = date_window.advance(lag*2, 'days');
-// Compute mean with images before and after the central window
-var meanIm1 = colDekads.filterDate(date_startW,date_window.advance(1,
-'days')).reduce(ee.Reducer.mean());
-var meanIm2 = colDekads.filterDate(date_window.advance(-1,
-'days'),date_endW).reduce(ee.Reducer.mean());
-var meanIm = (meanIm1.add(meanIm2)).divide(2);
-return im
-// Apply the gap-filling only to empty values
-.unmask(meanIm)
-.copyProperties(im,['system:time_start']);
+      // Window central day
+      var date_window = ee.Date(im.get('system:time_start'));
+      // Window first day
+      var date_startW = date_window.advance(-lag*2, 'days');
+      // Window last day
+      var date_endW = date_window.advance(lag*2, 'days');
+      // Compute mean with images before and after the central window
+      var meanIm1 = colDekads.filterDate(date_startW,date_window.advance(1,
+      'days')).reduce(ee.Reducer.mean());
+      var meanIm2 = colDekads.filterDate(date_window.advance(-1,
+      'days'),date_endW).reduce(ee.Reducer.mean());
+      var meanIm = (meanIm1.add(meanIm2)).divide(2);
+      return im
+      // Apply the gap-filling only to empty values
+      .unmask(meanIm)
+      .copyProperties(im,['system:time_start']);
 });
+
 var colDekads = colDekads.sort('system:time_start');
+
 // Plot gap-filled composites
-var chart1 = ui.Chart.image.series(colDekads, point, ee.Reducer.first(), scale)
-.setOptions({title: 'Moving average gap-filled',
+var chart1 = ui.Chart.image.series(colDekads, point, ee.Reducer.first(), scale).setOptions({title: 'Moving average gap-filled',
 lineWidth: 0,
 pointSize: 4});
 print(chart1);
@@ -356,26 +357,30 @@ print(chart1);
 var flagNoObs = colDekads.map(function(im){
 return im.unmask(-999).eq(-999).copyProperties(im,['system:time_start']);
 }).filterDate('2021-05-01','2021-10-01').sum().eq(0).rename('flagNoObs');
+
 Map.addLayer(flagNoObs.clip(ROI),{min:0,max:1},'Pixels with empty composites',
 false);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PART VI ------ TIME-SERIES INTERPOLATION
 /////////////////////////////////////////////////////////////////////////////////////////////////////
+
 var interp = cubicInterpolation(colDekads,1);
+
 // Plot daily observations, composites, and interpolated values
 var chart1 = ui.Chart.image.series(S2.merge(colDekads.select('bio_mean')).merge(interp),
-point, ee.Reducer.first(), 10)
-.setOptions({
-title: 'Phenology',
-vAxis: {
-title: ' '
-},
-series: {
-0: {color: '000000',lineWidth: 0, pointSize: 2},
-1: {color: '00b8ff',lineWidth: 0, pointSize: 5},
-2: {color: '19a700',lineWidth: 1, pointSize: 0}
-} });
+    point, ee.Reducer.first(), 10)
+    .setOptions({
+        title: 'Phenology',
+        vAxis: {
+        title: ' '
+    },
+      series: {
+        0: {color: '000000',lineWidth: 0, pointSize: 2},
+        1: {color: '00b8ff',lineWidth: 0, pointSize: 5},
+        2: {color: '19a700',lineWidth: 1, pointSize: 0}
+}});
+
 print(chart1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
