@@ -386,37 +386,40 @@ print(chart1);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //PART VII ------- PHENOLOGICAL METRICS COMPUTATION
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Define doy = 0
 var init = ee.Image(ee.Date((year1-1)+'-12-31').millis());
+
 // TimeStamp band adding
 var interp = interp.map(function(im){
 return im.rename('bio_interp').addBands(im.metadata('system:time_start','date1'))
 .set('system:time_start', im.get('system:time_start'));
 });
+
 // Estimate amplitude of time series
 var minND = ee.Image(threshMin);
 var maxND = colDekads.max();
 var amplitude = maxND.subtract(minND);
+
 // Threshold image computation
 var thresh = amplitude.multiply(th).add(minND).rename('bio_interp');
+
 // mask values below the threhsold
 var col_aboveThresh = interp.map(function(im){
-var out = im.select('bio_interp').gt(thresh);
-return im.updateMask(out) //
-.copyProperties(im,['system:time_start']);
+        var out = im.select('bio_interp').gt(thresh);
+        return im.updateMask(out) //
+        .copyProperties(im,['system:time_start']);
 });
 
-/////////////// START OF SEASON
-// SOS (first day below the threhsold)
+/////////////// START OF SEASON -- SOS (first day below the threhsold)
 var SOS = col_aboveThresh.reduce(ee.Reducer.firstNonNull()).select('date1_first').rename('SOS');
 var SOS_doy = SOS.subtract(init).divide(86400000); // convert to doy
 
-/////////////// END OF SEASON
-// EOS (last day below the threhsold)
+/////////////// END OF SEASON -- EOS (last day below the threhsold)
 var EOS = col_aboveThresh.reduce(ee.Reducer.lastNonNull()).select('date1_last').rename('EOS');
 var EOS_doy = EOS.subtract(init).divide(86400000); // convert to doy
-/////////////// LENGHT OF SEASON
-// LOS
+
+/////////////// LENGHT OF SEASON - LOS
 var LOS = EOS_doy.subtract(SOS_doy);
 var phenoPalette = ['ff0000','ff8d00','fbff00','4aff00','00ffe7','01b8ff','0036ff','fb00ff'];
 var visLOS = {min:100,max:365,palette:phenoPalette};
@@ -425,6 +428,7 @@ Map.addLayer(LOS.clip(ROI), visLOS,'LOS',true);
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // PART VIII -------- RESULTS PLOTTING
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
 print('Threshold:',thresh.reduceRegion(ee.Reducer.first(), point, 1).get('bio_interp'));
 print('SOS',ee.Date(SOS.reduceRegion(ee.Reducer.first(), point, 1).get('SOS')));
 print('EOS',ee.Date(EOS.reduceRegion(ee.Reducer.first(), point, 1).get('EOS')));
@@ -435,46 +439,40 @@ Map.addLayer(SOS_doy.clip(ROI),visSOS,'SOS',true);
 Map.addLayer(EOS_doy.clip(ROI),visEOS,'EOS',false);
 var vPoly = ee.Image().toByte().paint(ROI, 2,4);
 Map.addLayer(vPoly, {palette: '000000', max: 3, opacity: 0.9}, 'Region of interest');
+
 //PLOT GRAPH
 var SOSdict = SOS_doy.reduceRegion(ee.Reducer.first(), point, scale);
 var EOSdict = EOS_doy.reduceRegion(ee.Reducer.first(), point, scale);
-var blankImage1 = ee.Image(0).set('doy',SOSdict.get('SOS')).rename('SOS').int()
-.set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(
-SOSdict.get('SOS')),'day').millis());
-var blankImage2 = ee.Image(1).set('doy',ee.Number(SOSdict.get('SOS')).add(1)).rename('SOS').int()
-.set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(
-SOSdict.get('SOS')).add(1),'day').millis());
-var blankImage3 = ee.Image(0).set('doy',EOSdict.get('EOS')).rename('EOS').int()
-.set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(
-EOSdict.get('EOS')),'day').millis());
-var blankImage4 = ee.Image(1).set('doy',ee.Number(EOSdict.get('EOS')).add(1)).rename('EOS').int()
-.set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(
-EOSdict.get('EOS')).add(1),'day').millis());
+var blankImage1 = ee.Image(0).set('doy',SOSdict.get('SOS')).rename('SOS').int().set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(SOSdict.get('SOS')),'day').millis());
+var blankImage2 = ee.Image(1).set('doy',ee.Number(SOSdict.get('SOS')).add(1)).rename('SOS').int().set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(SOSdict.get('SOS')).add(1),'day').millis());
+var blankImage3 = ee.Image(0).set('doy',EOSdict.get('EOS')).rename('EOS').int().set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(EOSdict.get('EOS')),'day').millis());
+var blankImage4 = ee.Image(1).set('doy',ee.Number(EOSdict.get('EOS')).add(1)).rename('EOS').int().set('system:time_start', ee.Date(year1+'-01-01').advance(ee.Number(EOSdict.get('EOS')).add(1),'day').millis());
 var lineSoS = ee.ImageCollection.fromImages([blankImage1,blankImage2]);
 var lineEoS = ee.ImageCollection.fromImages([blankImage3,blankImage4]);
 
 var resultsPanel = ui.Panel({style: {position: 'bottom-right',width: '500px'}});
 Map.add(resultsPanel);
-var chart1 = ui.Chart.image.series({imageCollection:
-S2.merge(lineEoS).merge(lineSoS).merge(interp.select('bio_interp')),
-region: point,
-reducer: ee.Reducer.first(),
-scale: scale,
-// xProperty: 'doy'
-})
-.setOptions({title: 'Sentinel-2 '+VI_index,
-interpolateNulls: true,
-series: {
-0: {pointSize: 0, lineWidth: 3, color: '2800ff'}, // EoS
-2: {pointSize: 2, lineWidth: 0, color: '000000'}, // L8
-1: {pointSize: 0, lineWidth: 3, color: '3eff00'}, // SoS
-3: {pointSize: 0, lineWidth: 2, color: 'f13030'}, // S2
+var chart1 = ui.Chart.image.series({
+        imageCollection:S2.merge(lineEoS).merge(lineSoS).merge(interp.select('bio_interp')),
+      region: point,
+      reducer: ee.Reducer.first(),
+      scale: scale,
+      // xProperty: 'doy'
+    })
+      .setOptions({title: 'Sentinel-2 '+VI_index,
+      interpolateNulls: true,
+      series: {
+      0: {pointSize: 0, lineWidth: 3, color: '2800ff'}, // EoS
+      2: {pointSize: 2, lineWidth: 0, color: '000000'}, // L8
+      1: {pointSize: 0, lineWidth: 3, color: '3eff00'}, // SoS
+      3: {pointSize: 0, lineWidth: 2, color: 'f13030'}, // S2
 },
 vAxis: {
 viewWindow: {
 min: threshMin-0.05,
 max: 1
 }}});
+
 // print(chart1)
 resultsPanel.clear().add(chart1);
 
@@ -485,71 +483,71 @@ resultsPanel.clear().add(chart1);
 ////////////////////
 
 function ColorBar() {
-return ui.Thumbnail({
-image: ee.Image.pixelLonLat().select(0),
-params: {
-bbox: [0, 0, 1, 0.1],
-dimensions: '100x10',
-format: 'png',
-min: 0,
-max: 1,
-palette: phenoPalette,
-},
-style: {stretch: 'horizontal', margin: '0px 8px'},
-});
-}
+      return ui.Thumbnail({
+      image: ee.Image.pixelLonLat().select(0),
+      params: {
+      bbox: [0, 0, 1, 0.1],
+      dimensions: '100x10',
+      format: 'png',
+      min: 0,
+      max: 1,
+      palette: phenoPalette,
+    },
+      style: {stretch: 'horizontal', margin: '0px 8px'},
+    });
+  }
 
 function makeLegend(a,b) {
-var labelPanel = ui.Panel(
-[
-ui.Label(a, {margin: '4px 8px'}),
-ui.Label(' ',{margin: '4px 8px', textAlign: 'center', stretch: 'horizontal'}),
-ui.Label(b, {margin: '4px 8px'})
-],
-ui.Panel.Layout.flow('horizontal'));
-return ui.Panel([ColorBar(), labelPanel]);
+    var labelPanel = ui.Panel([
+      ui.Label(a, {margin: '4px 8px'}),
+      ui.Label(' ',{margin: '4px 8px', textAlign: 'center', stretch: 'horizontal'}),
+      ui.Label(b, {margin: '4px 8px'})
+  ],
+      ui.Panel.Layout.flow('horizontal'));
+      return ui.Panel([ColorBar(), labelPanel]);
 }
 
 var LEGEND_TITLE_STYLE = {
-fontSize: '20px',
-fontWeight: 'bold',
-stretch: 'horizontal',
-textAlign: 'center',
-margin: '4px',
+      fontSize: '20px',
+      fontWeight: 'bold',
+      stretch: 'horizontal',
+      textAlign: 'center',
+      margin: '4px',
 };
 
 var LEGEND_FOOTNOTE_STYLE = {
-fontSize: '14px',
-stretch: 'horizontal',
-textAlign: 'center',
-margin: '4px',
+      fontSize: '14px',
+      stretch: 'horizontal',
+      textAlign: 'center',
+      margin: '4px',
 };
 
-Map.add(ui.Panel(
-[
-ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-EOS['min'],visEOS['max']),
-ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
-ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([
+      ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-EOS['min'],visEOS['max']),
+      ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
+      ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
 
-Map.add(ui.Panel([ui.Label('Start of Season', LEGEND_TITLE_STYLE),makeLegend(visSOS['min'],visSOS['max']),
-ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
-ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([
+      ui.Label('Start of Season', LEGEND_TITLE_STYLE),makeLegend(visSOS['min'],visSOS['max']),
+      ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
+      ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
 
-Map.add(ui.Panel([ui.Label('Length of Season', LEGEND_TITLE_STYLE),makeLegend(visLOS['min'],visLOS['max']),
-ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
-ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([
+      ui.Label('Length of Season', LEGEND_TITLE_STYLE),makeLegend(visLOS['min'],visLOS['max']),
+      ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
+      ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
 
 var titleLabel = ui.Label('PHENOLOGICAL METRICS ESTIMATOR IN MOUNTAIN AREAS (PMEMA)'+year1+'', {fontWeight: 'bold', fontSize: '20px'});
-Map.add(titleLabel);
 
+Map.add(titleLabel);
 Map.addLayer(geometry,{min:0,max:1},'point',true);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////
-
 // PART X ----------- EXPORT SOS EOS LOS
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////
+
+
 // SOS
 Export.image.toDrive({
      image: SOS_doy.clip(ROI),
