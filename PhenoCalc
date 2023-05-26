@@ -1,21 +1,17 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AOI = 
     /* color: #bf04c2 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-66.63362515761595, -14.561979619708879],
-          [-66.63362515761595, -31.240686725411567],
-          [-47.605304845115946, -31.240686725411567],
-          [-47.605304845115946, -14.561979619708879]]], null, false),
-    g = 
-    /* color: #ff0000 */
-    /* shown: false */
-    ee.Geometry.Point([-56.91057456328611, -23.279441411461253]);
+        [[[-63.118000157615946, -18.81238721326395],
+          [-63.118000157615946, -28.11044066114034],
+          [-53.054523595115946, -28.11044066114034],
+          [-53.054523595115946, -18.81238721326395]]], null, false),
+    p = /* color: #ff0000 */ee.Geometry.Point([-56.91057456328611, -23.279441411461253]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // IAA Feb. 2023
 // Phenology metrics from https://www.mdpi.com/2673-7418/3/1/12
@@ -70,8 +66,8 @@ Map.centerObject(ROI,6);
 // (Optional) Set a point in which you want to compute PME or a polygon
 // WARNING if noting it will be set indicate the same name of the ROI it will return
 //errors in the console if the areas are too wide but the code works perfectly you only have to export
-var point = g;
-var geometry = g;
+var point = p;
+var geometry = AOI;
 
 /////////////////////////////////////////////////////////////////////////
 // SET TIME
@@ -84,8 +80,8 @@ var year1 = 2020;
 var lag = 20;
 
 // Define the time range to compute the PME. As Phenological Active Season it is suggested
-var startDate = year1+'-03-31'; // YYY-MM-DD start YYYY-03-01
-var endDate = year1+'-07-31'; // YYY-MM-DD start YYYY-12-20
+var startDate = year1+'-01-31'; // YYY-MM-DD start YYYY-03-01
+var endDate = year1+'-12-31'; // YYY-MM-DD start YYYY-12-20
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
