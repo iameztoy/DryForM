@@ -70,12 +70,12 @@ var point = p;
 // SET TIME
 //////////////////////////////////////////////////////////////////////////
 // Set processing year of interest
-var year1 = 2021;
+var year1 = 2020;
 // Set composites temporal resolution - LAG
 var lag = 20;
 // Define the time range to compute the PME. As Phenological Active Season it is suggested
-var startDate = year1+'-03-15'; // YYY-MM-DD start YYYY-03-01
-var endDate = year1+'-12-20'; // YYY-MM-DD start YYYY-12-20
+var startDate = year1+'-01-31'; // YYY-MM-DD start YYYY-03-01
+var endDate = year1+'-12-31'; // YYY-MM-DD start YYYY-12-20
 //////////////////////////////////////////////////////////////////////////////////////////
 // SET VI - the vegetation index (VI) on which you like to compute PME
 // (VI) options:
@@ -499,39 +499,22 @@ margin: '4px',
 
 Map.add(ui.Panel(
 [
-ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-
-EOS['min'],visEOS['max']),
-ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)
-],
-ui.Panel.Layout.flow('vertical'),
-{width: '230px', position: 'bottom-left'}));
+ui.Label('End of Season', LEGEND_TITLE_STYLE), makeLegend(vis-EOS['min'],visEOS['max']),
+ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
+ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
 
-Map.add(ui.Panel(
-[
-ui.Label('Start of Season', LEGEND_TITLE_STYLE),
-makeLegend(visSOS['min'],visSOS['max']),
-ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)
-],
-ui.Panel.Layout.flow('vertical'),
-{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([ui.Label('Start of Season', LEGEND_TITLE_STYLE),makeLegend(visSOS['min'],visSOS['max']),
+ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
+ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
 
-Map.add(ui.Panel(
-[
-ui.Label('Length of Season', LEGEND_TITLE_STYLE),
-makeLegend(visLOS['min'],visLOS['max']),
-ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)
-],
-ui.Panel.Layout.flow('vertical'),
-{width: '230px', position: 'bottom-left'}));
+Map.add(ui.Panel([ui.Label('Length of Season', LEGEND_TITLE_STYLE),makeLegend(visLOS['min'],visLOS['max']),
+ui.Label('(Day of Year)', LEGEND_FOOTNOTE_STYLE)],
+ui.Panel.Layout.flow('vertical'),{width: '230px', position: 'bottom-left'}));
 
-var titleLabel = ui.Label('PHENOLOGICAL METRICS ESTIMATOR IN MOUNTAIN AREAS (PMEMA)'
-+year1+'', {fontWeight: 'bold', fontSize: '20px'});
+var titleLabel = ui.Label('PHENOLOGICAL METRICS ESTIMATOR IN MOUNTAIN AREAS (PMEMA)'+year1+'', {fontWeight: 'bold', fontSize: '20px'});
 Map.add(titleLabel);
 
 Map.addLayer(geometry,{min:0,max:1},'point',true);
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////
