@@ -141,7 +141,7 @@ Map.addLayer(sumrec, {}, "sum Reclass", 0)
 
 var region = AOIpl
 
-// Generate 50 random points with the region.
+// Generate x random points with the region.
 var randomPoints = ee.FeatureCollection.randomPoints(
     {region: region, points: 2000, seed: 0, maxError: 1});
 
