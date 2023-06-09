@@ -114,4 +114,8 @@ Map.addLayer(esa_shrub, {}, "ESA_Tree", 0)
 
 
 Map.addLayer(sum, {}, "sum", 1)
-Map.addLayer(TC_wri, {color: "Red"}, "WRI Tree Cover", 0)
+
+// For testing purposes: (to be deleted)
+
+Map.addLayer(wrimax, {}, "WRI Tree Cover", 0)
+
