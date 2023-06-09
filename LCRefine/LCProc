@@ -94,11 +94,11 @@ var wri80 = wrimax.eq(80)
 var wri90 = wrimax.eq(90)
 var wri100 = wrimax.eq(100)
 
-var wri = wri80.add(wri90).add(wri100)
+var wri_Tree = wri80.add(wri90).add(wri100)
 
 // n. Overall 2020
 var sumDE = dwM_Tree.add(esri_Tree) 
-var sumDEW = sumDE.add(wri)
+var sumDEW = sumDE.add(wri_Tree)
 //--------------
 //VISUALIZATION
 
