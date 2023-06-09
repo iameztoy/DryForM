@@ -32,7 +32,6 @@ var AOIpl =
 //
 
 var ForestRefine = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
-
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m") //+Info https://gee-community-catalog.org/projects/esrilc2020/
 var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
@@ -99,6 +98,10 @@ var wri_Tree = wri80.add(wri90).add(wri100)
 // n. Overall 2020
 var sumDE = dwM_Tree.add(esri_Tree) 
 var sumDEW = sumDE.add(wri_Tree)
+
+print(sumDE)
+
+
 //--------------
 //VISUALIZATION
 
@@ -108,8 +111,6 @@ var dwVisParams = {min: 0, max: 8, palette: [
 
 Map.addLayer(dwl, dwVisParams, 'Dynamic World');
 Map.addLayer(esri_lulc2020, {}, "ESRI", 0)
-
-
 Map.addLayer(dwM_Tree, {}, "DW Trees", 0)
 Map.addLayer(dwM_shrub, {}, "DW Shrub", 0)
 Map.addLayer(esri_Tree, {}, "ESRI Tree", 0)
@@ -119,7 +120,7 @@ Map.addLayer(esa_shrub, {}, "ESA Shrub", 0)
 Map.addLayer(wri80, {}, "WRI 80", 0);
 Map.addLayer(wri90, {}, "WRI 90", 0);
 Map.addLayer(wri100, {}, "WRI 100", 0);
-Map.addLayer(wri_Tree, {}, "WRI => 80", 0);
+Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 
 
 Map.addLayer(sumDE, {}, "sumDE", 1)
