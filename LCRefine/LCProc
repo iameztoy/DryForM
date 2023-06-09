@@ -1,14 +1,20 @@
+//*Copied from and older file
+//------------------------------
 //
+// IAA 2019 Process and combine land cover classes from different product to get a new layer by mixing forest, tree cover and woodland + probably associated
+// transition zones. The idea is to extract tiles that will be further refined and used in the frame of semantic segmentation procedures
+
+//--------------
 // Datasets
 //
 
 var ForestRefine = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
 
+var dW = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1");
+var esri_lulc2020= ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m") //See https://gee-community-catalog.org/projects/esrilc2020/
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); 
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); 
-var dynWorld = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1");
-var esri_lulc2020= ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m") //See https://gee-community-catalog.org/projects/esrilc2020/
-
 
 // GFC 2001-2021
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
@@ -30,5 +36,17 @@ var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011)
 // GEDI CH 2019 
 
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+
+//--------------
+// VARIABLES
+
+var date = ee.Date('2020-01-01', '2021-12-31' );
+
+
+//--------------
+// PROCESSING
+
+// 1. Dynamic World
+
 
 
