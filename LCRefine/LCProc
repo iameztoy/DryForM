@@ -94,6 +94,7 @@ var wri90 = wrimax.eq(90)
 var wri100 = wrimax.eq(100)
 
 var wri_Tree = wri80.add(wri90).add(wri100)
+var wri_Tree = wri_Tree.unmask(0) //Reclass mask to zero zo the calculation can go beyond the boundaries of the WRI dataset
 
 // n. Overall 2020
 var sumDE = dwM_Tree.add(esri_Tree) 
@@ -133,7 +134,7 @@ Map.addLayer(sumDEW, {}, "sumDEW", 0)
 Map.addLayer(sumDEWs, {}, "sumDEWs", 0)
 Map.addLayer(sumrec, {}, "sum Reclass", 0)
 
-
+/*
 //Export 
 Export.image.toDrive({
     image: sumDEW,
@@ -142,7 +143,7 @@ Export.image.toDrive({
     scale: 10,
     maxPixels: 1e13
   });
-
+*/
 
 // For testing purposes: (to be deleted)
 
