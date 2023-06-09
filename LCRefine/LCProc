@@ -176,7 +176,7 @@ Export.image.toDrive({
   });
   
 Export.image.toAsset({
-    image: TreeCombo,
+    image: sumrec,
     description: 'TreeCombo',
     assetId: 'projects/ee-dryforestia/assets/sumrec',
     scale: 10,
