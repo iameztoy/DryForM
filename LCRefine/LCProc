@@ -123,8 +123,19 @@ Map.addLayer(wri100, {}, "WRI 100", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 
 
-Map.addLayer(sumDE, {}, "sumDE", 1)
+Map.addLayer(sumDE, {}, "sumDE", 0)
 Map.addLayer(sumDEW, {}, "sumDEW", 0)
+
+
+//Export 
+Export.image.toDrive({
+    image: sumDEW,
+    description: 'TrainTrees',
+    region: AOIpl,
+    scale: 10,
+    maxPixels: 1e13
+  });
+
 
 // For testing purposes: (to be deleted)
 
