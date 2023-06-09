@@ -99,7 +99,9 @@ var wri_Tree = wri80.add(wri90).add(wri100)
 var sumDE = dwM_Tree.add(esri_Tree) 
 var sumDEW = sumDE.add(wri_Tree)
 
-print(sumDE)
+var sumDEWs = sumDEW.where(lossYearGFC2000_2020,0);
+var sumDEWs = sumDEWs.where(cropmask_UMD,0);
+
 
 
 //--------------
@@ -109,7 +111,7 @@ var dwVisParams = {min: 0, max: 8, palette: [
     '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
     '#C4281B', '#A59B8F', '#B39FE1']};
 
-Map.addLayer(dwl, dwVisParams, 'Dynamic World');
+Map.addLayer(dwl, dwVisParams, 'Dynamic World', 0);
 Map.addLayer(esri_lulc2020, {}, "ESRI", 0)
 Map.addLayer(dwM_Tree, {}, "DW Trees", 0)
 Map.addLayer(dwM_shrub, {}, "DW Shrub", 0)
@@ -123,8 +125,10 @@ Map.addLayer(wri100, {}, "WRI 100", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 
 
+
 Map.addLayer(sumDE, {}, "sumDE", 0)
 Map.addLayer(sumDEW, {}, "sumDEW", 0)
+Map.addLayer(sumDEWs, {}, "sumDEWs", 0)
 
 
 //Export 
