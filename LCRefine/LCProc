@@ -98,8 +98,8 @@ var wri = wri80.add(wri90).add(wri100);
 
 
 // n. Overall 2020
-var sum = dwM_Tree.add(esri_Tree).add(wri);
-
+var sumDE = dwM_Tree.add(esri_Tree) 
+var sumDEW = sumDE.add(wri)
 //--------------
 //VISUALIZATION
 
@@ -123,7 +123,8 @@ Map.addLayer(wri100, {}, "WRI 100", 0);
 Map.addLayer(wri, {}, "WRI Above 80", 0);;
 
 
-Map.addLayer(sum, {}, "sum", 1)
+Map.addLayer(sumDE, {}, "sumDE", 1)
+Map.addLayer(sumDEW, {}, "sumDEW", 0)
 
 // For testing purposes: (to be deleted)
 
