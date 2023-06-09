@@ -99,7 +99,7 @@ var dwVisParams = {min: 0, max: 8, palette: [
 
 Map.addLayer(dwl, dwVisParams, 'Dynamic World');
 Map.addLayer(esri_lulc2020, {}, "ESRI", 0)
-Map.addLayer(TC_wri, {color: "Red"}, "WRI Tree Cover, 0")
+Map.addLayer(TC_wri, {color: "Red"}, "WRI Tree Cover", 0)
 
 Map.addLayer(dwM_Tree, {}, "dwM_Trees", 0)
 Map.addLayer(dwM_shrub, {}, "dwM_shrub", 0)
