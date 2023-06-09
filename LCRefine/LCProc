@@ -99,8 +99,10 @@ var wri_Tree = wri80.add(wri90).add(wri100)
 var sumDE = dwM_Tree.add(esri_Tree) 
 var sumDEW = sumDE.add(wri_Tree)
 
-var sumDEWs = sumDEW.where(lossYearGFC2000_2020,0);
+var sumDEWs = sumDEW.where(lossYearGFC2000_2020,0); // "s" refers to subtract
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
+
+var sumrec = sumDEWs.gte(1)
 
 
 
@@ -129,6 +131,7 @@ Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 Map.addLayer(sumDE, {}, "sumDE", 0)
 Map.addLayer(sumDEW, {}, "sumDEW", 0)
 Map.addLayer(sumDEWs, {}, "sumDEWs", 0)
+Map.addLayer(sumrec, {}, "sum Reclass", 0)
 
 
 //Export 
