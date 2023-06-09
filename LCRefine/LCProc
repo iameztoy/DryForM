@@ -83,12 +83,16 @@ var esri_shrub = esri_aoi.eq(7).rename(['shrub']);
 
 // 3. ESA World Cover 2020
 
-var esa_Tree = esawc2020.eq(10) // Tree 10, shrubland 20
-var esa_shrub = esawc2020.eq(20)
+var esa_Tree = esawc2020.eq(10); // Tree 10, shrubland 20
+var esa_shrub = esawc2020.eq(20);
+
+// 4. WRI Tree Cover 2020
+
+var wrimax = TC_wri.max();
 
 
 // n. Overall 2020
-var sum = dwM_Tree.add(esri_Tree)
+var sum = dwM_Tree.add(esri_Tree);
 
 //--------------
 //VISUALIZATION
