@@ -1,0 +1,34 @@
+//
+// Datasets
+//
+
+var ForestRefine = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); 
+var dynWorld = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1");
+var esri_lulc2020= ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m") //See https://gee-community-catalog.org/projects/esrilc2020/
+
+
+// GFC 2001-2021
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var treeCover = gfcImage.select(['treecover2000']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossYear.gte(1)).and(lossYear.lte(20));
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
+
+// GEDI CH 2019 
+
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+
+
