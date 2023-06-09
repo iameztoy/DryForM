@@ -89,10 +89,15 @@ var esa_shrub = esawc2020.eq(20);
 // 4. WRI Tree Cover 2020
 
 var wrimax = TC_wri.max();
+var wri80 = wrimax.eq(80);
+var wri90 = wrimax.eq(90);
+var wri100 = wrimax.eq(100);
+var wri = wri80.add(wri90).add(wri100);
+
 
 
 // n. Overall 2020
-var sum = dwM_Tree.add(esri_Tree);
+var sum = dwM_Tree.add(esri_Tree).add(wri);
 
 //--------------
 //VISUALIZATION
@@ -110,24 +115,18 @@ Map.addLayer(dwM_shrub, {}, "dwM_shrub", 0)
 Map.addLayer(esri_Tree, {}, "esri_Tree", 0)
 Map.addLayer(esri_shrub, {}, "esri_shrub", 0)
 Map.addLayer(esa_Tree, {}, "ESA_Tree", 0)
-Map.addLayer(esa_shrub, {}, "ESA_Tree", 0)
+Map.addLayer(esa_shrub, {}, "ESA_Shrub", 0)
+Map.addLayer(wri80, {}, "WRI 80", 0);
+Map.addLayer(wri90, {}, "WRI 90", 0);
+Map.addLayer(wri100, {}, "WRI 100", 0);
+Map.addLayer(wri, {}, "WRI Above 80", 0);;
 
 
 Map.addLayer(sum, {}, "sum", 1)
 
 // For testing purposes: (to be deleted)
 
-var im = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
-print(im)
-var b = im.max()
-var c = b.eq(90)
-var d = b.eq(100)
-var e = b.eq(80)
-print(b)
-print(c)
 
-//var ims = im.gt(80)
-Map.addLayer(e, {}, "80")
-Map.addLayer(c, {}, "90")
-Map.addLayer(d, {}, "100")
+
+
 
