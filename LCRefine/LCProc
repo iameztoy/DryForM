@@ -119,7 +119,7 @@ Map.addLayer(esa_shrub, {}, "ESA Shrub", 0)
 Map.addLayer(wri80, {}, "WRI 80", 0);
 Map.addLayer(wri90, {}, "WRI 90", 0);
 Map.addLayer(wri100, {}, "WRI 100", 0);
-Map.addLayer(wri, {}, "WRI => 80", 0);
+Map.addLayer(wri_Tree, {}, "WRI => 80", 0);
 
 
 Map.addLayer(sumDE, {}, "sumDE", 1)
