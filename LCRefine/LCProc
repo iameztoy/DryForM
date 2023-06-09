@@ -77,9 +77,9 @@ var dwM_shrub = dwMode.eq(5).rename(['Shrubs']);
 // 2. ESRI LULC 2020
 
 var esri_aoi = esri_lulc2020.mosaic(); 
-var esri_Tree = esri_aoi.eq(3).rename(['Trees']); // Trees 3, shrubs 7, Grass 4
+var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
 var esri_shrub = esri_aoi.eq(7).rename(['shrub']);
-var sum = dwM_Tree.add(esri_Tree)
+
 
 // 3. ESA World Cover 2020
 
@@ -87,6 +87,8 @@ var esa_Tree = esawc2020.eq(10) // Tree 10, shrubland 20
 var esa_shrub = esawc2020.eq(20)
 
 
+// n. Overall 2020
+var sum = dwM_Tree.add(esri_Tree)
 
 //--------------
 //VISUALIZATION
