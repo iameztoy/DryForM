@@ -25,6 +25,8 @@ var AOIpl =
 
 //preliminary AOIpl and AOIpt is only for testing purposes
 
+
+
 //--------------
 // Datasets
 //
@@ -60,8 +62,7 @@ var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 //--------------
 // VARIABLES GENERAL
 
-var srt = '2020-01-01'; var end = '2021-12-31';
-
+var srt = '2020-01-01'; var end = '2020-12-31';
 
 //--------------
 // PROCESSING
