@@ -1,8 +1,25 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var AOI = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-51.08295251151512, -25.65388617456612],
+          [-51.08295251151512, -26.82650195726501],
+          [-48.83075524589012, -26.82650195726501],
+          [-48.83075524589012, -25.65388617456612]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
 //
 // IAA 2019 Process and combine land cover classes from different product to get a new layer by mixing forest, tree cover and woodland + probably associated
 // transition zones. The idea is to extract tiles that will be further refined and used in the frame of semantic segmentation procedures
+
+//preliminary AOI is only for testing purposes
 
 //--------------
 // Datasets
@@ -10,7 +27,7 @@
 
 var ForestRefine = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
 
-var dW = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1");
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1");
 var esri_lulc2020= ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m") //See https://gee-community-catalog.org/projects/esrilc2020/
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); 
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
@@ -38,9 +55,9 @@ var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011)
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 
 //--------------
-// VARIABLES
+// VARIABLES GENERAL
 
-var date = ee.Date('2020-01-01', '2021-12-31' );
+var srt = '2020-01-01'; var end = '2021-12-31';
 
 
 //--------------
@@ -48,5 +65,18 @@ var date = ee.Date('2020-01-01', '2021-12-31' );
 
 // 1. Dynamic World
 
+var dwl = dw.filterDate(srt, end).filterBounds(AOI).select("label");
 
 
+
+
+
+
+//--------------
+//VISUALIZATION
+
+var dwVisParams = {min: 0, max: 8, palette: [
+    '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
+    '#C4281B', '#A59B8F', '#B39FE1']};
+
+Map.addLayer(dwl, dwVisParams, 'Classified Image');
