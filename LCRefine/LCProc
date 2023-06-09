@@ -33,10 +33,8 @@ var ForestRefine = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"
 
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m") //+Info https://gee-community-catalog.org/projects/esrilc2020/
-var WC2020 = ee.ImageCollection("ESA/WorldCover/v100"); 
-print(WC2020)
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
-var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); 
 
 // GFC 2001-2021
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
@@ -73,21 +71,20 @@ var srt = '2020-01-01'; var end = '2021-12-31';
 var dwl = dw.filterDate(srt, end).filterBounds(AOIpt).select("label");
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
 
-var dwM_Trees = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
 var dwM_shrub = dwMode.eq(5).rename(['Shrubs']);
 
 // 2. ESRI LULC 2020
 
 var esri_aoi = esri_lulc2020.mosaic(); 
 var esri_Tree = esri_aoi.eq(3).rename(['Trees']); // Trees 3, shrubs 7, Grass 4
-var esri_shrub = esri_aoi.eq(3).rename(['shrub']);
-var sum = dwM_Trees.add(esri_Tree)
+var esri_shrub = esri_aoi.eq(7).rename(['shrub']);
+var sum = dwM_Tree.add(esri_Tree)
 
+// 3. ESA World Cover 2020
 
-
-
-//var esrilc_Trees = esrilc.eq(3).rename(['Trees']); 
-//var esrilc_shrub = esrilc.eq(7).rename(['Shrub']);
+var esa_Tree = esawc2020.eq(10) // Tree 10, shrubland 20
+var esa_shrub = esawc2020.eq(20)
 
 
 
@@ -99,9 +96,11 @@ var dwVisParams = {min: 0, max: 8, palette: [
     '#C4281B', '#A59B8F', '#B39FE1']};
 
 Map.addLayer(dwl, dwVisParams, 'Classified Image');
-Map.addLayer(dwM_Trees)
-Map.addLayer(dwM_shrub)
-Map.addLayer(esri_Tree)
-Map.addLayer(esri_shrub)
+Map.addLayer(dwM_Tree, {}, "dwM_Trees", 0)
+Map.addLayer(dwM_shrub, {}, "dwM_shrub", 0)
+Map.addLayer(esri_Tree, {}, "esri_Tree", 0)
+Map.addLayer(esri_shrub, {}, "esri_shrub", 0)
+Map.addLayer(esa_Tree, {}, "ESA_Tree", 0)
+Map.addLayer(esa_shrub, {}, "ESA_Tree", 0)
 
-Map.addLayer(sum)
+Map.addLayer(sum, {}, "sum", 1)
