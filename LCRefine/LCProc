@@ -114,6 +114,7 @@ var trsh = sumrec.add(sumshrrec);
 //Select mixed trsh = 2. Mixed spectral response Trees/Shrub
 var trshsel = trsh.eq(2);
 
+//Need to remove value 2 (combination of Trees/Shrubs from the layers of 1) Treens and 2) Shrub))
 var treemcomb = sumrec.subtract(trshsel);  //Overall Trees - (trees + shrub)
 var shrubmcomb = sumshrrec.subtract(trshsel);
 
@@ -165,8 +166,8 @@ Map.addLayer(sumshr, {}, "Sum Shrub", 0);
 Map.addLayer(trsh, {}, "Trees or Shrub", 0); 
 
 
-Map.addLayer(sumrec, {color: "green"}, "Trees", 0);
-Map.addLayer(sumshrrec, {color: "brown"}, "Shrubs", 0);
+Map.addLayer(treemcomb, {color: "green"}, "Trees", 0);
+Map.addLayer(shrubmcomb, {color: "brown"}, "Shrubs", 0);
 Map.addLayer(trshsel, {color: "orange"}, "Trees/Shrub 1+1", 0);
 
 
