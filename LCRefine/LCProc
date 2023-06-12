@@ -137,9 +137,7 @@ var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
   .filter(ee.Filter.inList('country_na', ctr));
   //.filter(ee.Filter.inList('wld_rgn', rgn));   
   
-  
-
-
+ 
 //--------------
 //VISUALIZATION
 
@@ -170,16 +168,12 @@ Map.addLayer(sumrec, {}, "sum Reclass", 0);
 Map.addLayer(sumshr, {}, "Sum Shrub", 0);
 
 
-Map.addLayer(trsh, {}, "Trees or Shrub", 0); 
-
 
 Map.addLayer(treemcomb, {}, "Trees", 0);
 Map.addLayer(shrubmcomb, {}, "Shrubs", 0);
 Map.addLayer(trshsel, {}, "Trees/Shrub 1+1", 0);
 
 Map.addLayer(final, {}, "Final", 0);
-
-
 
 
 //----------------
