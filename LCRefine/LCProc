@@ -111,8 +111,11 @@ var sumshrrec = sumshr.gte(1);
 // Overall Tree + Shrub 1 = shrub or tree 2 = shrub and tree 0 = other class
 var trsh = sumrec.add(sumshrrec);
 
-//Select mixed trsh = 2. This represents in theory mixed shrubs and trees
+//Select mixed trsh = 2. Mixed spectral response Trees/Shrub
 var trshsel = trsh.eq(2);
+
+var treemcomb = sumrec.subtract(trshsel);  //Overall Trees - (trees + shrub)
+var shrubmcomb = sumshrrec.subtract(trshsel);
 
 
 
@@ -159,12 +162,12 @@ Map.addLayer(sumrec, {}, "sum Reclass", 0);
 Map.addLayer(sumshr, {}, "Sum Shrub", 0);
 
 
-Map.addLayer(trsh, {}, "Trees or Shrub", 0);
+Map.addLayer(trsh, {}, "Trees or Shrub", 0); 
 
 
 Map.addLayer(sumrec, {color: "green"}, "Trees", 0);
 Map.addLayer(sumshrrec, {color: "brown"}, "Shrubs", 0);
-Map.addLayer(trshsel, {color: "orange"}, "Trees and Shrub", 0);
+Map.addLayer(trshsel, {color: "orange"}, "Trees/Shrub 1+1", 0);
 
 
 
