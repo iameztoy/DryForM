@@ -96,14 +96,25 @@ var wri100 = wrimax.eq(100)
 var wri_Tree = wri80.add(wri90).add(wri100)
 var wri_Tree = wri_Tree.unmask(0) //Reclass mask to zero zo the calculation can go beyond the boundaries of the WRI dataset
 
-// n. Overall 2020
+// n. Overall Trees 2020
 var sumDE = dwM_Tree.add(esri_Tree) 
 var sumDEW = sumDE.add(wri_Tree)
-
 var sumDEWs = sumDEW.where(lossYearGFC2000_2020,0); // "s" refers to subtract
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
-
 var sumrec = sumDEWs.gte(1)
+
+// n. Overall Shrub 2020
+
+var sumshr = dwM_shrub.add(esri_shrub).add(esa_shrub)
+var sumshrrec = sumshr.gte(1)
+
+// Overall Tree + Shrub 1 = shrub or tree 2 = shrub and tree 0 = other class
+var trsh = sumrec.add(sumshrrec);
+
+//Select mixed trsh = 2. This represents in theory mixed shrubs and trees
+var trshsel = trsh.eq(2)
+
+
 
 //Countries 
 
@@ -145,6 +156,17 @@ Map.addLayer(sumDE, {}, "sumDE", 0)
 Map.addLayer(sumDEW, {}, "sumDEW", 0)
 Map.addLayer(sumDEWs, {}, "sumDEWs", 0)
 Map.addLayer(sumrec, {}, "sum Reclass", 0)
+Map.addLayer(sumshr, {}, "Sum Shrub", 0);
+
+
+Map.addLayer(trsh, {}, "Trees or Shrub", 0);
+
+
+Map.addLayer(sumrec, {color: "green"}, "Trees", 0);
+Map.addLayer(sumshrrec, {color: "brown"}, "Shrubs", 0);
+Map.addLayer(trshsel, {color: "orange"}, "Trees and Shrub", 0);
+
+
 
 
 //----------------
