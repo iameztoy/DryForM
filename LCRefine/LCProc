@@ -108,6 +108,7 @@ var sumrec = sumDEWs.gte(1);
 var sumshr = dwM_shrub.add(esri_shrub).add(esa_shrub);
 var sumshrrec = sumshr.gte(1);
 
+
 // Overall Tree + Shrub 1 = shrub or tree 2 = shrub and tree 0 = other class
 var trsh = sumrec.add(sumshrrec);
 
