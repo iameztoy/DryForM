@@ -105,7 +105,18 @@ var sumDEWs = sumDEWs.where(cropmask_UMD,0);
 
 var sumrec = sumDEWs.gte(1)
 
+//Countries 
 
+var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
+var rgn = ["Europe", "Africa", "SW Asia"];
+
+// Define mask to clip.
+var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+  .filter(ee.Filter.inList('country_na', ctr));
+  //.filter(ee.Filter.inList('wld_rgn', rgn));   
+  
+  
+Map.addLayer(mask);
 
 //--------------
 //VISUALIZATION
@@ -177,8 +188,9 @@ Export.image.toDrive({
   
 Export.image.toAsset({
     image: sumrec,
-    description: 'TreeCombo',
+    description: 'TreeCombo Brazil',
     assetId: 'projects/ee-dryforestia/assets/sumrec',
+    region: mask,
     scale: 10,
     maxPixels: 1e13
   });
