@@ -116,7 +116,14 @@ var trshsel = trsh.eq(2);
 
 //Need to remove value 2 (combination of Trees/Shrubs from the layers of 1) Treens and 2) Shrub))
 var treemcomb = sumrec.subtract(trshsel);  //Overall Trees - (trees + shrub)
-var shrubmcomb = sumshrrec.subtract(trshsel);
+var shrubmcomb = sumshrrec.subtract(trshsel); //Overall Shrubs - (trees + shrub)
+
+//Reclassify and Combine
+var trees = treemcomb.add(9);
+var shrubs = shrubmcomb.add(19);
+var trsh = trshsel.add(29);
+
+var final = treemcomb.add(shrubmcomb).add(trshsel);
 
 
 
