@@ -173,9 +173,11 @@ Map.addLayer(sumshr, {}, "Sum Shrub", 0);
 Map.addLayer(trsh, {}, "Trees or Shrub", 0); 
 
 
-Map.addLayer(treemcomb, {color: "green"}, "Trees", 0);
-Map.addLayer(shrubmcomb, {color: "brown"}, "Shrubs", 0);
-Map.addLayer(trshsel, {color: "orange"}, "Trees/Shrub 1+1", 0);
+Map.addLayer(treemcomb, {}, "Trees", 0);
+Map.addLayer(shrubmcomb, {}, "Shrubs", 0);
+Map.addLayer(trshsel, {}, "Trees/Shrub 1+1", 0);
+
+Map.addLayer(final, {}, "Final", 0);
 
 
 
