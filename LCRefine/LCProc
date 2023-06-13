@@ -130,7 +130,7 @@ var trsh = trshsel.add(29);
 
 var final = treemcomb.add(shrubmcomb).add(trshsel);
 
-//Countries 
+//Countries or Polygons of Interest
 
 var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
 var rgn = ["Europe", "Africa", "SW Asia"];
