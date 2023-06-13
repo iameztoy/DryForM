@@ -155,7 +155,7 @@ var dwVisParams = {min: 0, max: 8, palette: [
 
 Map.addLayer(mask, {}, "Selected courntries", 0);
 
-Map.addLayer(RefineStep1, "Forest Refine Step1", 0);
+Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
 Map.addLayer(WC2020Forest, {}, "World Cover 2020", 0);
 Map.addLayer(dwl, dwVisParams, 'Dynamic World', 0);
 Map.addLayer(esri_lulc2020, {}, "ESRI", 0);
