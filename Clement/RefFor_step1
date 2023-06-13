@@ -1,3 +1,7 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageVisParam = {"opacity":1,"bands":["Map"],"palette":["47be45"]},
+    imageVisParam2 = {"opacity":1,"bands":["Map"],"palette":["ff5733"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 ////////////////////////////////////////////
 ////Step1 GLOBAL PROCESSING
@@ -40,8 +44,9 @@ var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 //////////////// PROCESSING
 
 var Global_forest_step1 = WC2020_foret;
-Global_forest_step1 = Global_forest_step1.where(lc2019_otherlandcover,0);
 Global_forest_step1 = Global_forest_step1.where(lossYearGFC2000_2020,0);
+Global_forest_step1 = Global_forest_step1.where(lc2019_otherlandcover,0);
+
 Global_forest_step1 = Global_forest_step1.where(cropmask_UMD,0);
 Global_forest_step1 = Global_forest_step1.where(CH_GEDI.lt(5),0);
 
@@ -51,10 +56,7 @@ Global_forest_step1_1 = Global_forest_step1.where(lossYearGFC2000_2020,0);
 Global_forest_step1_1 = Global_forest_step1.where(cropmask_UMD,0);
 
 
-var gfs_noth = Global_forest_step1_1.subtract(Global_forest_step1);
-var gedi_lt = CH_GEDI.lt(5);
 
 Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1), {}, "Step1", 0);
 Map.addLayer(Global_forest_step1_1.updateMask(Global_forest_step1_1), {}, "Step1 no Threshold", 0);
-Map.addLayer = (gedi_lt, {}, "GEDI Lt 5", 0);
-Map.addLayer(gfs_noth, {}, "Difference", 0);
+
