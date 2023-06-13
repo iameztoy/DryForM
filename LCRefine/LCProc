@@ -76,7 +76,6 @@ var WC2020Forest = WC2020.eq(10);
 
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
-
 var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
 var dwM_shrub = dwMode.eq(5).rename(['Shrubs']);
 
@@ -85,7 +84,6 @@ var dwM_shrub = dwMode.eq(5).rename(['Shrubs']);
 var esri_aoi = esri_lulc2020.mosaic(); 
 var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
 var esri_shrub = esri_aoi.eq(7).rename(['shrub']);
-
 
 // 3. ESA World Cover 2020
 
@@ -98,7 +96,6 @@ var wrimax = TC_wri.max();
 var wri80 = wrimax.eq(80);
 var wri90 = wrimax.eq(90);
 var wri100 = wrimax.eq(100);
-
 var wri_Tree = wri80.add(wri90).add(wri100);
 var wri_Tree = wri_Tree.unmask(0); //Reclass mask to zero zo the calculation can go beyond the boundaries of the WRI dataset
 
@@ -133,8 +130,6 @@ var trsh = trshsel.add(29);
 
 var final = treemcomb.add(shrubmcomb).add(trshsel);
 
-
-
 //Countries 
 
 var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
@@ -148,7 +143,6 @@ var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
 //----------------
 // SAMPLING
 //
-
 var region = AOIpl;
 
 // Generate x random points with the region.
@@ -158,7 +152,7 @@ var randomPoints = ee.FeatureCollection.randomPoints(
 
 
 var bounding_box_func = function(feature) {
-    var intermediate_buffer = feature.buffer(128);  // buffer radius, half your box width in m
+    var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
     var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
        return(intermediate_box); // Return the bounding box
       };
