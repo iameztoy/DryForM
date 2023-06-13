@@ -247,7 +247,7 @@ for (var f in featlist) {
     image: sumrec,
     //description: name+disS.toString(),
     folder: "EEtest",
-    fileNamePrefix: name+disS.toString(),
+    //fileNamePrefix: name+disS.toString(),
     region: feat.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
