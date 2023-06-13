@@ -207,7 +207,7 @@ var bounding_box_func = function(feature) {
       };
       
 // Apply function
-var bounding_boxes = randomPoints.map(bounding_box_func);
+var Zones = randomPoints.map(bounding_box_func);
 
 Map.addLayer(bounding_boxes, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 
@@ -244,7 +244,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toDrive({
-    image: img,
+    image: sumrec,
     description: name+disS.toString(),
     folder: "EEtest",
     fileNamePrefix: name+disS.toString(),
