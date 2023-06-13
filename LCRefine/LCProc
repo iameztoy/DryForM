@@ -209,6 +209,11 @@ var bounding_box_func = function(feature) {
 // Apply function
 var Zones = randomPoints.map(bounding_box_func);
 
+
+var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api')
+Zones = utils.Classification.assignIds(Zones, 'ID')
+print(Zones)
+
 Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 
 
@@ -218,7 +223,7 @@ Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 #######################################
 #######################################*/
 
-
+/*
 
 //Export 
 Export.image.toDrive({
@@ -238,19 +243,19 @@ Export.image.toAsset({
     maxPixels: 1e13
   });
   
-
+*/
   
 var featlist = Zones.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("id");
+  var dis = feat.get("attributeName");
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toDrive({
     image: sumrec,
-    description: name+disS, //.toString(),
+    description: name+disS.toString(),
     folder: "TrainingSets",
-    fileNamePrefix: name+disS, //.toString(),
+    fileNamePrefix: name+disS.toString(),
     region: feat, //.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
