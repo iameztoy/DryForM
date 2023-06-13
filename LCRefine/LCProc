@@ -219,6 +219,7 @@ Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 #######################################*/
 
 
+
 //Export 
 Export.image.toDrive({
     image: sumDEW,
@@ -237,6 +238,8 @@ Export.image.toAsset({
     maxPixels: 1e13
   });
   
+
+  
 var featlist = Zones.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
@@ -248,7 +251,7 @@ for (var f in featlist) {
     description: name+disS, //.toString(),
     folder: "EEtest",
     fileNamePrefix: name+disS, //.toString(),
-    region: feat.geometry().bounds(),
+    region: feat, //.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
   });
