@@ -31,7 +31,9 @@ var AOIpl =
 // Datasets
 //
 
-var ForestRefine = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first();
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
 var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
@@ -152,6 +154,8 @@ var dwVisParams = {min: 0, max: 8, palette: [
 
 
 Map.addLayer(mask, {}, "Selected courntries", 0);
+
+Map.addLayer(RefineStep1, "Forest Refine Step1", 0);
 Map.addLayer(WC2020Forest, {}, "World Cover 2020", 0);
 Map.addLayer(dwl, dwVisParams, 'Dynamic World', 0);
 Map.addLayer(esri_lulc2020, {}, "ESRI", 0);
