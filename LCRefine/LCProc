@@ -249,7 +249,7 @@ for (var f in featlist) {
   Export.image.toDrive({
     image: sumrec,
     description: name+disS, //.toString(),
-    folder: "EEtest",
+    folder: "TrainingSets",
     fileNamePrefix: name+disS, //.toString(),
     region: feat, //.geometry().bounds(),
     scale: 10,
