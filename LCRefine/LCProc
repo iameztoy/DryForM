@@ -145,7 +145,34 @@ var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
   .filter(ee.Filter.inList('country_na', ctr));
   //.filter(ee.Filter.inList('wld_rgn', rgn));   
   
- 
+//----------------
+// SAMPLING
+//
+
+var region = AOIpl;
+
+// Generate x random points with the region.
+var randomPoints = ee.FeatureCollection.randomPoints(
+    {region: region, points: 50, seed: 0, maxError: 1});
+
+
+
+var bounding_box_func = function(feature) {
+    var intermediate_buffer = feature.buffer(128);  // buffer radius, half your box width in m
+    var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
+       return(intermediate_box); // Return the bounding box
+      };
+      
+// Apply function
+var Zones = randomPoints.map(bounding_box_func);
+
+//Add Unique ID to each feature so it can be used to give a name while exporting to Drive
+var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api')
+Zones = utils.Classification.assignIds(Zones, 'ID')
+
+
+
+
 //--------------
 //VISUALIZATION
 
@@ -188,32 +215,10 @@ Map.addLayer(trshsel, {}, "Trees/Shrub 1+1", 0);
 Map.addLayer(final, {}, "Final", 0);
 
 
-//----------------
-// SAMPLING
-//
 
-var region = AOIpl;
 
-// Generate x random points with the region.
-var randomPoints = ee.FeatureCollection.randomPoints(
-    {region: region, points: 50, seed: 0, maxError: 1});
 
 Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
-
-var bounding_box_func = function(feature) {
-    var intermediate_buffer = feature.buffer(128);  // buffer radius, half your box width in m
-    var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
-       return(intermediate_box); // Return the bounding box
-      };
-      
-// Apply function
-var Zones = randomPoints.map(bounding_box_func);
-
-
-var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api')
-Zones = utils.Classification.assignIds(Zones, 'ID')
-print(Zones)
-
 Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 
 
