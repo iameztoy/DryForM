@@ -104,7 +104,7 @@ var wri_Tree = wri_Tree.unmask(0); //Reclass mask to zero zo the calculation can
 
 // n. Overall Trees 2020
 
-var sumDE = WC2020.add(dwM_Tree).add(esri_Tree);
+var sumDE = WC2020Forest.add(dwM_Tree).add(esri_Tree);
 var sumDEW = sumDE.add(wri_Tree);
 var sumDEWs = sumDEW.where(lossYearGFC2000_2020,0); // "s" refers to subtract
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
