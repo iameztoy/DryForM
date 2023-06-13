@@ -196,7 +196,7 @@ var region = AOIpl;
 
 // Generate x random points with the region.
 var randomPoints = ee.FeatureCollection.randomPoints(
-    {region: region, points: 2000, seed: 0, maxError: 1});
+    {region: region, points: 50, seed: 0, maxError: 1});
 
 Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
 
@@ -236,6 +236,23 @@ Export.image.toAsset({
     scale: 10,
     maxPixels: 1e13
   });
+  
+var featlist = Zones.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: img,
+    description: name+disS.toString(),
+    folder: "EEtest",
+    fileNamePrefix: name+disS.toString(),
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
 
 
 // For testing purposes: (to be deleted)
