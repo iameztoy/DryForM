@@ -241,11 +241,11 @@ var featlist = Zones.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
   var dis = feat.get("id");
-  var disS = dis.getInfo();
+  //var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toDrive({
     image: sumrec,
-    description: name+disS.toString(),
+    //description: name+disS.toString(),
     folder: "EEtest",
     fileNamePrefix: name+disS.toString(),
     region: feat.geometry().bounds(),
