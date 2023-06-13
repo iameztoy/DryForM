@@ -209,7 +209,7 @@ var bounding_box_func = function(feature) {
 // Apply function
 var Zones = randomPoints.map(bounding_box_func);
 
-Map.addLayer(bounding_boxes, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
+Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 
 
 
