@@ -5,11 +5,15 @@ var geometry = /* color: #ffc82d */ee.Geometry.Polygon(
           [7.698062417731255, 45.62117749755701],
           [7.698014137968987, 45.621019918806496],
           [7.698067782149285, 45.62093362549354]]]),
-    geometry2 = /* color: #0b4a8b */ee.Geometry.Point([7.698110697493523, 45.621001159401914]);
+    geometry2 = /* color: #0b4a8b */ee.Geometry.Point([7.698110697493523, 45.621001159401914]),
+    table = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Caatinga"),
+    table2 = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado"),
+    table3 = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
+    table4 = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_TRF_SA");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var p = /* color: #0b4a8b */geometry2,
     g = /* color: #ffc82d */geometry,
-    AOI = ee.FeatureCollection("users/torusa/Alps-Convention_borders");
+    AOI = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_TRF_SA");
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PHENOLOGICAL METRICS ESTIMATOR IN MOUTAIN AREAS (PMEMA)
@@ -541,7 +545,7 @@ Export.image.toDrive({
   fileFormat: 'GeoTIFF',
   maxPixels: 3784216672400,
   //crs: 'EPSG 23032',
-  //folder: 'S2',
+  folder: 'Phenology',
 });
 
 // EOS
@@ -553,7 +557,7 @@ Export.image.toDrive({
   fileFormat: 'GeoTIFF',
   maxPixels: 3784216672400,
   //crs: 'EPSG 23032',
-  //folder: 'S2',
+  folder: 'Phenology',
 });
 // LOS 
 Export.image.toDrive({
@@ -564,7 +568,7 @@ Export.image.toDrive({
   fileFormat: 'GeoTIFF',
   maxPixels: 3784216672400,
   //crs: 'EPSG 23032',
-  //folder: 'S2',
+  folder: 'Phenology',
 });
 print('JOIN THE PHENOLOGICAL SIDE OF THE EARTH ENGINE!' );
 //////////////////////////////
