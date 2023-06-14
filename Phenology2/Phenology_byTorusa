@@ -59,12 +59,12 @@ var geometry = g;
 // SET TIME
 //////////////////////////////////////////////////////////////////////////
 // Set processing year of interest 
-var year1 = 2021; 
+var year1 = 2020; 
 // Set composites temporal resolution - LAG
 var lag = 20; 
 // Define the time range to compute the PME. As Phenological Active Season it is suggested 
-var startDate = year1+'-03-15'; // YYY-MM-DD start YYYY-03-01 
-var endDate = year1+'-12-20'; // YYY-MM-DD start YYYY-12-20
+var startDate = year1+'-01-01'; // YYY-MM-DD start YYYY-03-01 
+var endDate = year1+'-12-31'; // YYY-MM-DD start YYYY-12-20
 //////////////////////////////////////////////////////////////////////////////////////////
 // SET VI - the vegetation index (VI) on which you like to compute PME
 // (VI) options: 
