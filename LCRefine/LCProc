@@ -146,11 +146,11 @@ var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
 //----------------
 // SAMPLING
 //
-var region = AOIpl;
+var region = Chaco;
 
 // Generate x random points with the region.
 var randomPoints = ee.FeatureCollection.randomPoints(
-    {region: region, points: 50, seed: 0, maxError: 1});
+    {region: region, points: 1000, seed: 0, maxError: 1});
 
 
 
