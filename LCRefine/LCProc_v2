@@ -318,7 +318,7 @@ var clip = sumDEWs.clip(cliptest)
 Map.addLayer(clip, {}, "clip", 0);
 
 
-var mask = clip.lt(0) 
+var mask = clip.gte(0) 
 var clip2 = clip.updateMask(mask)
 Map.addLayer(clip2, {}, "clip masked", 0);
 
