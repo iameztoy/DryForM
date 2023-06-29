@@ -40,6 +40,10 @@ var AOIpl =
 //ESRI 0.80
 //Hansen? 0.8
 
+//2020 baseline: need also to mitigate the impact (outweighs) of  number of datasets used per pixel;
+//The maximum score we get is a sum of the number of products used, so to mitigate this issue
+//Need to remove all about esawc2020
+
 
 
 //--------------
