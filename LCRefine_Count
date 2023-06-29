@@ -34,16 +34,16 @@ var r1 = WC2020Forest.rename("f")
 var r2 = dwM_Tree.rename("f")
 var r3 = wri_Tree1.rename("f")
 
-
-
-
 var col = ee.ImageCollection.fromImages([r1, r2, r3]);
 //print(col)
 
-var count = col.count()
-Map.addLayer(count)
+var valid = col.map(function(img) {
+  return img.updateMask(img.gte(1));
+});
 
-.count()
+
+var count = valid.count()
+Map.addLayer(count)
 
 
 
