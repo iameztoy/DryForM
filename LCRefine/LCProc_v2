@@ -121,7 +121,7 @@ var wri_Tree = wri_Tree.unmask(0); //Reclass mask to zero zo the calculation can
 
 var sumDE = WC2020Forest.add(dwM_Tree).add(esri_Tree);
 var sumDEW = sumDE.add(wri_Tree);
-var sumDEWs = sumDEW.add(HTC_2020,0); // "s" refers to subtract
+var sumDEWs = sumDEW.add(HTC_2020); 
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
 var sumrec = sumDEWs.gte(1);
 
