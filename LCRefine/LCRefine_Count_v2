@@ -1,3 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff907b","ffe81c","a9ff6f","3ceeff","0e64ff"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
@@ -18,26 +21,29 @@ var WC2020Forest = WC2020.eq(10);
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
 var dwM_Tree = dwMode.eq(1)
-
 var wrimax = TC_wri.max();
 var wri80 = wrimax.eq(80);
 var wri90 = wrimax.eq(90);
 var wri100 = wrimax.eq(100);
 var wri_Tree = wri80.add(wri90).add(wri100);
 var wri_Tree = wri_Tree.gte(1)
-
-
+var esri_aoi = esri_lulc2020.mosaic(); 
+var esri_Tree = esri_aoi.eq(2).rename(['Trees']);
+var glc10m = GLC10.mosaic()
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 
 var r1 = WC2020Forest.rename("f")
 var r2 = dwM_Tree.rename("f")
 var r3 = wri_Tree.rename("f")
+var r4 = esri_Tree.rename("f")
+var r5 = glc10mForest.rename("f")
 
-var col = ee.ImageCollection.fromImages([r1, r2, r3]);
+var col = ee.ImageCollection.fromImages([r1, r2, r3, r4, r5]);
 //print(col)
 
 
 var count = col.count()
-Map.addLayer(count)
+Map.addLayer(count, {imageVisParam}, "Product count", 1)
 
 
 
