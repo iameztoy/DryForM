@@ -1,0 +1,43 @@
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
+var glc10m = GLC10.mosaic()
+
+
+var srt = '2020-01-01'; var end = '2020-12-31';
+
+
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+
+
+
+var WC2020Forest = WC2020.eq(10);
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dwM_Tree = dwMode.eq(1)
+
+var wrimax = TC_wri.max();
+var wri80 = wrimax.eq(80);
+var wri90 = wrimax.eq(90);
+var wri100 = wrimax.eq(100);
+var wri_Tree = wri80.add(wri90).add(wri100);
+var wri_Tree = wri_Tree.gte(1)
+
+
+
+var r1 = WC2020Forest.rename("f")
+var r2 = dwM_Tree.rename("f")
+var r3 = wri_Tree.rename("f")
+
+var col = ee.ImageCollection.fromImages([r1, r2, r3]);
+//print(col)
+
+
+var count = col.count()
+Map.addLayer(count)
+
+
+
