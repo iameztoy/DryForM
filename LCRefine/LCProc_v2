@@ -43,6 +43,7 @@ var AOIpl =
 //2020 baseline: need also to mitigate the impact (outweighs) of  number of datasets used per pixel;
 //The maximum score we get is a sum of the number of products used, so to mitigate this issue
 //Need to remove all about esawc2020
+//Add From GLC10 https://gee-community-catalog.org/projects/glc10/?h=glc10
 
 
 
@@ -57,6 +58,7 @@ var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://develope
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
 var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 
 // GFC 2001-2021
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
