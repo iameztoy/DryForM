@@ -35,6 +35,11 @@ var AOIpl =
 //Me: we could control a bit better whether to focus on omission or commission error
 //for normalization see: https://gis.stackexchange.com/questions/313394/normalization-in-google-earth-engine
 
+//DW 0.73
+//WC 0.70
+//ESRI 0.80
+//Hansen? 0.8
+
 
 
 //--------------
@@ -43,7 +48,7 @@ var AOIpl =
 
 var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
 
-var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first();
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
 var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
