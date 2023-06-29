@@ -120,9 +120,9 @@ var wrimax = TC_wri.max();
 var wri80 = wrimax.eq(80);
 var wri90 = wrimax.eq(90);
 var wri100 = wrimax.eq(100);
-var wri_Tree = wri80.add(wri90).add(wri100);
-var wri_Tree = wri_Tree.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
-var wri_Tree = wri_Tree.gte(1)
+var wri_Tree3 = wri80.add(wri90).add(wri100);
+var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
+var wri_Tree = wri_Treeu.gte(1)
 
 // 5. GLC10
 
