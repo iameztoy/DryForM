@@ -133,7 +133,7 @@ var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 // n. Overall Trees 2020
 
 var sumDE = WC2020Forest.add(dwM_Tree).add(esri_Tree);
-var sumDEW = sumDE.add(wri_Tree);
+var sumDEW = sumDE.add(wri_Tree).add(glc10mForest);
 var sumDEWs = sumDEW.add(HTC_2020); 
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
 var sumrec = sumDEWs.gte(1);
