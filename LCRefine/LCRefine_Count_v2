@@ -9,13 +9,10 @@ var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var glc10m = GLC10.mosaic()
 
-
 var srt = '2020-01-01'; var end = '2020-12-31';
 
 
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
-
-
 
 var WC2020Forest = WC2020.eq(10);
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
