@@ -311,19 +311,18 @@ for (var f in featlist) {
 
 // For testing purposes: (to be deleted)
 
-
-
+//Appying a mode filter
 
 var clip = sumDEWs.clip(cliptest)
 Map.addLayer(clip, {}, "clip", 0);
 
 
-var mask = clip.gte(0) 
-var clip2 = clip.updateMask(mask)
-Map.addLayer(clip2, {}, "clip masked", 0);
+var mask = clip.gte(0) //there are negative values. We are extracting looss where originally (2000) was not forest
+var clip = clip.updateMask(mask)
+print(clip)
 
+//Map.addLayer(clip2, {}, "clip masked", 0);
 Map.addLayer(treeCover, {}, "Hansen >10", 0);
-
 
 var smooth = clip2.focalMode({
     radius: 3,
