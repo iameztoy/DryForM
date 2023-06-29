@@ -44,11 +44,11 @@ Map.addLayer(count, imageVisParam, "Product count", 1)
 
 
 
-Map.addLayer(WC2020Forest)
-Map.addLayer(dwM_Tree)
-Map.addLayer(wri_Tree)
-Map.addLayer(esri_Tree)
-Map.addLayer(glc10mForest)
+Map.addLayer(WC2020Forest, {}, "WC", 0)
+Map.addLayer(dwM_Tree, {}, "DW", 0)
+Map.addLayer(wri_Tree, {}, "WRI", 0)
+Map.addLayer(esri_Tree, {}, "ESRI", 0)
+Map.addLayer(glc10mForest, {}, "GLC", 0)
 
 
 
