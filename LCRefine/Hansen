@@ -1,0 +1,26 @@
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var treeCover = gfcImage.select(['treecover2000']);
+var treeCover = gfcImage.select(['treecover2000']);
+var lossImage = gfcImage.select(['loss']);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+
+var treeCover10 = treeCover.gte(10);
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var HTC2020 = treeCover10.subtract(lossb2020);
+var m = HTC2020
+
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1");
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+var thg = CH_GEDI.lt(5);
+
+
+Map.addLayer(treeCover, {min:0, max:100},"Tree Cover", 0);
+Map.addLayer(treeCover10, {min:0, max:1},"treeCover10", 0);
+Map.addLayer(lossImage, {min:0, max:1},"lossImage", 0);
+Map.addLayer(lossYear, {min:0, max:22},"lossyear", 0);
+Map.addLayer(lossb2020, {min:0, max:1},"lossb2020", 0);
+Map.addLayer(lossYearGFC2000_2020, {min:0, max:1},"TC10_lossYear", 0);
+Map.addLayer(HTC2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
+Map.addLayer(RefineStep1, {min:0, max:1},"Step1", 0); 
+Map.addLayer(thg, {min:0, max:1}, "Height < 5");
