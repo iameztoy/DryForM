@@ -28,6 +28,13 @@ var AOIpl =
 
 //preliminary AOIpl and AOIpt is only for testing purposes
 
+//idea from https://www.mdpi.com/2072-4292/14/16/4101: 
+//DW 72% versus reported 74%; WC 65% versus reported 74%; Esri 75% versus 85%. 
+//We note that it is also possible to use all three LULC products in combination by 
+//creating some form of majority vote or weighted average.  
+//Me: we could control a bit better whether to focus on omission or commission error
+//for normalization see: https://gis.stackexchange.com/questions/313394/normalization-in-google-earth-engine
+
 
 
 //--------------
