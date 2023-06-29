@@ -207,6 +207,7 @@ Map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
 Map.addLayer(esri_shrub, {}, "ESRI Shrub", 0);
 Map.addLayer(esa_Tree, {}, "ESA Tree", 0);
 Map.addLayer(esa_shrub, {}, "ESA Shrub", 0);
+Map.addLayer(HTC2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
 Map.addLayer(wri80, {}, "WRI 80", 0);
 Map.addLayer(wri90, {}, "WRI 90", 0);
 Map.addLayer(wri100, {}, "WRI 100", 0);
