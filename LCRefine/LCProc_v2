@@ -126,7 +126,7 @@ var wri_Tree = wri_Tree.unmask(0); //Reclass mask to zero zo the calculation can
 // 5. GLC10
 
 var glc10m = GLC10.mosaic()
-var glc10mForest = GLC10.eq(20); //Forest 20, Shrub	40
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 
 
 
