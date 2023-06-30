@@ -8,6 +8,7 @@ var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also a
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var glc10m = GLC10.mosaic()
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 
 var srt = '2020-01-01'; var end = '2020-12-31';
 
@@ -28,14 +29,16 @@ var esri_aoi = esri_lulc2020.mosaic();
 var esri_Tree = esri_aoi.eq(2).rename(['Trees']);
 var glc10m = GLC10.mosaic()
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var gedi5 = CH_GEDI.gte(5);
 
 var r1 = WC2020Forest.rename("f")
 var r2 = dwM_Tree.rename("f")
 var r3 = wri_Tree.rename("f")
 var r4 = esri_Tree.rename("f")
 var r5 = glc10mForest.rename("f")
+var r6 = gedi5.rename("f")
 
-var col = ee.ImageCollection.fromImages([r1, r2, r3, r4, r5]);
+var col = ee.ImageCollection.fromImages([r1, r2, r3, r4, r5, r6]);
 //print(col)
 
 
@@ -43,12 +46,12 @@ var count = col.count()
 Map.addLayer(count, imageVisParam, "Product count", 1)
 
 
-
 Map.addLayer(WC2020Forest, {}, "WC", 0)
 Map.addLayer(dwM_Tree, {}, "DW", 0)
 Map.addLayer(wri_Tree, {}, "WRI", 0)
 Map.addLayer(esri_Tree, {}, "ESRI", 0)
 Map.addLayer(glc10mForest, {}, "GLC", 0)
+Map.addLayer(gedi5, {}, "GEDI => 5", 0)
 
 
 
