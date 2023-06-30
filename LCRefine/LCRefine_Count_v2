@@ -44,7 +44,7 @@ var col = ee.ImageCollection.fromImages([r1, r2, r3, r4, r5, r6]);
 
 
 var count = col.count()
-Map.addLayer(count, imageVisParam, "Count", 0);
+Map.addLayer(count, imageVisParam2, "Count", 0);
 
 
 Map.addLayer(WC2020Forest, {}, "WC", 0)
