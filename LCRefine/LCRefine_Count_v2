@@ -1,5 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff907b","ffe81c","a9ff6f","3ceeff","0e64ff"]};
+var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff907b","ffe81c","a9ff6f","3ceeff","0e64ff"]},
+    imageVisParam2 = {"opacity":1,"bands":["f"],"max":6,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
@@ -43,7 +44,7 @@ var col = ee.ImageCollection.fromImages([r1, r2, r3, r4, r5, r6]);
 
 
 var count = col.count()
-Map.addLayer(count, imageVisParam, "Product count", 1)
+Map.addLayer(count, imageVisParam, "Count", 0);
 
 
 Map.addLayer(WC2020Forest, {}, "WC", 0)
