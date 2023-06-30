@@ -283,13 +283,7 @@ Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 #######################################
 #######################################*/
 
-Export.image.toAsset({
-    image: sumDEWs,
-    description: 'SumTCF_7cl',
-    assetId: 'SumTCF_7cl',
-    scale: 10,
-    maxPixels: 1e13
-  });
+
 
 /*
 
@@ -307,6 +301,14 @@ Export.image.toAsset({
     description: 'TreeCombo Brazil',
     assetId: 'projects/ee-dryforestia/assets/sumrec',
     region: mask,
+    scale: 10,
+    maxPixels: 1e13
+  });
+
+Export.image.toAsset({
+    image: sumDEWs,
+    description: 'SumTCF_7cl',
+    assetId: 'SumTCF_7cl',
     scale: 10,
     maxPixels: 1e13
   });
