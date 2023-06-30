@@ -64,10 +64,11 @@ var AOIpl =
 
 //2020 baseline: need also to mitigate the impact (outweighs) of  number of datasets used per pixel;
 //The maximum score we get is a sum of the number of products used, so to mitigate this issue
-//Need to remove all about esawc2020
-//Add From GLC10 https://gee-community-catalog.org/projects/glc10/?h=glc10
 //Check negative values of Hansen tree cover (I get some -1 values). To be further checked but:
 //it is probably because we are subtracting a loss to the tree cover when this was not a tree in 2000
+
+// DONE //Need to remove all about esawc2020
+// DONE //Add From GLC10 https://gee-community-catalog.org/projects/glc10/?h=glc10
 
 
 
