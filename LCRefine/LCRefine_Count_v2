@@ -69,7 +69,7 @@ Map.addLayer(HTC_2020, {}, "Hansen", 0)
 
 Export.image.toAsset({
     image: count,
-    description: 'Count Valid observations',
+    description: 'CountValid',
     assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
     scale: 10,
     maxPixels: 1e13
