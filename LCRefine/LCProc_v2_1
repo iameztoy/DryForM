@@ -1,7 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var AOIpl = 
     /* color: #98ff00 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -283,6 +282,14 @@ Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 /*#####################################
 #######################################
 #######################################*/
+
+Export.image.toAsset({
+    image: sumDEWs,
+    description: 'SumTCF_7cl',
+    assetId: 'SumTCF_7cl',
+    scale: 10,
+    maxPixels: 1e13
+  });
 
 /*
 
