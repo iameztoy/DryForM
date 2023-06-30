@@ -145,8 +145,7 @@ var wri_Tree = wri_Treeu.gte(1)
 var treeCover = gfcImage.select(['treecover2000']);
 var treeCover10 = treeCover.gte(10);
 var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
-var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
-var lossYearGFC2000_2020 = treeCover10.and(lossb2020);
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20)); //Sum of all losses between 2001 and 2020)
 var HTC_2020 = treeCover10.subtract(lossb2020);
 
 // 6. GLC10 and 6.1 Hansen Loss (2018-2020)
@@ -154,6 +153,8 @@ var HTC_2020 = treeCover10.subtract(lossb2020);
 var glc10m = GLC10.mosaic()
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 
+var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
+var glc10Loss = glc10mForest.subtract(HLoss2018_2020)
 
 
 
@@ -255,7 +256,9 @@ Map.addLayer(wri80, {}, "WRI 80", 0);
 Map.addLayer(wri90, {}, "WRI 90", 0);
 Map.addLayer(wri100, {}, "WRI 100", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
-
+Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
+Map.addLayer(glc10mForest, {}, "GLC 10", 0);
+Map.addLayer(glc10Loss, {}, "GLC 10 with Loss", 0);
 
 
 Map.addLayer(sumDE, {}, "sumDE", 0);
@@ -324,6 +327,8 @@ for (var f in featlist) {
 
 // For testing purposes: (to be deleted)
 
+/*
+
 //Appying a mode filter
 
 var clip = sumDEWs.clip(cliptest)
@@ -346,4 +351,6 @@ var smooth = clip2.focalMode({
 })
 //Map.addLayer(smooth)
 Map.addLayer(HTC_2020)
+
+*/
 
