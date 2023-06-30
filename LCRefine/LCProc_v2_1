@@ -77,14 +77,13 @@ var AOIpl =
 
 var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
 
-var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+//var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
-var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //v100 also available
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
-
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 
 ////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
@@ -109,8 +108,7 @@ var srt = '2020-01-01'; var end = '2020-12-31';
 // PROCESSING
 
 // 0. WorldCover 2020
-
-var WC2020Forest = WC2020.eq(10);
+//var WC2020Forest = WC2020.eq(10);
 
 // 1. Dynamic World
 
@@ -164,7 +162,7 @@ var gedi5 = CH_GEDI.gte(5);
 
 // n. Overall Trees 2020
 
-var sumDE = WC2020Forest.add(dwM_Tree).add(esri_Tree);
+var sumDE = esa_Tree.add(dwM_Tree).add(esri_Tree);
 var sumDEW = sumDE.add(wri_Tree).add(glc10Loss);
 var sumDEWs = sumDEW.add(HTC_2020).add(gedi5); 
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
@@ -244,7 +242,7 @@ Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
 
 //Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
-Map.addLayer(WC2020Forest, {}, "World Cover 2020", 0);
+
 Map.addLayer(dwl, dwVisParams, 'Dynamic World', 0);
 Map.addLayer(esri_lulc2020, {}, "ESRI", 0);
 Map.addLayer(dwM_Tree, {}, "DW Trees", 0);
