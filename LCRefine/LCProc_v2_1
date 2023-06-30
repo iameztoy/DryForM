@@ -146,7 +146,7 @@ var treeCover = gfcImage.select(['treecover2000']);
 var treeCover10 = treeCover.gte(10);
 var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
-var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
 var HTC_2020 = treeCover10.subtract(lossb2020);
 
 // 6. GLC10 and 6.1 Hansen Loss (2018-2020)
