@@ -163,7 +163,7 @@ var glc10Loss = glc10mForest.subtract(HLoss2018_2020)
 // n. Overall Trees 2020
 
 var sumDE = WC2020Forest.add(dwM_Tree).add(esri_Tree);
-var sumDEW = sumDE.add(wri_Tree).add(glc10mForest);
+var sumDEW = sumDE.add(wri_Tree).add(glc10Loss);
 var sumDEWs = sumDEW.add(HTC_2020); 
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
 var sumrec = sumDEWs.gte(1);
@@ -258,7 +258,7 @@ Map.addLayer(wri100, {}, "WRI 100", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 Map.addLayer(glc10mForest, {}, "GLC 10", 0);
-Map.addLayer(glc10Loss, {}, "GLC 10 with Loss", 0);
+Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
 
 
 Map.addLayer(sumDE, {}, "sumDE", 0);
