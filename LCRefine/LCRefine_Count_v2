@@ -55,4 +55,10 @@ Map.addLayer(glc10mForest, {}, "GLC", 0)
 Map.addLayer(gedi5, {}, "GEDI => 5", 0)
 
 
-
+Export.image.toAsset({
+    image: count,
+    description: 'Global_forest_step1',
+    assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
+    scale: 10,
+    maxPixels: 1e13
+  });
