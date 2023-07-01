@@ -147,6 +147,16 @@ var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
 //var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
 var HTC_2020 = treeCover10.subtract(lossb2020);
 
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var HTC_2020 = HTC_2020.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
 // 6. GLC10 and 6.1 Hansen Loss (2018-2020)
 
 var glc10m = GLC10.mosaic();
