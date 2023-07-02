@@ -125,41 +125,26 @@ var TotalShrub2020s = TotalShrub2020.subtract(gedi5);
 var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
 var TotalGrass2020s = TotalGrass2020.subtract(gedi5);
 
+//Remap
 
-//Countries or Polygons of Interest
+var fromList = [-1, 0, 1, 2, 3, 4];
+var toList =   [0, 0, 1, 2, 3, 4];
 
-var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
-var rgn = ["Europe", "Africa", "SW Asia"];
+var TotalShrub2020sr = TotalShrub2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'Total Shrub 2020'
+});
 
-// Define mask to clip.
-var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
-  .filter(ee.Filter.inList('country_na', ctr));
-  //.filter(ee.Filter.inList('wld_rgn', rgn));   
-  
-//----------------
-// SAMPLING
-//
-var region = Chaco;
-
-// Generate x random points with the region.
-var randomPoints = ee.FeatureCollection.randomPoints(
-    {region: region, points: 500, seed: 0, maxError: 1});
-
-var bounding_box_func = function(feature) {
-    var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
-    var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
-       return(intermediate_box); // Return the bounding box
-      };
-      
-// Apply function
-var Zones = randomPoints.map(bounding_box_func);
-
-//Add Unique ID to each feature so it can be used to give a name while exporting to Drive
-var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
-Zones = utils.Classification.assignIds(Zones, 'ID');
+var TotalGrass2020sr = TotalGrass2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'Total Shrub 2020'
+});
 
 
-//--------------
 //VISUALIZATION
 
 Map.addLayer(mask, {}, "Selected courntries", 0);
@@ -167,11 +152,10 @@ Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
 
-Map.addLayer(TotalGrass2020s, {}, "Total Grass", 0);
-Map.addLayer(TotalShrub2020s , {}, "Total Shrub", 0);
+Map.addLayer(TotalGrass2020sr, {}, "Total Grass 2020", 0);
+Map.addLayer(TotalShrub2020sr, {}, "Total Shrub 2020", 0);
 
 
 
 
-//Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
 
