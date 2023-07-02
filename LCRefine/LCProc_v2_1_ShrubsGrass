@@ -40,7 +40,8 @@ var AOIpl =
          [23.794739799900103, -5.194746813105823],
          [37.58327916365244, -5.591799745027464],
          [3.859078101309401, 11.17342485789545]]),
-    imageVisParam = {"opacity":1,"bands":["remapped"],"palette":["000000","ff0606","ffae42","fffd26","74ff26"]};
+    imageVisParam = {"opacity":1,"bands":["remapped"],"palette":["000000","ff0606","ffae42","fffd26","74ff26"]},
+    imVP8cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff0000","ffa732","ffe81e","7cff32","81fff2","3499ff","2214ff","fd22ff"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
@@ -160,7 +161,7 @@ Map.addLayer(Chaco, {}, "Chaco", 0);
 
 Map.addLayer(TotalGrass2020sr, imageVisParam, "Total Grass 2020", 0);
 Map.addLayer(TotalShrub2020sr, imageVisParam, "Total Shrub 2020", 0);
-Map.addLayer(totalSG, {}, "Total Shrub/Scrub and Grass, 0")
+Map.addLayer(totalSG, imVP8cl, "Total Shrub/Scrub and Grass", 0) //Range 0-8
 
 
 
