@@ -148,6 +148,8 @@ var TotalGrass2020sr = TotalGrass2020s.remap({
 var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
+//Total shrub/scrub + Grass
+var totalSG = TotalShrub2020sr.add(TotalGrass2020sr)
 
 
 //VISUALIZATION
@@ -156,8 +158,9 @@ Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
 
-Map.addLayer(TotalGrass2020sr, {imageVisParam}, "Total Grass 2020", 0);
-Map.addLayer(TotalShrub2020sr, {imageVisParam}, "Total Shrub 2020", 0);
+Map.addLayer(TotalGrass2020sr, imageVisParam, "Total Grass 2020", 0);
+Map.addLayer(TotalShrub2020sr, imageVisParam, "Total Shrub 2020", 0);
+Map.addLayer(totalSG, {}, "Total Shrub/Scrub and Grass, 0")
 
 
 
