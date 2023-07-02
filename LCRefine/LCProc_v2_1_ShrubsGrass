@@ -126,7 +126,6 @@ var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
 var TotalGrass2020s = TotalGrass2020.subtract(gedi5);
 
 
-
 //Countries or Polygons of Interest
 
 var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
@@ -146,8 +145,6 @@ var region = Chaco;
 var randomPoints = ee.FeatureCollection.randomPoints(
     {region: region, points: 500, seed: 0, maxError: 1});
 
-
-
 var bounding_box_func = function(feature) {
     var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
     var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
@@ -162,20 +159,19 @@ var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
 Zones = utils.Classification.assignIds(Zones, 'ID');
 
 
-
-
 //--------------
 //VISUALIZATION
-
-var dwVisParams = {min: 0, max: 8, palette: [
-    '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
-    '#C4281B', '#A59B8F', '#B39FE1']};
-
 
 Map.addLayer(mask, {}, "Selected courntries", 0);
 Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
+
+Map.addLayer(TotalGrass2020s, {}, "Total Grass", 0);
+Map.addLayer(TotalShrub2020s , {}, "Total Shrub", 0);
+
+
+
 
 //Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
 
