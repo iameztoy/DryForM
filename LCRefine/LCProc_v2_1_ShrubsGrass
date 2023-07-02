@@ -39,7 +39,8 @@ var AOIpl =
         [[24.187193992609796, -4.4869702092285575],
          [23.794739799900103, -5.194746813105823],
          [37.58327916365244, -5.591799745027464],
-         [3.859078101309401, 11.17342485789545]]);
+         [3.859078101309401, 11.17342485789545]]),
+    imageVisParam = {"opacity":1,"bands":["remapped"],"palette":["000000","ff0606","ffae42","fffd26","74ff26"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
@@ -134,26 +135,29 @@ var TotalShrub2020sr = TotalShrub2020s.remap({
   from: fromList,
   to: toList,
   defaultValue: 0,
-  bandName: 'Total Shrub 2020'
+  //bandName: 'Total Shrub 2020'
 });
 
 var TotalGrass2020sr = TotalGrass2020s.remap({
   from: fromList,
   to: toList,
   defaultValue: 0,
-  bandName: 'Total Shrub 2020'
+  //bandName: 'Total Grass 2020'
 });
+
+var TotalShrub2020sr = TotalShrub2020sr.unmask();
+var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
 
 
 //VISUALIZATION
 
-Map.addLayer(mask, {}, "Selected courntries", 0);
 Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
 
-Map.addLayer(TotalGrass2020sr, {}, "Total Grass 2020", 0);
-Map.addLayer(TotalShrub2020sr, {}, "Total Shrub 2020", 0);
+Map.addLayer(TotalGrass2020sr, {imageVisParam}, "Total Grass 2020", 0);
+Map.addLayer(TotalShrub2020sr, {imageVisParam}, "Total Shrub 2020", 0);
 
 
 
