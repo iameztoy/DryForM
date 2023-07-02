@@ -159,8 +159,8 @@ Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
 
-Map.addLayer(TotalGrass2020sr, imageVisParam, "Total Grass 2020", 0);
-Map.addLayer(TotalShrub2020sr, imageVisParam, "Total Shrub 2020", 0);
+Map.addLayer(TotalGrass2020sr, imageVisParam, "Total Grass 2020", 0); //Range 0-4
+Map.addLayer(TotalShrub2020sr, imageVisParam, "Total Shrub 2020", 0); //Range 0-4
 Map.addLayer(totalSG, imVP8cl, "Total Shrub/Scrub and Grass", 0) //Range 0-8
 
 
