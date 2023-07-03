@@ -202,6 +202,8 @@ var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
+print(TotTC_c_r)
+
 //Image Collection of all Tree/Forest bands
 
 var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r]);
@@ -406,40 +408,38 @@ Map.addLayer(HTC_2020)
 
 //UI and Charts
 
-var panel = ui.Panel();
-panel.style().set('width', '500px');
+//VALUE 1 Total Count
 Map.style().set('cursor', 'crosshair');
-
-// Create an intro panel with labels.
-var intro = ui.Panel([
-  ui.Label({
-    value: 'Tree/Forest Explorer',
-    style: {fontSize: '20px', fontWeight: 'bold'}
-  }),
-  
-  ui.Label({
-    value: 'Click on map to get a chart',
-    style: {fontSize: '14px', fontWeight: 'bold'}
-  }),
-]);
-
-panel.add(intro);
-ui.root.insert(0, panel);
-
-
-
-var lon = ui.Label();
-var lat = ui.Label();
-
+var inspector = ui.Panel([ui.Label('Click to get Tree/Forest Count')]);
+Map.add(inspector);
 
 Map.onClick(function(coords) {
-  // Update the lon/lat panel with values from the click event.
-  lon.setValue('lon: ' + coords.lon.toFixed(2)),
-  lat.setValue('lat: ' + coords.lat.toFixed(2));
-  var point = ee.Geometry.Point(coords.lon, coords.lat);
+  
+  //BLOCK 1
+  
+  // Show the loading label.
+  inspector.widgets().set(0, ui.Label({
+    value: 'Loading...',
+    style: {color: 'gray'}
+  }));
 
-  var chart =
-    ui.Chart.image
+  // Determine the mean NDVI, a long-running server operation.
+  var point = ee.Geometry.Point(coords.lon, coords.lat);
+  //var meanNdvi = TotTC_c_r;
+  var sample = TotTC_c_r.sample(point, 10);
+  var computedValue = sample.first().get('Total_TreeForest');
+
+  // Request the value from the server.
+  computedValue.evaluate(function(result) {
+    // When the server returns the value, show it.
+    inspector.widgets().set(0, ui.Label({
+      value: 'Mean NDVI: ' + result.toFixed(2),
+    }));
+  }); // END of BLOCK 1
+  
+  //BLOCK 2
+  
+var chart = ui.Chart.image
         .series({
           imageCollection: ic_allTF,
           region: point,
@@ -458,12 +458,7 @@ Map.onClick(function(coords) {
           lineWidth: 5,
           //colors: ['e37d05', '1d6b99'],
           curveType: 'function'
-        });
-
-  panel.widgets().set(1, chart); //Locate chart inside panel
-  
-  
-});
-
-
-
+        }); //END of BLOCK 2
+print(chart)
+    }); //END OF MAP ON CLICK
+ 
