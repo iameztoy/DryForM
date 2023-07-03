@@ -12,7 +12,7 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9");
 var glc10m = GLC10.mosaic()
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 
-var srt = '2020-01-01'; var end = '2020-12-31';
+var srt = '2020-01-01'; var end = '2021-01-01';
 
 
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
