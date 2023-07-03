@@ -70,8 +70,8 @@ ui.url.set('chipwidth', chipWidthUrl);
 // #############################################################################
 
 // Style.
-var CONTROL_PANEL_WIDTH = '280px';
-var CONTROL_PANEL_WIDTH_HIDE = '141px';
+var CONTROL_PANEL_WIDTH = '500px'; //orig. "280px"
+var CONTROL_PANEL_WIDTH_HIDE = '141px'; //orig. "141px"
 var textFont = {fontSize: '12px'};
 var headerFont = {
   fontSize: '13px', fontWeight: 'bold', margin: '4px 8px 0px 8px'};
@@ -82,7 +82,7 @@ var infoFont = {fontSize: '11px', color: '#505050'};
 // Control panel.
 var controlPanel = ui.Panel({
   style: {position: 'top-left', width: CONTROL_PANEL_WIDTH_HIDE,
-    maxHeight: '90%'
+    maxHeight: '90%' //orig: "90%"
   }});
 
 // Info panel.
@@ -168,7 +168,7 @@ var rgbPanel = ui.Panel([rgbLabel, rgbSelect], null, {stretch: 'horizontal'});
 var durationLabel = ui.Label(
   {value: 'Duration (months prior)', style: headerFont});
 var durationSlider = ui.Slider({
-  min: 1, max: 24 , value: parseInt(ui.url.get('duration')),
+  min: 1, max: 42, value: parseInt(ui.url.get('duration')), //orig. max: 24 //42: From July 2023 to January 2020
   step: 1, style: {stretch: 'horizontal'}
 });
 var durationPanel = ui.Panel(
