@@ -1,5 +1,10 @@
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+Map.setOptions("SATELLITE");
+
+
 var panel = ui.Panel();
-panel.style().set('width', '250px');
+panel.style().set('width', '500px');
+Map.style().set('cursor', 'crosshair');
 
 // Create an intro panel with labels.
 var intro = ui.Panel([
@@ -22,10 +27,19 @@ ui.root.insert(0, panel);
 var lon = ui.Label();
 var lat = ui.Label();
 
-Map.style().set('cursor', 'crosshair');
+
 
 Map.onClick(function(coords) {
   // Update the lon/lat panel with values from the click event.
   lon.setValue('lon: ' + coords.lon.toFixed(2)),
   lat.setValue('lat: ' + coords.lat.toFixed(2));
-  var point = ee.Geometry.Point(coords.lon, coords.lat)});
+  var point = ee.Geometry.Point(coords.lon, coords.lat);
+
+  
+
+  panel.widgets().set(1, ndviChart); //Locate chart inside panel
+  
+  
+});
+
+Map.addLayer(RefineStep1, {}, "RefineStep1");
