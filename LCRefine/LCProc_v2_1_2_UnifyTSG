@@ -264,9 +264,10 @@ Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 //Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
 
 Map.addLayer(dwl, dwVisParams, 'Dynamic World', 0);
-Map.addLayer(esri_lulc2020, {}, "ESRI", 0);
 Map.addLayer(dwM_Tree, {}, "DW Trees", 0);
 Map.addLayer(dwM_shrub, {}, "DW Shrub", 0);
+
+
 Map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
 Map.addLayer(esri_shrub, {}, "ESRI Shrub", 0);
 Map.addLayer(esa_Tree, {}, "ESA Tree", 0);
