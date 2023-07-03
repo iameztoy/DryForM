@@ -202,10 +202,14 @@ var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 //var TF_Stack =   //Add each Tree/Forest product into a ImageCollection
 
-/* print(dwM_Tree_r); print(esri_Tree_r); print(esa_Tree_r); print(wri_Tree_r);
-print(Hansen_Tree_r); print(GLC_Forest_r); print(GEDI_gte5_r)*/ print(TotTF_c)
+/* 
+print(dwM_Tree_r); print(esri_Tree_r); print(esa_Tree_r); print(wri_Tree_r);
+print(Hansen_Tree_r); print(GLC_Forest_r); print(GEDI_gte5_r); print(TotTF_c)
+*/ 
 
 var allFT = [dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, TotTC_c_r]
+print(allFT)
+
 
 
 
