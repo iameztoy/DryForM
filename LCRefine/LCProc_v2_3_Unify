@@ -63,11 +63,12 @@ var AOIpl =
 
 //2020 baseline: need also to mitigate the impact (outweighs) of  number of datasets used per pixel;
 //The maximum score we get is a sum of the number of products used, so to mitigate this issue
-//Check negative values of Hansen tree cover (I get some -1 values). To be further checked but:
-//it is probably because we are subtracting a loss to the tree cover when this was not a tree in 2000
+
 
 // DONE //Need to remove all about esawc2020
 // DONE //Add From GLC10 https://gee-community-catalog.org/projects/glc10/?h=glc10
+// DONE // Check negative values of Hansen tree cover (I get some -1 values). To be further checked but:
+//it is probably because we are subtracting a loss to the tree cover when this was not a tree in 2000
 
 
 
@@ -94,9 +95,6 @@ var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_201
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
 var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
-
-// GEDI CH 2019 
-
 
 
 //--------------
@@ -127,8 +125,9 @@ var esri_grass = esri_aoi.eq(4).rename(['Grass_esri']);
 
 // 3. ESA World Cover 2020
 
-var esa_Tree = esawc2020.eq(10); // Tree 10, shrubland 20
-var esa_shrub = esawc2020.eq(20);
+var esa_Tree = esawc2020.eq(10).rename(['Trees_esa']); // Tree 10, shrubland 20
+var esa_shrub = esawc2020.eq(20).rename(['Shrub_esa']);  // Tree 10, shrubland 20, grassland 30
+var esa_grass = esawc2020.eq(30).rename(['Grass_esa']);  
 
 // 4. WRI Tree Cover 2020
 
@@ -167,9 +166,13 @@ var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
 var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
 
-//7. GEDI => 5
+var glc10m_grass = glc10m.eq(30).rename(['Grass_glc10']);
+var glc10m_shrub = glc10m.eq(40).rename(['Grass_glc40']); //Grass 30, Shrub	40
+
+//7. GEDI => and < 5
 
 var gedi5 = CH_GEDI.gte(5);
+var gedilt5 = CH_GEDI.lt(5);
 
 
 // n. Overall Trees 2020
@@ -182,26 +185,41 @@ var sumrec = sumDEWs.gte(1);
 
 // n. Overall Shrub 2020
 
-var sumshr = dwM_shrub.add(esri_shrub).add(esa_shrub);
-var sumshrrec = sumshr.gte(1);
+var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
+var TotalShrub2020s = TotalShrub2020.subtract(geditl5);
 
 
-// Overall Tree + Shrub 1 = shrub or tree 2 = shrub and tree 0 = other class
-var trsh = sumrec.add(sumshrrec);
+// n. Overall Grass 2020
 
-//Select mixed trsh = 2. Mixed spectral response Trees/Shrub
-var trshsel = trsh.eq(2);
+var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
+var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
 
-//Need to remove value 2 (combination of Trees/Shrubs from the layers of 1) Treens and 2) Shrub))
-var treemcomb = sumrec.subtract(trshsel);  //Overall Trees - (trees + shrub)
-var shrubmcomb = sumshrrec.subtract(trshsel); //Overall Shrubs - (trees + shrub)
+//Remap Shrub and Grass
 
-//Reclassify and Combine
-var trees = treemcomb.add(9);
-var shrubs = shrubmcomb.add(19);
-var trsh = trshsel.add(29);
+var fromList = [-1, 0, 1, 2, 3, 4];
+var toList =   [0, 0, 1, 2, 3, 4];
 
-var final = treemcomb.add(shrubmcomb).add(trshsel);
+var TotalShrub2020sr = TotalShrub2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  //bandName: 'Total Shrub 2020'
+});
+
+var TotalGrass2020sr = TotalGrass2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  //bandName: 'Total Grass 2020'
+});
+
+var TotalShrub2020sr = TotalShrub2020sr.unmask();
+var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+//Total shrub/scrub + Grass
+var totalSG = TotalShrub2020sr.add(TotalGrass2020sr)
+
+
 
 //Countries or Polygons of Interest
 
@@ -222,8 +240,6 @@ var region = Chaco;
 var randomPoints = ee.FeatureCollection.randomPoints(
     {region: region, points: 500, seed: 0, maxError: 1});
 
-
-
 var bounding_box_func = function(feature) {
     var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
     var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
@@ -236,8 +252,6 @@ var Zones = randomPoints.map(bounding_box_func);
 //Add Unique ID to each feature so it can be used to give a name while exporting to Drive
 var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
 Zones = utils.Classification.assignIds(Zones, 'ID');
-
-
 
 
 //--------------
@@ -271,19 +285,14 @@ Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 Map.addLayer(glc10mForest, {}, "GLC 10", 0);
 Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
-
-
 Map.addLayer(sumDE, {}, "sumDE", 0);
 Map.addLayer(sumDEW, {}, "sumDEW", 0);
 Map.addLayer(sumDEWs, dswsVisParam, "sumDEWs", 0);
 Map.addLayer(sumrec, {}, "sum Reclass", 0);
-Map.addLayer(sumshr, {}, "Sum Shrub", 0);
-
 Map.addLayer(treemcomb, {}, "Trees", 0);
-Map.addLayer(shrubmcomb, {}, "Shrubs", 0);
-Map.addLayer(trshsel, {}, "Trees/Shrub 1+1", 0);
-
-Map.addLayer(final, {}, "Final", 0);
+Map.addLayer(TotalGrass2020sr, {}, "Total Grass 2020", 0); //Range 0-4
+Map.addLayer(TotalShrub2020sr, {}, "Total Shrub 2020", 0); //Range 0-4
+Map.addLayer(totalSG, imVP8cl, "Total Shrub/Scrub and Grass", 0) //Range 0-8
 
 Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
 Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
