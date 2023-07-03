@@ -1,0 +1,31 @@
+var panel = ui.Panel();
+panel.style().set('width', '250px');
+
+// Create an intro panel with labels.
+var intro = ui.Panel([
+  ui.Label({
+    value: 'Tree/Forest Explorer',
+    style: {fontSize: '20px', fontWeight: 'bold'}
+  }),
+  
+  ui.Label({
+    value: 'Click on map to get a chart',
+    style: {fontSize: '14px', fontWeight: 'bold'}
+  }),
+]);
+
+panel.add(intro);
+ui.root.insert(0, panel);
+
+
+
+var lon = ui.Label();
+var lat = ui.Label();
+
+Map.style().set('cursor', 'crosshair');
+
+Map.onClick(function(coords) {
+  // Update the lon/lat panel with values from the click event.
+  lon.setValue('lon: ' + coords.lon.toFixed(2)),
+  lat.setValue('lat: ' + coords.lat.toFixed(2));
+  var point = ee.Geometry.Point(coords.lon, coords.lat)});
