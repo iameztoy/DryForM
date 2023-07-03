@@ -2,11 +2,6 @@
 var AOIpl = 
     /* color: #98ff00 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[-50.94287682792137, -26.05429547289401],
           [-50.94287682792137, -27.063997751970174],
@@ -22,11 +17,6 @@ var AOIpl =
     cliptest = 
     /* color: #0b4a8b */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[-61.43237241315697, -25.63709687947577],
           [-61.43237241315697, -26.049284488877042],
@@ -40,8 +30,8 @@ var AOIpl =
          [23.794739799900103, -5.194746813105823],
          [37.58327916365244, -5.591799745027464],
          [3.859078101309401, 11.17342485789545]]),
-    VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff"]},
-    VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
+    VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]},
+    VisParam8cl = {"opacity":0.65,"bands":["Map"],"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
