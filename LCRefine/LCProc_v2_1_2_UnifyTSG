@@ -243,9 +243,6 @@ var Zones = randomPoints.map(bounding_box_func);
 var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
 Zones = utils.Classification.assignIds(Zones, 'ID');
 
-
-
-
 //--------------
 //VISUALIZATION
 
@@ -254,6 +251,11 @@ var dwVisParams = {min: 0, max: 8, palette: [
     '#C4281B', '#A59B8F', '#B39FE1']};
 
 
+
+
+
+//Vector files
+
 Map.addLayer(mask, {}, "Selected courntries", 0);
 Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
@@ -261,27 +263,26 @@ Map.addLayer(Chaco, {}, "Chaco", 0);
 Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
 Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 
-//Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
+//Tree/Forest 
 
-Map.addLayer(dwl, dwVisParams, 'Dynamic World', 0);
 Map.addLayer(dwM_Tree, {}, "DW Trees", 0);
-Map.addLayer(dwM_shrub, {}, "DW Shrub", 0);
-
-
 Map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
-Map.addLayer(esri_shrub, {}, "ESRI Shrub", 0);
 Map.addLayer(esa_Tree, {}, "ESA Tree", 0);
-Map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
-Map.addLayer(wri80, {}, "WRI 80", 0);
-Map.addLayer(wri90, {}, "WRI 90", 0);
-Map.addLayer(wri100, {}, "WRI 100", 0);
+//Map.addLayer(wri80, {}, "WRI 80", 0);
+//Map.addLayer(wri90, {}, "WRI 90", 0);
+//Map.addLayer(wri100, {}, "WRI 100", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
-Map.addLayer(glc10mForest, {}, "GLC 10", 0);
+Map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
+//Map.addLayer(glc10mForest, {}, "GLC 10", 0);
 Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
+Map.addLayer(gedi5, {}, "GEDI => 5", 0);
+Map.addLayer(TotTF_c, dswsVisParam, "Total Tree/Forest", 0);
 
-Map.addLayer(TotTF_c, dswsVisParam, "Total Tree/Forest (crops masked)", 0);
+//Shrub/Scrub (Only Totals)
 Map.addLayer(TotalGrass2020sr, {}, "Total Grass 2020", 0); //Range 0-4
 Map.addLayer(TotalShrub2020sr,{}, "Total Shrub 2020", 0); //Range 0-4
+
+//Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
 
 
 
