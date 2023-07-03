@@ -153,7 +153,7 @@ var HTC_2020 = HTC_2020.remap({
   bandName: 'treecover2000'
 });
 
-// 6. GLC10 and 6.1 Hansen Loss (2018-2020)
+// 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
 
 var glc10m = GLC10.mosaic();
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
@@ -170,11 +170,9 @@ var gedilt5 = CH_GEDI.lt(5);
 
 // n. Overall Trees 2020
 
-var sumDE = esa_Tree.add(dwM_Tree).add(esri_Tree);
-var sumDEW = sumDE.add(wri_Tree).add(glc10Loss);
-var sumDEWs = sumDEW.add(HTC_2020).add(gedi5); 
-var sumDEWs = sumDEWs.where(cropmask_UMD,0);
-var sumrec = sumDEWs.gte(1);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
+var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
+
 
 // n. Overall Shrub 2020
 
@@ -260,6 +258,8 @@ Map.addLayer(mask, {}, "Selected courntries", 0);
 Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
+Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
+Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 
 //Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
 
@@ -270,27 +270,19 @@ Map.addLayer(dwM_shrub, {}, "DW Shrub", 0);
 Map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
 Map.addLayer(esri_shrub, {}, "ESRI Shrub", 0);
 Map.addLayer(esa_Tree, {}, "ESA Tree", 0);
-Map.addLayer(esa_shrub, {}, "ESA Shrub", 0);
 Map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
 Map.addLayer(wri80, {}, "WRI 80", 0);
 Map.addLayer(wri90, {}, "WRI 90", 0);
 Map.addLayer(wri100, {}, "WRI 100", 0);
 Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
-Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 Map.addLayer(glc10mForest, {}, "GLC 10", 0);
 Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
 
-
-Map.addLayer(sumDE, {}, "sumDE", 0);
-Map.addLayer(sumDEW, {}, "sumDEW", 0);
-Map.addLayer(sumDEWs, dswsVisParam, "sumDEWs", 0);
+Map.addLayer(TotTF_c, dswsVisParam, "Total Tree/Forest (crops masked)", 0);
 Map.addLayer(TotalGrass2020sr, {}, "Total Grass 2020", 0); //Range 0-4
 Map.addLayer(TotalShrub2020sr,{}, "Total Shrub 2020", 0); //Range 0-4
 
-Map.addLayer(final, {}, "Final", 0);
 
-Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
-Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
 
 
 
