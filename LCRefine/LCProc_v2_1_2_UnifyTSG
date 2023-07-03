@@ -212,9 +212,7 @@ var ic_allTF = ee.ImageCollection.fromImages(allTF);
 print(ic_allTF);
 
 
-var chart = ui.Chart.array.values(allTF, 0, allTF)
-  .setChartType('ColumnChart');
-print(chart);
+
 
 
 
