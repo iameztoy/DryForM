@@ -119,7 +119,7 @@ var gedilt5 = CH_GEDI.lt(5);
 // n. Overall Shrub 2020
 
 var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
-var TotalShrub2020s = TotalShrub2020.subtract(geditl5);
+var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
 
 
 // n. Overall Grass 2020
