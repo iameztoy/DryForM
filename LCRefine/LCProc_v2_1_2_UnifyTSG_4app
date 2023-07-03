@@ -192,7 +192,6 @@ var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
-print(TotTC_c_r)
 
 //Image Collection of all Tree/Forest bands
 
@@ -237,10 +236,9 @@ var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
 
-
 //Countries or Polygons of Interest
 
-var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
+var ctr = ["Tanzania"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
 var rgn = ["Europe", "Africa", "SW Asia"];
 
 // Define mask to clip.
@@ -282,10 +280,10 @@ var dwVisParams = {min: 0, max: 8, palette: [
 
 //Vector files
 
-Map.addLayer(mask, {}, "Selected courntries", 0);
-Map.addLayer(Caatinga, {}, "Caatinga", 0);
-Map.addLayer(Cerrado, {}, "Cerrado", 0);
-Map.addLayer(Chaco, {}, "Chaco", 0);
+Map.addLayer(mask, {}, "Selected courntries", 1);
+Map.addLayer(Caatinga, {}, "Caatinga", 1);
+Map.addLayer(Cerrado, {}, "Cerrado", 1);
+Map.addLayer(Chaco, {}, "Chaco", 1);
 Map.addLayer(randomPoints, {color: 'red'}, 'Random points', 0);
 Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes", 0);
 
