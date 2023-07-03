@@ -208,7 +208,8 @@ var allTF = [dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC
 var ic_allTF = ee.ImageCollection.fromImages(allTF);
 print(ic_allTF);
 
-
+var sum = ic_allTF.sum();
+Map.addLayer(sum)
 
 
 // n. Overall Shrub 2020
@@ -294,8 +295,8 @@ Map.addLayer(mask, {}, "Selected courntries", 0);
 Map.addLayer(Caatinga, {}, "Caatinga", 0);
 Map.addLayer(Cerrado, {}, "Cerrado", 0);
 Map.addLayer(Chaco, {}, "Chaco", 0);
-Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
-Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
+Map.addLayer(randomPoints, {color: 'red'}, 'Random points', 0);
+Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes", 0);
 
 //Tree/Forest 
 
