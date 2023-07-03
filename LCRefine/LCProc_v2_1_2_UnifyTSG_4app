@@ -456,12 +456,15 @@ var chart4all = ui.Chart.image
           xProperty: 'system:index'
         })
         .setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLS", "GEDI"])
+        .setChartType('ColumnChart')
         .setOptions({
           title: 'Tree/Forest Presence/Absence',
           hAxis: {title: 'Product', titleTextStyle: {italic: false, bold: true}},
           vAxis: {
             title: 'Count',
-            titleTextStyle: {italic: false, bold: true}
+            titleTextStyle: {italic: false, bold: true},
+            minValue: 0,
+            maxValue: 1
           },
           lineWidth: 5,
           //colors: ['e37d05', '1d6b99'],
