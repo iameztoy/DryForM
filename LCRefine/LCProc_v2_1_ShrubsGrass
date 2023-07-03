@@ -111,7 +111,7 @@ var glc10m_grass = glc10m.eq(30);
 var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
 
 
-//5. GEDI => 5
+//5. GEDI <= 5
 
 var gedi5 = CH_GEDI.lt(5);     
 
