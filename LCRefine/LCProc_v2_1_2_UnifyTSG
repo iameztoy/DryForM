@@ -112,12 +112,16 @@ var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Gr
 var dwM_shrub = dwMode.eq(5).rename(['Shrubs_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
 var dwM_grass = dwMode.eq(2).rename(['Grass_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
 
+
+
 // 2. ESRI LULC 2020
 
 var esri_aoi = esri_lulc2020.mosaic(); 
 var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
 var esri_shrub = esri_aoi.eq(7).rename(['Shrub_esri']); 
 var esri_grass = esri_aoi.eq(4).rename(['Grass_esri']); 
+
+
 
 // 3. ESA World Cover 2020
 
@@ -135,6 +139,7 @@ var wri_Tree3 = wri80.add(wri90).add(wri100); //outcome ranges between 1 and 3
 var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
 var wri_Tree = wri_Treeu.gte(1);
 
+
 // 5. GFC 2001-2021
 
 var treeCover = gfcImage.select(['treecover2000']);
@@ -143,6 +148,7 @@ var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
 //var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
 var HTC_2020 = treeCover10.subtract(lossb2020);
+
 
 var fromList = [-1, 0, 1];
 var toList =   [0, 0, 1];
@@ -153,6 +159,7 @@ var HTC_2020 = HTC_2020.remap({
   defaultValue: 0,
   bandName: 'treecover2000'
 });
+
 
 // 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
 
@@ -171,16 +178,31 @@ var glc10Loss = glc10Loss.remap({
   bandName: 'b1'
 });
 
+
 //7. GEDI => 5
 
 var gedi5 = CH_GEDI.gte(5);
 var gedilt5 = CH_GEDI.lt(5);   
 
-
 // n. Overall Trees 2020
 
 var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
+
+//Stack Tree/Forest
+
+var dwM_Tree_r = dwM_Tree.rename(['DW_Trees']);
+var esri_Tree_r = esri_Tree.rename(['ESRI_Trees']);
+var esa_Tree_r = esri_Tree.rename(['ESA_Trees']);
+var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
+var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
+var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
+var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
+
+//var TF_Stack =   //Add each Tree/Forest product into a ImageCollection
+print(dwM_Tree_r); print(esri_Tree_r); print(esa_Tree_r); print(wri_Tree_r);
+print(Hansen_Tree_r); print(GLC_Forest_r); print(GEDI_gte5_r)
+
 
 
 // n. Overall Shrub 2020
