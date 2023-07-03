@@ -453,7 +453,7 @@ var chart4all = ui.Chart.image
           scale: 10,
           xProperty: 'system:index'
         })
-        .setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLS", "GEDI"])
+        //.setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLC", "GEDI"])
         .setChartType('ColumnChart')
         .setOptions({
           title: 'Tree/Forest Presence/Absence',
