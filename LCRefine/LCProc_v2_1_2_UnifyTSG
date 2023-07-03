@@ -162,6 +162,14 @@ var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
 var glc10m_grass = glc10m.eq(30);
 var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
 
+//Need to reclass (thre are negative values; all -1 = 0)
+var glc10Loss = glc10Loss.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'b1'
+});
+
 //7. GEDI => 5
 
 var gedi5 = CH_GEDI.gte(5);
