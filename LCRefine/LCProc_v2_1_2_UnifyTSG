@@ -95,10 +95,6 @@ var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_201
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
 var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
 
-// GEDI CH 2019 
-
-
-
 //--------------
 // VARIABLES GENERAL
 
@@ -107,26 +103,26 @@ var srt = '2020-01-01'; var end = '2020-12-31';
 //--------------
 // PROCESSING
 
-// 0. WorldCover 2020
-//var WC2020Forest = WC2020.eq(10);
-
 // 1. Dynamic World
 
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
 var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
-var dwM_shrub = dwMode.eq(5).rename(['Shrubs']);
+var dwM_shrub = dwMode.eq(5).rename(['Shrubs_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_grass = dwMode.eq(2).rename(['Grass_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
 
 // 2. ESRI LULC 2020
 
 var esri_aoi = esri_lulc2020.mosaic(); 
 var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
-var esri_shrub = esri_aoi.eq(7).rename(['shrub']);
+var esri_shrub = esri_aoi.eq(7).rename(['Shrub_esri']); 
+var esri_grass = esri_aoi.eq(4).rename(['Grass_esri']); 
 
 // 3. ESA World Cover 2020
 
-var esa_Tree = esawc2020.eq(10); // Tree 10, shrubland 20
-var esa_shrub = esawc2020.eq(20);
+var esa_Tree = esawc2020.eq(10); 
+var esa_shrub = esawc2020.eq(20);  // Tree 10, shrubland 20, grassland 30
+var esa_grass = esawc2020.eq(30);  
 
 // 4. WRI Tree Cover 2020
 
@@ -161,13 +157,15 @@ var HTC_2020 = HTC_2020.remap({
 
 var glc10m = GLC10.mosaic();
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
-
 var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
 var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
+var glc10m_grass = glc10m.eq(30);
+var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
 
 //7. GEDI => 5
 
 var gedi5 = CH_GEDI.gte(5);
+var gedilt5 = CH_GEDI.lt(5);   
 
 
 // n. Overall Trees 2020
@@ -180,26 +178,38 @@ var sumrec = sumDEWs.gte(1);
 
 // n. Overall Shrub 2020
 
-var sumshr = dwM_shrub.add(esri_shrub).add(esa_shrub);
-var sumshrrec = sumshr.gte(1);
+var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
+var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
 
 
-// Overall Tree + Shrub 1 = shrub or tree 2 = shrub and tree 0 = other class
-var trsh = sumrec.add(sumshrrec);
+// n. Overall Grass 2020
 
-//Select mixed trsh = 2. Mixed spectral response Trees/Shrub
-var trshsel = trsh.eq(2);
+var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
+var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
 
-//Need to remove value 2 (combination of Trees/Shrubs from the layers of 1) Treens and 2) Shrub))
-var treemcomb = sumrec.subtract(trshsel);  //Overall Trees - (trees + shrub)
-var shrubmcomb = sumshrrec.subtract(trshsel); //Overall Shrubs - (trees + shrub)
+//Remap
 
-//Reclassify and Combine
-var trees = treemcomb.add(9);
-var shrubs = shrubmcomb.add(19);
-var trsh = trshsel.add(29);
+var fromList = [-1, 0, 1, 2, 3, 4];
+var toList =   [0, 0, 1, 2, 3, 4];
 
-var final = treemcomb.add(shrubmcomb).add(trshsel);
+var TotalShrub2020sr = TotalShrub2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  //bandName: 'Total Shrub 2020'
+});
+
+var TotalGrass2020sr = TotalGrass2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  //bandName: 'Total Grass 2020'
+});
+
+var TotalShrub2020sr = TotalShrub2020sr.unmask();
+var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+
 
 //Countries or Polygons of Interest
 
@@ -274,8 +284,7 @@ Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
 Map.addLayer(sumDE, {}, "sumDE", 0);
 Map.addLayer(sumDEW, {}, "sumDEW", 0);
 Map.addLayer(sumDEWs, dswsVisParam, "sumDEWs", 0);
-Map.addLayer(sumrec, {}, "sum Reclass", 0);
-Map.addLayer(sumshr, {}, "Sum Shrub", 0);
+
 
 Map.addLayer(treemcomb, {}, "Trees", 0);
 Map.addLayer(shrubmcomb, {}, "Shrubs", 0);
