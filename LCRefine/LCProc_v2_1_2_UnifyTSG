@@ -100,6 +100,7 @@ var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011)
 // VARIABLES GENERAL
 
 var srt = '2020-01-01'; var end = '2021-01-01';
+Map.setOptions("SATELLITE");
 
 //--------------
 // PROCESSING
@@ -202,14 +203,19 @@ var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 //Image Collection of all Tree/Forest bands
 
-var allTF = [dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, TotTC_c_r];
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, TotTC_c_r]);
 //print(allFT)
+//system:index: 0, 1, 2, 3, 4, 5, 6, 7
 
 var ic_allTF = ee.ImageCollection.fromImages(allTF);
 print(ic_allTF);
 
-var sum = ic_allTF.sum();
-Map.addLayer(sum)
+
+var chart = ui.Chart.array.values(allTF, 0, allTF)
+  .setChartType('ColumnChart');
+print(chart);
+
+
 
 
 // n. Overall Shrub 2020
