@@ -188,7 +188,6 @@ var gedilt5 = CH_GEDI.lt(5);
 
 var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
-print(TotTF_c)
 
 //Stack Tree/Forest
 
