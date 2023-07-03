@@ -35,7 +35,27 @@ Map.onClick(function(coords) {
   lat.setValue('lat: ' + coords.lat.toFixed(2));
   var point = ee.Geometry.Point(coords.lon, coords.lat);
 
-  
+  var chart =
+    ui.Chart.image
+        .series({
+          imageCollection: ic_allTF,
+          region: point,
+          //reducer: ee.Reducer.mean(),
+          scale: 10,
+          xProperty: 'system:index'
+        })
+        .setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLS", "GEDI"])
+        .setOptions({
+          title: 'Tree/Forest Presence/Absence',
+          hAxis: {title: 'Product', titleTextStyle: {italic: false, bold: true}},
+          vAxis: {
+            title: 'Count',
+            titleTextStyle: {italic: false, bold: true}
+          },
+          lineWidth: 5,
+          //colors: ['e37d05', '1d6b99'],
+          curveType: 'function'
+        });
 
   panel.widgets().set(1, ndviChart); //Locate chart inside panel
   
