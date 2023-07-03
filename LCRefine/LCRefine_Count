@@ -7,7 +7,7 @@ var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var glc10m = GLC10.mosaic()
 
 
-var srt = '2020-01-01'; var end = '2020-12-31';
+var srt = '2020-01-01'; var end = '2021-01-01';
 
 
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
