@@ -113,19 +113,19 @@ var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
 
 //5. GEDI <= 5
 
-var gedi5 = CH_GEDI.lt(5);     
+var gedilt5 = CH_GEDI.lt(5);     
 
 
 // n. Overall Shrub 2020
 
 var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
-var TotalShrub2020s = TotalShrub2020.subtract(gedi5);
+var TotalShrub2020s = TotalShrub2020.subtract(geditl5);
 
 
 // n. Overall Grass 2020
 
 var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
-var TotalGrass2020s = TotalGrass2020.subtract(gedi5);
+var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
 
 //Remap
 
