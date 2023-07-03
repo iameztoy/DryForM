@@ -439,7 +439,7 @@ Map.onClick(function(coords) {
   computedValue.evaluate(function(result) {
     // When the server returns the value, show it.
     inspector.widgets().set(0, ui.Label({
-      value: 'Total Count Tree/Forest: ' + result,
+      value: 'Total Sum Tree/Forest: ' + result,
     }));
   }); // END of BLOCK 1
   
@@ -459,7 +459,7 @@ var chart4all = ui.Chart.image
           title: 'Tree/Forest Presence/Absence',
           hAxis: {title: 'Product', titleTextStyle: {italic: false, bold: true}},
           vAxis: {
-            title: 'Count',
+            title: 'Yes (1) / No (0)',
             titleTextStyle: {italic: false, bold: true},
             minValue: 0,
             maxValue: 1
@@ -484,7 +484,7 @@ var legend = ui.Panel({
  
 // Create legend title
 var legendTitle = ui.Label({
-  value: 'Overlay Count',
+  value: 'Overlay Sum',
   style: {
     fontWeight: 'bold',
     fontSize: '18px',
