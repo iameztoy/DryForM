@@ -102,7 +102,7 @@ var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011)
 //--------------
 // VARIABLES GENERAL
 
-var srt = '2020-01-01'; var end = '2020-12-31';
+var srt = '2020-01-01'; var end = '2021-01-01';
 
 //--------------
 // PROCESSING
