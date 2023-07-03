@@ -408,6 +408,26 @@ Map.addLayer(HTC_2020)
 
 //UI and Charts
 
+var panel = ui.Panel();
+panel.style().set('width', '500px');
+Map.style().set('cursor', 'crosshair');
+
+// Create an intro panel with labels.
+var intro = ui.Panel([
+  ui.Label({
+    value: 'Tree/Forest Explorer',
+    style: {fontSize: '20px', fontWeight: 'bold'}
+  }),
+  
+  ui.Label({
+    value: 'Click on map to get a chart',
+    style: {fontSize: '14px', fontWeight: 'bold'}
+  }),
+]);
+
+panel.add(intro);
+ui.root.insert(0, panel);
+
 //VALUE 1 Total Count
 Map.style().set('cursor', 'crosshair');
 var inspector = ui.Panel([ui.Label('Click to get Tree/Forest Count')]);
@@ -439,7 +459,7 @@ Map.onClick(function(coords) {
   
   //BLOCK 2
   
-var chart = ui.Chart.image
+var chart4all = ui.Chart.image
         .series({
           imageCollection: ic_allTF,
           region: point,
@@ -459,6 +479,9 @@ var chart = ui.Chart.image
           //colors: ['e37d05', '1d6b99'],
           curveType: 'function'
         }); //END of BLOCK 2
-print(chart)
+
+panel.widgets().set(1, chart4all); //Locate chart inside panel
+
+
     }); //END OF MAP ON CLICK
  
