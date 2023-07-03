@@ -284,11 +284,8 @@ Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
 Map.addLayer(sumDE, {}, "sumDE", 0);
 Map.addLayer(sumDEW, {}, "sumDEW", 0);
 Map.addLayer(sumDEWs, dswsVisParam, "sumDEWs", 0);
-
-
-Map.addLayer(treemcomb, {}, "Trees", 0);
-Map.addLayer(shrubmcomb, {}, "Shrubs", 0);
-Map.addLayer(trshsel, {}, "Trees/Shrub 1+1", 0);
+Map.addLayer(TotalGrass2020sr, {}, "Total Grass 2020", 0); //Range 0-4
+Map.addLayer(TotalShrub2020sr,{}, "Total Shrub 2020", 0); //Range 0-4
 
 Map.addLayer(final, {}, "Final", 0);
 
