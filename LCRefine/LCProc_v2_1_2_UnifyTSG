@@ -39,7 +39,8 @@ var AOIpl =
         [[24.187193992609796, -4.4869702092285575],
          [23.794739799900103, -5.194746813105823],
          [37.58327916365244, -5.591799745027464],
-         [3.859078101309401, 11.17342485789545]]);
+         [3.859078101309401, 11.17342485789545]]),
+    VisParam4cl = {"opacity":1,"bands":["remapped"],"palette":["ffffff","ff2f2f","ffaf5c","fff14e","7fff70"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
@@ -276,8 +277,8 @@ Map.addLayer(gedilt5, {}, "GEDI < 5", 0);
 Map.addLayer(TotTF_c, TreeVisP, "Total Tree/Forest", 0);
 
 //Shrub/Scrub (Only Totals)
-Map.addLayer(TotalGrass2020sr, {}, "Total Grass 2020", 0); //Range 0-4
-Map.addLayer(TotalShrub2020sr,{}, "Total Shrub 2020", 0); //Range 0-4
+Map.addLayer(TotalGrass2020sr, VisParam4cl, "Total Grass 2020", 0); //Range 0-4
+Map.addLayer(TotalShrub2020sr,VisParam4cl, "Total Shrub 2020", 0); //Range 0-4
 
 //Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
 
