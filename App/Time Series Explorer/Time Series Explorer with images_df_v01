@@ -96,6 +96,7 @@ var controlElements = ui.Panel(
 // Chart Count panel.
 var countElements = ui.Panel(
   {style: {shown: false, margin: '0px -8px 0px -8px'}});
+  
 
 // Instruction panel.
 var instr = ui.Label('Click on a location',
@@ -145,7 +146,7 @@ var appCodeLink = ui.Label({
   targetUrl: 'https://github.com/jdbcode/ee-rgb-timeseries/blob/main/eo-timeseries-explorer.js'
 });
 
-var countLabel = ui.Label(
+var countaboutLabel = ui.Label(
   'testtestteststastasgasg testtestteststastasgasg testtestteststastasgasg' +
   'testtestteststastasgasg',
   infoFont)
@@ -715,25 +716,24 @@ function infoButtonHandler() {
 /**
  * Show/hide the Count panel.
  */
-var infoShow = false;
-function infoButtonHandler() {
-  if(infoShow) {
+var countShow = false;
+function countButtonHandler() {
+  if(countShow) {
     countShow = false;
     countElements.style().set('shown', false);
     countButton.setLabel('Count ❯');
   } else {
-    infoShow = true;
-    infoElements.style().set('shown', true);
-    infoButton.setLabel('Count ❮');
+    countShow = true;
+    countElements.style().set('shown', true);
+    countButton.setLabel('Count ❮');
   }
   
-  if(infoShow | controlShow) {
+  if(infoShow | controlShow  | countShow) {
     controlPanel.style().set('width', CONTROL_PANEL_WIDTH);
   } else {
     controlPanel.style().set('width', CONTROL_PANEL_WIDTH_HIDE);
   }
 }
-
 
 
 // #############################################################################
@@ -753,19 +753,19 @@ controlElements.add(cloudPanel);
 controlElements.add(regionWidthPanel);
 controlElements.add(submitButton);
 
-countElements.add(countElements);
-countElements.add(countButton);
-countElements.add(countLabel)
+countElements.add(countLabel);
+countElements.add(countaboutLabel);
 
 controlPanel.add(instr);
 controlPanel.add(buttonPanel);
 controlPanel.add(infoElements);
-controlPanel.add(controlElements);
+controlPanel.add(controlElements)
 
 map.add(controlPanel);
 
 infoButton.onClick(infoButtonHandler);
 controlButton.onClick(controlButtonHandler);
+countButton.onClick(countButtonHandler);
 sensorSelect.onChange(optionChange);
 rgbSelect.onChange(optionChange);
 indexSelect.onChange(optionChange);
