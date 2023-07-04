@@ -720,66 +720,6 @@ function infoButtonHandler() {
   }
 }
 
-
-
-// #############################################################################
-// ### SETUP UI ELEMENTS ###
-// #############################################################################
-
-infoElements.add(infoLabel);
-infoElements.add(aboutLabel);
-infoElements.add(appCodeLink);
-
-controlElements.add(optionsLabel);
-controlElements.add(sensorPanel);
-controlElements.add(indexPanel);
-controlElements.add(rgbPanel);
-controlElements.add(durationPanel);
-controlElements.add(cloudPanel);
-controlElements.add(regionWidthPanel);
-controlElements.add(submitButton);
-
-controlPanel.add(instr);
-controlPanel.add(buttonPanel);
-controlPanel.add(infoElements);
-controlPanel.add(controlElements);
-
-map.add(controlPanel);
-
-
-infoButton.onClick(infoButtonHandler);
-controlButton.onClick(controlButtonHandler);
-sensorSelect.onChange(optionChange);
-rgbSelect.onChange(optionChange);
-indexSelect.onChange(optionChange);
-durationSlider.onChange(optionChange);
-cloudSlider.onChange(optionChange);
-regionWidthSlider.onChange(optionChange);
-submitButton.onClick(handleSubmitClick);
-map.onClick(handleMapClick);
-
-map.style().set('cursor', 'crosshair');
-map.setOptions('SATELLITE');
-
-
-
-map.setControlVisibility(
-  {layerList: true, fullscreenControl: true, zoomControl: false});
-//map.centerObject(ee.Geometry.Point([-122.91966, 44.24135]), 14);
-
-
-ui.root.clear();
-ui.root.add(splitPanel);
-
-
-
-
-if(ui.url.get('run')) {
-  CLICKED = true;
-  COORDS = [ui.url.get('lon'), ui.url.get('lat')];
-  renderGraphics(COORDS);
-}
-
 // #############################################################################
 // ### DATASET Processing ###
 // #############################################################################
@@ -920,6 +860,64 @@ var TotalGrass2020sr = TotalGrass2020s.remap({
 
 var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+// #############################################################################
+// ### SETUP UI ELEMENTS ###
+// #############################################################################
+
+infoElements.add(infoLabel);
+infoElements.add(aboutLabel);
+infoElements.add(appCodeLink);
+
+controlElements.add(optionsLabel);
+controlElements.add(sensorPanel);
+controlElements.add(indexPanel);
+controlElements.add(rgbPanel);
+controlElements.add(durationPanel);
+controlElements.add(cloudPanel);
+controlElements.add(regionWidthPanel);
+controlElements.add(submitButton);
+
+controlPanel.add(instr);
+controlPanel.add(buttonPanel);
+controlPanel.add(infoElements);
+controlPanel.add(controlElements);
+
+map.add(controlPanel);
+
+
+infoButton.onClick(infoButtonHandler);
+controlButton.onClick(controlButtonHandler);
+sensorSelect.onChange(optionChange);
+rgbSelect.onChange(optionChange);
+indexSelect.onChange(optionChange);
+durationSlider.onChange(optionChange);
+cloudSlider.onChange(optionChange);
+regionWidthSlider.onChange(optionChange);
+submitButton.onClick(handleSubmitClick);
+map.onClick(handleMapClick);
+
+map.style().set('cursor', 'crosshair');
+map.setOptions('SATELLITE');
+
+
+
+map.setControlVisibility(
+  {layerList: true, fullscreenControl: true, zoomControl: false});
+//map.centerObject(ee.Geometry.Point([-122.91966, 44.24135]), 14);
+
+
+ui.root.clear();
+ui.root.add(splitPanel);
+
+
+if(ui.url.get('run')) {
+  CLICKED = true;
+  COORDS = [ui.url.get('lon'), ui.url.get('lat')];
+  renderGraphics(COORDS);
+}
+
+
 
 // #############################################################################
 // ### VISUALIATON PARAMETERS ###
