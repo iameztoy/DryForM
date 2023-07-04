@@ -760,10 +760,10 @@ map.onClick(handleMapClick);
 map.style().set('cursor', 'crosshair');
 map.setOptions('SATELLITE');
 map.setControlVisibility(
-  {layerList: false, fullscreenControl: false, zoomControl: false});
+  {layerList: true, fullscreenControl: true, zoomControl: true});
 //map.centerObject(ee.Geometry.Point([-122.91966, 44.24135]), 14);
 
-ui.root.clear();
+//ui.root.clear();
 ui.root.add(splitPanel);
 
 
