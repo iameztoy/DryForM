@@ -18,7 +18,7 @@
 // #############################################################################
 // ### IMPORT MODULES ###
 // #############################################################################
-
+ui.root.clear();
 // RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
 var rgbTs = require(
   'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
@@ -907,7 +907,7 @@ map.setControlVisibility(
 //map.centerObject(ee.Geometry.Point([-122.91966, 44.24135]), 14);
 
 
-ui.root.clear();
+
 ui.root.add(splitPanel);
 
 
