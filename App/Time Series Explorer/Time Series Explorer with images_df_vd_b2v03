@@ -1003,10 +1003,8 @@ map.setControlVisibility(
   {layerList: true, fullscreenControl: true, zoomControl: false});
 //map.centerObject(ee.Geometry.Point([-122.91966, 44.24135]), 14);
 
-
 ui.root.clear();
 ui.root.add(splitPanel);
-
 
 if(ui.url.get('run')) {
   CLICKED = true;
