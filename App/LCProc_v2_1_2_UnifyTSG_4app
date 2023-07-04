@@ -36,9 +36,7 @@ var AOIpl =
          [-52.510388313980584, -20.96499197429267],
          [-90.8246468088151, 16.275218368302433],
          [36.708191582089505, -7.673314092573791],
-         [33.41244746040699, -6.563441516965288]]),
-    VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]},
-    VisParam8cl = {"opacity":0.65,"bands":["Map"],"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff"]};
+         [33.41244746040699, -6.563441516965288]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
@@ -283,6 +281,12 @@ Zones = utils.Classification.assignIds(Zones, 'ID');
 var dwVisParams = {min: 0, max: 8, palette: [
     '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
     '#C4281B', '#A59B8F', '#B39FE1']};
+    
+var VisParam5cl = {min: 0, max: 4, palette: [
+    "000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
+
+var VisParam8cl = {min: 0, max: 7, palette: [
+    "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff"]};
 
 
 //Vector files
