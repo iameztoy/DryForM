@@ -402,7 +402,7 @@ Map.addLayer(HTC_2020)
 //UI and Charts
 
 var panel = ui.Panel();
-panel.style().set('width', '500px');
+panel.style().set('width', '350px');
 Map.style().set('cursor', 'crosshair');
 
 // Create an intro panel with labels.
