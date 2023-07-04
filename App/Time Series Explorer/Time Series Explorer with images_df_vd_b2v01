@@ -24,6 +24,31 @@ var rgbTs = require(
   'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
 
 // #############################################################################
+// ### IMPORT DATASETS ###
+// #############################################################################
+
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+
+//var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //v100 also available
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
+
+
+// #############################################################################
 // ### GET URL PARAMS ###
 // #############################################################################
 
@@ -747,3 +772,183 @@ if(ui.url.get('run')) {
   COORDS = [ui.url.get('lon'), ui.url.get('lat')];
   renderGraphics(COORDS);
 }
+
+// #############################################################################
+// ### DATASET Processing ###
+// #############################################################################
+
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+// 1. Dynamic World
+
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_shrub = dwMode.eq(5).rename(['Shrubs_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_grass = dwMode.eq(2).rename(['Grass_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+
+
+
+// 2. ESRI LULC 2020
+
+var esri_aoi = esri_lulc2020.mosaic(); 
+var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
+var esri_shrub = esri_aoi.eq(7).rename(['Shrub_esri']); 
+var esri_grass = esri_aoi.eq(4).rename(['Grass_esri']); 
+
+
+
+// 3. ESA World Cover 2020
+
+var esa_Tree = esawc2020.eq(10); 
+var esa_shrub = esawc2020.eq(20);  // Tree 10, shrubland 20, grassland 30
+var esa_grass = esawc2020.eq(30);  
+
+// 4. WRI Tree Cover 2020
+
+var wrimax = TC_wri.max();
+var wri80 = wrimax.eq(80);
+var wri90 = wrimax.eq(90);
+var wri100 = wrimax.eq(100);
+var wri_Tree3 = wri80.add(wri90).add(wri100); //outcome ranges between 1 and 3
+var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
+var wri_Tree = wri_Treeu.gte(1);
+
+
+// 5. GFC 2001-2021
+
+var treeCover = gfcImage.select(['treecover2000']);
+var treeCover10 = treeCover.gte(10);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var HTC_2020 = treeCover10.subtract(lossb2020);
+
+
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var HTC_2020 = HTC_2020.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
+
+// 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
+
+var glc10m = GLC10.mosaic();
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
+var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
+var glc10m_grass = glc10m.eq(30);
+var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
+
+//Need to reclass (thre are negative values; all -1 = 0)
+var glc10Loss = glc10Loss.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'b1'
+});
+
+
+//7. GEDI => 5
+
+var gedi5 = CH_GEDI.gte(5);
+var gedilt5 = CH_GEDI.lt(5);   
+
+// n. Overall Trees 2020
+
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
+var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
+
+//Stack Tree/Forest
+
+var dwM_Tree_r = dwM_Tree.rename(['DW_Trees']);
+var esri_Tree_r = esri_Tree.rename(['ESRI_Trees']);
+var esa_Tree_r = esri_Tree.rename(['ESA_Trees']);
+var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
+var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
+var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
+var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
+var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
+
+
+//Image Collection of all Tree/Forest bands
+
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r]);
+//print(allFT)
+//system:index: 0, 1, 2, 3, 4, 5, 6 // 7 is for total count
+
+var ic_allTF = ee.ImageCollection.fromImages(allTF);
+
+
+// n. Overall Shrub 2020
+
+var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
+var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
+
+
+// n. Overall Grass 2020
+
+var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
+var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
+
+//Remap
+
+var fromList = [-1, 0, 1, 2, 3, 4];
+var toList =   [0, 0, 1, 2, 3, 4];
+
+var TotalShrub2020sr = TotalShrub2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  //bandName: 'Total Shrub 2020'
+});
+
+var TotalGrass2020sr = TotalGrass2020s.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  //bandName: 'Total Grass 2020'
+});
+
+var TotalShrub2020sr = TotalShrub2020sr.unmask();
+var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+// #############################################################################
+// ### VISUALIATON PARAMETERS ###
+// #############################################################################
+
+var dwVisParams = {min: 0, max: 8, palette: [
+    '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
+    '#C4281B', '#A59B8F', '#B39FE1']};
+    
+var VisParam5cl = {min: 0, max: 4, palette: [
+    "000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
+    
+var VisParam5cl = {min: 0, max: 4, palette: [
+    "000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
+
+var VisParam8cl = {min: 0, max: 7, palette: [
+    "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff"]};
+    
+// #############################################################################
+// ### ADD LAYERS ###
+// #############################################################################
+
+Map.addLayer(dwM_Tree, {}, "DW Trees", 0);
+Map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
+Map.addLayer(esa_Tree, {}, "ESA Tree", 0);
+Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
+Map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
+Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
+Map.addLayer(gedi5, {}, "GEDI => 5", 0);
+Map.addLayer(gedilt5, {}, "GEDI < 5", 0);
+Map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 1); //Range 0-7
+
+//Shrub/Scrub (Only Totals)
+Map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
+Map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
