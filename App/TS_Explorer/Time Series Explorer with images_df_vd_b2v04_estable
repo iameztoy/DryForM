@@ -694,7 +694,7 @@ function renderGraphics(coords) {
   map.layers().remove(allTF);
   
     map.addLayer(dwM_Tree, {}, "DW Trees", 0);
-  map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 1); //Range 0-7
+  map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-7
   map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
   map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
