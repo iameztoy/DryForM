@@ -601,7 +601,7 @@ function displayBrowseImg(col, aoiBox, aoiCircle) {
  * Generates chart and adds image cards to the image panel.
  */
 function renderGraphics(coords) {
-  map.clear();
+  map.reset();
   var sensor = sensorSelect.getValue();
 
   // Get the selected RGB combo vis params.
