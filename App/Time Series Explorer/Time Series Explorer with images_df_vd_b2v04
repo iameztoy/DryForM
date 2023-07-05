@@ -937,8 +937,6 @@ var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
 
-
-
 // #############################################################################
 // ### VISUALIATON PARAMETERS ###
 // #############################################################################
@@ -956,7 +954,7 @@ var VisParam5cl = {min: 0, max: 4, palette: [
 var VisParam8cl = {min: 0, max: 7, palette: [
     "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff"], opacity: 0.6};
     
-//  Palette with the colors for leged
+//  Palette with legend colors
 var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',];
  
 // name of the legend
@@ -1003,21 +1001,6 @@ cloudSlider.onChange(optionChange);
 regionWidthSlider.onChange(optionChange);
 submitButton.onClick(handleSubmitClick);
 map.onClick(handleMapClick);
-
-/*
-map.addLayer(dwM_Tree, {}, "DW Trees", 0);
-map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 1); //Range 0-7
-map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
-map.addLayer(esa_Tree, {}, "ESA Tree", 0);
-map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
-map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
-map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
-map.addLayer(gedi5, {}, "GEDI => 5", 0);
-map.addLayer(gedilt5, {}, "GEDI < 5", 0);
-//Shrub/Scrub (Only Totals)
-map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
-map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
-*/
 
 map.style().set('cursor', 'crosshair');
 map.setOptions('SATELLITE');
