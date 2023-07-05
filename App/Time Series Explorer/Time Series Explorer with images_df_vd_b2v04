@@ -223,7 +223,7 @@ var rgbPanel = ui.Panel([rgbLabel, rgbSelect], null, {stretch: 'horizontal'});
 var durationLabel = ui.Label(
   {value: 'Duration (months prior)', style: headerFont});
 var durationSlider = ui.Slider({
-  min: 1, max: 42, value: parseInt(ui.url.get('duration')), //orig. max: 24 //42: From July 2023 to January 2020
+  min: 1, max: 48, value: parseInt(ui.url.get('duration')), //orig. max: 24 //42: From July 2023 to January 2020
   step: 1, style: {stretch: 'horizontal'}
 });
 var durationPanel = ui.Panel(
