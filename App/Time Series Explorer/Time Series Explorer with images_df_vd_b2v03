@@ -891,19 +891,19 @@ var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
 
 //Remap
 
-var fromList = [-1, 0, 1, 2, 3, 4];
-var toList =   [0, 0, 1, 2, 3, 4];
+var fromListsg = [-1, 0, 1, 2, 3, 4];
+var toListsg =   [0, 0, 1, 2, 3, 4];
 
 var TotalShrub2020sr = TotalShrub2020s.remap({
-  from: fromList,
-  to: toList,
+  from: fromListsg,
+  to: toListsg,
   defaultValue: 0,
   //bandName: 'Total Shrub 2020'
 });
 
 var TotalGrass2020sr = TotalGrass2020s.remap({
-  from: fromList,
-  to: toList,
+  from: fromListsg,
+  to: toListsg,
   defaultValue: 0,
   //bandName: 'Total Grass 2020'
 });
