@@ -167,7 +167,7 @@ var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
 var glc10m_grass = glc10m.eq(30);
 var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
 
-//Need to reclass (thre are negative values; all -1 = 0)
+//Need to reclass (there are negative values; all -1 = 0)
 var glc10Loss = glc10Loss.remap({
   from: fromList,
   to: toList,
