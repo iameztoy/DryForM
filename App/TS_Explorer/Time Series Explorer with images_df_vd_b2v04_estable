@@ -25,8 +25,8 @@
 
 // RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
 var rgbTs = require(
-  'users/iameztoy/ScriptFolder:rgb-timeseries.js');
-  //'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
+  //'users/iameztoy/ScriptFolder:rgb-timeseries.js');
+  'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
 
 // #############################################################################
 // ### IMPORT DATASETS ###
@@ -678,6 +678,14 @@ function renderGraphics(coords) {
   //Shrub/Scrub (Only Totals)
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
+  
+  map.layers(allTF).remove();
+  
+  /*
+  map.layers().forEach(function(el) {
+  map.layers().remove(el);
+  });
+  */
   
 }
 
