@@ -152,13 +152,12 @@ var aboutLabel = ui.Label(
   'White color indicating presence and Black color indicating absence.' +
   'Some of these have been pre-processed according to predefined thresholds (e.g. Height maps derived from GEDI are presented' +
   'for values equal or above 5 meters and below 5 meters or Hansen Tree Cover 2000 for densities equal or greater 10%' +
-  '' +
   'It also provides a comprehensive series of charts and images to visualize the temporal evolution of any give area of interest' +
   '',
   infoFont);
 
 var appCodeLink = ui.Label({
-  value: 'Part of this App was developed using by: Justin Braaten; source code',
+  value: 'Some parts of the code have been taken from: source code',
   style: {fontSize: '11px', color: '#505050', margin: '-4px 8px 0px 8px'}, 
   targetUrl: 'https://github.com/jdbcode/ee-rgb-timeseries/blob/main/eo-timeseries-explorer.js'
 });
