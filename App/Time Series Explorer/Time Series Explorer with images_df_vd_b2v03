@@ -601,7 +601,7 @@ function displayBrowseImg(col, aoiBox, aoiCircle) {
  * Generates chart and adds image cards to the image panel.
  */
 function renderGraphics(coords) {
-  map.reset();
+
   var sensor = sensorSelect.getValue();
 
   // Get the selected RGB combo vis params.
@@ -616,6 +616,8 @@ function renderGraphics(coords) {
   map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
+  
+  map.layers().remove();
 
   // Add new point to the Map.
   map.addLayer(aoiCircle, {color: AOI_COLOR});
