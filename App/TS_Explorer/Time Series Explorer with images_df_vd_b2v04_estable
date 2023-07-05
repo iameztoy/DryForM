@@ -666,8 +666,7 @@ function renderGraphics(coords) {
   //Add all Tree/Cover layers + shrub/scrub and grass
   map.layers().remove(allTF);
   
-  map.addLayer(TotTC_c_r, VisParam8cl, "Total Tree/Forest", 1);
-  map.addLayer(dwM_Tree, {}, "DW Trees", 0);
+    map.addLayer(dwM_Tree, {}, "DW Trees", 0);
   map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 1); //Range 0-7
   map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
