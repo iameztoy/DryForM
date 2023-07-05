@@ -1257,8 +1257,3 @@ if(ui.url.get('run')) {
   renderGraphics(COORDS);
 }
 
-
-
-    
-
- 
