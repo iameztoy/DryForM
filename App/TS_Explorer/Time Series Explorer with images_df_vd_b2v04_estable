@@ -47,7 +47,7 @@ var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011)
 // ### REQUIRE RGB FOR TIMESERIES ###
 // #############################################################################
 
-// This block goes altogether. Alternatively use require.
+// This block goes altogether. Alternatively use require; Activate "IMPORT MODULES" block
 
 exports.version = '0.1.2';
 
