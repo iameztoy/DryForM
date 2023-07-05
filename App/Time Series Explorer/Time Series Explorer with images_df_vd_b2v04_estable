@@ -1,7 +1,11 @@
 /**
  * @license
- * Copyright 2021 Justin Braaten
- *
+ * Copyright 2021-2023 Justin Braaten + Fine tuned and modules added by Iban Ameztoy (JRC S4/D1 - Started in 2022)
+ * 
+ * Process and combine land cover classes from different products (7) to compute a new layer by mixing forest and tree cover.
+ * Grassland and shrub/Scrub classes also processed and made available.
+ * Originally thought to extract tiles or image chips that will be further refined and used in the frame of semantic segmentation processes.
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,7 +25,8 @@
 
 // RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
 var rgbTs = require(
-  'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
+  'users/iameztoy/modules:DryForest/App/Time Series Explorer/rgb-timeseries.js'); 
+  //'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
 
 // #############################################################################
 // ### IMPORT DATASETS ###
