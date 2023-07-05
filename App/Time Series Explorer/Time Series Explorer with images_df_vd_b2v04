@@ -1,0 +1,1054 @@
+/**
+ * @license
+ * Copyright 2021 Justin Braaten
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// #############################################################################
+// ### IMPORT MODULES ###
+// #############################################################################
+
+// RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
+var rgbTs = require(
+  'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
+
+// #############################################################################
+// ### IMPORT DATASETS ###
+// #############################################################################
+
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+
+//var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //v100 also available
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
+
+
+// #############################################################################
+// ### GET URL PARAMS ###
+// #############################################################################
+
+var initRun = 'false';
+var runUrl = ui.url.get('run', initRun);
+ui.url.set('run', runUrl);
+
+var initSensor = 'Sentinel-2 SR';
+var sensorUrl = ui.url.get('sensor', initSensor);
+ui.url.set('sensor', sensorUrl);
+
+var initLon = -121.68804;
+var lonUrl = ui.url.get('lon', initLon);
+ui.url.set('lon', lonUrl);
+
+var initLat = 36.46517;
+var latUrl = ui.url.get('lat', initLat);
+ui.url.set('lat', latUrl);
+
+var initIndex = 'NBR';
+var indexUrl = ui.url.get('index', initIndex);
+ui.url.set('index', indexUrl);
+
+var initRgb = 'SWIR1/NIR/GREEN';
+var rgbUrl = ui.url.get('rgb', initRgb);
+ui.url.set('rgb', rgbUrl);
+
+var initDuration = 12;
+var durationUrl = ui.url.get('duration', initDuration);
+ui.url.set('duration', durationUrl);
+
+var initCloud = 30;
+var cloudUrl = ui.url.get('cloud', initCloud);
+ui.url.set('cloud', cloudUrl);
+
+var initChipWidth = 2;
+var chipWidthUrl = ui.url.get('chipwidth', initChipWidth);
+ui.url.set('chipwidth', chipWidthUrl);
+
+
+
+// ############################################################################# 
+// ### DEFINE UI ELEMENTS ###
+// #############################################################################
+
+// Style.
+var CONTROL_PANEL_WIDTH = '500px'; //orig. "280px"
+var CONTROL_PANEL_WIDTH_HIDE = '141px'; //orig. "141px"
+var textFont = {fontSize: '12px'};
+var headerFont = {
+  fontSize: '13px', fontWeight: 'bold', margin: '4px 8px 0px 8px'};
+var sectionFont = {
+  fontSize: '16px', color: '#808080', margin: '16px 8px 0px 8px'};
+var infoFont = {fontSize: '11px', color: '#505050'};
+
+// Control panel.
+var controlPanel = ui.Panel({
+  style: {position: 'top-left', width: CONTROL_PANEL_WIDTH_HIDE,
+    maxHeight: '90%' //orig: "90%"
+  }});
+
+// Info panel.
+var infoElements = ui.Panel(
+  {style: {shown: false, margin: '0px -8px 0px -8px'}});
+
+// Element panel.
+var controlElements = ui.Panel(
+  {style: {shown: false, margin: '0px -8px 0px -8px'}});
+
+// Instruction panel.
+var instr = ui.Label('Click on a location',
+  {fontSize: '15px', color: '#303030', margin: '0px 0px 6px 0px'});
+
+// Show/hide info panel button.
+var infoButton = ui.Button(
+  {label: 'About ❯', style: {margin: '0px 4px 0px 0px'}});
+
+// Show/hide control panel button.
+var controlButton = ui.Button(
+  {label: 'Options ❯', style: {margin: '0px 0px 0px 0px'}});
+
+// Info/control button panel.
+var buttonPanel = ui.Panel(
+  [infoButton, controlButton],
+  ui.Panel.Layout.Flow('horizontal'),
+  {stretch: 'horizontal', margin: '0px 0px 0px 0px'});
+
+// Options label.
+var optionsLabel = ui.Label('Options', sectionFont);
+optionsLabel.style().set('margin', '16px 8px 2px 8px');
+
+// Information label.
+var infoLabel = ui.Label('About', sectionFont);
+
+// Information text. 
+var aboutLabel = ui.Label(
+  'This app combines different land cover and land use products and emphasizes three main classes:  ' +
+  'Trees/Forests, Grassland and Shrub/Scrub for 2020 at 10 meter resolution.'  +
+  'The Total sum layers (i.e. "Total Tree/Forest 2020", "Total Grass 2020" and "Total Shrub 2020") are calculated' +
+  'by overlaying and suming the different datasets. The boolean products of each individual layers are also provided: ' +
+  'White color indicating presence and Black color indicating absence.' +
+  'Some of these have been pre-processed according to predefined thresholds (e.g. Height maps derived from GEDI are presented' +
+  'for values equal or above 5 meters and below 5 meters.' +
+  '' +
+  '' +
+  '',
+  infoFont);
+
+var appCodeLink = ui.Label({
+  value: 'Part of this App was developed using by: Justin Braaten; source code',
+  style: {fontSize: '11px', color: '#505050', margin: '-4px 8px 0px 8px'}, 
+  targetUrl: 'https://github.com/jdbcode/ee-rgb-timeseries/blob/main/eo-timeseries-explorer.js'
+});
+
+//// set position of panel for legend
+var legend = ui.Panel({
+  style: {
+    position: 'bottom-left',
+    padding: '8px 15px'
+  }
+});
+
+// Create legend title
+var legendTitle = ui.Label({
+  value: 'Overlay Sum',
+  style: {
+    fontWeight: 'bold',
+    fontSize: '18px',
+    margin: '0 0 4px 0',
+    padding: '0'
+    }
+});
+
+// Add the title to the panel
+legend.add(legendTitle);
+
+// #############################
+// END of PANELS
+// #############################
+
+// Sensor selection.
+var sensorLabel = ui.Label({value: 'Sensor selection', style: headerFont});
+var sensorList = ['Sentinel-2 SR', 'Sentinel-2 TOA',
+                  'Landsat-8 SR', 'Landsat-8 TOA'];
+var sensorSelect = ui.Select({
+  items: sensorList, placeholder: ui.url.get('sensor'),
+  value: ui.url.get('sensor'), style: {stretch: 'horizontal'}
+});
+var sensorPanel = ui.Panel([sensorLabel, sensorSelect], null, {stretch: 'horizontal'});
+
+// Y-axis index selection.
+var indexLabel = ui.Label('Y-axis index', headerFont);
+var indexList = ['NBR', 'NDVI', 'Blue', 'Green', 'Red',
+                 'NIR', 'SWIR1', 'SWIR2'];
+var indexSelect = ui.Select(
+  {items: indexList, value: ui.url.get('index'), style: {stretch: 'horizontal'}});
+var indexPanel = ui.Panel(
+  [indexLabel, indexSelect], null, {stretch: 'horizontal'});
+
+// RGB bands selection.
+var rgbLabel = ui.Label({value: 'RGB visualization', style: headerFont});
+var rgbList = ['SWIR1/NIR/GREEN', 'RED/GREEN/BLUE', 'NIR/RED/GREEN',
+               'NIR/SWIR1/RED'];
+var rgbSelect = ui.Select({
+  items: rgbList, placeholder: ui.url.get('rgb'),
+  value: ui.url.get('rgb'), style: {stretch: 'horizontal'}
+});
+var rgbPanel = ui.Panel([rgbLabel, rgbSelect], null, {stretch: 'horizontal'});
+
+// Duration.
+var durationLabel = ui.Label(
+  {value: 'Duration (months prior)', style: headerFont});
+var durationSlider = ui.Slider({
+  min: 1, max: 42, value: parseInt(ui.url.get('duration')), //orig. max: 24 //42: From July 2023 to January 2020
+  step: 1, style: {stretch: 'horizontal'}
+});
+var durationPanel = ui.Panel(
+  [durationLabel, durationSlider], null, {stretch: 'horizontal'});
+
+// Cloud threshold.
+var cloudLabel = ui.Label(
+  {value: 'Cloud threshold % (exclude >)', style: headerFont});
+var cloudSlider = ui.Slider({
+  min: 0, max: 100 , value: parseInt(ui.url.get('cloud')),
+  step: 1, style: {stretch: 'horizontal'}
+});
+var cloudPanel = ui.Panel(
+  [cloudLabel, cloudSlider], null, {stretch: 'horizontal'});
+
+// Region buffer.
+var regionWidthLabel = ui.Label(
+  {value: 'Image chip width (km)', style: headerFont});
+var regionWidthSlider = ui.Slider({
+  min: 1, max: 10 , value: parseInt(ui.url.get('chipwidth')),
+  step: 1, style: {stretch: 'horizontal'}
+});
+var regionWidthPanel = ui.Panel(
+  [regionWidthLabel, regionWidthSlider], null, {stretch: 'horizontal'});
+
+// A message to wait for image chips to load.
+var waitMsgImgPanel = ui.Label({
+  value: '⚙️' + ' Processing, please wait.',
+  style: {
+    stretch: 'horizontal',
+    textAlign: 'center',
+    backgroundColor: '#d3d3d3'
+  }
+});
+
+// Panel to hold the chart.
+var chartPanel = ui.Panel({style: {height: '25%'}});
+
+// Holder for image cards.
+var imgCardPanel = ui.Panel({
+  layout: ui.Panel.Layout.flow('horizontal', true),
+  style: {width: '897px', backgroundColor: '#d3d3d3'}
+});
+
+// Map widget.
+var map = ui.Map();
+
+// Map/chart panel
+var mapChartSplitPanel = ui.Panel(ui.SplitPanel({
+  firstPanel: map, //
+  secondPanel: chartPanel,
+  orientation: 'vertical',
+  wipe: false,
+}));
+
+// Map/chart and image card panel
+var splitPanel = ui.SplitPanel(mapChartSplitPanel, imgCardPanel);
+
+// Submit changes button.
+var submitButton = ui.Button({
+  label: 'Submit changes',
+  style: {stretch: 'horizontal', shown: false}
+});
+
+
+
+// #############################################################################
+// ### DEFINE INITIALIZING CONSTANTS ###
+// #############################################################################
+
+// Set color of the circle to show on map and images where clicked
+var AOI_COLOR = 'ffffff';  //'b300b3';
+
+var COORDS = null;
+var CLICKED = false;
+
+// Set region reduction and chart params.
+var OPTIONAL_PARAMS = {
+  reducer: ee.Reducer.mean(),
+  scale: 20,
+  crs: 'EPSG:4326',
+  chartParams: {
+    pointSize: 11,
+    legend: {position: 'none'},
+    hAxis: {title: 'Date', titleTextStyle: {italic: false, bold: true}},
+    vAxis: {
+      title: indexSelect.getValue(),
+      titleTextStyle: {italic: false, bold: true}
+    },
+    explorer: {axis: 'horizontal'}
+  }
+};
+
+var sensorInfo = {
+  'Landsat-8 SR': {
+    id: 'LANDSAT/LC08/C02/T1_L2',
+    scale: 30,
+    aoiRadius: 45,
+    index: {
+      NBR: 'NBR',
+      NDVI: 'NDVI',
+      Blue: 'SR_B2',
+      Green: 'SR_B3',
+      Red: 'SR_B4',
+      NIR: 'SR_B5',
+      SWIR1: 'SR_B6',
+      SWIR2: 'SR_B7'
+    },
+    rgb: {
+      'SWIR1/NIR/GREEN': {
+        bands: ['SR_B6', 'SR_B5', 'SR_B3'],
+        min: [0.0100, 0.0151 , 0.050],
+        max: [0.4500, 0.4951, 0.2500],
+        gamma: [1, 1, 1]
+      },
+      'RED/GREEN/BLUE': {
+        bands: ['SR_B4', 'SR_B3', 'SR_B2'],
+        min: [0.0, 0.050, 0.050],
+        max: [0.2500, 0.2500, 0.2500],
+        gamma: [1.2, 1.2, 1.2]
+      },
+      'NIR/RED/GREEN': {
+        bands: ['SR_B5', 'SR_B4', 'SR_B3'],
+        min: [0.0151, 0.0, 0.050],
+        max: [0.4951, 0.2500, 0.2500],
+        gamma: [1, 1, 1]
+      },
+      'NIR/SWIR1/RED': {
+        bands: ['SR_B5', 'SR_B6', 'SR_B3'],
+        min: [0.0151, 0.0100, 0.050],
+        max: [0.4951, 0.4500, 0.2500],
+        gamma: [1, 1, 1]
+      }      
+    }
+  },
+  'Landsat-8 TOA': {
+    id: 'LANDSAT/LC08/C02/T1_TOA',
+    scale: 30,
+    aoiRadius: 45,
+    index: {
+      NBR: 'NBR',
+      NDVI: 'NDVI',
+      Blue: 'B2',
+      Green: 'B3',
+      Red: 'B4',
+      NIR: 'B5',
+      SWIR1: 'B6',
+      SWIR2: 'B7'
+    },
+    rgb: {
+      'SWIR1/NIR/GREEN': {
+        bands: ['B6', 'B5', 'B3'],
+        min: [0.0100, 0.0151 , 0.0050],
+        max: [0.4500, 0.4951, 0.2500],
+        gamma: [1, 1, 1]
+      },
+      'RED/GREEN/BLUE': {
+        bands: ['B4', 'B3', 'B2'],
+        min: [0, 0.0050, 0.0050],
+        max: [0.2500, 0.2500, 0.2500],
+        gamma: [1.2, 1.2, 1.2]
+      },
+      'NIR/RED/GREEN': {
+        bands: ['B5', 'B4', 'B3'],
+        min: [0.0151, 0, 0.0050],
+        max: [0.4951, 0.2500, 0.2500],
+        gamma: [1, 1, 1]
+      },
+      'NIR/SWIR1/RED': {
+        bands: ['B5', 'B6', 'B3'],
+        min: [0.0151, 0.0100, 0.0050],
+        max: [0.4951, 0.4500, 0.2500],
+        gamma: [1, 1, 1]
+      }      
+    }
+  },
+  'Sentinel-2 SR': {
+    id: 'COPERNICUS/S2_SR_HARMONIZED',
+    scale: 20,
+    aoiRadius: 30,
+    index: {
+      NBR: 'NBR',
+      NDVI: 'NDVI',
+      Blue: 'B2',
+      Green: 'B3',
+      Red: 'B4',
+      NIR: 'B8',
+      SWIR1: 'B11',
+      SWIR2: 'B12'
+    },
+    rgb: {
+      'SWIR1/NIR/GREEN': {
+        bands: ['B11', 'B8', 'B3'],
+        min: [100, 151 , 50],
+        max: [4500, 4951, 2500],
+        gamma: [1, 1, 1]
+      },
+      'RED/GREEN/BLUE': {
+        bands: ['B4', 'B3', 'B2'],
+        min: [0, 50, 50],
+        max: [2500, 2500, 2500],
+        gamma: [1.2, 1.2, 1.2]
+      },
+      'NIR/RED/GREEN': {
+        bands: ['B8', 'B4', 'B3'],
+        min: [151, 0, 50],
+        max: [4951, 2500, 2500],
+        gamma: [1, 1, 1]
+      },
+      'NIR/SWIR1/RED': {
+        bands: ['B8', 'B11', 'B3'],
+        min: [151, 100, 50],
+        max: [4951, 4500, 2500],
+        gamma: [1, 1, 1]
+      }      
+    }
+  },
+  'Sentinel-2 TOA': {
+    id: 'COPERNICUS/S2',
+    scale: 20,
+    aoiRadius: 30,
+    index: {
+      NBR: 'NBR',
+      NDVI: 'NDVI',
+      Blue: 'B2',
+      Green: 'B3',
+      Red: 'B4',
+      NIR: 'B8',
+      SWIR1: 'B11',
+      SWIR2: 'B12'
+    },
+    rgb: {
+      'SWIR1/NIR/GREEN': {
+        bands: ['B11', 'B8', 'B3'],
+        min: [100, 151 , 50],
+        max: [4500, 4951, 2500],
+        gamma: [1, 1, 1]
+      },
+      'RED/GREEN/BLUE': {
+        bands: ['B4', 'B3', 'B2'],
+        min: [0, 50, 50],
+        max: [2500, 2500, 2500],
+        gamma: [1.2, 1.2, 1.2]
+      },
+      'NIR/RED/GREEN': {
+        bands: ['B8', 'B4', 'B3'],
+        min: [151, 0, 50],
+        max: [4951, 2500, 2500],
+        gamma: [1, 1, 1]
+      },
+      'NIR/SWIR1/RED': {
+        bands: ['B8', 'B11', 'B3'],
+        min: [151, 100, 50],
+        max: [4951, 4500, 2500],
+        gamma: [1, 1, 1]
+      }      
+    }    
+  }
+};
+
+
+
+// #############################################################################
+// ### DEFINE FUNCTIONS ###
+// #############################################################################
+
+/**
+ * Ccloud masks OLI images.
+ */
+function prepOliSr(img) {
+  var opticalBands = img.select('SR_B.').multiply(0.0000275).add(-0.2);
+  img = img.addBands(opticalBands, null, true);
+  var nbr = img.normalizedDifference(['SR_B5', 'SR_B7']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['SR_B5', 'SR_B4']).rename('NDVI');
+  return addDate(img.addBands(ee.Image.cat(nbr, ndvi)));
+}
+
+function prepOliToa(img) {
+  var nbr = img.normalizedDifference(['B5', 'B7']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['B5', 'B4']).rename('NDVI');
+  return addDate(img.addBands(ee.Image.cat(nbr, ndvi)));
+}
+
+/**
+ * Add NDVI band Sentinel-2.
+ */
+function addBandsS2(img) {
+  var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  return img.addBands(ee.Image.cat(nbr, ndvi));
+}
+
+/**
+ * Add date property.
+ */
+function addDate(img) {
+  var date = img.date().format('YYYY-MM-dd');
+  return img.set('date', date);
+}
+
+/**
+ * Gathers all Landsat into a collection.
+ */
+function getLandsatCollection(aoi, startDate, endDate, cloudthresh, id) {
+  var oliCol = ee.ImageCollection(id)
+    .filterBounds(aoi)
+    .filterDate(startDate, endDate)
+    .filter(ee.Filter.lt('CLOUD_COVER', cloudthresh));
+
+  if (id == 'LANDSAT/LC08/C02/T1_TOA') {
+    oliCol = oliCol.map(prepOliToa);
+  } else {
+    oliCol = oliCol.map(prepOliSr);
+  }
+    
+  return oliCol;
+}
+
+/**
+ * Join S2 SR and S2 cloudless.
+ */
+function getS2SrCldCol(aoi, startDate, endDate, cloudthresh, id) {
+  var s2SrCol = ee.ImageCollection(id)
+    .filterBounds(aoi)
+    .filterDate(startDate, endDate)
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', cloudthresh));
+
+  return s2SrCol.map(addBandsS2).map(addDate);
+}
+
+/**
+ * Clears image cards from the image card panel.
+ */
+function clearImgs() {
+  imgCardPanel.clear();
+}
+
+/**
+ * Displays image cards to the card panel.
+ */
+function displayBrowseImg(col, aoiBox, aoiCircle) {
+  clearImgs();
+  waitMsgImgPanel.style().set('shown', true);
+  imgCardPanel.add(waitMsgImgPanel);
+
+  var visParams = sensorInfo[sensorSelect.getValue()]['rgb'][rgbSelect.getValue()];
+  
+  var dates = col.aggregate_array('date').sort();
+  
+  dates.evaluate(function(dates) {
+    waitMsgImgPanel.style().set('shown', false);
+    dates.forEach(function(date) {
+      var img = col.filter(ee.Filter.eq('date', date)).first();
+      
+      var aoiImg = ee.Image().byte()
+        .paint(ee.FeatureCollection(ee.Feature(aoiCircle)), 1, 2)
+        .visualize({palette: AOI_COLOR});
+      
+      var thumbnail = ui.Thumbnail({
+        image: img.visualize(visParams).blend(aoiImg),
+        params: {
+          region: aoiBox,
+          dimensions: '200',
+          crs: 'EPSG:3857',
+          format: 'PNG'
+        }
+      });
+      
+      var imgCard = ui.Panel([
+        ui.Label(date,
+          {margin: '4px 4px -6px 8px', fontSize: '13px', fontWeight: 'bold'}),
+        thumbnail
+      ], null, {margin: '4px 0px 0px 4px' , width: 'px'});
+      
+      imgCardPanel.add(imgCard);
+    });
+  });
+}
+
+/**
+ * Generates chart and adds image cards to the image panel.
+ */
+function renderGraphics(coords) {
+
+  var sensor = sensorSelect.getValue();
+
+  // Get the selected RGB combo vis params.
+  var visParams = sensorInfo[sensorSelect.getValue()]['rgb'][rgbSelect.getValue()];
+  
+  // Get the clicked point and buffer it.
+  var point = ee.Geometry.Point(coords);
+  var aoiCircle = point.buffer(sensorInfo[sensor]['aoiRadius']);
+  var aoiBox = point.buffer(regionWidthSlider.getValue()*1000/2);
+  
+  // Clear previous point from the Map.
+  map.layers().forEach(function(el) {
+    map.layers().remove(el);
+  });
+
+  // Add new point to the Map.
+  map.addLayer(aoiCircle, {color: AOI_COLOR});
+  map.centerObject(aoiCircle, 14);
+
+  // Get collection options.
+
+  var cloudThresh = cloudSlider.getValue();
+  var datasetId = sensorInfo[sensor]['id'];
+  var endDate = new Date();
+  var startDate = ee.Date(endDate)
+    .advance(-parseInt(durationSlider.getValue()), 'months');
+
+  // Build the collection.
+  var col;
+  if(sensor == 'Sentinel-2 SR' | sensor == 'Sentinel-2 TOA') {
+    col = getS2SrCldCol(aoiBox, startDate, endDate, cloudThresh, datasetId);
+  } else if(sensor == 'Landsat-8 SR' | sensor == 'Landsat-8 TOA') {
+    col = getLandsatCollection(aoiBox, startDate, endDate, cloudThresh, datasetId);
+  }
+
+  col = ee.ImageCollection(col.distinct('date')).sort('system:time_start');
+  
+
+  // Display the image chip time series. 
+  displayBrowseImg(col, aoiBox, aoiCircle);
+
+  OPTIONAL_PARAMS['chartParams']['vAxis']['title'] = indexSelect.getValue();
+  OPTIONAL_PARAMS['scale'] = sensorInfo[sensorSelect.getValue()]['scale'];
+
+  // Render the time series chart.
+  rgbTs.rgbTimeSeriesChart(col, aoiCircle,
+    sensorInfo[sensorSelect.getValue()]['index'][indexSelect.getValue()],
+    sensorInfo[sensorSelect.getValue()]['rgb'][rgbSelect.getValue()],
+    chartPanel, OPTIONAL_PARAMS);
+  
+  //Add all Tree/Cover layers + shrub/scrub and grass
+    
+  map.addLayer(TotTC_c_r, VisParam8cl, "Total Tree/Forest", 1);
+  map.addLayer(dwM_Tree, {}, "DW Trees", 0);
+  map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 1); //Range 0-7
+  map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
+  map.addLayer(esa_Tree, {}, "ESA Tree", 0);
+  map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
+  map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
+  map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
+  map.addLayer(gedi5, {}, "GEDI => 5", 0);
+  map.addLayer(gedilt5, {}, "GEDI < 5", 0);
+  //Shrub/Scrub (Only Totals)
+  map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
+  map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
+  
+}
+
+/**
+ * Handles map clicks.
+ */
+function handleMapClick(coords) {
+  CLICKED = true;
+  COORDS = [coords.lon, coords.lat];
+  ui.url.set('run', 'true');
+  ui.url.set('lon', COORDS[0]);
+  ui.url.set('lat', COORDS[1]);
+  renderGraphics(COORDS);
+}
+
+/**
+ * Handles submit button click.
+ */
+function handleSubmitClick() {
+  renderGraphics(COORDS);
+  submitButton.style().set('shown', false);
+}
+
+/**
+ * Sets URL params.
+ */
+function setParams() {
+  ui.url.set('sensor', sensorSelect.getValue());
+  ui.url.set('index', indexSelect.getValue());
+  ui.url.set('rgb', rgbSelect.getValue());
+  ui.url.set('duration', durationSlider.getValue());
+  ui.url.set('cloud', cloudSlider.getValue());
+  ui.url.set('chipwidth', regionWidthSlider.getValue());
+}   
+  
+/**
+ * Show/hide the submit button.
+ */
+function showSubmitButton() {
+  if(CLICKED) {
+    submitButton.style().set('shown', true);
+  }
+}
+
+/**
+ * Handles options changes.
+ */
+function optionChange() {
+  showSubmitButton();
+  setParams();
+}
+
+/**
+ * Show/hide the control panel.
+ */
+var controlShow = false;
+function controlButtonHandler() {
+  if(controlShow) {
+    controlShow = false;
+    controlElements.style().set('shown', false);
+    controlButton.setLabel('Options ❯');
+  } else {
+    controlShow = true;
+    controlElements.style().set('shown', true);
+    controlButton.setLabel('Options ❮');
+  }
+  
+  if(infoShow | controlShow) {
+    controlPanel.style().set('width', CONTROL_PANEL_WIDTH);
+  } else {
+    controlPanel.style().set('width', CONTROL_PANEL_WIDTH_HIDE);
+  }
+}
+
+/**
+ * Show/hide the control panel.
+ */
+var infoShow = false;
+function infoButtonHandler() {
+  if(infoShow) {
+    infoShow = false;
+    infoElements.style().set('shown', false);
+    infoButton.setLabel('About ❯');
+  } else {
+    infoShow = true;
+    infoElements.style().set('shown', true);
+    infoButton.setLabel('About ❮');
+  }
+  
+  if(infoShow | controlShow) {
+    controlPanel.style().set('width', CONTROL_PANEL_WIDTH);
+  } else {
+    controlPanel.style().set('width', CONTROL_PANEL_WIDTH_HIDE);
+  }
+}
+
+// Creates and styles 1 row of the legend.
+var makeRow = function(color, name) {
+ 
+      // Create the label that is actually the colored box.
+      var colorBox = ui.Label({
+        style: {
+          backgroundColor: '#' + color,
+          // Use padding to give the box height and width.
+          padding: '8px',
+          margin: '0 0 4px 0'
+        }
+      });
+ 
+      // Create the label filled with the description text.
+      var description = ui.Label({
+        value: name,
+        style: {margin: '0 0 4px 6px'}
+      });
+ 
+      // return the panel
+      return ui.Panel({
+        widgets: [colorBox, description],
+        layout: ui.Panel.Layout.Flow('horizontal')
+      });
+};
+
+// #############################################################################
+// ### DATASET Processing ###
+// #############################################################################
+
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+// 1. Dynamic World
+
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_shrub = dwMode.eq(5).rename(['Shrubs_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_grass = dwMode.eq(2).rename(['Grass_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+
+// 2. ESRI LULC 2020
+
+var esri_aoi = esri_lulc2020.mosaic(); 
+var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
+var esri_shrub = esri_aoi.eq(7).rename(['Shrub_esri']); 
+var esri_grass = esri_aoi.eq(4).rename(['Grass_esri']); 
+
+// 3. ESA World Cover 2020
+
+var esa_Tree = esawc2020.eq(10); 
+var esa_shrub = esawc2020.eq(20);  // Tree 10, shrubland 20, grassland 30
+var esa_grass = esawc2020.eq(30);  
+
+// 4. WRI Tree Cover 2020
+
+var wrimax = TC_wri.max();
+var wri80 = wrimax.eq(80);
+var wri90 = wrimax.eq(90);
+var wri100 = wrimax.eq(100);
+var wri_Tree3 = wri80.add(wri90).add(wri100); //outcome ranges between 1 and 3
+var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
+var wri_Tree = wri_Treeu.gte(1);
+
+
+// 5. GFC 2001-2021
+
+var treeCover = gfcImage.select(['treecover2000']);
+var treeCover10 = treeCover.gte(10);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var HTC_2020 = treeCover10.subtract(lossb2020);
+
+
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var HTC_2020 = HTC_2020.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
+
+// 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
+
+var glc10m = GLC10.mosaic();
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
+var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
+var glc10m_grass = glc10m.eq(30);
+var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
+
+//Need to reclass (thre are negative values; all -1 = 0)
+var glc10Loss = glc10Loss.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'b1'
+});
+
+
+//7. GEDI => 5
+
+var gedi5 = CH_GEDI.gte(5);
+var gedilt5 = CH_GEDI.lt(5);   
+
+// n. Overall Trees 2020
+
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
+var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
+
+//Stack Tree/Forest
+
+var dwM_Tree_r = dwM_Tree.rename(['DW_Trees']);
+var esri_Tree_r = esri_Tree.rename(['ESRI_Trees']);
+var esa_Tree_r = esri_Tree.rename(['ESA_Trees']);
+var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
+var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
+var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
+var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
+var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
+
+
+//Image Collection of all Tree/Forest bands
+
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r]);
+//print(allFT)
+//system:index: 0, 1, 2, 3, 4, 5, 6 // 7 is for total count
+
+var ic_allTF = ee.ImageCollection.fromImages(allTF);
+
+
+// n. Overall Shrub 2020
+
+var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
+var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
+
+
+// n. Overall Grass 2020
+
+var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
+var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
+
+//Remap
+
+var fromListsg = [-1, 0, 1, 2, 3, 4];
+var toListsg =   [0, 0, 1, 2, 3, 4];
+
+var TotalShrub2020sr = TotalShrub2020s.remap({
+  from: fromListsg,
+  to: toListsg,
+  defaultValue: 0,
+  //bandName: 'Total Shrub 2020'
+});
+
+var TotalGrass2020sr = TotalGrass2020s.remap({
+  from: fromListsg,
+  to: toListsg,
+  defaultValue: 0,
+  //bandName: 'Total Grass 2020'
+});
+
+var TotalShrub2020sr = TotalShrub2020sr.unmask();
+var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+
+
+
+// #############################################################################
+// ### VISUALIATON PARAMETERS ###
+// #############################################################################
+
+var dwVisParams = {min: 0, max: 8, palette: [
+    '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
+    '#C4281B', '#A59B8F', '#B39FE1']};
+    
+var VisParam5cl = {min: 0, max: 4, palette: [
+    "000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
+    
+var VisParam5cl = {min: 0, max: 4, palette: [
+    "000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
+
+var VisParam8cl = {min: 0, max: 7, palette: [
+    "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff"], opacity: 0.6};
+    
+//  Palette with the colors for leged
+var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',];
+ 
+// name of the legend
+var names = ["0", "1", "2", "3", "4", "5", "6", "7"];
+ 
+// Add color and names to legend
+for (var i = 0; i < 8; i++) {
+  legend.add(makeRow(palette[i], names[i]));
+  }  
+
+
+// #############################################################################
+// ### SETUP UI ELEMENTS ###
+// #############################################################################
+
+infoElements.add(infoLabel);
+infoElements.add(aboutLabel);
+infoElements.add(appCodeLink);
+
+controlElements.add(optionsLabel);
+controlElements.add(sensorPanel);
+controlElements.add(indexPanel);
+controlElements.add(rgbPanel);
+controlElements.add(durationPanel);
+controlElements.add(cloudPanel);
+controlElements.add(regionWidthPanel);
+controlElements.add(submitButton);
+
+controlPanel.add(instr);
+controlPanel.add(buttonPanel);
+controlPanel.add(infoElements);
+controlPanel.add(controlElements);
+
+map.add(controlPanel);
+
+
+infoButton.onClick(infoButtonHandler);
+controlButton.onClick(controlButtonHandler);
+sensorSelect.onChange(optionChange);
+rgbSelect.onChange(optionChange);
+indexSelect.onChange(optionChange);
+durationSlider.onChange(optionChange);
+cloudSlider.onChange(optionChange);
+regionWidthSlider.onChange(optionChange);
+submitButton.onClick(handleSubmitClick);
+map.onClick(handleMapClick);
+
+/*
+map.addLayer(dwM_Tree, {}, "DW Trees", 0);
+map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 1); //Range 0-7
+map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
+map.addLayer(esa_Tree, {}, "ESA Tree", 0);
+map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
+map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
+map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
+map.addLayer(gedi5, {}, "GEDI => 5", 0);
+map.addLayer(gedilt5, {}, "GEDI < 5", 0);
+//Shrub/Scrub (Only Totals)
+map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
+map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
+*/
+
+map.style().set('cursor', 'crosshair');
+map.setOptions('SATELLITE');
+
+// add legend to map (alternatively you can also print the legend to the console)
+map.add(legend);
+
+map.setControlVisibility(
+  {layerList: true, fullscreenControl: true, zoomControl: false});
+//map.centerObject(ee.Geometry.Point([-122.91966, 44.24135]), 14);
+
+ui.root.clear();
+ui.root.add(splitPanel);
+
+if(ui.url.get('run')) {
+  CLICKED = true;
+  COORDS = [ui.url.get('lon'), ui.url.get('lat')];
+  renderGraphics(COORDS);
+}
+
+
+
+    
+
+
+
+
+
+ 
+
+
+
+ 
+
+ 
