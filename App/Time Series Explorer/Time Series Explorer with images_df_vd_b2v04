@@ -145,15 +145,15 @@ var infoLabel = ui.Label('About', sectionFont);
 
 // Information text. 
 var aboutLabel = ui.Label(
-  'This app combines different land cover and land use products and emphasizes three main classes:  ' +
-  'Trees/Forests, Grassland and Shrub/Scrub for 2020 at 10 meter resolution.'  +
+  'This app combines different land cover and land use products and extracts three main classes:  ' +
+  'Trees/Forests, Grassland and Shrub/Scrub for year 2020 at 10 meter resolution and global scale.'  +
   'The Total sum layers (i.e. "Total Tree/Forest 2020", "Total Grass 2020" and "Total Shrub 2020") are calculated' +
   'by overlaying and suming the different datasets. The boolean products of each individual layers are also provided: ' +
   'White color indicating presence and Black color indicating absence.' +
   'Some of these have been pre-processed according to predefined thresholds (e.g. Height maps derived from GEDI are presented' +
-  'for values equal or above 5 meters and below 5 meters.' +
+  'for values equal or above 5 meters and below 5 meters or Hansen Tree Cover 2000 for densities equal or greater 10%' +
   '' +
-  '' +
+  'It also provides a comprehensive series of charts and images to visualize the temporal evolution of any give area of interest' +
   '',
   infoFont);
 
