@@ -25,7 +25,7 @@
 
 // RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
 var rgbTs = require(
-  'users/iameztoy/DryForest/App/TS_Explorer:rgb-timeseries');
+  'users/iameztoy/ScriptFolder:rgb-timeseries.js');
   //'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
 
 // #############################################################################
