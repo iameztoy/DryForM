@@ -1118,9 +1118,10 @@ controlPanel.add(controlElements);
 map.add(controlPanel);
 map.add(inspector);
 map.add(countChart);
-
-
+map.add(legend);
 legend.add(legendTitle).add(sublegendTitle);
+
+map.setControlVisibility({layerList: true, fullscreenControl: true, zoomControl: false});
 
 
 infoButton.onClick(infoButtonHandler);
@@ -1137,12 +1138,6 @@ map.onClick(handleMapClick);
 map.style().set('cursor', 'crosshair');
 map.setOptions('SATELLITE');
 
-// add legend to map (alternatively you can also print the legend to the console)
-map.add(legend);
-
-map.setControlVisibility(
-  {layerList: true, fullscreenControl: true, zoomControl: false});
-//map.centerObject(ee.Geometry.Point([-122.91966, 44.24135]), 14);
 
 ui.root.clear();
 ui.root.add(splitPanel);
