@@ -206,7 +206,7 @@ var legend = ui.Panel({
 
 // Create legend title
 var legendTitle = ui.Label({
-  value: 'Tree/Forest Sum',
+  value: 'Total Tree/Forest',
   style: {
     fontWeight: 'bold',
     fontSize: '16px',
@@ -215,8 +215,18 @@ var legendTitle = ui.Label({
     }
 });
 
+var sublegendTitle = ui.Label({
+  value: 'Overlay Sum',
+  style: {
+    //fontWeight: 'bold',
+    fontSize: '12px',
+    margin: '0 0 4px 0',
+    padding: '0'
+    }
+});
+
 // Add the title to the panel
-legend.add(legendTitle);
+legend.add(legendTitle).add(sublegendTitle);
 
 // #############################
 // END of PANELS
