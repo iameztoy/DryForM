@@ -191,7 +191,7 @@ var aboutLabel = ui.Label(
   infoFont);
 
 var appCodeLink = ui.Label({
-  value: 'Modified and built upon from source code',
+  value: 'Modified and built upon: source code',
   style: {fontSize: '11px', color: '#505050', margin: '-4px 8px 0px 8px'}, 
   targetUrl: 'https://github.com/jdbcode/ee-rgb-timeseries/blob/main/eo-timeseries-explorer.js'
 });
