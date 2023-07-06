@@ -691,9 +691,10 @@ function renderGraphics(coords) {
     chartPanel, OPTIONAL_PARAMS);
   
   //Add all Tree/Cover layers + shrub/scrub and grass
-  map.layers().remove(allTF);
+  //map.layers().remove(allTF);
   
-    map.addLayer(dwM_Tree, {}, "DW Trees", 0);
+  /*
+  map.addLayer(dwM_Tree, {}, "DW Trees", 0);
   map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-7
   map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
@@ -705,7 +706,7 @@ function renderGraphics(coords) {
   //Shrub/Scrub (Only Totals)
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
-  
+  */
   
   
   /*
@@ -715,6 +716,8 @@ function renderGraphics(coords) {
   */
   
 }
+
+
 
 /**
  * Handles map clicks.
