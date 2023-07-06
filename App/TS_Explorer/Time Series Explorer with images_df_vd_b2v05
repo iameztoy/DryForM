@@ -650,7 +650,7 @@ function renderGraphics(coords) {
   var aoiCircle = point.buffer(sensorInfo[sensor]['aoiRadius']);
   var aoiBox = point.buffer(regionWidthSlider.getValue()*1000/2);
  
-  // Clear previous point from the Map.
+  // Clear previous layers from the Map.
   map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
@@ -660,6 +660,10 @@ function renderGraphics(coords) {
   });
   
   map.layers().forEach(function(el) {
+    map.layers().remove(el);
+  });
+  
+    map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
 
