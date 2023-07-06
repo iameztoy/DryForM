@@ -766,15 +766,15 @@ function renderGraphics(coords) {
           xProperty: 'system:index'
         })
         //.setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLC", "GEDI"])
-        .setChartType('ColumnChart')
+        .setChartType('ScatterChart')
         .setOptions({
           title: 'Tree/Forest Presence/Absence',
           hAxis: {title: 'Product', titleTextStyle: {italic: false, bold: true}},
           vAxis: {
             title: 'Yes (1) / No (0)',
             titleTextStyle: {italic: false, bold: true},
-            minValue: 0,
-            maxValue: 1
+            minValue: -0.5,
+            maxValue: 1.5
           },
           lineWidth: 5,
           //colors: ['e37d05', '1d6b99'],
