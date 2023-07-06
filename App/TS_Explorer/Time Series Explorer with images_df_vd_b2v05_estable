@@ -184,6 +184,8 @@ var aboutLabel = ui.Label(
   'White color indicating presence and Black color indicating absence.' +
   'Some of these have been pre-processed according to predefined thresholds (e.g. Height maps derived from GEDI are presented' +
   'for values equal or above 5 meters and below 5 meters or Hansen Tree Cover 2000 for densities equal or greater 10%' +
+  '                                                                                                                             ' +
+  '                                                                                                                             ' +
   'It also provides a comprehensive series of charts and images to visualize the temporal evolution of any give area of interest' +
   'Point colors are defined by RGB assignment to selected bands where ' +
   'intensity is based on the area-weighted mean pixel value within a radius ' +
