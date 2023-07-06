@@ -772,7 +772,7 @@ function renderGraphics(coords) {
   computedValue.evaluate(function(result) {
     // When the server returns the value, show it.
     inspector.widgets().set(0, ui.Label({
-      value: 'Total Sum Tree/Forest: ' + result,
+      value: 'Overlay Sum (2020): ' + result,
     }));
   });
   
