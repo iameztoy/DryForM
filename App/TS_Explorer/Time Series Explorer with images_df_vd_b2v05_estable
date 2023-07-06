@@ -706,9 +706,7 @@ function renderGraphics(coords) {
     map.layers().remove(el);
   });
 
-  // Add new point to the Map.
-  map.addLayer(aoiCircle, {color: AOI_COLOR});
-  map.centerObject(aoiCircle, 14);
+
   
   //Add all Tree/Cover layers + shrub/scrub and grass
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
@@ -722,6 +720,10 @@ function renderGraphics(coords) {
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
   map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
   map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-7
+  
+  // Add new point to the Map.
+  map.addLayer(aoiCircle, {color: AOI_COLOR});
+  map.centerObject(aoiCircle, 14);
   
   // Get collection options.
 
