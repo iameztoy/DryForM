@@ -216,7 +216,7 @@ var legendTitle = ui.Label({
 });
 
 var sublegendTitle = ui.Label({
-  value: 'Overlay Sum',
+  value: 'Overlay Score',
   style: {
     //fontWeight: 'bold',
     fontSize: '12px',
