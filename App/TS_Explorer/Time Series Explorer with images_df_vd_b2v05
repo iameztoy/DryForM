@@ -649,8 +649,16 @@ function renderGraphics(coords) {
   var point = ee.Geometry.Point(coords);
   var aoiCircle = point.buffer(sensorInfo[sensor]['aoiRadius']);
   var aoiBox = point.buffer(regionWidthSlider.getValue()*1000/2);
-  
+ 
   // Clear previous point from the Map.
+  map.layers().forEach(function(el) {
+    map.layers().remove(el);
+  });
+  
+  map.layers().forEach(function(el) {
+    map.layers().remove(el);
+  });
+  
   map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
@@ -661,7 +669,7 @@ function renderGraphics(coords) {
   
   //Add all Tree/Cover layers + shrub/scrub and grass
  
-  map.addLayer(dwM_Tree, {}, "DW Trees", 0);
+  map.addLayer(dwM_Tree, {}, "DW Trees", 1);
   map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-7
   map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
@@ -673,6 +681,8 @@ function renderGraphics(coords) {
   //Shrub/Scrub (Only Totals)
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
+
+
 
   // Get collection options.
 
@@ -1054,4 +1064,6 @@ if(ui.url.get('run')) {
   COORDS = [ui.url.get('lon'), ui.url.get('lat')];
   renderGraphics(COORDS);
 }
+
+
 
