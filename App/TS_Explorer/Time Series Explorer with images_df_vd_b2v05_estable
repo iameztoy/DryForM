@@ -227,7 +227,7 @@ var legendTitle = ui.Label({
 });
 
 var sublegendTitle = ui.Label({
-  value: 'Overlay Score',
+  value: 'Overlay Score (2020)',
   style: {
     //fontWeight: 'bold',
     fontSize: '12px',
@@ -770,7 +770,7 @@ function renderGraphics(coords) {
   computedValue.evaluate(function(result) {
     // When the server returns the value, show it.
     inspector.widgets().set(0, ui.Label({
-      value: 'Total Sum Tree/Forest (2020): ' + result,
+      value: 'Total Sum Tree/Forest: ' + result,
     }));
   });
   
