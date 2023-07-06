@@ -1044,7 +1044,7 @@ var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
 var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
 var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
 
-//Remap
+//Remap 
 
 var fromListsg = [-1, 0, 1, 2, 3, 4];
 var toListsg =   [0, 0, 1, 2, 3, 4];
