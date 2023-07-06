@@ -237,7 +237,6 @@ var sublegendTitle = ui.Label({
 });
 
 
-
 // #############################
 // END of PANELS
 // #############################
@@ -351,6 +350,8 @@ var AOI_COLOR = 'ffffff';  //'b300b3';
 
 var COORDS = null;
 var CLICKED = false;
+
+var srt = '2020-01-01'; var end = '2021-01-01'; //For DW processing
 
 // Set region reduction and chart params.
 var OPTIONAL_PARAMS = {
@@ -918,7 +919,6 @@ var makeRow = function(color, name) {
 // ### DATASET Processing ###
 // #############################################################################
 
-var srt = '2020-01-01'; var end = '2021-01-01';
 
 // 1. Dynamic World
 
