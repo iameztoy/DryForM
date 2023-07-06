@@ -963,7 +963,7 @@ var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation c
 var wri_Tree = wri_Treeu.gte(1);
 
 
-// 5. GFC 2001-2021
+// 5. GFC 2001-2020
 
 var treeCover = gfcImage.select(['treecover2000']);
 var treeCover10 = treeCover.gte(10);
