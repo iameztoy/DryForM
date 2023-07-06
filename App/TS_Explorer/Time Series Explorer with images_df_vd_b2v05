@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2021-2023 Justin Braaten + Fine tuned and modules added by Iban Ameztoy (JRC S4/D1 - Started in 2022)
+ * Copyright 2021-2023 Justin Braaten + Fine tuned/Modified and modules added by Iban Ameztoy (JRC S4/D1 - Started in 2022)
  * 
  * Process and combine land cover classes from different products (7) to compute a new layer by mixing forest and tree cover.
  * Grassland and shrub/Scrub classes also processed and made available.
