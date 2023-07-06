@@ -671,6 +671,15 @@ function renderGraphics(coords) {
   var aoiBox = point.buffer(regionWidthSlider.getValue()*1000/2);
  
   // Clear previous layers from the Map.
+  // 
+  
+  /** Need to optimize the removal of layers.
+  *
+  * Not sure why it does only remove half of layers if I run the 
+  * function only once. This is just a trick repeated (x4) 
+  * 
+  **/
+  
   map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
