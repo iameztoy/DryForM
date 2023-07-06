@@ -705,15 +705,6 @@ function renderGraphics(coords) {
     sensorInfo[sensorSelect.getValue()]['rgb'][rgbSelect.getValue()],
     chartPanel, OPTIONAL_PARAMS);
   
-
-
-  
-  
-  /*
-  map.layers().forEach(function(el) {
-  map.layers().remove(el);
-  });
-  */
   
 }
 
