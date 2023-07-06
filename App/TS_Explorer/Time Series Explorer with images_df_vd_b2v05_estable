@@ -196,8 +196,19 @@ var appCodeLink = ui.Label({
   targetUrl: 'https://github.com/jdbcode/ee-rgb-timeseries/blob/main/eo-timeseries-explorer.js'
 });
 
+var inspector = ui.Panel([ui.Label('Click to get Tree/Forest Count')]);
+
+
 //// set position of panel for legend
 var legend = ui.Panel({
+  style: {
+    position: 'bottom-right',
+    padding: '8px 15px'
+  }
+});
+
+//// set position of panel for Count Chart
+var countChart = ui.Panel({
   style: {
     position: 'bottom-left',
     padding: '8px 15px'
@@ -225,8 +236,7 @@ var sublegendTitle = ui.Label({
     }
 });
 
-// Add the title to the panel
-legend.add(legendTitle).add(sublegendTitle);
+
 
 // #############################
 // END of PANELS
@@ -697,7 +707,6 @@ function renderGraphics(coords) {
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
 
 
-
   // Get collection options.
 
   var cloudThresh = cloudSlider.getValue();
@@ -729,10 +738,53 @@ function renderGraphics(coords) {
     sensorInfo[sensorSelect.getValue()]['rgb'][rgbSelect.getValue()],
     chartPanel, OPTIONAL_PARAMS);
   
+  //Set Boolean Count per layer
   
+    // Show the loading label.
+  inspector.widgets().set(0, ui.Label({
+    value: 'Loading...',
+    style: {color: 'gray'}
+  }));
+  
+  var sample = TotTC_c_r.sample(point, 10);
+  var computedValue = sample.first().get('Total_TreeForest');
+  
+    // Request the value from the server.
+  computedValue.evaluate(function(result) {
+    // When the server returns the value, show it.
+    inspector.widgets().set(0, ui.Label({
+      value: 'Total Sum Tree/Forest: ' + result,
+    }));
+  });
+  
+  var chart4all = ui.Chart.image
+        .series({
+          imageCollection: ic_allTF,
+          region: point,
+          //reducer: ee.Reducer.mean(),
+          scale: 10,
+          xProperty: 'system:index'
+        })
+        //.setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLC", "GEDI"])
+        .setChartType('ColumnChart')
+        .setOptions({
+          title: 'Tree/Forest Presence/Absence',
+          hAxis: {title: 'Product', titleTextStyle: {italic: false, bold: true}},
+          vAxis: {
+            title: 'Yes (1) / No (0)',
+            titleTextStyle: {italic: false, bold: true},
+            minValue: 0,
+            maxValue: 1
+          },
+          lineWidth: 5,
+          //colors: ['e37d05', '1d6b99'],
+          curveType: 'function'
+        }); //END of BLOCK 2
+
+  countChart.widgets().set(1, chart4all); //Locate chart inside panel
+
+
 }
-
-
 
 /**
  * Handles map clicks.
@@ -1047,6 +1099,11 @@ controlPanel.add(infoElements);
 controlPanel.add(controlElements);
 
 map.add(controlPanel);
+map.add(inspector);
+map.add(countChart);
+
+
+legend.add(legendTitle).add(sublegendTitle);
 
 
 infoButton.onClick(infoButtonHandler);
