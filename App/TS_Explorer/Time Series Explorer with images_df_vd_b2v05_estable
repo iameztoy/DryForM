@@ -199,7 +199,7 @@ var appCodeLink = ui.Label({
 });
 
 //Panel for Total Sum Tree/Forest
-var inspector = ui.Panel([ui.Label('Click to get Tree/Forest Count')]); 
+var inspector = ui.Panel([ui.Label('Click to get Overlay Score')]); 
 
 //// set position of panel for legend
 var legend = ui.Panel({
