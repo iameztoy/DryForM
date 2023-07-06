@@ -764,6 +764,8 @@ function renderGraphics(coords) {
     style: {color: 'gray'}
   }));
   
+  //Set point for Count Chart
+  
   var sample = TotTC_c_r.sample(point, 10);
   var computedValue = sample.first().get('Total_TreeForest');
   
