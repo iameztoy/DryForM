@@ -196,8 +196,8 @@ var appCodeLink = ui.Label({
   targetUrl: 'https://github.com/jdbcode/ee-rgb-timeseries/blob/main/eo-timeseries-explorer.js'
 });
 
-var inspector = ui.Panel([ui.Label('Click to get Tree/Forest Count')]);
-
+//Panel for Total Sum Tree/Forest
+var inspector = ui.Panel([ui.Label('Click to get Tree/Forest Count')]); 
 
 //// set position of panel for legend
 var legend = ui.Panel({
