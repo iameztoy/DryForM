@@ -615,6 +615,13 @@ function clearImgs() {
 }
 
 /**
+ * Clears chart from Count chart panel.
+ */
+function clearCchart() {
+  countChart.clear();
+}
+
+/**
  * Displays image cards to the card panel.
  */
 function displayBrowseImg(col, aoiBox, aoiCircle) {
@@ -767,6 +774,7 @@ function renderGraphics(coords) {
     }));
   });
   
+  clearCchart();
   var chart4all = ui.Chart.image
         .series({
           imageCollection: ic_allTF,
