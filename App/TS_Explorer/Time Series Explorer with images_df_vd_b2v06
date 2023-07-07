@@ -1068,9 +1068,6 @@ var dwVisParams = {min: 0, max: 8, palette: [
 var VisParam5cl = {min: 0, max: 4, palette: [
     "000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
     
-var VisParam5cl = {min: 0, max: 4, palette: [
-    "000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
-
 var VisParam8cl = {min: 0, max: 7, palette: [
     "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff"], opacity: 0.6};
     
