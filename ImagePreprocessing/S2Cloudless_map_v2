@@ -120,6 +120,7 @@ var s2_Oct_Chaco = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
 var s2_Nov_Chaco = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
 var s2_Dec_Chaco = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
 
+
 var s2srMed_Jan = (s2_Jan_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
 var s2srMed_Feb = (s2_Feb_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);                          
 var s2srMed_Mar = (s2_Mar_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);                
