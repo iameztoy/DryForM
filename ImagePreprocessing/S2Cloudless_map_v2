@@ -121,18 +121,15 @@ var addindex = function addindexes(img) {
 /**
  * Add date property. (not used)
  */
-var addDate = function addDate(img) {
-  var date = img.date().format('YYYY-MM-dd');
-  return img.set('date', date);
-}
+var addTime = function(image) {
+  return image.addBands(image.getNumber('system:time_start'));
+};
 
 
 
 
 var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
 var s2_sr_cld_col = s2_sr_cld_col.map(addindex)
-
-
 
 
 
