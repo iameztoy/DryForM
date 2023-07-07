@@ -3,8 +3,8 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Define variables
 var AOI = ee.Geometry.Point(-122.269, 45.701)
-var START_DATE = '2020-06-01'
-var END_DATE = '2020-06-02'
+var START_DATE = '2020-01-01'
+var END_DATE = '2021-01-01'
 var CLOUD_FILTER = 90
 var CLD_PRB_THRESH = 50
 var NIR_DRK_THRESH = 0.15
