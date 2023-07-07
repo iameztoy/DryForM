@@ -212,11 +212,6 @@ var ic_allTF = ee.ImageCollection.fromImages(allTF);
 print(ic_allTF);
 
 
-
-
-
-
-
 // n. Overall Shrub 2020
 
 var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
@@ -254,7 +249,7 @@ var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
 //Countries or Polygons of Interest
 
-var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
+var ctr = ["Tanzania"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
 var rgn = ["Europe", "Africa", "SW Asia"];
 
 // Define mask to clip.
@@ -293,7 +288,7 @@ var dwVisParams = {min: 0, max: 8, palette: [
     '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
     '#C4281B', '#A59B8F', '#B39FE1']};
 
-
+/*
 //Vector files
 
 Map.addLayer(mask, {}, "Selected courntries", 0);
@@ -324,6 +319,7 @@ Map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
 Map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
 
 //Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
+*/
 
 /*#####################################
 #######################################
@@ -413,5 +409,72 @@ var smooth = clip2.focalMode({
 Map.addLayer(HTC_2020)
 
 */
+
+//Chaco
+
+var chacoForest = TotTC_c_r.gte(4).clip(Chaco);
+var chacoForestm = chacoForest.updateMask(chacoForest.mask(chacoForest.gte(1)));
+
+var chacoGrass = TotalGrass2020s.gte(1).clip(Chaco);
+var chacoGrassm = chacoGrass.updateMask(chacoGrass.mask(chacoGrass.gte(1)));
+
+var chacoShrub = TotalShrub2020s.gte(1).clip(Chaco);
+var chacoShrubm = chacoShrub.updateMask(chacoShrub.mask(chacoShrub.gte(1)));
+
+//Cerrado
+
+var cerradoForest = TotTC_c_r.gte(4).clip(Cerrado);
+var cerradoForestm = cerradoForest.updateMask(cerradoForest.mask(cerradoForest.gte(1)));
+
+var cerradoGrass = TotalGrass2020s.gte(1).clip(Cerrado);
+var cerradoGrassm = cerradoGrass.updateMask(cerradoGrass.mask(cerradoGrass.gte(1)));
+
+var cerradoShrub = TotalShrub2020s.gte(1).clip(Cerrado);
+var cerradoShrubm = cerradoShrub.updateMask(cerradoShrub.mask(cerradoShrub.gte(1)));
+
+//Caatinga
+
+
+var caatingaForest = TotTC_c_r.gte(4).clip(Caatinga);
+var caatingaForestm = caatingaForest.updateMask(caatingaForest.mask(caatingaForest.gte(1)));
+
+var caatingaGrass = TotalGrass2020s.gte(1).clip(Caatinga);
+var caatingaGrassm = caatingaGrass.updateMask(caatingaGrass.mask(caatingaGrass.gte(1)));
+
+var caatingaShrub = TotalShrub2020s.gte(1).clip(Caatinga);
+var caatingaShrubm = caatingaShrub.updateMask(caatingaShrub.mask(caatingaShrub.gte(1)));
+
+//Tanzania
+
+var tanzaniaForest = TotTC_c_r.gte(4).clip(mask);
+var tanzaniaForestm = tanzaniaForest .updateMask(tanzaniaForest .mask(tanzaniaForest .gte(1)));
+
+var tanzaniaGrass = TotalGrass2020s.gte(1).clip(mask);
+var tanzaniaGrassm = tanzaniaGrass.updateMask(tanzaniaGrass.mask(tanzaniaGrass.gte(1)));
+
+var tanzaniaShrub = TotalShrub2020s.gte(1).clip(mask);
+var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
+
+
+Map.addLayer(chacoForestm, {}, "Chaco Forest", 0);
+Map.addLayer(chacoGrassm, {}, "Chaco Grass", 0);
+Map.addLayer(chacoShrubm, {}, "Chaco Shrub", 0);
+
+Map.addLayer(cerradoForestm, {}, "Cerrado Forest", 0);
+Map.addLayer(cerradoGrassm, {}, "Cerrado Grass", 0);
+Map.addLayer(cerradoShrubm, {}, "Cerrado Shrub", 0);
+
+Map.addLayer(caatingaForestm, {}, "Caatinga Forest", 0);
+Map.addLayer(caatingaGrassm, {}, "Caatinga Grass", 0);
+Map.addLayer(caatingaShrubm, {}, "Caatinga Shrub", 0);
+
+Map.addLayer(tanzaniaForestm, {}, "Tanzania Forest", 0);
+Map.addLayer(tanzaniaGrassm, {}, "Tanzania Grass", 0);
+Map.addLayer(tanzaniaShrubm, {}, "Tanzania Shrub", 0);
+
+
+
+
+
 
 
