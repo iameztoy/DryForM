@@ -1,8 +1,11 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Define variables
-var AOI = ee.Geometry.Point(-122.269, 45.701)
+var AOI = Chaco
 
-var START_DATE = '2020-06-14'
-var END_DATE = '2020-07-01'
+var START_DATE = '2020-01-01'
+var END_DATE = '2020-02-01'
 var CLOUD_FILTER = 100
 var CLD_PRB_THRESH = 30
 var NIR_DRK_THRESH = 0.15
@@ -107,9 +110,12 @@ var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE)
 var s2_sr_median = (s2_sr_cld_col.map(add_cld_shdw_mask)
                              .map(apply_cld_shdw_mask)
                              .median())
+                             .clip(Chaco)
+                             
+                             
 
 //Center the map view on a given AOI with the zool level.
-Map.centerObject(AOI, 13);                          
+Map.centerObject(AOI, 13);
 
 //ADD CLOUD-FREE COMPOSITE TO THE MAP.                             
 Map.addLayer(s2_sr_median, 
