@@ -140,6 +140,19 @@ print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
 //Center the map view on a given AOI with the zool level. 
 Map.centerObject(AOI, 13);
 
+var bands = ['B4', 'B3', 'B2']
+
 //ADD CLOUD-FREE COMPOSITE TO THE MAP.                             
-Map.addLayer(s2srMed_Jan, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic');
+Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
+Map.addLayer(s2srMed_Feb, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic February', 0);
+Map.addLayer(s2srMed_Mar, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic March', 0);
+Map.addLayer(s2srMed_Apr, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic April', 0);
+Map.addLayer(s2srMed_May, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic May', 0);
+Map.addLayer(s2srMed_Jun, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic June', 0);
+Map.addLayer(s2srMed_Jul, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic July', 0);
+Map.addLayer(s2srMed_Aug, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic August', 0);
+Map.addLayer(s2srMed_Sep, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic September', 0);
+Map.addLayer(s2srMed_Oct, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic October', 0);
+Map.addLayer(s2srMed_Nov, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic November', 0);
+Map.addLayer(s2srMed_Dec, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic December', 0);
 
