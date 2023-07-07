@@ -209,7 +209,6 @@ var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tre
 //system:index: 0, 1, 2, 3, 4, 5, 6, 7
 
 var ic_allTF = ee.ImageCollection.fromImages(allTF);
-print(ic_allTF);
 
 
 // n. Overall Shrub 2020
@@ -257,29 +256,7 @@ var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
   .filter(ee.Filter.inList('country_na', ctr));
   //.filter(ee.Filter.inList('wld_rgn', rgn));   
   
-//----------------
-// SAMPLING
-//
-var region = Chaco;
 
-// Generate x random points with the region.
-var randomPoints = ee.FeatureCollection.randomPoints(
-    {region: region, points: 500, seed: 0, maxError: 1});
-
-
-
-var bounding_box_func = function(feature) {
-    var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
-    var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
-       return(intermediate_box); // Return the bounding box
-      };
-      
-// Apply function
-var Zones = randomPoints.map(bounding_box_func);
-
-//Add Unique ID to each feature so it can be used to give a name while exporting to Drive
-var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
-Zones = utils.Classification.assignIds(Zones, 'ID');
 
 //--------------
 //VISUALIZATION
@@ -288,127 +265,9 @@ var dwVisParams = {min: 0, max: 8, palette: [
     '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
     '#C4281B', '#A59B8F', '#B39FE1']};
 
-/*
-//Vector files
-
-Map.addLayer(mask, {}, "Selected courntries", 0);
-Map.addLayer(Caatinga, {}, "Caatinga", 0);
-Map.addLayer(Cerrado, {}, "Cerrado", 0);
-Map.addLayer(Chaco, {}, "Chaco", 0);
-Map.addLayer(randomPoints, {color: 'red'}, 'Random points', 0);
-Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes", 0);
-
-//Tree/Forest 
-
-Map.addLayer(dwM_Tree, {}, "DW Trees", 0);
-Map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
-Map.addLayer(esa_Tree, {}, "ESA Tree", 0);
-//Map.addLayer(wri80, {}, "WRI 80", 0);
-//Map.addLayer(wri90, {}, "WRI 90", 0);
-//Map.addLayer(wri100, {}, "WRI 100", 0);
-Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
-Map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
-//Map.addLayer(glc10mForest, {}, "GLC 10", 0);
-Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
-Map.addLayer(gedi5, {}, "GEDI => 5", 0);
-Map.addLayer(gedilt5, {}, "GEDI < 5", 0);
-Map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-7
-
-//Shrub/Scrub (Only Totals)
-Map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
-Map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
-
-//Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
-*/
-
-/*#####################################
-#######################################
-#######################################*/
-
-
-//Additional Processing
 
 
 
-
-/*
-
-//Export 
-Export.image.toDrive({
-    image: sumDEW,
-    description: 'TrainTrees',
-    region: AOIpl,
-    scale: 10,
-    maxPixels: 1e13
-  });
-  
-Export.image.toAsset({
-    image: sumrec,
-    description: 'TreeCombo Brazil',
-    assetId: 'projects/ee-dryforestia/assets/sumrec',
-    region: mask,
-    scale: 10,
-    maxPixels: 1e13
-  });
-
-Export.image.toAsset({
-    image: sumDEWs,
-    description: 'SumTCF_7cl',
-    assetId: 'SumTCF_7cl',
-    scale: 10,
-    maxPixels: 1e13
-  });
-  
-
-  
-var featlist = Zones.getInfo()["features"];
-for (var f in featlist) {
-  var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("attributeName");
-  var disS = dis.getInfo();
-  var name = "chip";  
-  Export.image.toDrive({
-    image: sumrec,
-    description: name+disS.toString(),
-    folder: "TrainingSets",
-    fileNamePrefix: name+disS.toString(),
-    region: feat, //.geometry().bounds(),
-    scale: 10,
-    maxPixels: 1e13
-  });
-}
-
-*/
-
-
-// For testing purposes: (to be deleted)
-
-/*
-
-//Appying a mode filter
-
-var clip = sumDEWs.clip(cliptest)
-Map.addLayer(clip, {}, "clip", 0);
-
-
-var mask = clip.gte(0) //there are negative values. We are extracting looss where originally (2000) was not forest
-var clip = clip.updateMask(mask)
-print(clip)
-
-//Map.addLayer(clip2, {}, "clip masked", 0);
-Map.addLayer(treeCover, {}, "Hansen >10", 0);
-
-var smooth = clip2.focalMode({
-    radius: 3,
-    kernelType: "square",
-    units: "pixels",
-    iterations: false,
-//	kernel:null,
-})
-//Map.addLayer(smooth)
-Map.addLayer(HTC_2020)
-
-*/
 
 //Chaco
 
@@ -456,6 +315,35 @@ var tanzaniaShrub = TotalShrub2020s.gte(1).clip(mask);
 var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
 
 
+//----------------
+// SAMPLING
+//
+/*
+
+var region = Chaco;
+
+// Generate x random points with the region.
+var randomPoints = ee.FeatureCollection.randomPoints(
+    {region: region, points: 500, seed: 0, maxError: 1});
+
+
+
+var bounding_box_func = function(feature) {
+    var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
+    var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
+       return(intermediate_box); // Return the bounding box
+      };
+      
+// Apply function
+var Zones = randomPoints.map(bounding_box_func);
+
+//Add Unique ID to each feature so it can be used to give a name while exporting to Drive
+var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
+Zones = utils.Classification.assignIds(Zones, 'ID');
+*/
+
+// Visualize
+
 Map.addLayer(chacoForestm, {}, "Chaco Forest", 0);
 Map.addLayer(chacoGrassm, {}, "Chaco Grass", 0);
 Map.addLayer(chacoShrubm, {}, "Chaco Shrub", 0);
@@ -471,6 +359,38 @@ Map.addLayer(caatingaShrubm, {}, "Caatinga Shrub", 0);
 Map.addLayer(tanzaniaForestm, {}, "Tanzania Forest", 0);
 Map.addLayer(tanzaniaGrassm, {}, "Tanzania Grass", 0);
 Map.addLayer(tanzaniaShrubm, {}, "Tanzania Shrub", 0);
+
+var RADIUS = 30; // In meters
+var MIN_RATIO = 0.5;
+
+var BATCH_SIZE = 1000;
+var NUM_PIXELS = 10000;
+
+print(chacoForestm)
+
+var p_ChacoForest = ee.FeatureCollection(
+  ee.List.sequence(1, NUM_PIXELS / BATCH_SIZE)
+    .map(function (batch) { // Samples batch of points
+      return chacoForestm
+        .sample({
+          region: Chaco, 
+          scale: 30,
+          seed: batch,
+          numPixels: 2 * BATCH_SIZE, // Sample some extra to make sure 
+          geometries: true
+        })
+        .limit(BATCH_SIZE)
+    })
+    .iterate(function (acc, batchCollection) { // Merge batches into a single collection
+      return ee.FeatureCollection(acc).merge(
+        ee.FeatureCollection(batchCollection)
+      )
+    }, ee.FeatureCollection([]))
+)
+
+Map.addLayer(p_ChacoForest, null, "Points Chaco Forest", 1)
+
+
 
 
 
