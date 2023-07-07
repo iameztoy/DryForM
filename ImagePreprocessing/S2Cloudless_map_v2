@@ -5,7 +5,7 @@ var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco");
 var AOI = Chaco
 
 var START_DATE = '2020-01-01'
-var END_DATE = '2020-12-31'
+var END_DATE = '2021-01-01'
 var CLOUD_FILTER = 30
 var CLD_PRB_THRESH = 30
 var NIR_DRK_THRESH = 0.15
@@ -14,6 +14,7 @@ var BUFFER = 50
 
 function get_s2_sr_cld_col(aoi, start_date, end_date) {
     // # Import and filter S2 SR.
+    
     var s2_sr_col = (ee.ImageCollection('COPERNICUS/S2_SR')
         .filterBounds(aoi)
         .filterDate(start_date, end_date)
@@ -34,6 +35,7 @@ function get_s2_sr_cld_col(aoi, start_date, end_date) {
         })
     }))
 }
+
 
 
 function add_cloud_bands(img) {
@@ -105,7 +107,34 @@ function apply_cld_shdw_mask(img) {
     return img.select('B.*').updateMask(not_cld_shdw)
 }
 
-var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE)
+/**
+ * Add NDVI band Sentinel-2. (not used)
+ */
+var addindex = function addindexes(img) {
+  var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  return img.addBands(ee.Image.cat(nbr, ndvi));
+}
+
+
+
+/**
+ * Add date property. (not used)
+ */
+var addDate = function addDate(img) {
+  var date = img.date().format('YYYY-MM-dd');
+  return img.set('date', date);
+}
+
+
+
+
+var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
+var s2_sr_cld_col = s2_sr_cld_col.map(addindex)
+
+
+
+
 
 var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
 var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
@@ -134,6 +163,7 @@ var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).
 var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
 var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
 
+
 print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
 print(s2srMed_Jun), print(s2srMed_Jul), print(s2srMed_Aug), print(s2srMed_Sep),
 print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
@@ -141,7 +171,7 @@ print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
 //Center the map view on a given AOI with the zool level. 
 Map.centerObject(AOI, 13);
 
-var bands = ['B4', 'B3', 'B2']
+var bands = ['B8', 'B4', 'B3']
 
 //ADD CLOUD-FREE COMPOSITE TO THE MAP.                             
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
