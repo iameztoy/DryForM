@@ -5,7 +5,7 @@ var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco");
 var AOI = Chaco
 
 var START_DATE = '2020-01-01'
-var END_DATE = '2020-01-31'
+var END_DATE = '2020-12-31'
 var CLOUD_FILTER = 30
 var CLD_PRB_THRESH = 30
 var NIR_DRK_THRESH = 0.15
@@ -133,7 +133,9 @@ var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).
 var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
 var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
 
-print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar),print(s2srMed_Apr)
+print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
+print(s2srMed_Jun), print(s2srMed_Jul), print(s2srMed_Aug), print(s2srMed_Sep),
+print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
 
 //Center the map view on a given AOI with the zool level. 
 Map.centerObject(AOI, 13);
