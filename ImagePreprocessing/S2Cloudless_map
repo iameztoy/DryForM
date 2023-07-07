@@ -120,14 +120,22 @@ var s2_Oct_Chaco = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
 var s2_Nov_Chaco = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
 var s2_Dec_Chaco = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
 
-var s2srMed_Jan = (s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
-                             
-                     
+var s2srMed_Jan = (s2_Jan_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
+var s2srMed_Feb = (s2_Feb_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)                           
+var s2srMed_Mar = (s2_Mar_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)                
+var s2srMed_Apr = (s2_Apr_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_May = (s2_May_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_Jun = (s2_Jun_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_Jul = (s2_Jul_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_Aug = (s2_Aug_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_Sep = (s2_Sep_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
+var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
 
 //Center the map view on a given AOI with the zool level.
 Map.centerObject(AOI, 13);
 
 //ADD CLOUD-FREE COMPOSITE TO THE MAP.                             
-Map.addLayer(s2srMed_Jan, 
-  {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic');
+Map.addLayer(s2srMed_Jan, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic');
 
