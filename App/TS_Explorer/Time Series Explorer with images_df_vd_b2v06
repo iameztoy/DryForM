@@ -206,7 +206,7 @@ var legendTitle = ui.Label({
 });
 
 var sublegendTitle = ui.Label({
-  value: 'Overlay Score (2020)',
+  value: 'Overlay Score (2020) & Valid Observations',
   style: {
     //fontWeight: 'bold',
     fontSize: '12px',
@@ -214,9 +214,6 @@ var sublegendTitle = ui.Label({
     padding: '0'
     }
 });
-
-
-
 
 
 // #############################
