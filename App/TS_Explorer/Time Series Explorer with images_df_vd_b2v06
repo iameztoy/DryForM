@@ -206,7 +206,7 @@ var legendTitle = ui.Label({
 });
 
 var sublegendTitle = ui.Label({
-  value: 'Overlay Score (2020) & Valid Observations',
+  value: 'Overlay Score (2020)',
   style: {
     //fontWeight: 'bold',
     fontSize: '12px',
@@ -214,6 +214,18 @@ var sublegendTitle = ui.Label({
     padding: '0'
     }
 });
+
+var sublegendTitle2 = ui.Label({
+  value: '& Valid Observations',
+  style: {
+    //fontWeight: 'bold',
+    fontSize: '12px',
+    margin: '0 0 4px 0',
+    padding: '0'
+    }
+});
+
+
 
 
 // #############################
@@ -1104,7 +1116,7 @@ map.add(controlPanel);
 map.add(inspector);
 map.add(countChart);
 map.add(legend);
-legend.add(legendTitle).add(sublegendTitle);
+legend.add(legendTitle).add(sublegendTitle).add(sublegendTitle2);
 
 map.setControlVisibility({layerList: true, fullscreenControl: true, zoomControl: false});
 
