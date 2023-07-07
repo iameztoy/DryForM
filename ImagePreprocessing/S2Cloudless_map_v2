@@ -128,8 +128,8 @@ var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
 var altogether = s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex);
 print(altogether)
 
-var select = altogether.filter(ee.Filter.lte('id', "COPERNICUS/S2_SR/20200101T142731_20200101T143720_T19JGG"));
-
+var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20200101T143720_T19JGF"));
+print(select)
 
 var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
 var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
@@ -182,5 +182,6 @@ Map.addLayer(s2srMed_Nov, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-fre
 Map.addLayer(s2srMed_Dec, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic December', 0);
 
 Map.addLayer(select, {'bands': bands, 'min': 0, 'max': 2500}, 'select', 0);
+Map.setCenter(select);
 
 
