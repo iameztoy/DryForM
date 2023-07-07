@@ -5,8 +5,8 @@ var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco");
 var AOI = Chaco
 
 var START_DATE = '2020-01-01'
-var END_DATE = '2020-02-01'
-var CLOUD_FILTER = 100
+var END_DATE = '2020-01-31'
+var CLOUD_FILTER = 30
 var CLD_PRB_THRESH = 30
 var NIR_DRK_THRESH = 0.15
 var CLD_PRJ_DIST = 1
@@ -107,17 +107,27 @@ function apply_cld_shdw_mask(img) {
 
 var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE)
 
-var s2_sr_median = (s2_sr_cld_col.map(add_cld_shdw_mask)
-                             .map(apply_cld_shdw_mask)
-                             .median())
-                             .clip(Chaco)
+var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
+var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
+var s2_Mar_Chaco = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
+var s2_Apr_Chaco = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
+var s2_May_Chaco = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
+var s2_Jun_Chaco = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
+var s2_Jul_Chaco = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
+var s2_Aug_Chaco = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
+var s2_Sep_Chaco = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
+var s2_Oct_Chaco = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
+var s2_Nov_Chaco = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
+var s2_Dec_Chaco = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
+
+var s2srMed_Jan = (s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco)
                              
-                             
+                     
 
 //Center the map view on a given AOI with the zool level.
 Map.centerObject(AOI, 13);
 
 //ADD CLOUD-FREE COMPOSITE TO THE MAP.                             
-Map.addLayer(s2_sr_median, 
+Map.addLayer(s2srMed_Jan, 
   {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic');
 
