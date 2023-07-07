@@ -1,5 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco");
+var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
+    table = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Caatinga"),
+    table2 = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Define variables
 var AOI = Chaco
@@ -181,4 +183,4 @@ Map.addLayer(s2srMed_Nov, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-fre
 Map.addLayer(s2srMed_Dec, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic December', 0);
 
 Map.addLayer(select, {'bands': bands, 'min': 0, 'max': 2500}, 'select', 0);
-Map.centerObject(select)
+Map.centerObject(AOI, 8)
