@@ -12,6 +12,8 @@ var NIR_DRK_THRESH = 0.15
 var CLD_PRJ_DIST = 1
 var BUFFER = 50
 
+
+
 function get_s2_sr_cld_col(aoi, start_date, end_date) {
     // # Import and filter S2 SR.
     
@@ -110,7 +112,7 @@ function apply_cld_shdw_mask(img) {
 /**
  * Add NDVI band Sentinel-2. (not used)
  */
-var addindex = function addindexes(img) {
+var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
   var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
   return img.addBands(ee.Image.cat(nbr, ndvi));
@@ -118,18 +120,7 @@ var addindex = function addindexes(img) {
 
 
 
-/**
- * Add date property. (not used)
- */
-var addTime = function(image) {
-  return image.addBands(image.getNumber('system:time_start'));
-};
-
-
-
-
 var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
-var s2_sr_cld_col = s2_sr_cld_col.map(addindex)
 
 
 
@@ -147,19 +138,18 @@ var s2_Nov_Chaco = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
 var s2_Dec_Chaco = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
 
 
-var s2srMed_Jan = (s2_Jan_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Feb = (s2_Feb_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);                          
-var s2srMed_Mar = (s2_Mar_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);                
-var s2srMed_Apr = (s2_Apr_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_May = (s2_May_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Jun = (s2_Jun_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Jul = (s2_Jul_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Aug = (s2_Aug_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Sep = (s2_Sep_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).median()).clip(Chaco);
-
+var s2srMed_Jan = (s2_Jan_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Feb = (s2_Feb_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);                          
+var s2srMed_Mar = (s2_Mar_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);                
+var s2srMed_Apr = (s2_Apr_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_May = (s2_May_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Jun = (s2_Jun_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Jul = (s2_Jul_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Aug = (s2_Aug_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Sep = (s2_Sep_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
 
 print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
 print(s2srMed_Jun), print(s2srMed_Jul), print(s2srMed_Aug), print(s2srMed_Sep),
