@@ -115,7 +115,11 @@ function apply_cld_shdw_mask(img) {
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
   var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
-  return img.addBands(ee.Image.cat(nbr, ndvi));
+  var msavi2 = img.select('B8').multiply(2).add(1)
+  .subtract(img.select('B8').multiply(2).add(1).pow(2)
+    .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
+  ).divide(2).rename("MSAVI");
+  return img.addBands(ee.Image.cat(nbr, ndvi, msavi2));
 }
 
 
