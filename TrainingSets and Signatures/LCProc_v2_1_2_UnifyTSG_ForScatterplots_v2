@@ -507,16 +507,16 @@ var chacoGrassm = chacoGrassm.rename("Grass_Chaco");
 var chacoShrubm = chacoShrubm.rename("Shrub_Chaco");
 
 var cerradoForestm = cerradoForestm.rename("Forest_Cerrado");
-var cerradoGrassm = cerradoGrassm.rename("Cerrado_Grass"); 
-var cerradoShrubm = cerradoShrubm.rename("Cerrado_Shrub");
+var cerradoGrassm = cerradoGrassm.rename("Grass_Cerrado"); 
+var cerradoShrubm = cerradoShrubm.rename("Shrub_Cerrado");
 
-var caatingaForestm = caatingaForestm.rename("Caatinga_Forest");
-var caatingaGrassm = caatingaGrassm.rename("Caatinga_Grass");
-var caatingaShrubm = caatingaShrubm.rename("Caatinga_Shrub");
+var caatingaForestm = caatingaForestm.rename("Forest_Caatinga");
+var caatingaGrassm = caatingaGrassm.rename("Grass_Caatinga");
+var caatingaShrubm = caatingaShrubm.rename("Shrub_Caatinga");
 
-var tanzaniaForestm = tanzaniaForestm.rename("Tanzania_Forest");
-var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass"); 
-var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
+var tanzaniaForestm = tanzaniaForestm.rename("Forest_Tanzania");
+var tanzaniaGrassm = tanzaniaGrassm.rename("Grass_Tanzania"); 
+var tanzaniaShrubm = tanzaniaShrubm.rename("Shrub_Tanzania")
 
 //----------------
 // SAMPLING for stats | Done in a previous step and saved the Samples as an Asset 
