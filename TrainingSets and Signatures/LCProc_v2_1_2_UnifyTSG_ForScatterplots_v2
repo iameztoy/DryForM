@@ -631,7 +631,7 @@ var params = {
         138, 139, 142, 145, 146, 147, 148, 149,
         153, 154, 157, 160, 161, 162, 163, 164,
         168, 169, 172, 175, 176, 177, 178, 179,
-        180, 181, 182],
+        180, 181, 182, 183],
         
   bandsRename : ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan",
              "b4feb", "b5feb", "b8feb", "b11feb", "b12feb", "nbrfeb", "ndvifeb", "msavi2feb", 
