@@ -488,6 +488,8 @@ var tanzania_forest_shrub = tanzania_forest_shrub.remap({from: from_gs, to: to_g
 
 // Third we need to subtract classes | "_s" refers to subracted
 
+
+
 var chacoForestm_s = chacoForestm.subtract(chaco_grass_shrub);
 var chacoGrassm_s = chacoGrassm.subtract(chaco_forest_shrub);
 var chacoShrubm_s = chacoShrubm.subtract(chaco_grass_forest);
@@ -506,22 +508,25 @@ var tanzaniaShrubm_s = tanzaniaShrubm.subtract(tanzania_grass_forest);
 
 // Fourth: Need to remap third step (there are negative values)
 
+var from_4th = [-1, 0, 1];
+var to_gs_4th = [0, 0, 1];
 
-var chacoForestm_s = chacoForestm.updateMask(chacoForestm.mask(chacoForestm.gte(1)));
-var chacoGrassm_s = chacoGrassm.updateMask(chacoGrassm.mask(chacoGrassm.gte(1)));
-var chacoShrubm_s = chacoShrubm.updateMask(chacoShrubm.mask(chacoShrubm.gte(1)));
 
-var cerradoForestm_s = cerradoForestm.updateMask(cerradoForestm.mask(cerradoForestm.gte(1)));
-var cerradoGrassm_s = cerradoGrassm.updateMask(cerradoGrassm.mask(cerradoGrassm.gte(1)));
-var cerradoShrubm_s = cerradoShrubm.updateMask(cerradoShrubm.mask(cerradoShrubm.gte(1)));
+var chacoForestm_s = chacoForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var chacoGrassm_s = chacoGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var chacoShrubm_s = chacoShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
 
-var caatingaForestm_s = caatingaForestm.updateMask(caatingaForestm.mask(caatingaForestm.gte(1)));
-var caatingaGrassm_s = caatingaGrassm.updateMask(caatingaGrassm.mask(caatingaGrassm.gte(1)));
-var caatingaShrubm_s = caatingaShrubm.updateMask(caatingaShrubm.mask(caatingaShrubm.gte(1)));
+var cerradoForestm_s = cerradoForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var cerradoGrassm_s = cerradoGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var cerradoShrubm_s = cerradoShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
 
-var tanzaniaForestm_s = tanzaniaForestm.updateMask(tanzaniaForestm.mask(tanzaniaForestm.gte(1)));
-var tanzaniaGrassm_s = tanzaniaGrassm.updateMask(tanzaniaGrassm.mask(tanzaniaGrassm.gte(1)));
-var tanzaniaShrubm_s = tanzaniaShrubm.updateMask(tanzaniaShrubm.mask(tanzaniaShrubm.gte(1)));
+var caatingaForestm_s = caatingaForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var caatingaGrassm_s = caatingaGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var caatingaShrubm_s = caatingaShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+
+var tanzaniaForestm_s = tanzaniaForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var tanzaniaGrassm_s = tanzaniaGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var tanzaniaShrubm_s = tanzaniaShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
 
 
 Map.addLayer(chacoForestm, null, "Forest");
