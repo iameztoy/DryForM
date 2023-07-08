@@ -311,7 +311,8 @@ var TotalGrass2020sr = TotalGrass2020s.remap({
 
 var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
-
+//print(TotalShrub2020sr)
+//print(TotalGrass2020sr)
 
 
 //------------------------------
@@ -487,8 +488,6 @@ var tanzania_grass_forest = tanzania_grass_forest.remap({from: from_gs, to: to_g
 var tanzania_forest_shrub = tanzania_forest_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
 
 // Third we need to subtract classes | "_s" refers to subracted
-
-
 
 var chacoForestm_s = chacoForestm.subtract(chaco_grass_shrub);
 var chacoGrassm_s = chacoGrassm.subtract(chaco_forest_shrub);
