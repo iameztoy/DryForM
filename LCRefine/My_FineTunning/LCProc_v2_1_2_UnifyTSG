@@ -16,9 +16,6 @@ var AOIpl =
     /* color: #0b4a8b */
     /* shown: false */
     ee.Geometry.Point([-50.36060143729637, -26.620432304959333]),
-    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Caatinga"),
-    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado"),
-    Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
     cliptest = 
     /* color: #0b4a8b */
     /* shown: false */
@@ -41,7 +38,10 @@ var AOIpl =
          [37.58327916365244, -5.591799745027464],
          [3.859078101309401, 11.17342485789545]]),
     VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff"]},
-    VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]};
+    VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]},
+    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
