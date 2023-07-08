@@ -527,23 +527,54 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 
 // Concatenate elevation and slope as two bands of an image.
-var colcat = ee.Image.cat(chacoForestm, s2srMed_Jan)
+var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2srMed_May, s2srMed_Jun, s2srMed_Jul, 
+                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec)
   // Computed images do not have a 'system:time_start' property; add one based
   // on when the data were collected.
-  //.set('system:time_start', ee.Date('2020-01-01').millis());
+  .set('system:time_start', ee.Date('2020-01-01').millis());
 
 // Wrap the single image in an ImageCollection for use in the zonalStats function.
 var col4stats = ee.ImageCollection([colcat]);
 print(col4stats)
 
+
+var bandr = ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan"]
+var bandsren = ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan",
+             "b4feb", "b5feb", "b8feb", "b11feb", "b12feb", "nbrfeb", "ndvifeb", "msavi2feb", 
+             "b4mar", "b5mar", "b8mar", "b11mar", "b12mar", "nbrmar", "ndvimar", "msavi2mar",
+             "b4apr", "b5apr", "b8apr", "b11apr", "b12apr", "nbrapr", "ndviapr", "msavi2apr",
+             "b4may", "b5may", "b8may", "b11may", "b12may", "nbrmay", "ndvimay", "msavi2may",
+             "b4jun", "b5jun", "b8jun", "b11jun", "b12jun", "nbrjun", "ndvijun", "msavi2jun",
+             "b4jul", "b5jul", "b8jul", "b11jul", "b12jul", "nbrjul", "ndvijul", "msavi2jul",
+             "b4aug", "b5aug", "b8aug", "b11aug", "b12aug", "nbraug", "ndviaug", "msavi2aug",
+             "b4sep", "b5sep", "b8sep", "b11sep", "b12sep", "nbrsep", "ndvisep", "msavi2sep",
+             "b4oct", "b5oct", "b8oct", "b11oct", "b12oct", "nbroct", "ndvioct", "msavi2oct",
+             "b4nov", "b5nov", "b8nov", "b11nov", "b12nov", "nbrnov", "ndvinov", "msavi2nov",
+             "b4dec", "b5dec", "b8dec", "b11dec", "b12dec", "nbrdec", "ndvidec", "msavi2dec"]
+
 // Define parameters for the zonalStats function.
 var params = {
-  bands: [2, 3, 8],
-  bandsRename: ["b2", "b3", "b8"]  //['elevation', 'Chaco_Forest', "s2ChacoF_B1_Jan", "s2ChacoF_B2Jan", ]
+  bands: [3, 4, 7, 10, 11, 12, 13, 14,
+  18, 19, 22, 25, 26, 27, 28, 29,
+  33, 34, 37, 40, 41, 42, 43, 44,
+  48, 49, 52, 55, 56, 57, 58, 59,
+  63, 64, 67, 70, 71, 72, 73, 74,
+  78, 79, 82, 85, 86, 87, 88, 89,
+  93, 94, 97, 100, 101, 102, 103, 104,
+  108, 109, 112, 115, 116, 117, 118, 119,
+  123, 124, 127, 130, 131, 132, 133, 134,
+  138, 139, 142, 145, 146, 147, 148, 149,
+  153, 154, 157, 160, 161, 162, 163, 164,
+  168, 169, 172, 175, 176, 177, 178, 179],
+  bandsRename: bandr  //['elevation', 'Chaco_Forest', "s2ChacoF_B1_Jan", "s2ChacoF_B2Jan", ]
 };
 
+
+
+//B1 January ["b1", "b15"]
+
 // Extract zonal statistics per point per image. //image collection, points, parameters
-var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable
+var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable // (col4stats, samples, params);
 
 
 // **********************************************
@@ -577,6 +608,10 @@ Export.table.toDrive({
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
 Map.addLayer(RP_Chaco, null, "Samples")
 
+var select = s2srMed_Jan.select(13)
+print(select)
+
+Map.addLayer(select, {'min': -1, 'max': 1}, "ndvi", 1);
 
 
 
