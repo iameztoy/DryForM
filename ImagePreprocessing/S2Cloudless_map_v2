@@ -1,7 +1,8 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
-    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Caatinga"),
-    table2 = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado");
+var CAatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Define variables
 var AOI = Chaco;
@@ -125,7 +126,7 @@ var addIndex = function addindexes(img) {
 
 var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
 var altogether = s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex);
-print(altogether);
+// print(altogether);
 
 //Example to filter one specific image in the Image Collection
 var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20200101T143720_T19JGF"));
