@@ -426,7 +426,7 @@ var tanzaniaShrub = TotalShrub2020sr.gte(thr_gs).clip(Tanzania);
 var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
 
 
-// Rename Bands - These will go for stats
+// Rename Bands
 
 var chacoForestm = chacoForestm.rename("Forest_Chaco").unmask(); 
 var chacoGrassm = chacoGrassm.rename("Grass_Chaco").unmask();
@@ -519,7 +519,7 @@ var tanzaniaGrassm_s = tanzaniaGrassm.gt(0);
 var tanzaniaShrubm_s = tanzaniaShrubm.gt(0);
 
 
-Map.addLayer(chacoForestm_s, null, "forest");
+Map.addLayer(chaco_grass_shrub, null, "grass shrub");
 Map.addLayer(chacoForestm, null, "forest original")
 
 
