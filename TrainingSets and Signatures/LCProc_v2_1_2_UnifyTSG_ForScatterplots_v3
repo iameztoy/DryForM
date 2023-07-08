@@ -312,6 +312,8 @@ var TotalGrass2020sr = TotalGrass2020s.remap({
 var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
+
+
 //------------------------------
 // APPLY FUNCTIONS TO SENTINEL-2 ALTOGETHER
 
@@ -374,55 +376,55 @@ Map.setOptions("SATELLITE");
 
 //----------------------------------------------------------------------
 //PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
-var thr = 4
+var thr_forest = 4
 
 //Chaco
 
-var chacoForest = TotTC_c_r.gte(thr).clip(Chaco);
+var chacoForest = TotTC_c_r.gte(thr_forest).clip(Chaco);
 var chacoForestm = chacoForest.updateMask(chacoForest.mask(chacoForest.gte(1)));
 
-var chacoGrass = TotalGrass2020s.gte(1).clip(Chaco);
+var chacoGrass = TotalGrass2020sr.gte(1).clip(Chaco);
 var chacoGrassm = chacoGrass.updateMask(chacoGrass.mask(chacoGrass.gte(1)));
 
-var chacoShrub = TotalShrub2020s.gte(1).clip(Chaco);
+var chacoShrub = TotalShrub2020sr.gte(1).clip(Chaco);
 var chacoShrubm = chacoShrub.updateMask(chacoShrub.mask(chacoShrub.gte(1)));
 
 //Cerrado
 
-var cerradoForest = TotTC_c_r.gte(thr).clip(Cerrado);
+var cerradoForest = TotTC_c_r.gte(thr_forest).clip(Cerrado);
 var cerradoForestm = cerradoForest.updateMask(cerradoForest.mask(cerradoForest.gte(1)));
 
-var cerradoGrass = TotalGrass2020s.gte(1).clip(Cerrado);
+var cerradoGrass = TotalGrass2020sr.gte(1).clip(Cerrado);
 var cerradoGrassm = cerradoGrass.updateMask(cerradoGrass.mask(cerradoGrass.gte(1)));
 
-var cerradoShrub = TotalShrub2020s.gte(1).clip(Cerrado);
+var cerradoShrub = TotalShrub2020sr.gte(1).clip(Cerrado);
 var cerradoShrubm = cerradoShrub.updateMask(cerradoShrub.mask(cerradoShrub.gte(1)));
 
 //Caatinga
 
 
-var caatingaForest = TotTC_c_r.gte(thr).clip(Caatinga);
+var caatingaForest = TotTC_c_r.gte(thr_forest).clip(Caatinga);
 var caatingaForestm = caatingaForest.updateMask(caatingaForest.mask(caatingaForest.gte(1)));
 
-var caatingaGrass = TotalGrass2020s.gte(1).clip(Caatinga);
+var caatingaGrass = TotalGrass2020sr.gte(1).clip(Caatinga);
 var caatingaGrassm = caatingaGrass.updateMask(caatingaGrass.mask(caatingaGrass.gte(1)));
 
-var caatingaShrub = TotalShrub2020s.gte(1).clip(Caatinga);
+var caatingaShrub = TotalShrub2020sr.gte(1).clip(Caatinga);
 var caatingaShrubm = caatingaShrub.updateMask(caatingaShrub.mask(caatingaShrub.gte(1)));
 
 //Tanzania
 
-var tanzaniaForest = TotTC_c_r.gte(thr).clip(Tanzania);
+var tanzaniaForest = TotTC_c_r.gte(thr_forest).clip(Tanzania);
 var tanzaniaForestm = tanzaniaForest .updateMask(tanzaniaForest .mask(tanzaniaForest .gte(1)));
 
-var tanzaniaGrass = TotalGrass2020s.gte(1).clip(Tanzania);
+var tanzaniaGrass = TotalGrass2020sr.gte(1).clip(Tanzania);
 var tanzaniaGrassm = tanzaniaGrass.updateMask(tanzaniaGrass.mask(tanzaniaGrass.gte(1)));
 
-var tanzaniaShrub = TotalShrub2020s.gte(1).clip(Tanzania);
+var tanzaniaShrub = TotalShrub2020sr.gte(1).clip(Tanzania);
 var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
 
 
-// Rename Bands
+// Rename Bands - These will go for stats
 
 var chacoForestm = chacoForestm.rename("Forest_Chaco"); 
 var chacoGrassm = chacoGrassm.rename("Grass_Chaco");
@@ -438,7 +440,10 @@ var caatingaShrubm = caatingaShrubm.rename("Shrub_Caatinga");
 
 var tanzaniaForestm = tanzaniaForestm.rename("Forest_Tanzania");
 var tanzaniaGrassm = tanzaniaGrassm.rename("Grass_Tanzania"); 
-var tanzaniaShrubm = tanzaniaShrubm.rename("Shrub_Tanzania")
+var tanzaniaShrubm = tanzaniaShrubm.rename("Shrub_Tanzania");
+
+Map.addLayer(chacoForestm, null, "cf")
+
 
 //----------------
 // SAMPLING for stats | Done in a previous step and saved the Samples as an Asset 
@@ -530,7 +535,7 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 // Concatenate elevation and slope as two bands of an image.
 var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2srMed_May, s2srMed_Jun, s2srMed_Jul, 
-                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec, chacoShrubm) // , chacoForestm, chacoGrassm, chacoShrubm, elev
+                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec, chacoForestm) // , chacoForestm, chacoGrassm, chacoShrubm, elev
   // Computed images do not have a 'system:time_start' property; add one based
   // on when the data were collected.
   .set('system:time_start', ee.Date('2020-01-01').millis());
