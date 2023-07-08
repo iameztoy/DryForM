@@ -387,17 +387,9 @@ var tanzaniaForestm = tanzaniaForestm.rename("Tanzania_Forest");
 var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass"); 
 var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
 
-// Export an ee.FeatureCollection as an Earth Engine asset.
-
-Export.table.toAsset({
-  collection: ctr_mask,
-  description:'Tanzania',
-  assetId: 'Tanzania',
-});
 
 
-
-
+// Example to calculate Zonal Statistics
 
 // Import the MERIT global elevation dataset.
 var elev = ee.Image('MERIT/DEM/v1_0_3');
@@ -422,7 +414,17 @@ var params = {
 var ptsTopoStats = zonalStats(col4stats, RP_Chaco, params);
 
 
+
+
 // Export the FeatureCollection to a KML file.
+/*
+Export.table.toAsset({
+  collection: ctr_mask,
+  description:'Tanzania',
+  assetId: 'Tanzania',
+});
+*/
+
 Export.table.toDrive({
   collection: ptsTopoStats,
   description:'vectorsToDriveExample',
