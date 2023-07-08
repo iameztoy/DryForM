@@ -378,7 +378,7 @@ Map.setOptions("SATELLITE");
 //PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
 
 var thr_forest = 4
-var thr_gs = 3 // threshold for grass and shrub
+var thr_gs = 1 // threshold for grass and shrub
 
 //Chaco
 
@@ -465,23 +465,26 @@ var tanzania_grass_shrub = tanzaniaGrassm.add(tanzaniaShrubm);
 var tanzania_grass_forest = tanzaniaGrassm.add(tanzaniaForestm);
 var tanzania_forest_shrub = tanzaniaForestm.add(tanzaniaShrubm);
 
-// Second - Make previous 0 and 1
+// Second - Make previous 0 and 1 (remap)
 
-var chaco_grass_shrub = chaco_grass_shrub.gte(1);
-var chaco_grass_forest = chaco_grass_forest.gte(1);
-var chaco_forest_shrub = chaco_forest_shrub.gte(1);
+var from_gs = [-1, 0, 1, 2, 3, 4];
+var to_gs =   [0, 0, 1, 1, 1, 1];
 
-var cerrado_grass_shrub = cerrado_grass_shrub.gte(1);
-var cerrado_grass_forest = cerrado_grass_forest.gte(1);
-var cerrado_forest_shrub = cerrado_forest_shrub.gte(1);
+var chaco_grass_shrub = chaco_grass_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var chaco_grass_forest = chaco_grass_forest.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var chaco_forest_shrub = chaco_forest_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
 
-var caatinga_grass_shrub = caatinga_grass_shrub.gte(1);
-var caatinga_grass_forest = caatinga_grass_forest.gte(1);
-var caatinga_forest_shrub = caatinga_forest_shrub.gte(1);
+var cerrado_grass_shrub = cerrado_grass_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var cerrado_grass_forest = cerrado_grass_forest.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var cerrado_forest_shrub = cerrado_forest_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
 
-var tanzania_grass_shrub = tanzania_grass_shrub.gte(1);
-var tanzania_grass_forest = tanzania_grass_forest.gte(1);
-var tanzania_forest_shrub = tanzania_forest_shrub.gte(1);
+var caatinga_grass_shrub = caatinga_grass_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var caatinga_grass_forest = caatinga_grass_forest.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var caatinga_forest_shrub = caatinga_forest_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
+
+var tanzania_grass_shrub = tanzania_grass_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var tanzania_grass_forest = tanzania_grass_forest.remap({from: from_gs, to: to_gs, defaultValue: 0});
+var tanzania_forest_shrub = tanzania_forest_shrub.remap({from: from_gs, to: to_gs, defaultValue: 0});
 
 // Third we need to subtract classes | "_s" refers to subracted
 
@@ -503,24 +506,29 @@ var tanzaniaShrubm_s = tanzaniaShrubm.subtract(tanzania_grass_forest);
 
 // Fourth: Need to remap third step (there are negative values)
 
-var chacoForestm_s = chacoForestm.gt(0);
-var chacoShrubm_s = chacoShrubm.gt(0);
 
-var cerradoForestm_s = cerradoForestm.gt(0);
-var cerradoGrassm_s = cerradoGrassm.gt(0);
-var cerradoShrubm_s = cerradoShrubm.gt(0);
+var chacoForestm_s = chacoForestm.updateMask(chacoForestm.mask(chacoForestm.gte(1)));
+var chacoGrassm_s = chacoGrassm.updateMask(chacoGrassm.mask(chacoGrassm.gte(1)));
+var chacoShrubm_s = chacoShrubm.updateMask(chacoShrubm.mask(chacoShrubm.gte(1)));
 
-var caatingaForestm_s = caatingaForestm.gt(0);
-var caatingaGrassm_s = caatingaGrassm.gt(0);
-var caatingaShrubm_s = caatingaShrubm.gt(0);
+var cerradoForestm_s = cerradoForestm.updateMask(cerradoForestm.mask(cerradoForestm.gte(1)));
+var cerradoGrassm_s = cerradoGrassm.updateMask(cerradoGrassm.mask(cerradoGrassm.gte(1)));
+var cerradoShrubm_s = cerradoShrubm.updateMask(cerradoShrubm.mask(cerradoShrubm.gte(1)));
 
-var tanzaniaForestm_s = tanzaniaForestm.gt(0);
-var tanzaniaGrassm_s = tanzaniaGrassm.gt(0);
-var tanzaniaShrubm_s = tanzaniaShrubm.gt(0);
+var caatingaForestm_s = caatingaForestm.updateMask(caatingaForestm.mask(caatingaForestm.gte(1)));
+var caatingaGrassm_s = caatingaGrassm.updateMask(caatingaGrassm.mask(caatingaGrassm.gte(1)));
+var caatingaShrubm_s = caatingaShrubm.updateMask(caatingaShrubm.mask(caatingaShrubm.gte(1)));
+
+var tanzaniaForestm_s = tanzaniaForestm.updateMask(tanzaniaForestm.mask(tanzaniaForestm.gte(1)));
+var tanzaniaGrassm_s = tanzaniaGrassm.updateMask(tanzaniaGrassm.mask(tanzaniaGrassm.gte(1)));
+var tanzaniaShrubm_s = tanzaniaShrubm.updateMask(tanzaniaShrubm.mask(tanzaniaShrubm.gte(1)));
 
 
-Map.addLayer(chaco_grass_shrub, null, "grass shrub");
-Map.addLayer(chacoForestm, null, "forest original")
+Map.addLayer(chacoForestm, null, "Forest");
+Map.addLayer(chaco_grass_shrub, null, "Grass+Shrub")
+Map.addLayer(chacoForestm_s, null, "Forest sub")
+
+
 
 
 //----------------
