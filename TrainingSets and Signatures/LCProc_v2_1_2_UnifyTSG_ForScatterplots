@@ -13,10 +13,8 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //* Copied from and older file
 //------------------------------
 //
-// IAA 2019 Process and combine land cover classes from different product to get a new layer by mixing forest, tree cover and woodland + probably associated
-// transition zones. The idea is to extract tiles that will be further refined and used in the frame of semantic segmentation procedures
-//
-// Script to export Zonal Statistics 
+// From LCProc v.2_1_2 script to calculate the Total Tree/Forest Counts and
+// calculate and export Zonal Statistics 
 // AOI of interest and samples in Assets
 
 
@@ -415,7 +413,8 @@ Export.table.toAsset({
 Export.table.toDrive({
   collection: sampleZStats,
   description:'Samples2Drive',
-  fileFormat: 'CSV'
+  fileFormat: 'CSV',
+  folder: "dryform"
 });
 
 
