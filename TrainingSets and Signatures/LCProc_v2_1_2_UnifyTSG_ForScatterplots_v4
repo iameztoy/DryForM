@@ -378,7 +378,7 @@ Map.setOptions("SATELLITE");
 //PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
 
 var thr_forest = 4
-var thr_gs = 1 // threshold for grass and shrub
+var thr_gs = 2 // threshold for grass and shrub
 
 //Chaco
 
@@ -514,7 +514,7 @@ var to_gs_4th = [0, 0, 1];
 
 var chacoForestm_sr = chacoForestm_s.remap({from: from_4th, to: to_gs_4th});
 var chacoGrassm_sr = chacoGrassm_s.remap({from: from_4th, to: to_gs_4th});
-var chacoShrubm_sr = chacoShrub_sm.remap({from: from_4th, to: to_gs_4th});
+var chacoShrubm_sr = chacoShrubm_s.remap({from: from_4th, to: to_gs_4th});
 
 var cerradoForestm_sr = cerradoForestm_s.remap({from: from_4th, to: to_gs_4th});
 var cerradoGrassm_sr = cerradoGrassm_s.remap({from: from_4th, to: to_gs_4th});
