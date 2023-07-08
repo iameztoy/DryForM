@@ -210,7 +210,6 @@ var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
 
-
 //Countries or Polygons of Interest
 
 var ctr = ["Tanzania"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
@@ -229,8 +228,6 @@ var ctr_mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
 var dwVisParams = {min: 0, max: 8, palette: [
     '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
     '#C4281B', '#A59B8F', '#B39FE1']};
-
-
 
 
 
@@ -281,7 +278,8 @@ var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.g
 
 
 //----------------
-// SAMPLING for stats
+// SAMPLING for stats | Done in a previous step and saved the Samples as an Asset 
+// One per Area of Interest
 //
 
 /*
@@ -369,7 +367,7 @@ function zonalStats(ic, fc, params) {
 }
 
 
-// rename
+// Rename Bands
 
 var chacoForestm = chacoForestm.rename("Forest_Chaco"); 
 var chacoGrassm = chacoGrassm.rename("Grass_Chano");
