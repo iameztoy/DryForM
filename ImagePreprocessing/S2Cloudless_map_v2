@@ -4,16 +4,16 @@ var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
     table2 = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Define variables
-var AOI = Chaco
+var AOI = Chaco;
 
-var START_DATE = '2020-01-01'
-var END_DATE = "2021-01-01" //"2021-01-01"
-var CLOUD_FILTER = 30
-var CLD_PRB_THRESH = 30
-var NIR_DRK_THRESH = 0.15
-var CLD_PRJ_DIST = 1
-var BUFFER = 50
-
+var START_DATE = '2020-01-01';
+var END_DATE = "2021-01-01"; //"2021-01-01"
+var CLOUD_FILTER = 30;
+var CLD_PRB_THRESH = 30;
+var NIR_DRK_THRESH = 0.15;
+var CLD_PRJ_DIST = 1;
+var BUFFER = 50;
+var bands = ['B8', 'B4', 'B3'];
 
 function get_s2_sr_cld_col(aoi, start_date, end_date) {
     // # Import and filter S2 SR.
@@ -21,12 +21,12 @@ function get_s2_sr_cld_col(aoi, start_date, end_date) {
     var s2_sr_col = (ee.ImageCollection('COPERNICUS/S2_SR')
         .filterBounds(aoi)
         .filterDate(start_date, end_date)
-        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)))
+        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
 
     // # Import and filter s2cloudless.
     var s2_cloudless_col = (ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY')
         .filterBounds(aoi)
-        .filterDate(start_date, end_date))
+        .filterDate(start_date, end_date));
 
     // # Join the filtered s2cloudless collection to the SR collection by the 'system:index' property.
     return ee.ImageCollection(ee.Join.saveFirst('s2cloudless').apply({
@@ -36,31 +36,31 @@ function get_s2_sr_cld_col(aoi, start_date, end_date) {
             'leftField': 'system:index',
             'rightField': 'system:index'
         })
-    }))
+    }));
 }
 
 
 
 function add_cloud_bands(img) {
     // # Get s2cloudless image, subset the probability band.
-    var cld_prb = ee.Image(img.get('s2cloudless')).select('probability')
+    var cld_prb = ee.Image(img.get('s2cloudless')).select('probability');
 
     // # Condition s2cloudless by the probability threshold value.
-    var is_cloud = cld_prb.gt(CLD_PRB_THRESH).rename('clouds')
+    var is_cloud = cld_prb.gt(CLD_PRB_THRESH).rename('clouds');
 
     // # Add the cloud probability layer and cloud mask as image bands.
-    return img.addBands(ee.Image([cld_prb, is_cloud]))
+    return img.addBands(ee.Image([cld_prb, is_cloud]));
     
 }
 
 
 function add_shadow_bands(img) {
     // # Identify water pixels from the SCL band.
-    var not_water = img.select('SCL').neq(6)
+    var not_water = img.select('SCL').neq(6);
 
     // # Identify dark NIR pixels that are not water (potential cloud shadow pixels).
-    var SR_BAND_SCALE = 1e4
-    var dark_pixels = img.select('B8').lt(NIR_DRK_THRESH*SR_BAND_SCALE).multiply(not_water).rename('dark_pixels')
+    var SR_BAND_SCALE = 1e4;
+    var dark_pixels = img.select('B8').lt(NIR_DRK_THRESH*SR_BAND_SCALE).multiply(not_water).rename('dark_pixels');
 
     // # Determine the direction to project cloud shadow from clouds (assumes UTM projection).
     var shadow_azimuth = ee.Number(90).subtract(ee.Number(img.get('MEAN_SOLAR_AZIMUTH_ANGLE')));
@@ -70,44 +70,42 @@ function add_shadow_bands(img) {
         .reproject({'crs': img.select(0).projection(), 'scale': 100})
         .select('distance')
         .mask()
-        .rename('cloud_transform'))
+        .rename('cloud_transform'));
 
     // # Identify the intersection of dark pixels with cloud shadow projection.
-    var shadows = cld_proj.multiply(dark_pixels).rename('shadows')
+    var shadows = cld_proj.multiply(dark_pixels).rename('shadows');
 
     // # Add dark pixels, cloud projection, and identified shadows as image bands.
-    return img.addBands(ee.Image([dark_pixels, cld_proj, shadows]))
+    return img.addBands(ee.Image([dark_pixels, cld_proj, shadows]));
 }
 
 
 function add_cld_shdw_mask(img) {
     // # Add cloud component bands.
-    var img_cloud = add_cloud_bands(img)
+    var img_cloud = add_cloud_bands(img);
 
     // # Add cloud shadow component bands.
-    var img_cloud_shadow = add_shadow_bands(img_cloud)
+    var img_cloud_shadow = add_shadow_bands(img_cloud);
 
     // # Combine cloud and shadow mask, set cloud and shadow as value 1, else 0.
-    var is_cld_shdw = img_cloud_shadow.select('clouds').add(img_cloud_shadow.select('shadows')).gt(0)
+    var is_cld_shdw = img_cloud_shadow.select('clouds').add(img_cloud_shadow.select('shadows')).gt(0);
 
     // # Remove small cloud-shadow patches and dilate remaining pixels by BUFFER input.
     // # 20 m scale is for speed, and assumes clouds don't require 10 m precision.
     is_cld_shdw = (is_cld_shdw.focal_min(2).focal_max(BUFFER*2/20)
         .reproject({'crs': img.select([0]).projection(), 'scale': 20})
-        .rename('cloudmask'))
+        .rename('cloudmask'));
 
     // # Add the final cloud-shadow mask to the image.
-    return img_cloud_shadow.addBands(is_cld_shdw)
+    return img_cloud_shadow.addBands(is_cld_shdw);
 }
-
-
 
 function apply_cld_shdw_mask(img) {
     // # Subset the cloudmask band and invert it so clouds/shadow are 0, else 1.
-    var not_cld_shdw = img.select('cloudmask').not()
+    var not_cld_shdw = img.select('cloudmask').not();
 
     // # Subset reflectance bands and update their masks, return the result.
-    return img.select('B.*').updateMask(not_cld_shdw)
+    return img.select('B.*').updateMask(not_cld_shdw);
 }
 
 /**
@@ -121,17 +119,17 @@ var addIndex = function addindexes(img) {
     .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
   ).divide(2).rename("MSAVI");
   return img.addBands(ee.Image.cat(nbr, ndvi, msavi2));
-}
+};
 
 
 
 var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
 var altogether = s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex);
-print(altogether)
+print(altogether);
 
 //Example to filter one specific image in the Image Collection
 var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20200101T143720_T19JGF"));
-print(select)
+print(select);
 
 var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
 var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
@@ -167,7 +165,7 @@ print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
 //Center the map view on a given AOI with the zool level. 
 Map.centerObject(AOI, 13);
 
-var bands = ['B8', 'B4', 'B3']
+
 
 //ADD CLOUD-FREE COMPOSITE TO THE MAP.                             
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
@@ -184,4 +182,4 @@ Map.addLayer(s2srMed_Nov, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-fre
 Map.addLayer(s2srMed_Dec, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic December', 0);
 
 Map.addLayer(select, {'bands': bands, 'min': 0, 'max': 2500}, 'select', 0);
-Map.centerObject(AOI, 8)
+Map.centerObject(AOI, 8);
