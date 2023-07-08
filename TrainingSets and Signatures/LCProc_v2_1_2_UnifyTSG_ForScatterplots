@@ -231,10 +231,13 @@ var dwVisParams = {min: 0, max: 8, palette: [
     '#C4281B', '#A59B8F', '#B39FE1']};
 
 
+//--------------
+//PREPARE AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
+var thr = 4
 
 //Chaco
 
-var chacoForest = TotTC_c_r.gte(4).clip(Chaco);
+var chacoForest = TotTC_c_r.gte(thr).clip(Chaco);
 var chacoForestm = chacoForest.updateMask(chacoForest.mask(chacoForest.gte(1)));
 
 var chacoGrass = TotalGrass2020s.gte(1).clip(Chaco);
@@ -245,7 +248,7 @@ var chacoShrubm = chacoShrub.updateMask(chacoShrub.mask(chacoShrub.gte(1)));
 
 //Cerrado
 
-var cerradoForest = TotTC_c_r.gte(4).clip(Cerrado);
+var cerradoForest = TotTC_c_r.gte(thr).clip(Cerrado);
 var cerradoForestm = cerradoForest.updateMask(cerradoForest.mask(cerradoForest.gte(1)));
 
 var cerradoGrass = TotalGrass2020s.gte(1).clip(Cerrado);
@@ -257,7 +260,7 @@ var cerradoShrubm = cerradoShrub.updateMask(cerradoShrub.mask(cerradoShrub.gte(1
 //Caatinga
 
 
-var caatingaForest = TotTC_c_r.gte(4).clip(Caatinga);
+var caatingaForest = TotTC_c_r.gte(thr).clip(Caatinga);
 var caatingaForestm = caatingaForest.updateMask(caatingaForest.mask(caatingaForest.gte(1)));
 
 var caatingaGrass = TotalGrass2020s.gte(1).clip(Caatinga);
@@ -268,7 +271,7 @@ var caatingaShrubm = caatingaShrub.updateMask(caatingaShrub.mask(caatingaShrub.g
 
 //Tanzania
 
-var tanzaniaForest = TotTC_c_r.gte(4).clip(ctr_mask);
+var tanzaniaForest = TotTC_c_r.gte(thr).clip(ctr_mask);
 var tanzaniaForestm = tanzaniaForest .updateMask(tanzaniaForest .mask(tanzaniaForest .gte(1)));
 
 var tanzaniaGrass = TotalGrass2020s.gte(1).clip(ctr_mask);
