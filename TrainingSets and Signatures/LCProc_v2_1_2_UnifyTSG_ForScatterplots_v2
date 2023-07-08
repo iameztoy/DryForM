@@ -537,7 +537,7 @@ print(col4stats)
 
 // Define parameters for the zonalStats function.
 var params = {
-  bands: [0, 1, 2, 3, 4],
+  bands: [0, 1, 2, 3],
   bandsRename: ['elevation', 'Chaco_Forest', "s2ChacoF_B1_Jan", "s2ChacoF_B2Jan"]
 };
 
