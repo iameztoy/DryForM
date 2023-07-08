@@ -547,26 +547,14 @@ Map.addLayer(chacoForestm_sr, null, "Forest sub remap")
 //
 
 /*
-var region = Chaco;
 
-// Generate x random points with the region.
-var randomPoints = ee.FeatureCollection.randomPoints(
-    {region: region, points: 500, seed: 0, maxError: 1});
+var region = AOI
 
-
-
-var bounding_box_func = function(feature) {
-    var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
-    var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
-       return(intermediate_box); // Return the bounding box
-      };
-      
-// Apply function
-var Zones = randomPoints.map(bounding_box_func);
-
-//Add Unique ID to each feature so it can be used to give a name while exporting to Drive
-var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
-Zones = utils.Classification.assignIds(Zones, 'ID');
+// Generate x random points within the region.
+var pTanzania = ee.FeatureCollection.randomPoints(
+    {region: region, points: 3000, seed: 0, maxError: 1});
+    
+var pTanzaniab = pTanzania.map(bufferPoints(30, false));
 */
 
 
