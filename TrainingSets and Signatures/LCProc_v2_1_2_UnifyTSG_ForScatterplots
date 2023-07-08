@@ -1,13 +1,14 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Caatinga = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Caatinga"),
-    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado"),
-    Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
-    VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff"]},
+var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff"]},
     VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]},
     RP_Caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Caatinga_3000"),
     RP_Cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Cerrado_3000"),
     RP_Chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Chaco_3000"),
-    RP_Tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Tanzania_3000");
+    RP_Tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Tanzania_3000"),
+    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
@@ -415,13 +416,13 @@ var ptsTopoStats = zonalStats(col4stats, RP_Chaco, params);
 
 
 // Export the FeatureCollection to a KML file.
-/*
+
 Export.table.toAsset({
   collection: ctr_mask,
   description:'Tanzania',
   assetId: 'Tanzania',
 });
-*/
+
 
 Export.table.toDrive({
   collection: ptsTopoStats,
