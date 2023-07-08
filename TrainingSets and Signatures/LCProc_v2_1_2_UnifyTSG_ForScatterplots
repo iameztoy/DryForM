@@ -57,11 +57,122 @@ var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_201
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
 var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
 
+//-------------
+//Functions
+
+function get_s2_sr_cld_col(aoi, start_date, end_date) {
+    // # Import and filter S2 SR.
+    
+    var s2_sr_col = (ee.ImageCollection('COPERNICUS/S2_SR')
+        .filterBounds(aoi)
+        .filterDate(start_date, end_date)
+        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
+
+    // # Import and filter s2cloudless.
+    var s2_cloudless_col = (ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY')
+        .filterBounds(aoi)
+        .filterDate(start_date, end_date));
+
+    // # Join the filtered s2cloudless collection to the SR collection by the 'system:index' property.
+    return ee.ImageCollection(ee.Join.saveFirst('s2cloudless').apply({
+        'primary': s2_sr_col,
+        'secondary': s2_cloudless_col,
+        'condition': ee.Filter.equals({
+            'leftField': 'system:index',
+            'rightField': 'system:index'
+        })
+    }));
+}
 
 
 
-//--------------
-// PROCESSING
+function add_cloud_bands(img) {
+    // # Get s2cloudless image, subset the probability band.
+    var cld_prb = ee.Image(img.get('s2cloudless')).select('probability');
+
+    // # Condition s2cloudless by the probability threshold value.
+    var is_cloud = cld_prb.gt(CLD_PRB_THRESH).rename('clouds');
+
+    // # Add the cloud probability layer and cloud mask as image bands.
+    return img.addBands(ee.Image([cld_prb, is_cloud]));
+    
+}
+
+
+function add_shadow_bands(img) {
+    // # Identify water pixels from the SCL band.
+    var not_water = img.select('SCL').neq(6);
+
+    // # Identify dark NIR pixels that are not water (potential cloud shadow pixels).
+    var SR_BAND_SCALE = 1e4;
+    var dark_pixels = img.select('B8').lt(NIR_DRK_THRESH*SR_BAND_SCALE).multiply(not_water).rename('dark_pixels');
+
+    // # Determine the direction to project cloud shadow from clouds (assumes UTM projection).
+    var shadow_azimuth = ee.Number(90).subtract(ee.Number(img.get('MEAN_SOLAR_AZIMUTH_ANGLE')));
+
+    // # Project shadows from clouds for the distance specified by the CLD_PRJ_DIST input.
+    var cld_proj = (img.select('clouds').directionalDistanceTransform(shadow_azimuth, CLD_PRJ_DIST*10)
+        .reproject({'crs': img.select(0).projection(), 'scale': 100})
+        .select('distance')
+        .mask()
+        .rename('cloud_transform'));
+
+    // # Identify the intersection of dark pixels with cloud shadow projection.
+    var shadows = cld_proj.multiply(dark_pixels).rename('shadows');
+
+    // # Add dark pixels, cloud projection, and identified shadows as image bands.
+    return img.addBands(ee.Image([dark_pixels, cld_proj, shadows]));
+}
+
+
+function add_cld_shdw_mask(img) {
+    // # Add cloud component bands.
+    var img_cloud = add_cloud_bands(img);
+
+    // # Add cloud shadow component bands.
+    var img_cloud_shadow = add_shadow_bands(img_cloud);
+
+    // # Combine cloud and shadow mask, set cloud and shadow as value 1, else 0.
+    var is_cld_shdw = img_cloud_shadow.select('clouds').add(img_cloud_shadow.select('shadows')).gt(0);
+
+    // # Remove small cloud-shadow patches and dilate remaining pixels by BUFFER input.
+    // # 20 m scale is for speed, and assumes clouds don't require 10 m precision.
+    is_cld_shdw = (is_cld_shdw.focal_min(2).focal_max(BUFFER*2/20)
+        .reproject({'crs': img.select([0]).projection(), 'scale': 20})
+        .rename('cloudmask'));
+
+    // # Add the final cloud-shadow mask to the image.
+    return img_cloud_shadow.addBands(is_cld_shdw);
+}
+
+function apply_cld_shdw_mask(img) {
+    // # Subset the cloudmask band and invert it so clouds/shadow are 0, else 1.
+    var not_cld_shdw = img.select('cloudmask').not();
+
+    // # Subset reflectance bands and update their masks, return the result.
+    return img.select('B.*').updateMask(not_cld_shdw);
+}
+
+/**
+ * Add NDVI band Sentinel-2
+ */
+var addIndex = function addindexes(img) {
+  var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var msavi2 = img.select('B8').multiply(2).add(1)
+  .subtract(img.select('B8').multiply(2).add(1).pow(2)
+    .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
+  ).divide(2).rename("MSAVI");
+  return img.addBands(ee.Image.cat(nbr, ndvi, msavi2));
+};
+
+// Write a function to scale the bands
+var scaleImage = function(imgscaled) {
+  return imgsc.multiply(0.0001).copyProperties(imgsc, ["system:time_start"])
+}
+
+//------------------------------
+// PROCESSING LAND COVER
 
 // 1. Dynamic World
 
@@ -201,6 +312,51 @@ var TotalGrass2020sr = TotalGrass2020s.remap({
 var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
+//------------------------------
+// APPLY FUNCTIONS TO SENTINEL-2 ALTOGETHER
+
+var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
+var altogether = s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex);
+//print(altogether);
+
+//Example to filter one specific image in the Image Collection
+var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20200101T143720_T19JGF"));
+//print(select);
+
+//------------------------------------------------------
+// SPLIT COLLECTIONS BY MONTH AND APPLY FUNCTIONS
+
+
+var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
+var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
+var s2_Mar_Chaco = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
+var s2_Apr_Chaco = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
+var s2_May_Chaco = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
+var s2_Jun_Chaco = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
+var s2_Jul_Chaco = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
+var s2_Aug_Chaco = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
+var s2_Sep_Chaco = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
+var s2_Oct_Chaco = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
+var s2_Nov_Chaco = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
+var s2_Dec_Chaco = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
+
+
+var s2srMed_Jan = (s2_Jan_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Feb = (s2_Feb_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);                          
+var s2srMed_Mar = (s2_Mar_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);                
+var s2srMed_Apr = (s2_Apr_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_May = (s2_May_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Jun = (s2_Jun_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Jul = (s2_Jul_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Aug = (s2_Aug_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Sep = (s2_Sep_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+
+print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
+print(s2srMed_Jun), print(s2srMed_Jul), print(s2srMed_Aug), print(s2srMed_Sep),
+print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
 
 
 //--------------
@@ -213,8 +369,8 @@ var dwVisParams = {min: 0, max: 8, palette: [
 Map.setOptions("SATELLITE");
 
 
-//--------------
-//PREPARE AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
+//----------------------------------------------------------------------
+//PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
 var thr = 4
 
 //Chaco
@@ -263,22 +419,31 @@ var tanzaniaShrub = TotalShrub2020s.gte(1).clip(Tanzania);
 var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
 
 
+// Rename Bands
+
+var chacoForestm = chacoForestm.rename("Forest_Chaco"); 
+var chacoGrassm = chacoGrassm.rename("Grass_Chano");
+var chacoShrubm = chacoShrubm.rename("Grass_Shrub");
+
+var cerradoForestm = cerradoForestm.rename("Forest_Cerrado");
+var cerradoGrassm = cerradoGrassm.rename("Cerrado_Grass"); 
+var cerradoShrubm = cerradoShrubm.rename("Cerrado_Shrub");
+
+var caatingaForestm = caatingaForestm.rename("Caatinga_Forest");
+var caatingaGrassm = caatingaGrassm.rename("Caatinga_Grass");
+var caatingaShrubm = caatingaShrubm.rename("Caatinga_Shrub");
+
+var tanzaniaForestm = tanzaniaForestm.rename("Tanzania_Forest");
+var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass"); 
+var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
+
 //----------------
 // SAMPLING for stats | Done in a previous step and saved the Samples as an Asset 
 // One per Area of Interest
 //
 
-/*
-var region = mask;
-
-// Generate x random points with the region.
-var pTanzania = ee.FeatureCollection.randomPoints(
-    {region: region, points: 3000, seed: 0, maxError: 1});
-    
-var pTanzaniab = pTanzania.map(bufferPoints(30, false));
-
-*/
-
+//-----------------
+//FUNCTIONS 
 
 function bufferPoints(radius, bounds) {
   return function(pt) {
@@ -353,25 +518,6 @@ function zonalStats(ic, fc, params) {
 }
 
 
-// Rename Bands
-
-var chacoForestm = chacoForestm.rename("Forest_Chaco"); 
-var chacoGrassm = chacoGrassm.rename("Grass_Chano");
-var chacoShrubm = chacoShrubm.rename("Grass_Shrub");
-
-var cerradoForestm = cerradoForestm.rename("Forest_Cerrado");
-var cerradoGrassm = cerradoGrassm.rename("Cerrado_Grass"); 
-var cerradoShrubm = cerradoShrubm.rename("Cerrado_Shrub");
-
-var caatingaForestm = caatingaForestm.rename("Caatinga_Forest");
-var caatingaGrassm = caatingaGrassm.rename("Caatinga_Grass");
-var caatingaShrubm = caatingaShrubm.rename("Caatinga_Shrub");
-
-var tanzaniaForestm = tanzaniaForestm.rename("Tanzania_Forest");
-var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass"); 
-var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
-
-
 // **********************************************
 // Example to calculate Zonal Statistics
 
@@ -380,25 +526,44 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 
 // Concatenate elevation and slope as two bands of an image.
-var colcat = ee.Image.cat(elev, chacoForestm)
+var colcat = ee.Image.cat(elev, chacoForestm, s2srMed_Jan)
   // Computed images do not have a 'system:time_start' property; add one based
   // on when the data were collected.
-  .set('system:time_start', ee.Date('2000-01-01').millis());
+  .set('system:time_start', ee.Date('2020-01-01').millis());
 
 // Wrap the single image in an ImageCollection for use in the zonalStats function.
 var col4stats = ee.ImageCollection([colcat]);
+print(col4stats)
 
 // Define parameters for the zonalStats function.
 var params = {
-  bands: [0, 1],
-  bandsRename: ['elevation', 'Chaco_Forest']
+  bands: [0, 1, 2],
+  bandsRename: ['elevation', 'Chaco_Forest', "ChacoS2"]
 };
 
 // Extract zonal statistics per point per image. //image collection, points, parameters
 var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable
 
 
+// **********************************************
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------------
+// EXPORT
 
 // Export the FeatureCollection to a KML file.
 /*
