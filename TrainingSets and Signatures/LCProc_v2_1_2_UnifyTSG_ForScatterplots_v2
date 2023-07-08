@@ -565,7 +565,7 @@ Export.table.toDrive({
   collection: sampleZStats,
   description:'Samples2Drive',
   fileFormat: 'CSV',
-  folder: "dryform/zonalstats"
+  folder: "/dryform/zonalstats"
 });
 
 
