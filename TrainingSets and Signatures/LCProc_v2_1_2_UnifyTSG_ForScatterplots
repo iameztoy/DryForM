@@ -10,12 +10,13 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-//*Copied from and older file
+//* Copied from and older file
 //------------------------------
 //
 // IAA 2019 Process and combine land cover classes from different product to get a new layer by mixing forest, tree cover and woodland + probably associated
 // transition zones. The idea is to extract tiles that will be further refined and used in the frame of semantic segmentation procedures
-
+//
+// Script to export Zonal Statistics
 
 //idea from https://www.mdpi.com/2072-4292/14/16/4101: 
 //DW 72% versus reported 74%; WC 65% versus reported 74%; Esri 75% versus 85%. 
@@ -37,6 +38,20 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 // DONE //Need to remove all about esawc2020
 // DONE //Add From GLC10 https://gee-community-catalog.org/projects/glc10/?h=glc10
 
+//--------------
+// VARIABLES GENERAL
+
+var AOI = Chaco;
+var samples = RP_Chaco
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; // For DW (Mode)
+var CLOUD_FILTER = 30;
+var CLD_PRB_THRESH = 30;
+var NIR_DRK_THRESH = 0.15;
+var CLD_PRJ_DIST = 1;
+var BUFFER = 50;
+var bands = ['B8', 'B4', 'B3'];
 
 //--------------
 // Datasets
@@ -62,11 +77,7 @@ var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_201
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
 var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
 
-//--------------
-// VARIABLES GENERAL
 
-Map.setOptions("SATELLITE");
-var srt = '2020-01-01'; var end = '2021-01-01';
 
 
 //--------------
@@ -211,17 +222,6 @@ var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
 
-//Countries or Polygons of Interest
-
-var ctr = ["Tanzania"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
-var rgn = ["Europe", "Africa", "SW Asia"];
-
-// Define mask to clip.
-var ctr_mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
-  .filter(ee.Filter.inList('country_na', ctr));
-  //.filter(ee.Filter.inList('wld_rgn', rgn));   
-  
-
 
 //--------------
 //VISUALIZATION
@@ -229,6 +229,8 @@ var ctr_mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
 var dwVisParams = {min: 0, max: 8, palette: [
     '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
     '#C4281B', '#A59B8F', '#B39FE1']};
+    
+Map.setOptions("SATELLITE");
 
 
 //--------------
@@ -390,7 +392,7 @@ var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass");
 var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
 
 
-
+// **********************************************
 // Example to calculate Zonal Statistics
 
 // Import the MERIT global elevation dataset.
@@ -413,25 +415,28 @@ var params = {
 };
 
 // Extract zonal statistics per point per image. //image collection, points, parameters
-var ptsTopoStats = zonalStats(col4stats, RP_Chaco, params);
+var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable
 
 
 
 
 // Export the FeatureCollection to a KML file.
-
+/*
 Export.table.toAsset({
   collection: ctr_mask,
   description:'Tanzania',
   assetId: 'Tanzania',
 });
+*/
 
 
 Export.table.toDrive({
-  collection: ptsTopoStats,
+  collection: sampleZStats,
   description:'vectorsToDriveExample',
   fileFormat: 'CSV'
 });
+
+
 
 
 
