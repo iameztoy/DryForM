@@ -326,32 +326,6 @@ var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20
 //------------------------------------------------------
 // SPLIT COLLECTIONS BY MONTH AND APPLY FUNCTIONS
 
-var s2_Jan_Cerrado = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
-var s2_Feb_Cerrado = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
-var s2_Mar_Cerrado = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
-var s2_Apr_Cerrado = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
-var s2_May_Cerrado = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
-var s2_Jun_Cerrado = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
-var s2_Jul_Cerrado = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
-var s2_Aug_Cerrado = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
-var s2_Sep_Cerrado = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
-var s2_Oct_Cerrado = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
-var s2_Nov_Cerrado = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
-var s2_Dec_Cerrado = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
-
-
-var s2srMed_Jan = (s2_Jan_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Feb = (s2_Feb_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);                          
-var s2srMed_Mar = (s2_Mar_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);                
-var s2srMed_Apr = (s2_Apr_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_May = (s2_May_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Jun = (s2_Jun_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Jul = (s2_Jul_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Aug = (s2_Aug_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Sep = (s2_Sep_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Oct = (s2_Oct_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Nov = (s2_Nov_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
-var s2srMed_Dec = (s2_Dec_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
 
 var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
 var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
@@ -380,59 +354,7 @@ var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).
 var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
 var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
 
-var s2_Jan_Caatinga = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
-var s2_Feb_Caatinga = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
-var s2_Mar_Caatinga = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
-var s2_Apr_Caatinga = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
-var s2_May_Caatinga = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
-var s2_Jun_Caatinga = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
-var s2_Jul_Caatinga = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
-var s2_Aug_Caatinga = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
-var s2_Sep_Caatinga = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
-var s2_Oct_Caatinga = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
-var s2_Nov_Caatinga = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
-var s2_Dec_Caatinga = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
 
-
-var s2srMed_Jan = (s2_Jan_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Feb = (s2_Feb_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);                          
-var s2srMed_Mar = (s2_Mar_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);                
-var s2srMed_Apr = (s2_Apr_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_May = (s2_May_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Jun = (s2_Jun_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Jul = (s2_Jul_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Aug = (s2_Aug_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Sep = (s2_Sep_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Oct = (s2_Oct_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Nov = (s2_Nov_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-var s2srMed_Dec = (s2_Dec_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
-
-var s2_Jan_Tanzania = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
-var s2_Feb_Tanzania = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
-var s2_Mar_Tanzania = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
-var s2_Apr_Tanzania = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
-var s2_May_Tanzania = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
-var s2_Jun_Tanzania = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
-var s2_Jul_Tanzania = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
-var s2_Aug_Tanzania = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
-var s2_Sep_Tanzania = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
-var s2_Oct_Tanzania = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
-var s2_Nov_Tanzania = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
-var s2_Dec_Tanzania = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
-
-
-var s2srMed_Jan = (s2_Jan_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Feb = (s2_Feb_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);                          
-var s2srMed_Mar = (s2_Mar_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);                
-var s2srMed_Apr = (s2_Apr_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_May = (s2_May_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Jun = (s2_Jun_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Jul = (s2_Jul_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Aug = (s2_Aug_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Sep = (s2_Sep_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Oct = (s2_Oct_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Nov = (s2_Nov_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
-var s2srMed_Dec = (s2_Dec_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
 
 /*
 print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
