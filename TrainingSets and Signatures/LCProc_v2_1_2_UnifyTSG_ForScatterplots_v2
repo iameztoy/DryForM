@@ -326,6 +326,32 @@ var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20
 //------------------------------------------------------
 // SPLIT COLLECTIONS BY MONTH AND APPLY FUNCTIONS
 
+var s2_Jan_Cerrado = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
+var s2_Feb_Cerrado = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
+var s2_Mar_Cerrado = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
+var s2_Apr_Cerrado = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
+var s2_May_Cerrado = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
+var s2_Jun_Cerrado = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
+var s2_Jul_Cerrado = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
+var s2_Aug_Cerrado = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
+var s2_Sep_Cerrado = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
+var s2_Oct_Cerrado = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
+var s2_Nov_Cerrado = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
+var s2_Dec_Cerrado = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
+
+
+var s2srMed_Jan = (s2_Jan_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Feb = (s2_Feb_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);                          
+var s2srMed_Mar = (s2_Mar_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);                
+var s2srMed_Apr = (s2_Apr_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_May = (s2_May_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Jun = (s2_Jun_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Jul = (s2_Jul_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Aug = (s2_Aug_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Sep = (s2_Sep_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Oct = (s2_Oct_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Nov = (s2_Nov_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
+var s2srMed_Dec = (s2_Dec_Cerrado.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Cerrado);
 
 var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
 var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
@@ -353,6 +379,60 @@ var s2srMed_Sep = (s2_Sep_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).
 var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
 var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
 var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+
+var s2_Jan_Caatinga = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
+var s2_Feb_Caatinga = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
+var s2_Mar_Caatinga = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
+var s2_Apr_Caatinga = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
+var s2_May_Caatinga = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
+var s2_Jun_Caatinga = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
+var s2_Jul_Caatinga = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
+var s2_Aug_Caatinga = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
+var s2_Sep_Caatinga = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
+var s2_Oct_Caatinga = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
+var s2_Nov_Caatinga = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
+var s2_Dec_Caatinga = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
+
+
+var s2srMed_Jan = (s2_Jan_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Feb = (s2_Feb_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);                          
+var s2srMed_Mar = (s2_Mar_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);                
+var s2srMed_Apr = (s2_Apr_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_May = (s2_May_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Jun = (s2_Jun_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Jul = (s2_Jul_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Aug = (s2_Aug_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Sep = (s2_Sep_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Oct = (s2_Oct_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Nov = (s2_Nov_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+var s2srMed_Dec = (s2_Dec_Caatinga.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Caatinga);
+
+var s2_Jan_Tanzania = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
+var s2_Feb_Tanzania = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
+var s2_Mar_Tanzania = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
+var s2_Apr_Tanzania = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
+var s2_May_Tanzania = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
+var s2_Jun_Tanzania = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
+var s2_Jul_Tanzania = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
+var s2_Aug_Tanzania = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
+var s2_Sep_Tanzania = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
+var s2_Oct_Tanzania = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
+var s2_Nov_Tanzania = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
+var s2_Dec_Tanzania = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
+
+
+var s2srMed_Jan = (s2_Jan_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Feb = (s2_Feb_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);                          
+var s2srMed_Mar = (s2_Mar_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);                
+var s2srMed_Apr = (s2_Apr_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_May = (s2_May_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Jun = (s2_Jun_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Jul = (s2_Jul_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Aug = (s2_Aug_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Sep = (s2_Sep_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Oct = (s2_Oct_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Nov = (s2_Nov_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
+var s2srMed_Dec = (s2_Dec_Tanzania.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Tanzania);
 
 /*
 print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
@@ -423,20 +503,20 @@ var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.g
 // Rename Bands
 
 var chacoForestm = chacoForestm.rename("Forest_Chaco"); 
-var chacoGrassm = chacoGrassm.rename("Grass_Chano");
-var chacoShrubm = chacoShrubm.rename("Grass_Shrub");
+var chacoGrassm = chacoGrassm.rename("Grass_Chaco");
+var chacoShrubm = chacoShrubm.rename("Shrub_Chaco");
 
 var cerradoForestm = cerradoForestm.rename("Forest_Cerrado");
-var cerradoGrassm = cerradoGrassm.rename("Cerrado_Grass"); 
-var cerradoShrubm = cerradoShrubm.rename("Cerrado_Shrub");
+var cerradoGrassm = cerradoGrassm.rename("Grass_Cerrado"); 
+var cerradoShrubm = cerradoShrubm.rename("Shrub_Cerrado");
 
-var caatingaForestm = caatingaForestm.rename("Caatinga_Forest");
-var caatingaGrassm = caatingaGrassm.rename("Caatinga_Grass");
-var caatingaShrubm = caatingaShrubm.rename("Caatinga_Shrub");
+var caatingaForestm = caatingaForestm.rename("Forest_Caatinga");
+var caatingaGrassm = caatingaGrassm.rename("Grass_Caatinga");
+var caatingaShrubm = caatingaShrubm.rename("Shrub_Caatinga");
 
-var tanzaniaForestm = tanzaniaForestm.rename("Tanzania_Forest");
-var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass"); 
-var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
+var tanzaniaForestm = tanzaniaForestm.rename("Forest_Tanzania");
+var tanzaniaGrassm = tanzaniaGrassm.rename("Grass_Tanzania"); 
+var tanzaniaShrubm = tanzaniaShrubm.rename("Shrub_Tanzania")
 
 //----------------
 // SAMPLING for stats | Done in a previous step and saved the Samples as an Asset 
@@ -527,10 +607,11 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 
 // Concatenate elevation and slope as two bands of an image.
-var colcat = ee.Image.cat(chacoForestm, s2srMed_Jan)
+var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2srMed_May, s2srMed_Jun, s2srMed_Jul, 
+                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec) // , chacoForestm, chacoGrassm, chacoShrubm, elev
   // Computed images do not have a 'system:time_start' property; add one based
   // on when the data were collected.
-  //.set('system:time_start', ee.Date('2020-01-01').millis());
+  .set('system:time_start', ee.Date('2020-01-01').millis());
 
 // Wrap the single image in an ImageCollection for use in the zonalStats function.
 var col4stats = ee.ImageCollection([colcat]);
@@ -538,12 +619,38 @@ print(col4stats)
 
 // Define parameters for the zonalStats function.
 var params = {
-  bands: [2, 3, 8],
-  bandsRename: ["b2", "b3", "b8"]  //['elevation', 'Chaco_Forest', "s2ChacoF_B1_Jan", "s2ChacoF_B2Jan", ]
-};
+  bands: [3, 4, 7, 10, 11, 12, 13, 14,
+          18, 19, 22, 25, 26, 27, 28, 29,
+         33, 34, 37, 40, 41, 42, 43, 44,
+         48, 49, 52, 55, 56, 57, 58, 59,
+         63, 64, 67, 70, 71, 72, 73, 74,
+         78, 79, 82, 85, 86, 87, 88, 89,
+         93, 94, 97, 100, 101, 102, 103, 104,
+        108, 109, 112, 115, 116, 117, 118, 119,
+        123, 124, 127, 130, 131, 132, 133, 134,
+        138, 139, 142, 145, 146, 147, 148, 149,
+        153, 154, 157, 160, 161, 162, 163, 164,
+        168, 169, 172, 175, 176, 177, 178, 179
+        ], //180, 181, 182, 183
+        
+  bandsRename : ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan",
+             "b4feb", "b5feb", "b8feb", "b11feb", "b12feb", "nbrfeb", "ndvifeb", "msavi2feb", 
+             "b4mar", "b5mar", "b8mar", "b11mar", "b12mar", "nbrmar", "ndvimar", "msavi2mar",
+             "b4apr", "b5apr", "b8apr", "b11apr", "b12apr", "nbrapr", "ndviapr", "msavi2apr",
+             "b4may", "b5may", "b8may", "b11may", "b12may", "nbrmay", "ndvimay", "msavi2may",
+             "b4jun", "b5jun", "b8jun", "b11jun", "b12jun", "nbrjun", "ndvijun", "msavi2jun",
+             "b4jul", "b5jul", "b8jul", "b11jul", "b12jul", "nbrjul", "ndvijul", "msavi2jul",
+             "b4aug", "b5aug", "b8aug", "b11aug", "b12aug", "nbraug", "ndviaug", "msavi2aug",
+             "b4sep", "b5sep", "b8sep", "b11sep", "b12sep", "nbrsep", "ndvisep", "msavi2sep",
+             "b4oct", "b5oct", "b8oct", "b11oct", "b12oct", "nbroct", "ndvioct", "msavi2oct",
+             "b4nov", "b5nov", "b8nov", "b11nov", "b12nov", "nbrnov", "ndvinov", "msavi2nov",
+             "b4dec", "b5dec", "b8dec", "b11dec", "b12dec", "nbrdec", "ndvidec", "msavi2dec"
+             ] //, "chacoForest", "chacoGrass", "chacoShrub", "elevation"
+  };
+
 
 // Extract zonal statistics per point per image. //image collection, points, parameters
-var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable
+var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable // (col4stats, samples, params);
 
 
 // **********************************************
@@ -577,6 +684,10 @@ Export.table.toDrive({
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
 Map.addLayer(RP_Chaco, null, "Samples")
 
+var select = s2srMed_Jan.select(13)
+print(select)
+
+Map.addLayer(select, {'min': -1, 'max': 1}, "ndvi", 1);
 
 
 
