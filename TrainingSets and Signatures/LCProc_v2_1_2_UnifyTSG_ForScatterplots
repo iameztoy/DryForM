@@ -414,7 +414,7 @@ Export.table.toAsset({
 
 Export.table.toDrive({
   collection: sampleZStats,
-  description:'vectorsToDriveExample',
+  description:'Samples2Drive',
   fileFormat: 'CSV'
 });
 
