@@ -537,8 +537,8 @@ print(col4stats)
 
 // Define parameters for the zonalStats function.
 var params = {
-  bands: [0, 1, 2, 3],
-  bandsRename: ['elevation', 'Chaco_Forest', "s2ChacoF_B1_Jan", "s2ChacoF_B2Jan"]
+  bands: [5, 6],
+  bandsRename: ["s2ChacoF_B4_Jan", "s2ChacoF_B5Jan"]  //['elevation', 'Chaco_Forest', "s2ChacoF_B1_Jan", "s2ChacoF_B2Jan", ]
 };
 
 // Extract zonal statistics per point per image. //image collection, points, parameters
@@ -565,7 +565,7 @@ Export.table.toDrive({
   collection: sampleZStats,
   description:'Samples2Drive',
   fileFormat: 'CSV',
-  folder: "dryform"
+  folder: "dryform/zonalstats"
 });
 
 
