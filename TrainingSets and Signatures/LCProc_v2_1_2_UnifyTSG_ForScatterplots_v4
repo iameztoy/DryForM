@@ -663,7 +663,7 @@ var params = {                                    //ref for each band in the ima
              "b4oct", "b5oct", "b8oct", "b11oct", "b12oct", "nbroct", "ndvioct", "msavi2oct",
              "b4nov", "b5nov", "b8nov", "b11nov", "b12nov", "nbrnov", "ndvinov", "msavi2nov",
              "b4dec", "b5dec", "b8dec", "b11dec", "b12dec", "nbrdec", "ndvidec", "msavi2dec",
-             "ChacoChacoShrub"] //, "chacoForest", "chacoGrass", "chacoShrub", "elevation"
+             "ChacoForest"] //, "chacoForest", "chacoGrass", "chacoShrub", "elevation"
   };
 
 
