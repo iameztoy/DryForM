@@ -217,7 +217,7 @@ var ctr = ["Tanzania"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argenti
 var rgn = ["Europe", "Africa", "SW Asia"];
 
 // Define mask to clip.
-var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+var ctr_mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
   .filter(ee.Filter.inList('country_na', ctr));
   //.filter(ee.Filter.inList('wld_rgn', rgn));   
   
@@ -270,13 +270,13 @@ var caatingaShrubm = caatingaShrub.updateMask(caatingaShrub.mask(caatingaShrub.g
 
 //Tanzania
 
-var tanzaniaForest = TotTC_c_r.gte(4).clip(mask);
+var tanzaniaForest = TotTC_c_r.gte(4).clip(ctr_mask);
 var tanzaniaForestm = tanzaniaForest .updateMask(tanzaniaForest .mask(tanzaniaForest .gte(1)));
 
-var tanzaniaGrass = TotalGrass2020s.gte(1).clip(mask);
+var tanzaniaGrass = TotalGrass2020s.gte(1).clip(ctr_mask);
 var tanzaniaGrassm = tanzaniaGrass.updateMask(tanzaniaGrass.mask(tanzaniaGrass.gte(1)));
 
-var tanzaniaShrub = TotalShrub2020s.gte(1).clip(mask);
+var tanzaniaShrub = TotalShrub2020s.gte(1).clip(ctr_mask);
 var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
 
 
@@ -388,13 +388,13 @@ var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass");
 var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
 
 // Export an ee.FeatureCollection as an Earth Engine asset.
-/*
+
 Export.table.toAsset({
-  collection: pTanzaniab,
-  description:'pChacob2asset',
-  assetId: 'RandomP_Cerrado_3000',
+  collection: ctr_mask,
+  description:'Tanzania',
+  assetId: 'Tanzania',
 });
-*/
+
 
 
 
