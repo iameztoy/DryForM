@@ -526,7 +526,7 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 
 // Concatenate elevation and slope as two bands of an image.
-var colcat = ee.Image.cat(elev, chacoForestm)
+var colcat = ee.Image.cat(elev, chacoForestm, s2srMed_Jan)
   // Computed images do not have a 'system:time_start' property; add one based
   // on when the data were collected.
   .set('system:time_start', ee.Date('2020-01-01').millis());
@@ -537,8 +537,8 @@ print(col4stats)
 
 // Define parameters for the zonalStats function.
 var params = {
-  bands: [0, 1],
-  bandsRename: ['elevation', 'Chaco_Forest']
+  bands: [0, 1, 2],
+  bandsRename: ['elevation', 'Chaco_Forest', "s2_chaco"]
 };
 
 // Extract zonal statistics per point per image. //image collection, points, parameters
@@ -546,20 +546,6 @@ var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples 
 
 
 // **********************************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //---------------------
