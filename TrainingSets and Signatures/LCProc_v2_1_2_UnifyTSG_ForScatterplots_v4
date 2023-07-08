@@ -512,21 +512,21 @@ var from_4th = [-1, 0, 1];
 var to_gs_4th = [0, 0, 1];
 
 
-var chacoForestm_sr = chacoForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var chacoGrassm_sr = chacoGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var chacoShrubm_sr = chacoShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var chacoForestm_sr = chacoForestm.remap({from: from_4th, to: to_gs_4th});
+var chacoGrassm_sr = chacoGrassm.remap({from: from_4th, to: to_gs_4th});
+var chacoShrubm_sr = chacoShrubm.remap({from: from_4th, to: to_gs_4th});
 
-var cerradoForestm_sr = cerradoForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var cerradoGrassm_sr = cerradoGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var cerradoShrubm_sr = cerradoShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var cerradoForestm_sr = cerradoForestm.remap({from: from_4th, to: to_gs_4th});
+var cerradoGrassm_sr = cerradoGrassm.remap({from: from_4th, to: to_gs_4th});
+var cerradoShrubm_sr = cerradoShrubm.remap({from: from_4th, to: to_gs_4th});
 
-var caatingaForestm_sr = caatingaForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var caatingaGrassm_sr = caatingaGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var caatingaShrubm_sr = caatingaShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var caatingaForestm_sr = caatingaForestm.remap({from: from_4th, to: to_gs_4th});
+var caatingaGrassm_sr = caatingaGrassm.remap({from: from_4th, to: to_gs_4th});
+var caatingaShrubm_sr = caatingaShrubm.remap({from: from_4th, to: to_gs_4th});
 
-var tanzaniaForestm_sr = tanzaniaForestm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var tanzaniaGrassm_sr = tanzaniaGrassm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
-var tanzaniaShrubm_sr = tanzaniaShrubm.remap({from: from_4th, to: to_gs_4th, defaultValue: 0});
+var tanzaniaForestm_sr = tanzaniaForestm.remap({from: from_4th, to: to_gs_4th});
+var tanzaniaGrassm_sr = tanzaniaGrassm.remap({from: from_4th, to: to_gs_4th});
+var tanzaniaShrubm_sr = tanzaniaShrubm.remap({from: from_4th, to: to_gs_4th});
 
 
 Map.addLayer(chacoForestm, null, "Forest");
