@@ -1,0 +1,606 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff"]},
+    VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]},
+    RP_Caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Caatinga_3000"),
+    RP_Cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Cerrado_3000"),
+    RP_Chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Chaco_3000"),
+    RP_Tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Tanzania_3000"),
+    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//* Copied from and older file
+//------------------------------
+//
+// From LCProc v.2_1_2 script to calculate the Total Tree/Forest Counts and
+// calculate and export Zonal Statistics 
+// AOI of interest and samples in Assets
+
+
+//--------------
+// VARIABLES GENERAL
+
+var AOI = Chaco;
+var samples = RP_Chaco
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; // For DW (Mode)
+var CLOUD_FILTER = 30;
+var CLD_PRB_THRESH = 30;
+var NIR_DRK_THRESH = 0.15;
+var CLD_PRJ_DIST = 1;
+var BUFFER = 50;
+var bands = ['B8', 'B4', 'B3'];
+
+//--------------
+// Datasets
+//
+
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+
+//var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //v100 also available
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
+
+//-------------
+//Functions
+
+function get_s2_sr_cld_col(aoi, start_date, end_date) {
+    // # Import and filter S2 SR.
+    
+    var s2_sr_col = (ee.ImageCollection('COPERNICUS/S2_SR')
+        .filterBounds(aoi)
+        .filterDate(start_date, end_date)
+        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
+
+    // # Import and filter s2cloudless.
+    var s2_cloudless_col = (ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY')
+        .filterBounds(aoi)
+        .filterDate(start_date, end_date));
+
+    // # Join the filtered s2cloudless collection to the SR collection by the 'system:index' property.
+    return ee.ImageCollection(ee.Join.saveFirst('s2cloudless').apply({
+        'primary': s2_sr_col,
+        'secondary': s2_cloudless_col,
+        'condition': ee.Filter.equals({
+            'leftField': 'system:index',
+            'rightField': 'system:index'
+        })
+    }));
+}
+
+
+
+function add_cloud_bands(img) {
+    // # Get s2cloudless image, subset the probability band.
+    var cld_prb = ee.Image(img.get('s2cloudless')).select('probability');
+
+    // # Condition s2cloudless by the probability threshold value.
+    var is_cloud = cld_prb.gt(CLD_PRB_THRESH).rename('clouds');
+
+    // # Add the cloud probability layer and cloud mask as image bands.
+    return img.addBands(ee.Image([cld_prb, is_cloud]));
+    
+}
+
+
+function add_shadow_bands(img) {
+    // # Identify water pixels from the SCL band.
+    var not_water = img.select('SCL').neq(6);
+
+    // # Identify dark NIR pixels that are not water (potential cloud shadow pixels).
+    var SR_BAND_SCALE = 1e4;
+    var dark_pixels = img.select('B8').lt(NIR_DRK_THRESH*SR_BAND_SCALE).multiply(not_water).rename('dark_pixels');
+
+    // # Determine the direction to project cloud shadow from clouds (assumes UTM projection).
+    var shadow_azimuth = ee.Number(90).subtract(ee.Number(img.get('MEAN_SOLAR_AZIMUTH_ANGLE')));
+
+    // # Project shadows from clouds for the distance specified by the CLD_PRJ_DIST input.
+    var cld_proj = (img.select('clouds').directionalDistanceTransform(shadow_azimuth, CLD_PRJ_DIST*10)
+        .reproject({'crs': img.select(0).projection(), 'scale': 100})
+        .select('distance')
+        .mask()
+        .rename('cloud_transform'));
+
+    // # Identify the intersection of dark pixels with cloud shadow projection.
+    var shadows = cld_proj.multiply(dark_pixels).rename('shadows');
+
+    // # Add dark pixels, cloud projection, and identified shadows as image bands.
+    return img.addBands(ee.Image([dark_pixels, cld_proj, shadows]));
+}
+
+
+function add_cld_shdw_mask(img) {
+    // # Add cloud component bands.
+    var img_cloud = add_cloud_bands(img);
+
+    // # Add cloud shadow component bands.
+    var img_cloud_shadow = add_shadow_bands(img_cloud);
+
+    // # Combine cloud and shadow mask, set cloud and shadow as value 1, else 0.
+    var is_cld_shdw = img_cloud_shadow.select('clouds').add(img_cloud_shadow.select('shadows')).gt(0);
+
+    // # Remove small cloud-shadow patches and dilate remaining pixels by BUFFER input.
+    // # 20 m scale is for speed, and assumes clouds don't require 10 m precision.
+    is_cld_shdw = (is_cld_shdw.focal_min(2).focal_max(BUFFER*2/20)
+        .reproject({'crs': img.select([0]).projection(), 'scale': 20})
+        .rename('cloudmask'));
+
+    // # Add the final cloud-shadow mask to the image.
+    return img_cloud_shadow.addBands(is_cld_shdw);
+}
+
+function apply_cld_shdw_mask(img) {
+    // # Subset the cloudmask band and invert it so clouds/shadow are 0, else 1.
+    var not_cld_shdw = img.select('cloudmask').not();
+
+    // # Subset reflectance bands and update their masks, return the result.
+    return img.select('B.*').updateMask(not_cld_shdw);
+}
+
+/**
+ * Add NDVI band Sentinel-2
+ */
+var addIndex = function addindexes(img) {
+  var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var msavi2 = img.select('B8').multiply(2).add(1)
+  .subtract(img.select('B8').multiply(2).add(1).pow(2)
+    .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
+  ).divide(2).rename("MSAVI");
+  return img.addBands(ee.Image.cat(nbr, ndvi, msavi2));
+};
+
+// Write a function to scale the bands
+var scaleImage = function(imgscaled) {
+  return imgsc.multiply(0.0001).copyProperties(imgsc, ["system:time_start"])
+}
+
+//------------------------------
+// PROCESSING LAND COVER
+
+// 1. Dynamic World
+
+var dwl = dw.filterDate(srt, end).select("label"); 
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_shrub = dwMode.eq(5).rename(['Shrubs_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_grass = dwMode.eq(2).rename(['Grass_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+
+
+
+// 2. ESRI LULC 2020
+
+var esri_aoi = esri_lulc2020.mosaic(); 
+var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
+var esri_shrub = esri_aoi.eq(7).rename(['Shrub_esri']); 
+var esri_grass = esri_aoi.eq(4).rename(['Grass_esri']); 
+
+
+
+// 3. ESA World Cover 2020
+
+var esa_Tree = esawc2020.eq(10); 
+var esa_shrub = esawc2020.eq(20);  // Tree 10, shrubland 20, grassland 30
+var esa_grass = esawc2020.eq(30);  
+
+// 4. WRI Tree Cover 2020
+
+var wrimax = TC_wri.max();
+var wri80 = wrimax.eq(80);
+var wri90 = wrimax.eq(90);
+var wri100 = wrimax.eq(100);
+var wri_Tree3 = wri80.add(wri90).add(wri100); //outcome ranges between 1 and 3
+var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
+var wri_Tree = wri_Treeu.gte(1);
+
+
+// 5. GFC 2001-2021
+
+var treeCover = gfcImage.select(['treecover2000']);
+var treeCover10 = treeCover.gte(10);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var HTC_2020 = treeCover10.subtract(lossb2020);
+
+
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var HTC_2020 = HTC_2020.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
+
+// 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
+
+var glc10m = GLC10.mosaic();
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
+var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
+var glc10m_grass = glc10m.eq(30);
+var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
+
+//Need to reclass (thre are negative values; all -1 = 0)
+var glc10Loss = glc10Loss.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'b1'
+});
+
+
+//7. GEDI => 5
+
+var gedi5 = CH_GEDI.gte(5);
+var gedilt5 = CH_GEDI.lt(5);   
+
+// n. Overall Trees 2020
+
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
+var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
+
+//Stack Tree/Forest
+
+var dwM_Tree_r = dwM_Tree.rename(['DW_Trees']);
+var esri_Tree_r = esri_Tree.rename(['ESRI_Trees']);
+var esa_Tree_r = esri_Tree.rename(['ESA_Trees']);
+var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
+var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
+var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
+var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
+var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
+
+//Image Collection of all Tree/Forest bands
+
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, TotTC_c_r]);
+//print(allFT)
+//system:index: 0, 1, 2, 3, 4, 5, 6, 7
+
+var ic_allTF = ee.ImageCollection.fromImages(allTF);
+
+
+// n. Overall Shrub 2020
+
+var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
+var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
+
+
+// n. Overall Grass 2020
+
+var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
+var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
+
+//Remap
+
+var fromListsg = [-1, 0, 1, 2, 3, 4];
+var toListsg =   [0, 0, 1, 2, 3, 4];
+
+var TotalShrub2020sr = TotalShrub2020s.remap({
+  from: fromListsg,
+  to: toListsg,
+  defaultValue: 0,
+  //bandName: 'Total Shrub 2020'
+});
+
+var TotalGrass2020sr = TotalGrass2020s.remap({
+  from: fromListsg,
+  to: toListsg,
+  defaultValue: 0,
+  //bandName: 'Total Grass 2020'
+});
+
+var TotalShrub2020sr = TotalShrub2020sr.unmask();
+var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+//------------------------------
+// APPLY FUNCTIONS TO SENTINEL-2 ALTOGETHER
+
+var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
+var altogether = s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex);
+//print(altogether);
+
+//Example to filter one specific image in the Image Collection
+var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20200101T143720_T19JGF"));
+//print(select);
+
+//------------------------------------------------------
+// SPLIT COLLECTIONS BY MONTH AND APPLY FUNCTIONS
+
+
+var s2_Jan_Chaco = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
+var s2_Feb_Chaco = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
+var s2_Mar_Chaco = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
+var s2_Apr_Chaco = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
+var s2_May_Chaco = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
+var s2_Jun_Chaco = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
+var s2_Jul_Chaco = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
+var s2_Aug_Chaco = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
+var s2_Sep_Chaco = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
+var s2_Oct_Chaco = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
+var s2_Nov_Chaco = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
+var s2_Dec_Chaco = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
+
+
+var s2srMed_Jan = (s2_Jan_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Feb = (s2_Feb_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);                          
+var s2srMed_Mar = (s2_Mar_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);                
+var s2srMed_Apr = (s2_Apr_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_May = (s2_May_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Jun = (s2_Jun_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Jul = (s2_Jul_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Aug = (s2_Aug_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Sep = (s2_Sep_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Oct = (s2_Oct_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Nov = (s2_Nov_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+var s2srMed_Dec = (s2_Dec_Chaco.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(Chaco);
+
+print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
+print(s2srMed_Jun), print(s2srMed_Jul), print(s2srMed_Aug), print(s2srMed_Sep),
+print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
+
+
+//--------------
+//VISUALIZATION
+
+var dwVisParams = {min: 0, max: 8, palette: [
+    '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
+    '#C4281B', '#A59B8F', '#B39FE1']};
+    
+Map.setOptions("SATELLITE");
+
+
+//----------------------------------------------------------------------
+//PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
+var thr = 4
+
+//Chaco
+
+var chacoForest = TotTC_c_r.gte(thr).clip(Chaco);
+var chacoForestm = chacoForest.updateMask(chacoForest.mask(chacoForest.gte(1)));
+
+var chacoGrass = TotalGrass2020s.gte(1).clip(Chaco);
+var chacoGrassm = chacoGrass.updateMask(chacoGrass.mask(chacoGrass.gte(1)));
+
+var chacoShrub = TotalShrub2020s.gte(1).clip(Chaco);
+var chacoShrubm = chacoShrub.updateMask(chacoShrub.mask(chacoShrub.gte(1)));
+
+//Cerrado
+
+var cerradoForest = TotTC_c_r.gte(thr).clip(Cerrado);
+var cerradoForestm = cerradoForest.updateMask(cerradoForest.mask(cerradoForest.gte(1)));
+
+var cerradoGrass = TotalGrass2020s.gte(1).clip(Cerrado);
+var cerradoGrassm = cerradoGrass.updateMask(cerradoGrass.mask(cerradoGrass.gte(1)));
+
+var cerradoShrub = TotalShrub2020s.gte(1).clip(Cerrado);
+var cerradoShrubm = cerradoShrub.updateMask(cerradoShrub.mask(cerradoShrub.gte(1)));
+
+//Caatinga
+
+
+var caatingaForest = TotTC_c_r.gte(thr).clip(Caatinga);
+var caatingaForestm = caatingaForest.updateMask(caatingaForest.mask(caatingaForest.gte(1)));
+
+var caatingaGrass = TotalGrass2020s.gte(1).clip(Caatinga);
+var caatingaGrassm = caatingaGrass.updateMask(caatingaGrass.mask(caatingaGrass.gte(1)));
+
+var caatingaShrub = TotalShrub2020s.gte(1).clip(Caatinga);
+var caatingaShrubm = caatingaShrub.updateMask(caatingaShrub.mask(caatingaShrub.gte(1)));
+
+//Tanzania
+
+var tanzaniaForest = TotTC_c_r.gte(thr).clip(Tanzania);
+var tanzaniaForestm = tanzaniaForest .updateMask(tanzaniaForest .mask(tanzaniaForest .gte(1)));
+
+var tanzaniaGrass = TotalGrass2020s.gte(1).clip(Tanzania);
+var tanzaniaGrassm = tanzaniaGrass.updateMask(tanzaniaGrass.mask(tanzaniaGrass.gte(1)));
+
+var tanzaniaShrub = TotalShrub2020s.gte(1).clip(Tanzania);
+var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
+
+
+// Rename Bands
+
+var chacoForestm = chacoForestm.rename("Forest_Chaco"); 
+var chacoGrassm = chacoGrassm.rename("Grass_Chano");
+var chacoShrubm = chacoShrubm.rename("Grass_Shrub");
+
+var cerradoForestm = cerradoForestm.rename("Forest_Cerrado");
+var cerradoGrassm = cerradoGrassm.rename("Cerrado_Grass"); 
+var cerradoShrubm = cerradoShrubm.rename("Cerrado_Shrub");
+
+var caatingaForestm = caatingaForestm.rename("Caatinga_Forest");
+var caatingaGrassm = caatingaGrassm.rename("Caatinga_Grass");
+var caatingaShrubm = caatingaShrubm.rename("Caatinga_Shrub");
+
+var tanzaniaForestm = tanzaniaForestm.rename("Tanzania_Forest");
+var tanzaniaGrassm = tanzaniaGrassm.rename("Tanzania_Grass"); 
+var tanzaniaShrubm = tanzaniaShrubm.rename("Tanzania_Shrub")
+
+//----------------
+// SAMPLING for stats | Done in a previous step and saved the Samples as an Asset 
+// One per Area of Interest
+//
+
+//-----------------
+//FUNCTIONS 
+
+function bufferPoints(radius, bounds) {
+  return function(pt) {
+    pt = ee.Feature(pt);
+    return bounds ? pt.buffer(radius).bounds() : pt.buffer(radius);
+  };
+}
+
+
+
+function zonalStats(ic, fc, params) {
+  // Initialize internal params dictionary.
+  var _params = {
+    reducer: ee.Reducer.mean(),
+    scale: 10,
+    crs: null,
+    bands: null,
+    bandsRename: null,
+    imgProps: null,
+    imgPropsRename: null,
+    datetimeName: 'datetime',
+    datetimeFormat: 'YYYY-MM-dd HH:mm:ss'
+  };
+
+  // Replace initialized params with provided params.
+  if (params) {
+    for (var param in params) {
+      _params[param] = params[param] || _params[param];
+    }
+  }
+
+  // Set default parameters based on an image representative.
+  var imgRep = ic.first();
+  var nonSystemImgProps = ee.Feature(null)
+    .copyProperties(imgRep).propertyNames();
+  if (!_params.bands) _params.bands = imgRep.bandNames();
+  if (!_params.bandsRename) _params.bandsRename = _params.bands;
+  if (!_params.imgProps) _params.imgProps = nonSystemImgProps;
+  if (!_params.imgPropsRename) _params.imgPropsRename = _params.imgProps;
+
+  // Map the reduceRegions function over the image collection.
+  var results = ic.map(function(img) {
+    // Select bands (optionally rename), set a datetime & timestamp property.
+    img = ee.Image(img.select(_params.bands, _params.bandsRename))
+      .set(_params.datetimeName, img.date().format(_params.datetimeFormat))
+      .set('timestamp', img.get('system:time_start'));
+
+    // Define final image property dictionary to set in output features.
+    var propsFrom = ee.List(_params.imgProps)
+      .cat(ee.List([_params.datetimeName, 'timestamp']));
+    var propsTo = ee.List(_params.imgPropsRename)
+      .cat(ee.List([_params.datetimeName, 'timestamp']));
+    var imgProps = img.toDictionary(propsFrom).rename(propsFrom, propsTo);
+
+    // Subset points that intersect the given image.
+    var fcSub = fc.filterBounds(img.geometry());
+
+    // Reduce the image by regions.
+    return img.reduceRegions({
+      collection: fcSub,
+      reducer: _params.reducer,
+      scale: _params.scale,
+      crs: _params.crs
+    })
+    // Add metadata to each feature.
+    .map(function(f) {
+      return f.set(imgProps);
+    });
+  }).flatten().filter(ee.Filter.notNull(_params.bandsRename));
+
+  return results;
+}
+
+
+// **********************************************
+// Example to calculate Zonal Statistics
+
+// Import the MERIT global elevation dataset.
+var elev = ee.Image('MERIT/DEM/v1_0_3');
+
+
+// Concatenate elevation and slope as two bands of an image.
+var colcat = ee.Image.cat(elev, chacoForestm)
+  // Computed images do not have a 'system:time_start' property; add one based
+  // on when the data were collected.
+  .set('system:time_start', ee.Date('2020-01-01').millis());
+
+// Wrap the single image in an ImageCollection for use in the zonalStats function.
+var col4stats = ee.ImageCollection([colcat]);
+print(col4stats)
+
+// Define parameters for the zonalStats function.
+var params = {
+  bands: [0, 1],
+  bandsRename: ['elevation', 'Chaco_Forest']
+};
+
+// Extract zonal statistics per point per image. //image collection, points, parameters
+var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable
+
+
+// **********************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//---------------------
+// EXPORT
+
+// Export the FeatureCollection to a KML file.
+/*
+Export.table.toAsset({
+  collection: ctr_mask,
+  description:'Tanzania',
+  assetId: 'Tanzania',
+});
+*/
+
+
+Export.table.toDrive({
+  collection: sampleZStats,
+  description:'Samples2Drive',
+  fileFormat: 'CSV',
+  folder: "dryform"
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
