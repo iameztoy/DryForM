@@ -16,27 +16,9 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 // IAA 2019 Process and combine land cover classes from different product to get a new layer by mixing forest, tree cover and woodland + probably associated
 // transition zones. The idea is to extract tiles that will be further refined and used in the frame of semantic segmentation procedures
 //
-// Script to export Zonal Statistics
+// Script to export Zonal Statistics 
+// AOI of interest and samples in Assets
 
-//idea from https://www.mdpi.com/2072-4292/14/16/4101: 
-//DW 72% versus reported 74%; WC 65% versus reported 74%; Esri 75% versus 85%. 
-//We note that it is also possible to use all three LULC products in combination by 
-//creating some form of majority vote or weighted average.  
-//Me: we could control a bit better whether to focus on omission or commission error
-//for normalization see: https://gis.stackexchange.com/questions/313394/normalization-in-google-earth-engine
-
-//DW 0.73
-//WC 0.70
-//ESRI 0.80
-//Hansen? 0.8 
-
-//2020 baseline: need also to mitigate the impact (outweighs) of  number of datasets used per pixel;
-//The maximum score we get is a sum of the number of products used, so to mitigate this issue
-//Check negative values of Hansen tree cover (I get some -1 values). To be further checked but:
-//it is probably because we are subtracting a loss to the tree cover when this was not a tree in 2000
-
-// DONE //Need to remove all about esawc2020
-// DONE //Add From GLC10 https://gee-community-catalog.org/projects/glc10/?h=glc10
 
 //--------------
 // VARIABLES GENERAL
@@ -273,13 +255,13 @@ var caatingaShrubm = caatingaShrub.updateMask(caatingaShrub.mask(caatingaShrub.g
 
 //Tanzania
 
-var tanzaniaForest = TotTC_c_r.gte(thr).clip(ctr_mask);
+var tanzaniaForest = TotTC_c_r.gte(thr).clip(Tanzania);
 var tanzaniaForestm = tanzaniaForest .updateMask(tanzaniaForest .mask(tanzaniaForest .gte(1)));
 
-var tanzaniaGrass = TotalGrass2020s.gte(1).clip(ctr_mask);
+var tanzaniaGrass = TotalGrass2020s.gte(1).clip(Tanzania);
 var tanzaniaGrassm = tanzaniaGrass.updateMask(tanzaniaGrass.mask(tanzaniaGrass.gte(1)));
 
-var tanzaniaShrub = TotalShrub2020s.gte(1).clip(ctr_mask);
+var tanzaniaShrub = TotalShrub2020s.gte(1).clip(Tanzania);
 var tanzaniaShrubm = tanzaniaShrub.updateMask(tanzaniaShrub.mask(tanzaniaShrub.gte(1)));
 
 
