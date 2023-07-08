@@ -540,10 +540,10 @@ var col4stats = ee.ImageCollection([colcat]);
 print(col4stats)
 
 // Define parameters for the zonalStats function.
-var params = {
-  bands: [3, 4, 7, 10, 11, 12, 13, 14,
-          18, 19, 22, 25, 26, 27, 28, 29,
-         33, 34, 37, 40, 41, 42, 43, 44,
+var params = {                                    //ref for each band in the image collection (monthly) 
+  bands: [3, 4, 7, 10, 11, 12, 13, 14,            // e.g. 3 January, 4 February.... 14 December    
+          18, 19, 22, 25, 26, 27, 28, 29,         // e.g. 18 January, 22 March.... 
+         33, 34, 37, 40, 41, 42, 43, 44,      
          48, 49, 52, 55, 56, 57, 58, 59,
          63, 64, 67, 70, 71, 72, 73, 74,
          78, 79, 82, 85, 86, 87, 88, 89,
@@ -552,7 +552,8 @@ var params = {
         123, 124, 127, 130, 131, 132, 133, 134,
         138, 139, 142, 145, 146, 147, 148, 149,
         153, 154, 157, 160, 161, 162, 163, 164,
-        168, 169, 172, 175, 176, 177, 178, 179, 180], //180, 181, 182, 183
+        168, 169, 172, 175, 176, 177, 178, 179,
+        180], //Additional bands 180, 181, 182, 183
         
   bandsRename : ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan",
              "b4feb", "b5feb", "b8feb", "b11feb", "b12feb", "nbrfeb", "ndvifeb", "msavi2feb", 
@@ -566,7 +567,7 @@ var params = {
              "b4oct", "b5oct", "b8oct", "b11oct", "b12oct", "nbroct", "ndvioct", "msavi2oct",
              "b4nov", "b5nov", "b8nov", "b11nov", "b12nov", "nbrnov", "ndvinov", "msavi2nov",
              "b4dec", "b5dec", "b8dec", "b11dec", "b12dec", "nbrdec", "ndvidec", "msavi2dec",
-             "ChacoForest"] //, "chacoForest", "chacoGrass", "chacoShrub", "elevation"
+             "ChacoChacoGrass"] //, "chacoForest", "chacoGrass", "chacoShrub", "elevation"
   };
 
 
