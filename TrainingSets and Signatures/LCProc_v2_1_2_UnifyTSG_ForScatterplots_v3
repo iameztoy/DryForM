@@ -530,7 +530,7 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 // Concatenate elevation and slope as two bands of an image.
 var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2srMed_May, s2srMed_Jun, s2srMed_Jul, 
-                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec, chacoForestm) // , chacoForestm, chacoGrassm, chacoShrubm, elev
+                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec, chacoGrassm) // , chacoForestm, chacoGrassm, chacoShrubm, elev
   // Computed images do not have a 'system:time_start' property; add one based
   // on when the data were collected.
   .set('system:time_start', ee.Date('2020-01-01').millis());
