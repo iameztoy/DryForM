@@ -537,9 +537,22 @@ var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2
 var col4stats = ee.ImageCollection([colcat]);
 print(col4stats)
 
-
-var bandr = ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan"]
-var bandsren = ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan",
+// Define parameters for the zonalStats function.
+var params = {
+  bands: [3, 4, 7, 10, 11, 12, 13, 14,
+          18, 19, 22, 25, 26, 27, 28, 29,
+         33, 34, 37, 40, 41, 42, 43, 44,
+         48, 49, 52, 55, 56, 57, 58, 59,
+         63, 64, 67, 70, 71, 72, 73, 74,
+         78, 79, 82, 85, 86, 87, 88, 89,
+         93, 94, 97, 100, 101, 102, 103, 104,
+        108, 109, 112, 115, 116, 117, 118, 119,
+        123, 124, 127, 130, 131, 132, 133, 134,
+        138, 139, 142, 145, 146, 147, 148, 149,
+        153, 154, 157, 160, 161, 162, 163, 164,
+        168, 169, 172, 175, 176, 177, 178, 179],
+        
+  bandsRename : ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan",
              "b4feb", "b5feb", "b8feb", "b11feb", "b12feb", "nbrfeb", "ndvifeb", "msavi2feb", 
              "b4mar", "b5mar", "b8mar", "b11mar", "b12mar", "nbrmar", "ndvimar", "msavi2mar",
              "b4apr", "b5apr", "b8apr", "b11apr", "b12apr", "nbrapr", "ndviapr", "msavi2apr",
@@ -551,27 +564,8 @@ var bandsren = ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvija
              "b4oct", "b5oct", "b8oct", "b11oct", "b12oct", "nbroct", "ndvioct", "msavi2oct",
              "b4nov", "b5nov", "b8nov", "b11nov", "b12nov", "nbrnov", "ndvinov", "msavi2nov",
              "b4dec", "b5dec", "b8dec", "b11dec", "b12dec", "nbrdec", "ndvidec", "msavi2dec"]
+  };
 
-// Define parameters for the zonalStats function.
-var params = {
-  bands: [3, 4, 7, 10, 11, 12, 13, 14,
-  18, 19, 22, 25, 26, 27, 28, 29,
-  33, 34, 37, 40, 41, 42, 43, 44,
-  48, 49, 52, 55, 56, 57, 58, 59,
-  63, 64, 67, 70, 71, 72, 73, 74,
-  78, 79, 82, 85, 86, 87, 88, 89,
-  93, 94, 97, 100, 101, 102, 103, 104,
-  108, 109, 112, 115, 116, 117, 118, 119,
-  123, 124, 127, 130, 131, 132, 133, 134,
-  138, 139, 142, 145, 146, 147, 148, 149,
-  153, 154, 157, 160, 161, 162, 163, 164,
-  168, 169, 172, 175, 176, 177, 178, 179],
-  bandsRename: bandr  //['elevation', 'Chaco_Forest', "s2ChacoF_B1_Jan", "s2ChacoF_B2Jan", ]
-};
-
-
-
-//B1 January ["b1", "b15"]
 
 // Extract zonal statistics per point per image. //image collection, points, parameters
 var sampleZStats = zonalStats(col4stats, samples, params); //Select the samples in samples variable // (col4stats, samples, params);
