@@ -21,7 +21,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Chaco; //Cerrado, Caatinga, Tanzania
+var AOI = Chaco; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -32,7 +32,7 @@ var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
 var CLD_PRJ_DIST = 1;
 var BUFFER = 50;
-var bands = ['B8', 'B4', 'B3'];
+var bands = ['B8', 'B4', 'B3']; // ['B4', 'B3', 'B2'] ['B8', 'B4', 'B3']; ['B12', 'B11', 'B8'];
 
 
 
@@ -63,17 +63,17 @@ var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011)
 //-------------
 //Functions
 
-function get_s2_sr_cld_col(aoi, start_date, end_date) {
+function get_s2_sr_cld_col(AOI, start_date, end_date) {
     // # Import and filter S2 SR.
     
     var s2_sr_col = (ee.ImageCollection('COPERNICUS/S2_SR')
-        .filterBounds(aoi)
+        .filterBounds(AOI)
         .filterDate(start_date, end_date)
         .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
 
     // # Import and filter s2cloudless.
     var s2_cloudless_col = (ee.ImageCollection('COPERNICUS/S2_CLOUD_PROBABILITY')
-        .filterBounds(aoi)
+        .filterBounds(AOI)
         .filterDate(start_date, end_date));
 
     // # Join the filtered s2cloudless collection to the SR collection by the 'system:index' property.
@@ -169,7 +169,7 @@ var addIndex = function addindexes(img) {
   return img.addBands(ee.Image.cat(nbr, ndvi, msavi2));
 };
 
-// Write a function to scale the bands
+// Write a function to scale the bands (not implemented)
 var scaleImage = function(imgscaled) {
   return imgsc.multiply(0.0001).copyProperties(imgsc, ["system:time_start"])
 }
@@ -741,6 +741,7 @@ var select = s2srMed_Jan.select(13)
 print(select)
 
 Map.addLayer(select, {'min': -1, 'max': 1}, "ndvi", 1);
+Map.addLayer(Cerrado, null, "AOI")
 
 
 
