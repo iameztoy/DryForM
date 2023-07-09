@@ -25,8 +25,8 @@ var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
-var srt = '2020-01-01'; var end = '2021-01-01';
-var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; // For DW (Mode)
+var srt = '2020-01-01'; var end = '2021-01-01'; // For DW (Mode)
+var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; 
 var CLOUD_FILTER = 30;
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
