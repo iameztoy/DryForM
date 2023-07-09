@@ -527,11 +527,13 @@ var tanzaniaForestm_sr = tanzaniaForestm_s.remap({from: from_4th, to: to_gs_4th}
 var tanzaniaGrassm_sr = tanzaniaGrassm_s.remap({from: from_4th, to: to_gs_4th}).rename("Grass_Tanzania");
 var tanzaniaShrubm_sr = tanzaniaShrubm_s.remap({from: from_4th, to: to_gs_4th}).rename("Shrub_Tanzania");
 
-
+/*
+// Visu for check
 Map.addLayer(chacoForestm, null, "Forest");
 Map.addLayer(chaco_grass_shrub, null, "Grass+Shrub")
 Map.addLayer(chacoForestm_s, null, "Forest sub")
 Map.addLayer(chacoForestm_sr, null, "Forest sub remap")
+*/
 
 
 
@@ -552,7 +554,7 @@ var region = AOI
 
 // Generate x random points within the region.
 var pts = ee.FeatureCollection.randomPoints(
-    {region: AOI, points: 15000, seed: 0, maxError: 1});
+    {region: AOI, points: 20000, seed: 0, maxError: 1});
     
 var samplesIn = pts.map(bufferPoints(1, false));
 
@@ -725,12 +727,14 @@ Export.table.toDrive({
 //  ADD LAYERS
 
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
-Map.addLayer(RP_Chaco, null, "Samples")
+Map.addLayer(samplesIn, null, "Samples")
 
 var select = s2srMed_Jan.select(13)
 print(select)
 
 Map.addLayer(select, {'min': -1, 'max': 1}, "ndvi", 1);
+
+
 
 
 
