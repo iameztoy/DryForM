@@ -33,6 +33,8 @@ var CLD_PRJ_DIST = 1;
 var BUFFER = 50;
 var bands = ['B8', 'B4', 'B3'];
 
+var bufsize = 1 //Buffer size for samples if run within the code
+
 //--------------
 // Datasets
 //
@@ -554,7 +556,7 @@ Map.addLayer(chacoForestm_sr, null, "Forest sub remap")
 var pts = ee.FeatureCollection.randomPoints(
     {region: AOI, points: 20000, seed: 0, maxError: 1});
     
-var samplesIn = pts.map(bufferPoints(1, false));
+var samplesIn = pts.map(bufferPoints(bufsize, false));
 
 
 //FUNCTIONS 
