@@ -22,8 +22,9 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 // VARIABLES GENERAL
 
 var AOI = Chaco; //Cerrado, Caatinga, Tanzania
-var samples = RP_Chaco //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset
+var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset
 var srt = '2020-01-01'; var end = '2021-01-01';
+var bufsize = 1; //Buffer size for samples if run within the code
 
 var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; // For DW (Mode)
 var CLOUD_FILTER = 30;
@@ -33,7 +34,7 @@ var CLD_PRJ_DIST = 1;
 var BUFFER = 50;
 var bands = ['B8', 'B4', 'B3'];
 
-var bufsize = 1 //Buffer size for samples if run within the code
+
 
 //--------------
 // Datasets
