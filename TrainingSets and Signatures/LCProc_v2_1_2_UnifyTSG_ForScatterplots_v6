@@ -22,7 +22,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 // VARIABLES GENERAL
 
 var AOI = Chaco; //Cerrado, Caatinga, Tanzania
-var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset
+var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var srt = '2020-01-01'; var end = '2021-01-01';
 var bufsize = 1; //Buffer size for samples if run within the code
 
