@@ -666,7 +666,7 @@ var params = {                                    //ref for each band in the ima
         138, 139, 142, 145, 146, 147, 148, 149,
         153, 154, 157, 160, 161, 162, 163, 164,
         168, 169, 172, 175, 176, 177, 178, 179,
-        180, 181, 182], //Additional bands if all are included: 180, 181, 182, 183
+        180, 181, 182], //Additional bands, if all are included: 180, 181, 182, 183
               //If only one is included in colcat, then it is always 180
         
   bandsRename : ["b4Jan", "b5Jan", "b8jan", "b11jan", "b12jan", "nbrjan", "ndvijan", "msavi2jan",
