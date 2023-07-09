@@ -511,21 +511,21 @@ var from_4th = [-1, 0, 1];
 var to_gs_4th = [0, 0, 1];
 
 
-var chacoForestm_sr = chacoForestm_s.remap({from: from_4th, to: to_gs_4th});
-var chacoGrassm_sr = chacoGrassm_s.remap({from: from_4th, to: to_gs_4th});
-var chacoShrubm_sr = chacoShrubm_s.remap({from: from_4th, to: to_gs_4th});
+var chacoForestm_sr = chacoForestm_s.remap({from: from_4th, to: to_gs_4th}).rename("Forest_Chaco");
+var chacoGrassm_sr = chacoGrassm_s.remap({from: from_4th, to: to_gs_4th}).rename("Forest_Grass");
+var chacoShrubm_sr = chacoShrubm_s.remap({from: from_4th, to: to_gs_4th}).rename("Forest_Shrub");
 
-var cerradoForestm_sr = cerradoForestm_s.remap({from: from_4th, to: to_gs_4th});
-var cerradoGrassm_sr = cerradoGrassm_s.remap({from: from_4th, to: to_gs_4th});
-var cerradoShrubm_sr = cerradoShrubm_s.remap({from: from_4th, to: to_gs_4th});
+var cerradoForestm_sr = cerradoForestm_s.remap({from: from_4th, to: to_gs_4th}).rename("Forest_Cerrado");
+var cerradoGrassm_sr = cerradoGrassm_s.remap({from: from_4th, to: to_gs_4th}).rename("Grass_Cerrado");
+var cerradoShrubm_sr = cerradoShrubm_s.remap({from: from_4th, to: to_gs_4th}).rename("Shrub_Cerrado");
 
-var caatingaForestm_sr = caatingaForestm_s.remap({from: from_4th, to: to_gs_4th});
-var caatingaGrassm_sr = caatingaGrassm_s.remap({from: from_4th, to: to_gs_4th});
-var caatingaShrubm_sr = caatingaShrubm_s.remap({from: from_4th, to: to_gs_4th});
+var caatingaForestm_sr = caatingaForestm_s.remap({from: from_4th, to: to_gs_4th}).rename("Forest_Caatinga");
+var caatingaGrassm_sr = caatingaGrassm_s.remap({from: from_4th, to: to_gs_4th}).rename("Grass_Caatinga");
+var caatingaShrubm_sr = caatingaShrubm_s.remap({from: from_4th, to: to_gs_4th}).rename("Shrub_Caatinga");
 
-var tanzaniaForestm_sr = tanzaniaForestm_s.remap({from: from_4th, to: to_gs_4th});
-var tanzaniaGrassm_sr = tanzaniaGrassm_s.remap({from: from_4th, to: to_gs_4th});
-var tanzaniaShrubm_sr = tanzaniaShrubm_s.remap({from: from_4th, to: to_gs_4th});
+var tanzaniaForestm_sr = tanzaniaForestm_s.remap({from: from_4th, to: to_gs_4th}).rename("Forest_Tanzania");
+var tanzaniaGrassm_sr = tanzaniaGrassm_s.remap({from: from_4th, to: to_gs_4th}).rename("Grass_Tanzania");
+var tanzaniaShrubm_sr = tanzaniaShrubm_s.remap({from: from_4th, to: to_gs_4th}).rename("Shrub_Tanzania");
 
 
 Map.addLayer(chacoForestm, null, "Forest");
@@ -554,8 +554,7 @@ var region = AOI
 var pts = ee.FeatureCollection.randomPoints(
     {region: AOI, points: 15000, seed: 0, maxError: 1});
     
-var samplesIn = pts.map(bufferPoints(30, false));
-
+var samplesIn = pts.map(bufferPoints(1, false));
 
 
 //FUNCTIONS 
@@ -704,6 +703,13 @@ Export.table.toAsset({
   assetId: 'Tanzania',
 });
 */
+
+// Export an ee.FeatureCollection as an Earth Engine asset.
+Export.table.toAsset({
+  collection: samplesIn,
+  description:'samplesIn',
+  assetId: 'samplesIn',
+});
 
 
 Export.table.toDrive({
