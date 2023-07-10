@@ -11,9 +11,6 @@ var AOIpl =
     /* color: #0b4a8b */
     /* shown: false */
     ee.Geometry.Point([-50.36060143729637, -26.620432304959333]),
-    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Caatinga"),
-    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado"),
-    Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
     cliptest = 
     /* color: #0b4a8b */
     /* shown: false */
@@ -36,7 +33,10 @@ var AOIpl =
          [-52.510388313980584, -20.96499197429267],
          [-90.8246468088151, 16.275218368302433],
          [36.708191582089505, -7.673314092573791],
-         [33.41244746040699, -6.563441516965288]]);
+         [33.41244746040699, -6.563441516965288]]),
+    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
