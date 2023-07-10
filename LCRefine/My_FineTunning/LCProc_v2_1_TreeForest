@@ -224,7 +224,7 @@ var randomPoints = ee.FeatureCollection.randomPoints(
 
 
 var bounding_box_func = function(feature) {
-    var intermediate_buffer = feature.buffer(1280);  // buffer radius, half your box width in m
+    var intermediate_buffer = feature.buffer(125);  // buffer radius, half your box width in m
     var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
        return(intermediate_box); // Return the bounding box
       };
@@ -374,4 +374,34 @@ var smooth = clip2.focalMode({
 Map.addLayer(HTC_2020)
 
 */
+
+var chips250 = sumDEWs.clip(Zones)
+Map.addLayer(chips250)
+var projection = chips250.projection().getInfo();
+
+// Export the image, specifying the CRS, transform, and region.
+Export.image.toDrive({
+  image: chips250,
+  description: 'Exprort_Training',
+  folder: "TrainingSets",
+  scale: 30,
+  maxPixels:1e13,
+  region: Chaco
+});
+
+// Export the FeatureCollection to a KML file.
+Export.table.toDrive({
+  collection: Zones,
+  description:'ExportBoundingBox',
+  folder: "TrainingSets",
+  fileFormat: 'SHP'
+});
+
+
+Export.table.toDrive({
+  collection: randomPoints,
+  description:'ExportRP_centroid',
+  folder: "TrainingSets",
+  fileFormat: 'SHP'
+});
 
