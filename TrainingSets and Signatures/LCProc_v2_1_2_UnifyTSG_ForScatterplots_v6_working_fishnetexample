@@ -8,7 +8,8 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
+    fishnet = ee.FeatureCollection("users/iameztoy/dryform/fishnet/fishnet10_Ex_Dis");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -21,7 +22,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania
+var AOI = Chaco; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -32,7 +33,7 @@ var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
 var CLD_PRJ_DIST = 1;
 var BUFFER = 50;
-var bands = ['B8', 'B4', 'B3']; // ['B4', 'B3', 'B2'] ['B8', 'B4', 'B3']; ['B12', 'B11', 'B8']; 
+var bands = ['B4', 'B3', 'B2']; // ['B4', 'B3', 'B2'] ['B8', 'B4', 'B3']; ['B12', 'B11', 'B8']; 
 
 
 
@@ -735,13 +736,11 @@ Export.table.toDrive({
 //  ADD LAYERS
 
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
-Map.addLayer(samplesIn, null, "Samples")
 
-var select = s2srMed_Jan.select(13)
-print(select)
 
-Map.addLayer(select, {'min': -1, 'max': 1}, "ndvi", 1);
-Map.addLayer(Tanzania, null, "AOI")
+Map.addLayer(chacoForestm_sr, null, "Chaco Forest")
+Map.addLayer(fishnet, null, "fishnet", 1);
+Map.centerObject(fishnet, 14)
 
 
 
