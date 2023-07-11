@@ -675,7 +675,8 @@ function renderGraphics(coords) {
   /** Need to optimize the removal of layers.
   *
   * Not sure why it does only remove half of layers if I run the 
-  * function only once. This is just a trick repeated (x4) 
+  * function only once. This is just a trick repeated (x4) so it removes all. 
+  * If more layers are added (e.g. two more; repeat)
   * 
   **/
   
