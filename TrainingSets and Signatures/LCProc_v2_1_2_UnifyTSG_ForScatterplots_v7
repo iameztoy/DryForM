@@ -22,7 +22,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
           [-60.494896433334105, -17.80803809714306],
           [-54.232689402084105, -17.80803809714306],
           [-54.232689402084105, -13.33268193684789]]], null, false),
-    cloudcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":12,"palette":["fff7f6","26f7ff","79ffc5","7bff83","54ff9d","f4ff7b","edff28","ffb277","ff6969","ff745b","ff3528","ff0000","ff3301"]};
+    cloudsum = {"opacity":1,"bands":["cloudmask"],"min":0,"max":12,"palette":["fff7f6","26f7ff","79ffc5","7bff83","54ff9d","f4ff7b","edff28","ffb277","ff6969","ff745b","ff3528","ff0000","ff3301"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -39,7 +39,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = geometry; //Chaco, Cerrado, Caatinga, Tanzania
+var AOI = Chaco; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -410,12 +410,12 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 
 var s2_JanSCs = s2_JanSC.select("cloudmask");
 var s2_JanSCss = s2_JanSCs.sum();
+var s2_JanSCSSc = s2_JanSCs.count();
 
 
-
-
-
-Map.addLayer(cloudmask, cloudcount, 'CLOUD MASK');
+Map.addLayer(Chaco)
+Map.addLayer(s2_JanSCss, cloudsum, 'CLOUD MASK');
+Map.addLayer(s2_JanSCSSc, cloudsum, 'Image Count');
 
 
 
