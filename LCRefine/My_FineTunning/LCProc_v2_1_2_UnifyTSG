@@ -86,6 +86,7 @@ var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
 ////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
 
@@ -186,9 +187,12 @@ var glc10Loss = glc10Loss.remap({
 var gedi5 = CH_GEDI.gte(5);
 var gedilt5 = CH_GEDI.lt(5);   
 
+//8. GEDI Lang  => 5
+var gedi5Llt5 = GEDI_Lang.gte(5);
+
 // n. Overall Trees 2020
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 //Stack Tree/Forest
@@ -200,11 +204,12 @@ var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
 var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
+var gedi5L_r = gedi5L.rename(['GEDI_Lang_gte5']);
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 //Image Collection of all Tree/Forest bands
 
-var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, TotTC_c_r]);
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_r, TotTC_c_r]);
 //print(allFT)
 //system:index: 0, 1, 2, 3, 4, 5, 6, 7
 
@@ -220,13 +225,13 @@ print(ic_allTF);
 // n. Overall Shrub 2020
 
 var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
-var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
+var TotalShrub2020s = TotalShrub2020.subtract(gedi5Llt5);
 
 
 // n. Overall Grass 2020
 
 var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
-var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
+var TotalGrass2020s = TotalGrass2020.subtract(gedi5Llt5);
 
 //Remap
 
