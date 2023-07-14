@@ -17,6 +17,10 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 // calculate and export Zonal Statistics 
 // AOI of interest and samples in Assets 
 
+// Modifications compared to working v.6:
+// Error corrected for ESA and ESRI in rename (also corrected in previous versions)
+// Added GEDI Lang and added in Total Tree/Forest - For grass/shrub Potapov replaced by Lang
+
 
 //--------------
 // VARIABLES GENERAL
@@ -644,7 +648,7 @@ function zonalStats(ic, fc, params) {
 
 
 // **********************************************
-// Example to calculate Zonal Statistics
+// Example to calculate Zonal Statistics (done before summer break 2023) V7 contains modidifications 
 
 // Import the MERIT global elevation dataset.
 var elev = ee.Image('MERIT/DEM/v1_0_3');
