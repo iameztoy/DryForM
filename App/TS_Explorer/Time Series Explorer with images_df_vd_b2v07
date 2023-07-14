@@ -22,6 +22,8 @@
 // V7 modification to include GEDI Lang (For Tree/Forest Layer "Lang" is added and GEDI Potapov maintained)
 //                                       For Grass/Shrub Layers "Lang" replaces Potapov)
 
+// Need to recalculate Valid Count
+
 // #############################################################################
 // ### IMPORT MODULES ###
 // #############################################################################
@@ -47,7 +49,7 @@ var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
-var validCount = ee.Image("projects/hardy-tenure-383607/assets/CountValid_7cl");
+var validCount = ee.Image("projects/hardy-tenure-383607/assets/CountValid_7cl"); //Needs to be updated to include GEDI Lang (new max value is 8)
 var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
 ////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
@@ -705,7 +707,7 @@ function renderGraphics(coords) {
 
   
   //Add all Tree/Cover layers + shrub/scrub and grass
-  map.addLayer(validCount, vcVis, "Valid observations", 0)
+  map.addLayer(validCount, vcVis, "Valid observations", 0) //Needs to be updated to include GEDI Lang (new max value is 8)
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
   map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0);
