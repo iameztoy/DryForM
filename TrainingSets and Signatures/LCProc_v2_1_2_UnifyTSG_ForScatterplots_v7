@@ -21,7 +21,8 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
         [[[-60.494896433334105, -13.33268193684789],
           [-60.494896433334105, -17.80803809714306],
           [-54.232689402084105, -17.80803809714306],
-          [-54.232689402084105, -13.33268193684789]]], null, false);
+          [-54.232689402084105, -13.33268193684789]]], null, false),
+    cloudcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":12,"palette":["fff7f6","26f7ff","79ffc5","7bff83","54ff9d","f4ff7b","edff28","ffb277","ff6969","ff745b","ff3528","ff0000","ff3301"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -410,7 +411,7 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 var cm = s2_JanSC.select("cloudmask");
 var cloudmask = cm.sum();
 
-Map.addLayer(cloudmask, {palette: 'ff550c'}, 'CLOUD MASK');
+Map.addLayer(cloudmask, cloudcount, 'CLOUD MASK');
 
 
 
