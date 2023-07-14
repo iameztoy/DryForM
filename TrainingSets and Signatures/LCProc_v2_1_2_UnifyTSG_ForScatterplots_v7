@@ -292,13 +292,13 @@ var ic_allTF = ee.ImageCollection.fromImages(allTF);
 // n. Overall Shrub 2020
 
 var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
-var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
+var TotalShrub2020s = TotalShrub2020.subtract(gedi5Llt5);
 
 
 // n. Overall Grass 2020
 
 var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
-var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
+var TotalGrass2020s = TotalGrass2020.subtract(gedi5Llt5);
 
 //Remap
 
