@@ -190,7 +190,7 @@ var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 var dwM_Tree_r = dwM_Tree.rename(['DW_Trees']);
 var esri_Tree_r = esri_Tree.rename(['ESRI_Trees']);
-var esa_Tree_r = esri_Tree.rename(['ESA_Trees']);
+var esa_Tree_r = esa_Tree.rename(['ESA_Trees']);
 var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
 var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
