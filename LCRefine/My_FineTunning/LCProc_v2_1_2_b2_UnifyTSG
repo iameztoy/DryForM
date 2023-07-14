@@ -41,7 +41,8 @@ var AOIpl =
     VisParam5cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff2f2f","ffaf5c","fff14e","7fff70"]},
     Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
-    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    VisParam9cl = {"opacity":1,"bands":["Map"],"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff","f988f5"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
@@ -190,6 +191,8 @@ var gedilt5 = CH_GEDI.lt(5);
 //8. GEDI Lang  => 5
 var gedi5L_gte5 = GEDI_Lang.gte(5);
 var gedi5Llt5 = GEDI_Lang.lt(5);
+var gedi5Llt5 = gedi5Llt5.unmask();
+var gedi5L_gte5 = gedi5L_gte5.unmask();
 
 // n. Overall Trees 2020
 
@@ -321,7 +324,7 @@ Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0);
 Map.addLayer(gedilt5, {}, "GEDI Potapov < 5", 0);
 Map.addLayer(gedi5L_gte5, {}, "GEDI Lang => 5", 0);
 Map.addLayer(gedi5Llt5, {}, "GEDI Lang < 5", 0);
-Map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-8
+Map.addLayer(TotTF_c, VisParam9cl, "Total Tree/Forest", 0); //Range 0-8
 
 //Shrub/Scrub (Only Totals)
 Map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
