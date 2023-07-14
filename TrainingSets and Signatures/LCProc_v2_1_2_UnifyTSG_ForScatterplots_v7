@@ -412,24 +412,17 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 var s2_JanSCs = s2_JanSC.select("cloudmask");
 var s2_JanSCss = s2_JanSCs.sum();
 var s2_JanSCSSc = s2_JanSCs.count();
+var s2Jan_dif = s2_JanSCSSc.subtract(s2_JanSCss);
 
 
 Map.addLayer(Chaco, null, "Chaco AOI", 0)
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan');
 Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count');
+Map.addLayer(s2Jan_dif, imgcount, "Diference")
 
 
 
 //var colcm = cm.toBands();
-
-
-
-
-
-
-
-
-
 
 
 
