@@ -29,8 +29,8 @@ var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
-var srt = '2020-01-01'; var end = '2021-01-01'; // For DW (Mode)
-var START_DATE = '2020-01-01'; var END_DATE = "2020-03-01"; 
+var srt = '2020-01-01'; var end = '2021-01-10'; // For DW (Mode)
+var START_DATE = '2020-01-01'; var END_DATE = "2020-02-01"; 
 var CLOUD_FILTER = 30;
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
@@ -392,7 +392,10 @@ var s2_OctSC = s2_Oct.map(add_cld_shdw_mask);
 var s2_NovSC = s2_Nov.map(add_cld_shdw_mask); 
 var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 
-print(s2_JanSC)
+var s = s2_JanSC.toBands()
+print(s)
+
+
 
 
 
@@ -792,7 +795,7 @@ Map.addLayer(Tanzania, null, "AOI")
 
 **/
 
-Map.addLayer(TotTreeFor);
+
 
 
 /**
