@@ -170,9 +170,7 @@ var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
 var gedi5 = CH_GEDI.gte(5);
 
 //8. GEDI Lang  => 5
- var gedi5L = GEDI_Lang.gte(5);
-
-
+var gedi5L = GEDI_Lang.gte(5);
 
 
 // n. Overall Trees 2020
