@@ -18,15 +18,14 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 // AOI of interest and samples in Assets 
 
 // Modifications compared to working v.6:
-// Error corrected for ESA and ESRI in rename (also corrected in previous versions) it was only affecting the graph, not the layer
+// Error corrected for ESA and ESRI in rename (also corrected in previous versions)
 // Added GEDI Lang and added in Total Tree/Forest - For grass/shrub Potapov replaced by Lang
-// minor changes may happen in grass/shrub as a consequence of using GEDI Lang for <5m subtraction (not significant)
 
 
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Chaco; //Chaco, Cerrado, Caatinga, Tanzania
+var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -282,16 +281,18 @@ var esa_Tree_r = esa_Tree.rename(['ESA_Trees']);
 var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
 var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
-var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
+var GEDI_gte5_r = gedi5.rename(['GEDI_Pot_gte5']);
+var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5'])
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 //Image Collection of all Tree/Forest bands
 
-var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, TotTC_c_r]);
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r, TotTC_c_r]);
 //print(allFT)
-//system:index: 0, 1, 2, 3, 4, 5, 6, 7
+//system:index: 0, 1, 2, 3, 4, 5, 6, 7, 8
 
 var ic_allTF = ee.ImageCollection.fromImages(allTF);
+print(ic_allTF)
 
 
 // n. Overall Shrub 2020
@@ -657,7 +658,7 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 // Concatenate Sentinel-2 monthly mosaics (x12) and Class product for Forest + Grass + Shrub (x3) and eventually any other dataset
 var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2srMed_May, s2srMed_Jun, s2srMed_Jul, 
-                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec, chacoForestm_sr, chacoGrassm_sr, chacoShrubm_sr) // ,chacoForestm_sr, chacoGrassm_sr, chacoShrubm_sr, elev
+                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec, tanzaniaForestm_sr, tanzaniaGrassm_sr, tanzaniaShrubm_sr) // ,chacoForestm_sr, chacoGrassm_sr, chacoShrubm_sr, elev
                                                                                                                                             //, cerradoForestm_sr, cerradoGrass_sr, cerradoShrubm_sr, elev
                                                                                                                                             //, caatingaForestm_sr, caatingaGrassm_sr, caatingaShrubm_sr, elev
                                                                                                                                             //, tanzaniaForestm_sr, tanzaniaGrassm_sr, tanzaniaShrubm_sr, elev
@@ -700,7 +701,7 @@ var params = {                                    //ref for each band in the ima
              "b4oct", "b5oct", "b8oct", "b11oct", "b12oct", "nbroct", "ndvioct", "msavi2oct",
              "b4nov", "b5nov", "b8nov", "b11nov", "b12nov", "nbrnov", "ndvinov", "msavi2nov",
              "b4dec", "b5dec", "b8dec", "b11dec", "b12dec", "nbrdec", "ndvidec", "msavi2dec",
-             "chacoForest", "chacoGrass", "chacoShrub"] //, "chacoForest", "chacoGrass", "chacoShrub", "elevation"
+             "tanzaniaForest", "tanzaniaGrass", "tanzaniaShrub"] //, "chacoForest", "chacoGrass", "chacoShrub", "elevation"
                                                         //, "cerradoForest", "cerradoGrass", "cerradoShrub", "elevation"
                                                         //, "caatingaForest", "caatingaGrass", "caatingaShrub", "elevation"
                                                         //, "tanzaniaForest", tanzaniaGrass", tanzaniaShrub", "elevation"
