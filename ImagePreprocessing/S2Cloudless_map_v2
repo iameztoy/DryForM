@@ -8,7 +8,7 @@ var CAatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 var AOI = Chaco;
 
 var START_DATE = '2020-01-01';
-var END_DATE = "2020-03-01"; //"2021-01-01" "2020-03-01"
+var END_DATE = "2021-01-01"; //"2021-01-01" "2020-03-01"
 var CLOUD_FILTER = 30;
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
