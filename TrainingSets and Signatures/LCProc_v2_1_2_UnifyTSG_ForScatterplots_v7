@@ -288,7 +288,7 @@ var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 //Image Collection of all Tree/Forest bands
 
 var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r, TotTC_c_r]);
-var allTFunique = ee.List(ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r]);
+var allTFunique = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r]);
 //print(allFT)
 //system:index: 0, 1, 2, 3, 4, 5, 6, 7, 8 //Total can be removed for posterior calculations
 
@@ -767,12 +767,12 @@ Map.addLayer(Tanzania, null, "AOI")
  * The main idea is to stratify in 3 different zones: 1/ no tree/forest 2/transition zone 3/tree/forest predominance
  * https://developers.google.com/earth-engine/apidocs/ee-image-stratifiedsample
  * 
- * 
+ * 1st reclassify TotTreeFor
  * 
 
 **/
 
-var 
+Map.addLayer(TotTreeFor)
 
 
 
