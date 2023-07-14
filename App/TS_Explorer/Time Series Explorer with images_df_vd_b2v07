@@ -19,6 +19,8 @@
  * limitations under the License.
  */
 
+// V7 modification to include GEDI Lang (For Tree/Forest Layer "Lang" is added and GEDI Potapov maintained)
+//                                       For Grass/Shrub Layers "Lang" replaces Potapov)
 
 // #############################################################################
 // ### IMPORT MODULES ###
