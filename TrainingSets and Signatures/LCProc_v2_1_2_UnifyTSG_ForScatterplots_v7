@@ -414,7 +414,7 @@ var s2_JanSCss = s2_JanSCs.sum();
 var s2_JanSCSSc = s2_JanSCs.count();
 
 
-Map.addLayer(Chaco)
+Map.addLayer(Chaco, null, "Chaco AOI", 0)
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan');
 Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count');
 
