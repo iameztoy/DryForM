@@ -718,7 +718,7 @@ function renderGraphics(coords) {
   map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
   map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
-  map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-7
+  map.addLayer(TotTF_c, VisParam9cl, "Total Tree/Forest", 0); //Range 0-7
 
   
   // Add new point to the Map.
