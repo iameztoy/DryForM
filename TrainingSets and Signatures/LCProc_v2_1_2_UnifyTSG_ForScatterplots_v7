@@ -253,21 +253,27 @@ var glc10Loss = glc10Loss.remap({
 });
 
 
-//7. GEDI => 5
+//7. GEDI => 5 Potapov
 
 var gedi5 = CH_GEDI.gte(5);
 var gedilt5 = CH_GEDI.lt(5);   
 
+//8. GEDI Lang  => 5 and < 5
+var gedi5L_gte5 = GEDI_Lang.gte(5);
+var gedi5Llt5 = GEDI_Lang.lt(5);
+var gedi5L_gte5 = gedi5L_gte5.unmask();
+var gedi5Llt5 = gedi5Llt5.unmask();  
+
 // n. Overall Trees 2020
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 //Stack Tree/Forest
 
 var dwM_Tree_r = dwM_Tree.rename(['DW_Trees']);
 var esri_Tree_r = esri_Tree.rename(['ESRI_Trees']);
-var esa_Tree_r = esri_Tree.rename(['ESA_Trees']);
+var esa_Tree_r = esa_Tree.rename(['ESA_Trees']);
 var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
 var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
