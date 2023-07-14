@@ -418,7 +418,7 @@ var s2Jan_dif = s2_JanSCSSc.subtract(s2_JanSCss);
 Map.addLayer(Chaco, null, "Chaco AOI", 0)
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan');
 Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count');
-Map.addLayer(s2Jan_dif, imgcount, "Diference")
+Map.addLayer(s2Jan_dif, imgcount, "Diference"); //Number of cloud-free pixels available to calculate the median
 
 
 
