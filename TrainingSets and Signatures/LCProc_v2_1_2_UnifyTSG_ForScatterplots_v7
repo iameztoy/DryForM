@@ -419,8 +419,7 @@ Map.addLayer(Chaco, null, "Chaco AOI", 0)
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan');
 Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count');
 Map.addLayer(s2Jan_dif, imgcount, "Diference"); //Number of cloud-free pixels available to calculate the median
-
-
+Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
 
 //var colcm = cm.toBands();
 
