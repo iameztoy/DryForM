@@ -700,6 +700,7 @@ function renderGraphics(coords) {
     map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
+  
   map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
