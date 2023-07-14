@@ -83,7 +83,7 @@ Map.addLayer(esri_Tree, {}, "ESRI", 0)
 Map.addLayer(glc10mForest, {}, "GLC", 0)
 Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0)
 Map.addLayer(HTC_2020, {}, "Hansen", 0)
-Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0))
+Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0)
 
 
 Export.image.toAsset({
