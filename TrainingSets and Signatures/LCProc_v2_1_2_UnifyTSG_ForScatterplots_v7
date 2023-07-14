@@ -392,17 +392,8 @@ var s2_OctSC = s2_Oct.map(add_cld_shdw_mask);
 var s2_NovSC = s2_Nov.map(add_cld_shdw_mask); 
 var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 
+print(s2_JanSC)
 
-
-function select_SC(sc_col) {
-  var sc = sc_col.select("cloudmask");
-  return sc_col;
-}
-
-
-
-var s2JanSC = s2_JanSC.map(s);
-print(s2_JanSC);
 
 
 
