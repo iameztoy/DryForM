@@ -376,11 +376,22 @@ var s2srMed_Oct = (s2_Oct.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(ad
 var s2srMed_Nov = (s2_Nov.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
 var s2srMed_Dec = (s2_Dec.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
 
+print(s2srMed_Jan)
 
-//S2 Clouds and Shadows per month
-var s2_sr_cld_col_eval = get_s2_sr_cld_col(AOI, START_DATE, END_DATE)
-var img = s2_sr_cld_col_eval.map(add_cld_shdw_mask)
-print(img)
+//S2 Clouds and Shadows per month (it is added in the previous step but added the median so it affects the outcome)
+
+var s2_JanSC = s2_Jan.map(add_cld_shdw_mask);
+var s2_FebSC = s2_Feb.map(add_cld_shdw_mask);
+var s2_MarSC = s2_Mar.map(add_cld_shdw_mask);
+var s2_AprSC = s2_Apr.map(add_cld_shdw_mask);
+var s2_MaySC = s2_May.map(add_cld_shdw_mask);
+var s2_JunSC = s2_Jun.map(add_cld_shdw_mask);
+var s2_JulSC = s2_Jul.map(add_cld_shdw_mask);
+var s2_AugSC = s2_Aug.map(add_cld_shdw_mask);
+var s2_SepSC = s2_Sep.map(add_cld_shdw_mask);
+var s2_OctSC = s2_Oct.map(add_cld_shdw_mask);
+var s2_NovSC = s2_Nov.map(add_cld_shdw_mask);
+var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 
 
 
@@ -785,14 +796,14 @@ Map.addLayer(TotTreeFor);
 
 
 
-/**
-var clouds = img.select('clouds').selfMask();
-var shadows = img.select('shadows').selfMask();
-var dark_pixels = img.select('dark_pixels').selfMask();
-var probability = img.select('probability');
-var cloudmask = img.select('cloudmask').selfMask();
-var cloud_transform = img.select('cloud_transform');
-**/
+
+var clouds = s2_Jan.select('clouds').selfMask();
+var shadows = s2_Jan.select('shadows').selfMask();
+var dark_pixels = s2_Jan.select('dark_pixels').selfMask();
+var probability = is2_Jan.select('probability');
+var cloudmask = s2_Jan.select('cloudmask').selfMask();
+var cloud_transform = s2_Jan.select('cloud_transform');
+
 
 
 
