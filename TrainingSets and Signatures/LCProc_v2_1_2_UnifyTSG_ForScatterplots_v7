@@ -30,7 +30,7 @@ var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania
 var bufsize = 1; //Buffer size for samples if run within the code
 
 var srt = '2020-01-01'; var end = '2021-01-01'; // For DW (Mode)
-var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; 
+var START_DATE = '2020-01-01'; var END_DATE = "2020-03-01"; 
 var CLOUD_FILTER = 30;
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
@@ -294,8 +294,8 @@ var allTFunique = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hans
 
 var ic_allTF = ee.ImageCollection.fromImages(allTF);
 var ic_allTFunique = ee.ImageCollection.fromImages(allTFunique);
-print(ic_allTF)
-print(ic_allTFunique)
+//print(ic_allTF)
+//print(ic_allTFunique)
 
 
 // n. Overall Shrub 2020
@@ -375,6 +375,14 @@ var s2srMed_Sep = (s2_Sep.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(ad
 var s2srMed_Oct = (s2_Oct.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
 var s2srMed_Nov = (s2_Nov.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
 var s2srMed_Dec = (s2_Dec.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
+
+
+//S2 Clouds and Shadows per month
+var s2_sr_cld_col_eval = get_s2_sr_cld_col(AOI, START_DATE, END_DATE)
+var img = s2_sr_cld_col_eval.map(add_cld_shdw_mask)
+print(img)
+
+
 
 
 
@@ -671,7 +679,7 @@ var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2
 
 // Wrap the single image in an ImageCollection for use in the zonalStats function.
 var col4stats = ee.ImageCollection([colcat]);
-print(col4stats)
+//print(col4stats)
 
 
 
@@ -767,12 +775,25 @@ Map.addLayer(Tanzania, null, "AOI")
  * The main idea is to stratify in 3 different zones: 1/ no tree/forest 2/transition zone 3/tree/forest predominance
  * https://developers.google.com/earth-engine/apidocs/ee-image-stratifiedsample
  * 
- * 1st reclassify TotTreeFor
+ * 1/ reclassify TotTreeFor
+ * 2/ I need to make sure that none of the samples fall within the Sentinel2 cloud/shadow masks
  * 
 
 **/
 
-Map.addLayer(TotTreeFor)
+Map.addLayer(TotTreeFor);
+
+
+
+/**
+var clouds = img.select('clouds').selfMask();
+var shadows = img.select('shadows').selfMask();
+var dark_pixels = img.select('dark_pixels').selfMask();
+var probability = img.select('probability');
+var cloudmask = img.select('cloudmask').selfMask();
+var cloud_transform = img.select('cloud_transform');
+**/
+
 
 
 
