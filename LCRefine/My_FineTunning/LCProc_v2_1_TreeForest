@@ -86,6 +86,7 @@ var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
 ////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
 
@@ -170,12 +171,15 @@ var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
 
 var gedi5 = CH_GEDI.gte(5);
 
+//8. GEDI Lang  => 5
+var gedi5L = GEDI_Lang.gte(5);
+
 
 // n. Overall Trees 2020
 
 var sumDE = esa_Tree.add(dwM_Tree).add(esri_Tree);
 var sumDEW = sumDE.add(wri_Tree).add(glc10Loss);
-var sumDEWs = sumDEW.add(HTC_2020).add(gedi5); 
+var sumDEWs = sumDEW.add(HTC_2020).add(gedi5).add(gedi5L); 
 var sumDEWs = sumDEWs.where(cropmask_UMD,0);
 var sumrec = sumDEWs.gte(1);
 
