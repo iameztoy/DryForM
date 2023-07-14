@@ -293,6 +293,9 @@ var VisParam5cl = {min: 0, max: 4, palette: [
 
 var VisParam8cl = {min: 0, max: 7, palette: [
     "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff"]};
+  
+var VisParam9cl = {min: 0, max: 8, palette: [
+    "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff", '339825'], opacity: 0.6}; //added one color more
 
 
 //Vector files
@@ -316,9 +319,11 @@ Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
 Map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
 //Map.addLayer(glc10mForest, {}, "GLC 10", 0);
 Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
-Map.addLayer(gedi5, {}, "GEDI => 5", 0);
-Map.addLayer(gedilt5, {}, "GEDI < 5", 0);
-Map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 1); //Range 0-7
+Map.addLayer(gedi5, {}, "GEDI  Potapov => 5", 0);
+Map.addLayer(gedilt5, {}, "GEDI Potapov < 5", 0);
+Map.addLayer(gedi5L_gte5_r, {}, "GEDI Lang => 5", 0);
+
+Map.addLayer(TotTF_c, VisParam9cl, "Total Tree/Forest", 1); //Range 0-7
 
 //Shrub/Scrub (Only Totals)
 Map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
@@ -540,13 +545,13 @@ var makeRow = function(color, name) {
 };
  
 //  Palette with the colors
-var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',];
+var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '339825'];
  
 // name of the legend
-var names = ["0", "1", "2", "3", "4", "5", "6", "7"];
+var names = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
  
 // Add color and and names
-for (var i = 0; i < 8; i++) {
+for (var i = 0; i < 9; i++) {
   legend.add(makeRow(palette[i], names[i]));
   }  
  
