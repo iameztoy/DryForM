@@ -26,6 +26,14 @@
  *  Added GEDI Lang Layer (For Total Tree count)
  *  Replaced GEDI Potapov by GEDI Lang | Subtraction to Grass and Shrub classes
  *  Error corrected for ESA_Tree (it was = ESRI_Tree while renaming)
+ * 
+ *    ###############
+ *    ## TODO
+ *    ###############
+ * 
+ * Need to adequate masks per layer coverage e.g. If I click wri outside its own Spatial coverage
+ * I currently get 0, it should be null
+ * 
  */
 
 
