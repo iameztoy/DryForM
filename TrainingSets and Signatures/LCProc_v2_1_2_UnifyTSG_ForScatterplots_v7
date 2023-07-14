@@ -29,8 +29,8 @@ var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
-var srt = '2020-01-01'; var end = '2021-01-10'; // For DW (Mode)
-var START_DATE = '2020-01-01'; var END_DATE = "2020-02-01"; 
+var srt = '2020-01-01'; var end = '2021-01-01'; // For DW (Mode)
+var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; 
 var CLOUD_FILTER = 30;
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
@@ -394,14 +394,20 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 
 //var s = s2_JanSC.toBands()
 
+var cm = s2_JanSC.select("cloudmask");
+var max = cm.max();
 
-function sel_sc(image) {
-  var sc = image.select("cloudmask");
-  return image;
-}
+print(s2_JanSC)
+print(cm)
+print(max)
 
-var s = s2_JanSC.map(sel_sc)
-print(s)
+Map.addLayer(max)
+//var colcm = cm.toBands();
+
+
+
+
+
 
 
 
