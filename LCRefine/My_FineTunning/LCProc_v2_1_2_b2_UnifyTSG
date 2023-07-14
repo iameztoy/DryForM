@@ -42,7 +42,7 @@ var AOIpl =
     Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    VisParam9cl = {"opacity":1,"bands":["Map"],"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff","f988f5"]};
+    VisParam9cl = {"opacity":1,"bands":["Map"],"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff","c514ff","339825"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //*Copied from and older file
 //------------------------------
