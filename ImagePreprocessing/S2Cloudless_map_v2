@@ -110,7 +110,7 @@ function apply_cld_shdw_mask(img) {
 }
 
 /**
- * Add NDVI band Sentinel-2
+ * Add Vegetation indexes / Sentinel-2
  */
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
