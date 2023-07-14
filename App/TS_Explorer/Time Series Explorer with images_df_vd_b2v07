@@ -1,5 +1,27 @@
 /**
- * @license
+ *
+ *    ###############
+ *    ## CHANGELOG
+ *    ###############
+ * 
+ * 2023-07-23
+ *  Added GEDI Lang Layer (For Total Tree count)
+ *  Replaced GEDI Potapov by GEDI Lang | Subtraction to Grass and Shrub classes
+ *  Error corrected for ESA_Tree (it was = ESRI_Tree while renaming)
+ * 
+ *    ###############
+ *    ## TODO
+ *    ###############
+ * 
+ *  1/ Need to adequate masks per layer coverage e.g. If I click wri outside its own Spatial coverage
+ *     I currently get 0, it should be null
+ * 
+ * 
+ *    ###############
+ *    ## @LICENSE
+ *    ###############
+ *  
+ *  
  * Copyright 2021-2023 Justin Braaten + Fine tuned/Modified and modules added by Iban Ameztoy (JRC S4/D1 - Started in 2022)
  * 
  * Process and combine land cover classes from different products (7) to compute a new layer by mixing forest and tree cover.
@@ -17,22 +39,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- *    ###############
- *    ## CHANGELOG
- *    ###############
- * 
- * 2023-07-23
- *  Added GEDI Lang Layer (For Total Tree count)
- *  Replaced GEDI Potapov by GEDI Lang | Subtraction to Grass and Shrub classes
- *  Error corrected for ESA_Tree (it was = ESRI_Tree while renaming)
- * 
- *    ###############
- *    ## TODO
- *    ###############
- * 
- * Need to adequate masks per layer coverage e.g. If I click wri outside its own Spatial coverage
- * I currently get 0, it should be null
  * 
  */
 
