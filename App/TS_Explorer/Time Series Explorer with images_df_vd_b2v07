@@ -786,7 +786,7 @@ function renderGraphics(coords) {
           scale: 10,
           xProperty: 'system:index'
         })
-        //.setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLC", "GEDI"])
+        //.setSeriesNames(["DW", "ESRI", "ESA",  "WRI", "HANSEN", "GLC", "GEDI Potapov", "GEDI Lang"])
         .setChartType('ScatterChart')
         .setOptions({
           title: 'Tree/Forest Presence/Absence',
