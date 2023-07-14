@@ -395,13 +395,10 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 //var s = s2_JanSC.toBands()
 
 var cm = s2_JanSC.select("cloudmask");
-var max = cm.max();
+var mos = cm.mosaic();
 
-print(s2_JanSC)
-print(cm)
-print(max)
 
-Map.addLayer(max)
+Map.addLayer(mos)
 //var colcm = cm.toBands();
 
 
