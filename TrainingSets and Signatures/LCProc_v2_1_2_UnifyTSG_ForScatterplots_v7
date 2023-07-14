@@ -811,50 +811,19 @@ Map.addLayer(Tanzania, null, "AOI")
 
 //------------------------
 /** Summer 2023
- * Test for stratified random sampling
+ * Test for stratified random sampling: https://developers.google.com/earth-engine/apidocs/ee-image-stratifiedsample
  * The main idea is to stratify in 3 different zones: 1/ no tree/forest 2/transition zone 3/tree/forest predominance
  * https://developers.google.com/earth-engine/apidocs/ee-image-stratifiedsample
  * 
  * 1/ reclassify TotTreeFor
  * 2/ I need to make sure that none of the samples fall within the Sentinel2 cloud/shadow masks
  * 
+ * 
+ * 
 
 **/
 
 
-
-
-/**
-
-var clouds = s2_Jan.select('clouds').selfMask();
-var shadows = s2_Jan.select('shadows').selfMask();
-var dark_pixels = s2_Jan.select('dark_pixels').selfMask();
-var probability = is2_Jan.select('probability');
-var cloudmask = s2_Jan.select('cloudmask').selfMask();
-var cloud_transform = s2_Jan.select('cloud_transform');
-
-//ADD LAYERS TO THE MAP.
-//Add original image layer
-Map.addLayer(img, {bands: ['B4', 'B3', 'B2'], min: 0, max: 2500}, 'Image')
-//Add clouds layer
-Map.addLayer(clouds, {palette: '74fffc'}, 'CLOUDS')
-//Add cloud shadows layer
-Map.addLayer(shadows, {palette: '0a0cff'}, 'SHADOWS')
-//Add dark pixels layer
-Map.addLayer(dark_pixels, {palette: 'ffc227'}, 'DARK_PIXELS')
-//Add cloud probability layer 
-Map.addLayer(probability, {min: 0, max: 100}, 'PROBABILITY (cloud)')
-//Add cloud mask layer
-Map.addLayer(cloudmask, {palette: 'ff550c'}, 'CLOUD MASK')
-//Add cloud transform layer
-Map.addLayer(cloud_transform, {'min': 0, 'max': 1, 'palette': ['white', 'black']}, 'CLOUD TRANSFORM')
-
-//Add masked image layer
-Map.addLayer(masked_img, {bands: ['B4', 'B3', 'B2'], min: 0, max: 2500}, 'Masked Image')
-
-
-
-*/
 
 
 
