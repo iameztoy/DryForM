@@ -18,8 +18,9 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 // AOI of interest and samples in Assets 
 
 // Modifications compared to working v.6:
-// Error corrected for ESA and ESRI in rename (also corrected in previous versions)
+// Error corrected for ESA and ESRI in rename (also corrected in previous versions) it was only affecting the graph, not the layer
 // Added GEDI Lang and added in Total Tree/Forest - For grass/shrub Potapov replaced by Lang
+// minor changes may happen in grass/shrub as a consequence of using GEDI Lang for <5m subtraction (not significant)
 
 
 //--------------
