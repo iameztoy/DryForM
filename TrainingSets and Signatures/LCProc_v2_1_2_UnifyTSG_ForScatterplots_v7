@@ -408,8 +408,12 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 
 //var s = s2_JanSC.toBands()
 
-var cm = s2_JanSC.select("cloudmask");
-var cloudmask = cm.sum();
+var s2_JanSCs = s2_JanSC.select("cloudmask");
+var s2_JanSCss = s2_JanSCs.sum();
+
+
+
+
 
 Map.addLayer(cloudmask, cloudcount, 'CLOUD MASK');
 
