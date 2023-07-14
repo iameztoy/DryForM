@@ -759,9 +759,17 @@ Map.addLayer(Tanzania, null, "AOI")
 */
 
 //------------------------
-// Summer 2023
-// Test for stratified random sampling
-// The main idea is to stratify in 3 different zones: 1/ no tree/forest 2/transition zone 3/tree/forest predominance
+/** Summer 2023
+ * Test for stratified random sampling
+ * The main idea is to stratify in 3 different zones: 1/ no tree/forest 2/transition zone 3/tree/forest predominance
+ * https://developers.google.com/earth-engine/apidocs/ee-image-stratifiedsample
+ * 
+ * 
+ * 
+
+**/
+
+var 
 
 
 
