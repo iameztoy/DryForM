@@ -8,7 +8,20 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.494896433334105, -13.33268193684789],
+          [-60.494896433334105, -17.80803809714306],
+          [-54.232689402084105, -17.80803809714306],
+          [-54.232689402084105, -13.33268193684789]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -25,7 +38,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania
+var AOI = geometry; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -395,10 +408,12 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 //var s = s2_JanSC.toBands()
 
 var cm = s2_JanSC.select("cloudmask");
-var mos = cm.mosaic();
+var cloudmask = cm.sum();
+
+Map.addLayer(cloudmask, {palette: 'ff550c'}, 'CLOUD MASK');
 
 
-Map.addLayer(mos)
+
 //var colcm = cm.toBands();
 
 
