@@ -112,9 +112,9 @@ var glc10m_grass = glc10m.eq(30);
 var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
 
 
-//5. GEDI <= 5
+//5. GEDI <= 5 (changed from Potapov to Lang)
 
-var gedilt5 = CH_GEDI.lt(5);     
+var gedilt5 = GEDI_Lang.lt(5);     
 
 
 // n. Overall Shrub 2020
