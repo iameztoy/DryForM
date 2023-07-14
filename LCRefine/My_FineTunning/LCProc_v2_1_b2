@@ -1,0 +1,411 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var AOIpl = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-50.94287682792137, -26.05429547289401],
+          [-50.94287682792137, -27.063997751970174],
+          [-49.17407799979637, -27.063997751970174],
+          [-49.17407799979637, -26.05429547289401]]], null, false),
+    AOIpt = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    ee.Geometry.Point([-50.36060143729637, -26.620432304959333]),
+    cliptest = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-61.43237241315697, -25.63709687947577],
+          [-61.43237241315697, -26.049284488877042],
+          [-60.84117063093041, -26.049284488877042],
+          [-60.84117063093041, -25.63709687947577]]], null, false),
+    dswsVisParam = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff"]},
+    pois = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.MultiPoint(
+        [[24.187193992609796, -4.4869702092285575],
+         [23.794739799900103, -5.194746813105823],
+         [37.58327916365244, -5.591799745027464],
+         [3.859078101309401, 11.17342485789545]]),
+    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//*Copied from and older file
+//------------------------------
+//
+// IAA 2019 Process and combine land cover classes from different product to get a new layer by mixing forest, tree cover and woodland + probably associated
+// transition zones. The idea is to extract tiles that will be further refined and used in the frame of semantic segmentation procedures
+
+//preliminary AOIpl and AOIpt is only for testing purposes
+
+//idea from https://www.mdpi.com/2072-4292/14/16/4101: 
+//DW 72% versus reported 74%; WC 65% versus reported 74%; Esri 75% versus 85%. 
+//We note that it is also possible to use all three LULC products in combination by 
+//creating some form of majority vote or weighted average.  
+//Me: we could control a bit better whether to focus on omission or commission error
+//for normalization see: https://gis.stackexchange.com/questions/313394/normalization-in-google-earth-engine
+
+//DW 0.73
+//WC 0.70
+//ESRI 0.80
+//Hansen? 0.8
+
+//2020 baseline: need also to mitigate the impact (outweighs) of  number of datasets used per pixel;
+//The maximum score we get is a sum of the number of products used, so to mitigate this issue
+//Check negative values of Hansen tree cover (I get some -1 values). To be further checked but:
+//it is probably because we are subtracting a loss to the tree cover when this was not a tree in 2000
+
+// DONE //Need to remove all about esawc2020
+// DONE //Add From GLC10 https://gee-community-catalog.org/projects/glc10/?h=glc10
+
+
+
+//--------------
+// Datasets
+//
+
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+
+//var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //v100 also available
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
+
+// GEDI CH 2019 
+
+
+
+//--------------
+// VARIABLES GENERAL
+
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+//--------------
+// PROCESSING
+
+// 0. WorldCover 2020
+//var WC2020Forest = WC2020.eq(10);
+
+// 1. Dynamic World
+
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_shrub = dwMode.eq(5).rename(['Shrubs']);
+
+// 2. ESRI LULC 2020
+
+var esri_aoi = esri_lulc2020.mosaic(); 
+var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
+var esri_shrub = esri_aoi.eq(7).rename(['shrub']);
+
+// 3. ESA World Cover 2020
+
+var esa_Tree = esawc2020.eq(10); // Tree 10, shrubland 20
+var esa_shrub = esawc2020.eq(20);
+
+// 4. WRI Tree Cover 2020
+
+var wrimax = TC_wri.max();
+var wri80 = wrimax.eq(80);
+var wri90 = wrimax.eq(90);
+var wri100 = wrimax.eq(100);
+var wri_Tree3 = wri80.add(wri90).add(wri100); //outcome ranges between 1 and 3
+var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
+var wri_Tree = wri_Treeu.gte(1);
+
+// 5. GFC 2001-2021
+
+var treeCover = gfcImage.select(['treecover2000']);
+var treeCover10 = treeCover.gte(10);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var HTC_2020 = treeCover10.subtract(lossb2020);
+
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var HTC_2020 = HTC_2020.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
+// 6. GLC10 and 6.1 Hansen Loss (2018-2020)
+
+var glc10m = GLC10.mosaic();
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+
+var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
+var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
+
+//7. GEDI => 5
+
+var gedi5 = CH_GEDI.gte(5);
+
+//8. GEDI Lang  => 5
+var gedi5L = GEDI_Lang.gte(5);
+
+
+// n. Overall Trees 2020
+
+var sumDE = esa_Tree.add(dwM_Tree).add(esri_Tree);
+var sumDEW = sumDE.add(wri_Tree).add(glc10Loss);
+var sumDEWs = sumDEW.add(HTC_2020).add(gedi5).add(gedi5L);
+var sumDEWs = sumDEWs.where(cropmask_UMD,0);
+var sumrec = sumDEWs.gte(1);
+
+// n. Overall Shrub 2020
+
+var sumshr = dwM_shrub.add(esri_shrub).add(esa_shrub);
+var sumshrrec = sumshr.gte(1);
+
+
+// Overall Tree + Shrub 1 = shrub or tree 2 = shrub and tree 0 = other class
+var trsh = sumrec.add(sumshrrec);
+
+//Select mixed trsh = 2. Mixed spectral response Trees/Shrub
+var trshsel = trsh.eq(2);
+
+//Need to remove value 2 (combination of Trees/Shrubs from the layers of 1) Treens and 2) Shrub))
+var treemcomb = sumrec.subtract(trshsel);  //Overall Trees - (trees + shrub)
+var shrubmcomb = sumshrrec.subtract(trshsel); //Overall Shrubs - (trees + shrub)
+
+//Reclassify and Combine
+var trees = treemcomb.add(9);
+var shrubs = shrubmcomb.add(19);
+var trsh = trshsel.add(29);
+
+var final = treemcomb.add(shrubmcomb).add(trshsel);
+
+//Countries or Polygons of Interest
+
+var ctr = ["Brazil"];  //["Brazil", "Bolivia", "Paraguay", "Uruguay", "Argentina"]; //["Tanzania"]; 
+var rgn = ["Europe", "Africa", "SW Asia"];
+
+// Define mask to clip.
+var mask = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017')
+  .filter(ee.Filter.inList('country_na', ctr));
+  //.filter(ee.Filter.inList('wld_rgn', rgn));   
+  
+//----------------
+// SAMPLING
+//
+var region = Chaco;
+
+// Generate x random points with the region.
+var randomPoints = ee.FeatureCollection.randomPoints(
+    {region: region, points: 500, seed: 0, maxError: 1});
+
+
+
+var bounding_box_func = function(feature) {
+    var intermediate_buffer = feature.buffer(125);  // buffer radius, half your box width in m
+    var intermediate_box = intermediate_buffer.bounds(); // Draw a bounding box around the circle
+       return(intermediate_box); // Return the bounding box
+      };
+      
+// Apply function
+var Zones = randomPoints.map(bounding_box_func);
+
+//Add Unique ID to each feature so it can be used to give a name while exporting to Drive
+var utils = require('users/parevalo_bu/gee-ccdc-tools:ccdcUtilities/api');
+Zones = utils.Classification.assignIds(Zones, 'ID');
+
+
+
+
+//--------------
+//VISUALIZATION
+
+var dwVisParams = {min: 0, max: 8, palette: [
+    '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
+    '#C4281B', '#A59B8F', '#B39FE1']};
+
+
+Map.addLayer(mask, {}, "Selected courntries", 0);
+Map.addLayer(Caatinga, {}, "Caatinga", 0);
+Map.addLayer(Cerrado, {}, "Cerrado", 0);
+Map.addLayer(Chaco, {}, "Chaco", 0);
+
+//Map.addLayer(RefineStep1, {}, "Forest Refine Step1", 0);
+
+Map.addLayer(dwl, dwVisParams, 'Dynamic World', 0);
+Map.addLayer(esri_lulc2020, {}, "ESRI", 0);
+Map.addLayer(dwM_Tree, {}, "DW Trees", 0);
+Map.addLayer(dwM_shrub, {}, "DW Shrub", 0);
+Map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
+Map.addLayer(esri_shrub, {}, "ESRI Shrub", 0);
+Map.addLayer(esa_Tree, {}, "ESA Tree", 0);
+Map.addLayer(esa_shrub, {}, "ESA Shrub", 0);
+Map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
+Map.addLayer(wri80, {}, "WRI 80", 0);
+Map.addLayer(wri90, {}, "WRI 90", 0);
+Map.addLayer(wri100, {}, "WRI 100", 0);
+Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
+Map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
+Map.addLayer(glc10mForest, {}, "GLC 10", 0);
+Map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
+
+
+Map.addLayer(sumDE, {}, "sumDE", 0);
+Map.addLayer(sumDEW, {}, "sumDEW", 0);
+Map.addLayer(sumDEWs, dswsVisParam, "sumDEWs", 0);
+Map.addLayer(sumrec, {}, "sum Reclass", 0);
+Map.addLayer(sumshr, {}, "Sum Shrub", 0);
+
+Map.addLayer(treemcomb, {}, "Trees", 0);
+Map.addLayer(shrubmcomb, {}, "Shrubs", 0);
+Map.addLayer(trshsel, {}, "Trees/Shrub 1+1", 0);
+
+Map.addLayer(final, {}, "Final", 0);
+
+Map.addLayer(randomPoints, {color: 'red'}, 'Random points');
+Map.addLayer(Zones, {color: '#FECA1E', fillColor: '#4c4cff'}, "Bounding boxes");
+
+
+
+
+/*#####################################
+#######################################
+#######################################*/
+
+
+
+/*
+
+//Export 
+Export.image.toDrive({
+    image: sumDEW,
+    description: 'TrainTrees',
+    region: AOIpl,
+    scale: 10,
+    maxPixels: 1e13
+  });
+  
+Export.image.toAsset({
+    image: sumrec,
+    description: 'TreeCombo Brazil',
+    assetId: 'projects/ee-dryforestia/assets/sumrec',
+    region: mask,
+    scale: 10,
+    maxPixels: 1e13
+  });
+
+Export.image.toAsset({
+    image: sumDEWs,
+    description: 'SumTCF_7cl',
+    assetId: 'SumTCF_7cl',
+    scale: 10,
+    maxPixels: 1e13
+  });
+  
+
+  
+var featlist = Zones.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("attributeName");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: sumrec,
+    description: name+disS.toString(),
+    folder: "TrainingSets",
+    fileNamePrefix: name+disS.toString(),
+    region: feat, //.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+
+*/
+
+
+// For testing purposes: (to be deleted)
+
+/*
+
+//Appying a mode filter
+
+var clip = sumDEWs.clip(cliptest)
+Map.addLayer(clip, {}, "clip", 0);
+
+
+var mask = clip.gte(0) //there are negative values. We are extracting looss where originally (2000) was not forest
+var clip = clip.updateMask(mask)
+print(clip)
+
+//Map.addLayer(clip2, {}, "clip masked", 0);
+Map.addLayer(treeCover, {}, "Hansen >10", 0);
+
+var smooth = clip2.focalMode({
+    radius: 3,
+    kernelType: "square",
+    units: "pixels",
+    iterations: false,
+//	kernel:null,
+})
+//Map.addLayer(smooth)
+Map.addLayer(HTC_2020)
+
+*/
+
+var chips250 = sumDEWs.clip(Zones)
+Map.addLayer(chips250)
+var projection = chips250.projection().getInfo();
+
+// Export the image, specifying the CRS, transform, and region.
+Export.image.toDrive({
+  image: chips250,
+  description: 'Exprort_Training',
+  folder: "TrainingSets",
+  scale: 30,
+  maxPixels:1e13,
+  region: Chaco
+});
+
+// Export the FeatureCollection to a KML file.
+Export.table.toDrive({
+  collection: Zones,
+  description:'ExportBoundingBox',
+  folder: "TrainingSets",
+  fileFormat: 'SHP'
+});
+
+
+Export.table.toDrive({
+  collection: randomPoints,
+  description:'ExportRP_centroid',
+  folder: "TrainingSets",
+  fileFormat: 'SHP'
+});
+
