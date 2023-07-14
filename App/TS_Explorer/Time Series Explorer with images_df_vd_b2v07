@@ -48,6 +48,7 @@ var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 var validCount = ee.Image("projects/hardy-tenure-383607/assets/CountValid_7cl");
+var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
 ////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
 
@@ -697,6 +698,9 @@ function renderGraphics(coords) {
     map.layers().forEach(function(el) {
     map.layers().remove(el);
   });
+  map.layers().forEach(function(el) {
+    map.layers().remove(el);
+  });
 
 
   
@@ -704,8 +708,10 @@ function renderGraphics(coords) {
   map.addLayer(validCount, vcVis, "Valid observations", 0)
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
-  map.addLayer(gedi5, {}, "GEDI => 5", 0);
-  map.addLayer(gedilt5, {}, "GEDI < 5", 0);   
+  map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0);
+  map.addLayer(gedilt5, {}, "GEDI Potapov < 5", 0);  
+  map.addLayer(gedi5L_gte5 , {}, "GEDI Lang => 5", 0);
+  map.addLayer(gedi5Llt5 , {}, "GEDI Lang < 5", 0);
   map.addLayer(dwM_Tree, {}, "DW Trees", 0);
   map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
   map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
@@ -713,6 +719,7 @@ function renderGraphics(coords) {
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
   map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
   map.addLayer(TotTF_c, VisParam8cl, "Total Tree/Forest", 0); //Range 0-7
+
   
   // Add new point to the Map.
   map.addLayer(aoiCircle, {color: AOI_COLOR});
@@ -995,14 +1002,21 @@ var glc10Loss = glc10Loss.remap({
 });
 
 
-//7. GEDI => 5
+//7. GEDI => 5 Potapov
 
 var gedi5 = CH_GEDI.gte(5);
 var gedilt5 = CH_GEDI.lt(5);   
 
+//8. GEDI Lang  => 5 and < 5
+var gedi5L_gte5 = GEDI_Lang.gte(5);
+var gedi5Llt5 = GEDI_Lang.lt(5);
+var gedi5L_gte5 = gedi5L_gte5.unmask();
+var gedi5Llt5 = gedi5Llt5.unmask();
+
+
 // n. Overall Trees 2020
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 //Stack Tree/Forest
@@ -1014,28 +1028,31 @@ var wri_Tree_r = wri_Tree.rename(['WRI_Trees']);
 var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_gte5']);
+var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5']);
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 
 //Image Collection of all Tree/Forest bands
 
-var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r]);
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r, TotTC_c_r]);
 //print(allFT)
-//system:index: 0, 1, 2, 3, 4, 5, 6 // 7 is for total count
+//system:index: 0, 1, 2, 3, 4, 5, 6, 7, 8
 
 var ic_allTF = ee.ImageCollection.fromImages(allTF);
+print(ic_allTF);
+
 
 
 // n. Overall Shrub 2020
 
 var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
-var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
+var TotalShrub2020s = TotalShrub2020.subtract(gedi5Llt5 );
 
 
 // n. Overall Grass 2020
 
 var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
-var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
+var TotalGrass2020s = TotalGrass2020.subtract(gedi5Llt5);
 
 //Remap 
 
@@ -1074,20 +1091,26 @@ var VisParam5cl = {min: 0, max: 4, palette: [
 var VisParam8cl = {min: 0, max: 7, palette: [
     "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff"], opacity: 0.6};
     
+var VisParam9cl = {min: 0, max: 8, palette: [
+    "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff", '339825'], opacity: 0.6}; //added one color more
+    
 //  Palette with legend colors
-var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',];
+var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '339825'];
  
 // name of the legend
-var names = ["0", "1", "2", "3", "4", "5", "6", "7"];
+var names8 = ["0", "1", "2", "3", "4", "5", "6", "7"];
+var names9 = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
+
+
  
 // Add color and names to legend
-for (var i = 0; i < 8; i++) {
-  legend.add(makeRow(palette[i], names[i]));
+for (var i = 0; i < 9; i++) {
+  legend.add(makeRow(palette[i], names9[i]));
   }  
 
 // Palette for Valid Count
-var vcVis = {min: 0, max: 7, palette: [
-    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff']};
+var vcVis = {min: 0, max: 8, palette: [
+    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '339825']};
 
 
 // #############################################################################
