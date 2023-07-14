@@ -1,0 +1,170 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var AOIpl = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-50.94287682792137, -26.05429547289401],
+          [-50.94287682792137, -27.063997751970174],
+          [-49.17407799979637, -27.063997751970174],
+          [-49.17407799979637, -26.05429547289401]]], null, false),
+    AOIpt = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    ee.Geometry.Point([-50.36060143729637, -26.620432304959333]),
+    Caatinga = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Caatinga"),
+    Cerrado = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Cerrado"),
+    Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco"),
+    cliptest = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-61.43237241315697, -25.63709687947577],
+          [-61.43237241315697, -26.049284488877042],
+          [-60.84117063093041, -26.049284488877042],
+          [-60.84117063093041, -25.63709687947577]]], null, false),
+    dswsVisParam = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c0c","ffa41b","ffec62","9eff6c","58f7ff","6267ff"]},
+    pois = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.MultiPoint(
+        [[24.187193992609796, -4.4869702092285575],
+         [23.794739799900103, -5.194746813105823],
+         [37.58327916365244, -5.591799745027464],
+         [3.859078101309401, 11.17342485789545]]),
+    imageVisParam = {"opacity":1,"bands":["remapped"],"palette":["000000","ff0606","ffae42","fffd26","74ff26"]},
+    imVP8cl = {"opacity":1,"bands":["remapped"],"palette":["000000","ff0000","ffa732","ffe81e","7cff32","81fff2","3499ff","2214ff","fd22ff"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//*Copied from and older file
+//------------------------------
+//
+//  Continuation of LCProc_v2_1_TreeForest version for Shrubs/Scrub and Grass. 
+// Overall maximum value 4
+
+
+//--------------
+// Datasets
+//
+
+var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+
+//var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //v100 also available
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
+
+
+//--------------
+// VARIABLES GENERAL
+
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+//--------------
+// PROCESSING
+
+// 0. WorldCover 2020
+//var WC2020Forest = WC2020.eq(10);
+
+// 1. Dynamic World
+
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+  
+var dwM_shrub = dwMode.eq(5).rename(['Shrubs_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_grass = dwMode.eq(2).rename(['Grass_dw']); //Trees 1, shrub_and_scrub 5, Grass 2
+
+// 2. ESRI LULC 2020
+
+var esri_aoi = esri_lulc2020.mosaic(); 
+var esri_shrub = esri_aoi.eq(7).rename(['Shrub_esri']);  // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2??
+var esri_grass = esri_aoi.eq(4).rename(['Grass_esri']); 
+
+// 3. ESA World Cover 2020
+
+var esa_shrub = esawc2020.eq(20);  // Tree 10, shrubland 20, grassland 30
+var esa_grass = esawc2020.eq(30);  
+
+
+// 4. GLC10 and 6.1 Hansen Loss (2018-2020)
+
+var glc10m = GLC10.mosaic();
+var glc10m_grass = glc10m.eq(30);
+var glc10m_shrub = glc10m.eq(40); //Grass 30, Shrub	40
+
+
+//5. GEDI <= 5
+
+var gedilt5 = CH_GEDI.lt(5);     
+
+
+// n. Overall Shrub 2020
+
+var TotalShrub2020 =  dwM_shrub.add(esri_shrub).add(esa_shrub).add(glc10m_shrub);
+var TotalShrub2020s = TotalShrub2020.subtract(gedilt5);
+
+
+// n. Overall Grass 2020
+
+var TotalGrass2020 = dwM_grass.add(esri_grass).add(esa_grass).add(glc10m_grass);
+var TotalGrass2020s = TotalGrass2020.subtract(gedilt5);
+
+//Remap
+
+var fromListsg = [-1, 0, 1, 2, 3, 4];
+var toListsg =   [0, 0, 1, 2, 3, 4];
+
+var TotalShrub2020sr = TotalShrub2020s.remap({
+  from: fromListsg,
+  to: toListsg,
+  defaultValue: 0,
+  //bandName: 'Total Shrub 2020'
+});
+
+var TotalGrass2020sr = TotalGrass2020s.remap({
+  from: fromListsg,
+  to: toListsg,
+  defaultValue: 0,
+  //bandName: 'Total Grass 2020'
+});
+
+var TotalShrub2020sr = TotalShrub2020sr.unmask();
+var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+//Total shrub/scrub + Grass
+var totalSG = TotalShrub2020sr.add(TotalGrass2020sr)
+
+
+//VISUALIZATION
+
+Map.addLayer(Caatinga, {}, "Caatinga", 0);
+Map.addLayer(Cerrado, {}, "Cerrado", 0);
+Map.addLayer(Chaco, {}, "Chaco", 0);
+
+Map.addLayer(TotalGrass2020sr, imageVisParam, "Total Grass 2020", 0); //Range 0-4
+Map.addLayer(TotalShrub2020sr, imageVisParam, "Total Shrub 2020", 0); //Range 0-4
+Map.addLayer(totalSG, imVP8cl, "Total Shrub/Scrub and Grass", 0) //Range 0-8
+
+
+
+
+
