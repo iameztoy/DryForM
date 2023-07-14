@@ -25,6 +25,7 @@
  *  2/ Add more Vegetation Indexes (e.g. MSAVI-2)
  *  3/ Add Planet (NICFI)
  *  4/ Possibility to choose buffer?
+ *  5/ Possibilty to add majority threshold | Total valid observations should be taken into account
  * 
  * 
  *    ###############
