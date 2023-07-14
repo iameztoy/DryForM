@@ -17,6 +17,15 @@
  *     I currently get 0, it should be null
  *  2/ Valid count layer should be changed with new calculation, meanwhile I added + 1 to the previous
  * 
+ *    ###############
+ *    ## IDEAS
+ *    ###############
+ * 
+ *  1/ Add possibility to add Sentinel-2 for a given date range (2020 or reduced version)
+ *  2/ Add more Vegetation Indexes (e.g. MSAVI-2)
+ *  3/ Add Planet (NICFI)
+ *  4/ Possibility to choose buffer?
+ * 
  * 
  *    ###############
  *    ## @LICENSE
