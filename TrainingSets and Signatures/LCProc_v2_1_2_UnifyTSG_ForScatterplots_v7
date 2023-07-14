@@ -289,7 +289,7 @@ var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r, TotTC_c_r]);
 //print(allFT)
-//system:index: 0, 1, 2, 3, 4, 5, 6, 7, 8
+//system:index: 0, 1, 2, 3, 4, 5, 6, 7, 8 //Total can be removed for posterior calculations
 
 var ic_allTF = ee.ImageCollection.fromImages(allTF);
 print(ic_allTF)
@@ -382,7 +382,7 @@ print(s2srMed_Oct), print(s2srMed_Nov), print(s2srMed_Dec);
 */
 
 //--------------
-//VISUALIZATION
+//VISUALIZATION (1 class more added with GEDI Lang)
 
 var dwVisParams = {min: 0, max: 8, palette: [
     '#419BDF', '#397D49', '#88B053', '#7A87C6', '#E49635', '#DFC35A',
@@ -652,7 +652,7 @@ function zonalStats(ic, fc, params) {
 // **********************************************
 // Example to calculate Zonal Statistics (done before summer break 2023) V7 contains modidifications 
 
-// Import the MERIT global elevation dataset.
+// Import the MERIT global elevation dataset. (elevation not included in the first round of calculations)
 var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 
