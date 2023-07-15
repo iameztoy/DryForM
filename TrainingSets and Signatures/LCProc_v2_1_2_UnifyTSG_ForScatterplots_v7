@@ -509,7 +509,7 @@ Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-fre
 Map.addLayer(s2_Jan_dif_r, null, "Jan Remap", 0);
 
 
-Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows");
+Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
 
 
