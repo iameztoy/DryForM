@@ -496,14 +496,12 @@ var sum12clip = cor_scr_sum12.clip(AOI);
 //print(col_scr)
 
 
-Map.addLayer(Chaco, null, "Chaco AOI", 0);
+Map.addLayer(AOI, null, "AOI", 0);
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan', 0);
 Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count', 0);
 Map.addLayer(s2_Jan_dif, imgcount, "Diference"); //Number of cloud-free pixels available to calculate the median
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
 Map.addLayer(s2_Jan_dif_r, null, "Jan Remap", 0);
-
-
 Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
 
