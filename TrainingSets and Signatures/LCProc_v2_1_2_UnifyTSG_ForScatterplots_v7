@@ -391,8 +391,9 @@ var s2srMed_Oct = (s2_Oct.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(ad
 var s2srMed_Nov = (s2_Nov.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
 var s2srMed_Dec = (s2_Dec.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
 
-
+//------------------------------------------------------
 //S2 Clouds and Shadows per month (it is added in the previous step but added the median so it affects the outcome)
+//To be optimized
 
 var s2_JanSC = s2_Jan.map(add_cld_shdw_mask); 
 var s2_FebSC = s2_Feb.map(add_cld_shdw_mask); 
@@ -413,6 +414,7 @@ var s2_JanSCs = s2_JanSC.select("cloudmask");
 var s2_JanSCss = s2_JanSCs.sum();
 var s2_JanSCSSc = s2_JanSCs.count();
 var s2Jan_dif = s2_JanSCSSc.subtract(s2_JanSCss);
+
 
 
 Map.addLayer(Chaco, null, "Chaco AOI", 0)
