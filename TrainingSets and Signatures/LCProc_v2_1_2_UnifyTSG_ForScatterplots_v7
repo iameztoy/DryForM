@@ -917,6 +917,7 @@ Export.image.toAsset({
  * 
  * 1/ reclassify TotTreeFor (3classes)
  * 2/ I need to make sure that none of the samples fall within the Sentinel2 cloud/shadow masks
+ *    Chaco Sum12 exported to assets - Need to mask TotTreeFor after it is been reclassified
  * 
  * 
  * 
