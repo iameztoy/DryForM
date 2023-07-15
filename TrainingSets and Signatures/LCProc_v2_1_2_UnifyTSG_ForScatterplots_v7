@@ -894,9 +894,6 @@ Export.table.toDrive({
   folder: "zonalstats"
 });
 
-**/
-
-
 Export.image.toAsset({
   image: sum12clip,
   description: 'sum12',
@@ -906,6 +903,11 @@ Export.image.toAsset({
   //crsTransform: [30, 0, -2493045, 0, -30, 3310005],
   //crs: 'EPSG:5070'
 });
+
+**/
+
+
+
 
 //------------------------
 /** Summer 2023
