@@ -489,10 +489,8 @@ var scr = ee.List([s2_Jan_dif_r, s2_Feb_dif_r, s2_Mar_dif_r, s2_Apr_dif_r, s2_Ma
 var col_scr = ee.ImageCollection.fromImages(scr);
 var col_scr_sum = col_scr.sum();
 var mask_sum = col_scr_sum.eq(12);
-var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum)
-
-var sum12clip = cor_scr_sum12.clip(Chaco)
-
+var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum);
+var sum12clip = cor_scr_sum12.clip(AOI);
 
 
 //print(col_scr)
