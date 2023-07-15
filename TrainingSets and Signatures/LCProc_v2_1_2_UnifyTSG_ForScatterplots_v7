@@ -498,6 +498,10 @@ var col_scr_sum = col_scr.sum();
 var mask_sum = col_scr_sum.eq(12);
 var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum)
 
+var sum12clip = cor_scr_sum12.clip(Chaco)
+
+
+
 //print(col_scr)
 
 
@@ -890,8 +894,19 @@ Export.table.toDrive({
   folder: "zonalstats"
 });
 
+**/
 
 
+Export.image.toAsset({
+  image: sum12clip,
+  description: 'sum12',
+  assetId: 'sum12_months',  // <> modify these
+  region: Chaco
+  //crsTransform: [30, 0, -2493045, 0, -30, 3310005],
+  //crs: 'EPSG:5070'
+});
+
+/**
 //--------------------------
 //  ADD LAYERS
 
@@ -918,17 +933,6 @@ Map.addLayer(Tanzania, null, "AOI")
  * 
 
 **/
-
-
-
-
-
-
-
-
-
-
-
 
 
 
