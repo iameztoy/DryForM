@@ -398,6 +398,7 @@ var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
 
 //var s = s2_JanSC.toBands()
 
+// Select each cloud mask and sum + count | Then subtract count - sum 
 
 var s2_JanSCs = s2_JanSC.select("cloudmask");
 var s2_JanSCss = s2_JanSCs.sum();
@@ -459,7 +460,7 @@ var s2_DecSCss = s2_DecSCs.sum();
 var s2_DecSCSSc = s2_DecSCs.count();
 var s2_Dec_dif = s2_DecSCSSc.subtract(s2_DecSCss);
 
-
+//Remap the differences such that each cloud/shadow is zero, the rest 1
 var from_dif = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 var to_dif =   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
@@ -480,9 +481,13 @@ var s2_Dec_dif_r = s2_Dec_dif.remap({from: from_dif, to: to_dif, defaultValue: 0
 var scr = ee.List([s2_Jan_dif_r, s2_Feb_dif_r, s2_Mar_dif_r, s2_Apr_dif_r, s2_May_dif_r, s2_Jun_dif_r,
                        s2_Jul_dif_r, s2_Aug_dif_r, s2_Sep_dif_r, s2_Oct_dif_r, s2_Nov_dif_r, s2_Dec_dif_r]);
 
+// Sum all months remaped and select only those with value = 12
+// The objective is to get pixels with 12 valid observations; one per month. 
+// These will be used in the stratified random sampling. 
+// The objective is to have 12 valid observations per year to train the model
+
 var col_scr = ee.ImageCollection.fromImages(scr);
 var col_scr_sum = col_scr.sum();
-
 var mask_sum = col_scr_sum.eq(12);
 var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum)
 
