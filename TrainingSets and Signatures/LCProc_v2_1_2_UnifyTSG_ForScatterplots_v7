@@ -817,7 +817,7 @@ Map.addLayer(Tanzania, null, "AOI")
  * The main idea is to stratify in 3 different zones: 1/ no tree/forest 2/transition zone 3/tree/forest predominance
  * https://developers.google.com/earth-engine/apidocs/ee-image-stratifiedsample
  * 
- * 1/ reclassify TotTreeFor
+ * 1/ reclassify TotTreeFor (3classes)
  * 2/ I need to make sure that none of the samples fall within the Sentinel2 cloud/shadow masks
  * 
  * 
