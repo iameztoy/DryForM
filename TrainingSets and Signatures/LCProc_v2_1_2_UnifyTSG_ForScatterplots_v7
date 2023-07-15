@@ -22,7 +22,8 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
           [-54.232689402084105, -17.80803809714306],
           [-54.232689402084105, -13.33268193684789]]], null, false),
     cloudsum = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","26f7ff","79ffc5","7bff83","fffd56","ffae56","ff5a57","ff0000"]},
-    imgcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","ff0f0c","ffaa75","ffef95","fff557","afff5f","18ff5c","3aefff"]};
+    imgcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","ff0f0c","ffaa75","ffef95","fff557","afff5f","18ff5c","3aefff"]},
+    clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -471,18 +472,46 @@ var s2_DecSCSSc = s2_DecSCs.count();
 var s2_Dec_dif = s2_DecSCSSc.subtract(s2_DecSCss);
 
 
-var allsums = ee.List([]);
+var from_dif = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+var to_dif =   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
-/*
+
+var s2_Jan_dif_r = s2_Jan_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Feb_dif_r = s2_Feb_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Mar_dif_r = s2_Mar_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Apr_dif_r = s2_Apr_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_May_dif_r = s2_May_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Jun_dif_r = s2_Jun_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Jul_dif_r = s2_Jul_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Aug_dif_r = s2_Aug_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Sep_dif_r = s2_Sep_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Oct_dif_r = s2_Oct_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Nov_dif_r = s2_Nov_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_Dec_dif_r = s2_Dec_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+
+var scr = ee.List([s2_Jan_dif_r, s2_Feb_dif_r, s2_Mar_dif_r, s2_Apr_dif_r, s2_May_dif_r, s2_Jun_dif_r,
+                       s2_Jul_dif_r, s2_Aug_dif_r, s2_Sep_dif_r, s2_Oct_dif_r, s2_Nov_dif_r, s2_Dec_dif_r]);
+
+var col_scr = ee.ImageCollection.fromImages(scr);
+var col_scr_sum = col_scr.sum();
+
+//print(col_scr)
+
+
 Map.addLayer(Chaco, null, "Chaco AOI", 0)
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan');
 Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count');
 Map.addLayer(s2_Jan_dif, imgcount, "Diference"); //Number of cloud-free pixels available to calculate the median
 Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
+Map.addLayer(s2_Jan_dif_r, null, "Jan Remap", 1)
 
-print(s2_JanSCs)
-print(s2_JanSCss)
-*/
+
+Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows");
+
+
+
+
+
 
 //var colcm = cm.toBands();
 
