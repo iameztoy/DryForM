@@ -1,0 +1,19 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.Point([-62.70550725821895, -21.37010440861666]),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    imageVisParam = {"opacity":1,"bands":["B8"],"max":8,"palette":["ff310c","ffc07b","fffd2e","c0ff65","0aff0d","5bfffd","2a81ff","f06dff"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var srt = '2020-01-01'; var end = '2020-02-01';
+var CLOUD_FILTER = 100
+
+var s2_sr_col = (ee.ImageCollection('COPERNICUS/S2_SR')
+        .filterBounds(chaco)
+        .filterDate(srt, end)
+        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
+
+var count = s2_sr_col.count()
+var select = count.select("B8")
+print(select)
+
+Map.addLayer(select,imageVisParam)
+Map.addLayer(chaco)
