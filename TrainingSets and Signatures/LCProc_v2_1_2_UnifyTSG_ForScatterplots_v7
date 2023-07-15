@@ -526,7 +526,8 @@ Map.setOptions("SATELLITE");
 
 //----------------------------------------------------------------------
 //PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums | 
-// Threshold can be changed to 5 after including GEDI Lang
+// Threshold can be changed to 5 after including GEDI Lang              |
+//----------------------------------------------------------------------|
 
 var thr_forest = 4
 var thr_gs = 2 // threshold for grass and shrub
