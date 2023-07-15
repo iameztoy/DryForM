@@ -45,7 +45,7 @@ var bufsize = 1; //Buffer size for samples if run within the code
 
 var srt = '2020-01-01'; var end = '2021-01-01'; // For DW (Mode)
 var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; // Filter for S-2
-var CLOUD_FILTER = 70;
+var CLOUD_FILTER = 80;  // 70 does not cover all for Cerrado, Chaco, Caatinga (otherwise need to individualize)
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
 var CLD_PRJ_DIST = 1;
