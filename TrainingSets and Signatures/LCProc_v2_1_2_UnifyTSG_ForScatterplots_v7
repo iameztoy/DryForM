@@ -506,14 +506,7 @@ Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
 
 
-
-
-
-
 //var colcm = cm.toBands();
-
-
-
 
 /*
 print(s2srMed_Jan), print(s2srMed_Feb), print(s2srMed_Mar), print(s2srMed_Apr), print(s2srMed_May),
@@ -532,7 +525,8 @@ Map.setOptions("SATELLITE");
 
 
 //----------------------------------------------------------------------
-//PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums
+//PROCESSING AREAS OF INTEREST | FOR VALUES => 4 for Total product sums | 
+// Threshold can be changed to 5 after including GEDI Lang
 
 var thr_forest = 4
 var thr_gs = 2 // threshold for grass and shrub
