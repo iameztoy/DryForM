@@ -18,8 +18,8 @@ var count = s2.count()
 var select = count.select("B8")
 print(select)
 
-Map.addLayer(select,imageVisParam)
-Map.addLayer(AOI)
+Map.addLayer(select,imageVisParam, "Sentinel-2 Count")
+Map.addLayer(AOI, null, "AOI")
 
 
  
