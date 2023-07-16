@@ -937,6 +937,24 @@ Export.image.toAsset({
   //crs: 'EPSG:5070'
 });
 
+//Example export 64x64 with projection
+
+var export_options = {
+  'fileDimensions': "64x64",
+  'shardSize': 64
+};
+
+Export.image.toDrive({
+  image: img,
+  description: 'tiles',
+  fileNamePrefix: 't64',
+  scale: 10,
+  crs: img.projection().crs().getInfo(),
+  fileFormat: 'GeoTIFF',
+  region: geometry.buffer(10000).bounds(1),
+  formatOptions: export_options  
+})  
+
 **/
 
 Export.image.toAsset({
