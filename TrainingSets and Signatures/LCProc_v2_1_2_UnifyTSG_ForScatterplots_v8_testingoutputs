@@ -517,7 +517,7 @@ Map.addLayer(s2_Jan_dif, imgcount, "Diference"); //Number of cloud-free pixels a
 Map.addLayer(s2_Jan_dif_r, null, "Jan Remap", 0);
 Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
-Map.addLayer(sum12_chaco)
+Map.addLayer(sum12_chaco, null, "Sum 12 Chaco Final")
 
 
 //var colcm = cm.toBands();
