@@ -497,18 +497,18 @@ var sum12clip = cor_scr_sum12.clip(AOI);
 //print(col_scr)
 
 
-Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan', 0);
-Map.addLayer(s2_FebSCss, cloudsum, 'Cloud Sum Feb', 0);
-Map.addLayer(s2_MarSCss, cloudsum, 'Cloud Sum Mar', 0);
-Map.addLayer(s2_AprSCss, cloudsum, 'Cloud Sum Apr', 0);
-Map.addLayer(s2_MaySCss, cloudsum, 'Cloud Sum May', 0);
-Map.addLayer(s2_JunSCss, cloudsum, 'Cloud Sum Jun', 0);
-Map.addLayer(s2_JulSCss, cloudsum, 'Cloud Sum Jul', 0);
-Map.addLayer(s2_AugSCss, cloudsum, 'Cloud Sum Aug', 0);
-Map.addLayer(s2_SepSCss, cloudsum, 'Cloud Sum Sep', 0);
-Map.addLayer(s2_OctSCss, cloudsum, 'Cloud Sum Oct', 0);
-Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0);
-Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0);
+Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan', 0); Map.addLayer(s2_Jan_dif_r, cloudsum, 'Cloud Sum Jan dif', 0);
+Map.addLayer(s2_FebSCss, cloudsum, 'Cloud Sum Feb', 0); Map.addLayer(s2_Feb_dif_r, cloudsum, 'Cloud Sum Feb dif', 0);
+Map.addLayer(s2_MarSCss, cloudsum, 'Cloud Sum Mar', 0); Map.addLayer(s2_Mar_dif_r, cloudsum, 'Cloud Sum Mar dif', 0);
+Map.addLayer(s2_AprSCss, cloudsum, 'Cloud Sum Apr', 0); Map.addLayer(s2_Apr_dif_r, cloudsum, 'Cloud Sum Apr dif', 0);
+Map.addLayer(s2_MaySCss, cloudsum, 'Cloud Sum May', 0); Map.addLayer(s2_May_dif_r, cloudsum, 'Cloud Sum May dif', 0);
+Map.addLayer(s2_JunSCss, cloudsum, 'Cloud Sum Jun', 0); Map.addLayer(s2_Jun_dif_r, cloudsum, 'Cloud Sum Jun dif', 0);
+Map.addLayer(s2_JulSCss, cloudsum, 'Cloud Sum Jul', 0); Map.addLayer(s2_Jul_dif_r, cloudsum, 'Cloud Sum Jul dif', 0);
+Map.addLayer(s2_AugSCss, cloudsum, 'Cloud Sum Aug', 0); Map.addLayer(s2_Aug_dif_r, cloudsum, 'Cloud Sum Aug dif', 0);
+Map.addLayer(s2_SepSCss, cloudsum, 'Cloud Sum Sep', 0); Map.addLayer(s2_Sep_dif_r, cloudsum, 'Cloud Sum Sep dif', 0);
+Map.addLayer(s2_OctSCss, cloudsum, 'Cloud Sum Oct', 0); Map.addLayer(s2_Oct_dif_r, cloudsum, 'Cloud Sum Oct dif', 0);
+Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0); Map.addLayer(s2_Nov_dif_r, cloudsum, 'Cloud Sum Nov dif', 0);
+Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0); Map.addLayer(s2_Dec_dif_r, cloudsum, 'Cloud Sum Dec dif', 0);
 
 Map.addLayer(AOI, null, "AOI", 0);
 Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count', 0);
