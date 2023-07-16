@@ -6,7 +6,7 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     EstanciaFaroMoro = /* color: #d63000 */ee.Geometry.Point([-60.05361742519548, -21.716583693241255]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var srt = '2020-12-01'; var end = '2021-01-01'; 
-// Estancia Faro Moro S2 Intersect. 
+// Example Estancia Faro Moro S2 Intersect. 
 // Count: 15, 18, 17, 20, 24, 14, 19, 18, 17, 18, 19, 16
 var CLOUD_FILTER = 80; // 70 does not cover all
 
@@ -20,6 +20,10 @@ var s2 = (ee.ImageCollection('COPERNICUS/S2_SR')
 var count = s2.count()
 var select = count.select("B8")
 print(select)
+
+var red = s2.median();
+var bands = ['B8', 'B4', 'B3'];
+Map.addLayer(red, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
 
 Map.addLayer(select,imageVisParam, "Sentinel-2 Count")
 Map.addLayer(AOI, null, "AOI")
