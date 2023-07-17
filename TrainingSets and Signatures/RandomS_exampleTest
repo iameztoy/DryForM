@@ -38,7 +38,7 @@ var pts = cross.stratifiedSample({
 var bufsize = 250
 var samplesIn = pts.map(bufferPoints(bufsize, true));
 
-var projection = cross.projection().getInfo();
+var projection = image4.projection().getInfo();
 print(projection)
 
 //print(samplesIn)
