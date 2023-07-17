@@ -38,7 +38,7 @@ var pts = cross.stratifiedSample({
 	classBand: "Trees",
 //	region:null,
 	scale: 10,
-  projection: "EPSG:32720",
+  projection: "EPSG:32720", //EPGS:4326
 //	seed:false,
 //	classValues:null,
 //	classPoints:null,
