@@ -1,5 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Chaco = ee.FeatureCollection("users/iameztoy/dryform/eco_zone_Chaco");
+var Chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Define variables
 var AOI = Chaco
