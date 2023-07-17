@@ -3,14 +3,15 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     imageVisParam = {"opacity":1,"bands":["B8"],"max":8,"palette":["ff310c","ffc07b","fffd2e","c0ff65","0aff0d","5bfffd","2a81ff","f06dff"]},
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
-    EstanciaEriana = /* color: #d63000 */ee.Geometry.Point([-61.326942237670885, -21.412422503967058]);
+    EstanciaEriana = /* color: #d63000 */ee.Geometry.Point([-61.326942237670885, -21.412422503967058]),
+    ZonadeRioVerde = /* color: #50d62b */ee.Geometry.Point([-59.175143579885315, -23.19118088147772]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var srt = '2020-06-01'; var end = '2020-07-01'; 
+var srt = '2020-10-01'; var end = '2020-11-01'; 
 // Example Estancia Faro Moro S2 Intersect. 
 // Count: 15, 18, 17, 20, 24, 14, 19, 18, 17, 18, 19, 16
 var CLOUD_FILTER = 80; // 70 does not cover all
 
-var AOI = EstanciaEriana
+var AOI = ZonadeRioVerde
 var AOI_all = chaco.merge(cerrado).merge(caatinga)
 var AOI_clip = chaco
 
