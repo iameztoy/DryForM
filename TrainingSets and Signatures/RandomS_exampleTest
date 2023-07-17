@@ -45,3 +45,6 @@ print(projection)
 
 Map.addLayer(samplesIn, {color: "red"}, "STRS")
 
+//crs: projection.crs,
+//crsTransform: projection.transform,
+
