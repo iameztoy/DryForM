@@ -12,7 +12,6 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     cloudsum = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","26f7ff","79ffc5","7bff83","fffd56","ffae56","ff5a57","ff0000"]},
     imgcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","ff0f0c","ffaa75","ffef95","fff557","afff5f","18ff5c","3aefff"]},
     clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]},
-    sum12_chaco = ee.Image("projects/hardy-tenure-383607/assets/sum12_cloudShadows_Chaco"),
     testAOI = 
     /* color: #d63000 */
     /* shown: false */
@@ -509,11 +508,12 @@ var scr = ee.List([s2_Jan_dif_r, s2_Feb_dif_r, s2_Mar_dif_r, s2_Apr_dif_r, s2_Ma
 // These will be used in the stratified random sampling. 
 // The objective is to have 12 valid observations per year to train the model
 
-var col_scr = ee.ImageCollection.fromImages(scr);
-var col_scr_sum = col_scr.sum();
-var mask_sum = col_scr_sum.gte(12);
-var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum);
+var col_scr = ee.ImageCollection.fromImages(scr); //Make a collection with all the remapped monthly bands (each is 0 or 1)
+var col_scr_sum = col_scr.sum(); //Get the sum of all montly scores (sum 12 = a cloud/shadow free pixel per month is available)
+var mask_sum = col_scr_sum.eq(12); // Get only the pixels with score 12
+var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum); //Mask any pixel with score <12
 var sum12clip = cor_scr_sum12.clip(AOI);
+
 
 
 //print(col_scr)
@@ -533,8 +533,6 @@ Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0);
 Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0); 
 */
 
-var selfM = s2_Jan_dif.selfMask()
-Map.addLayer(selfM, cloudsum, "selfMask Test", 1)
 
 Map.addLayer(s2_Jan_dif, cloudsum, 'Cloud Sum Jan dif', 0);
 Map.addLayer(s2_Feb_dif, cloudsum, 'Cloud Sum Feb dif', 0);
@@ -557,7 +555,7 @@ Map.addLayer(s2_Jan_dif, imgcount, "Diference"); //Number of cloud-free pixels a
 Map.addLayer(s2_Jan_dif_r, null, "Jan Remap", 0);
 Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
-Map.addLayer(sum12_chaco, null, "Sum 12 Chaco Final")
+
 
 
 //var colcm = cm.toBands();
