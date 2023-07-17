@@ -502,7 +502,9 @@ var col_scr = ee.ImageCollection.fromImages(scr); //Make a collection with all t
 var col_scr_sum = col_scr.sum(); //Get the sum of all montly scores (sum 12 = a cloud/shadow free pixel per month is available)
 var mask_sum = col_scr_sum.eq(12); // Get only the pixels with score 12
 var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum); //Mask any pixel with score <12
-var sum12clip = cor_scr_sum12.clip(AOI);
+var sum12clip = (cor_scr_sum12.divide(cor_scr_sum12)).clip(AOI);
+
+
 
 
 
