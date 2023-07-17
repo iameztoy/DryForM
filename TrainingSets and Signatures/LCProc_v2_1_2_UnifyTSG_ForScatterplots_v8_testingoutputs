@@ -48,7 +48,7 @@ var bufsize = 1; //Buffer size for samples if run within the code
 var srt = '2020-01-01'; var end = '2021-01-01'; // For DW (Mode)
 var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; // Filter for S-2
 var CLOUD_FILTER = 80;  // 70 does not cover all for Cerrado, Chaco, Caatinga (otherwise need to individualize)
-var CLD_PRB_THRESH = 30; //Original 30
+var CLD_PRB_THRESH = 20; //Original 30 | Adding lower threshold masks more clouds but risk of commission
 var NIR_DRK_THRESH = 0.15; //Original 0.15
 var CLD_PRJ_DIST = 1;
 var BUFFER = 50;
@@ -141,8 +141,11 @@ function add_shadow_bands(img) {
         .mask()
         .rename('cloud_transform'));
 
-    // # Identify the intersection of dark pixels with cloud shadow projection.
-    var shadows = cld_proj.multiply(dark_pixels).rename('shadows');
+    // # Identify the intersection of dark pixels with cloud shadow projection. 
+    // IA: What if we add instead of intersect? It will not affect forests in any case.
+    //var shadows = cld_proj.multiply(dark_pixels).rename('shadows'); //original
+    
+    var shadows = cld_proj.eq(1).or(dark_pixels.eq(1)).rename('shadows');
 
     // # Add dark pixels, cloud projection, and identified shadows as image bands.
     return img.addBands(ee.Image([dark_pixels, cld_proj, shadows]));
@@ -556,8 +559,8 @@ var s2 = (ee.ImageCollection('COPERNICUS/S2_SR')
         .filterDate(s, e)
         .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
         
-var s2med = s2.median()
-var bands = ['B8', 'B4', 'B3'];
+var s2med = s2.min()
+var bands = ['B8', 'B8', 'B8'];
 Map.addLayer(s2med, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
 
 Map.addLayer(s2_JunSCss, cloudsum, 'Cloud Sum June', 1);
