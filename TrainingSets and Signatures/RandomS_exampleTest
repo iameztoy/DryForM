@@ -21,7 +21,7 @@ function bufferPoints(radius, bounds) {
 
 
 var pts = cross.stratifiedSample({
-	numPoints: 1000,
+	numPoints: 1500,
 	classBand: "Trees",
 //	region:null,
 	scale: 10,
