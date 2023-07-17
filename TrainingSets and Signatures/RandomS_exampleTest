@@ -2,8 +2,19 @@
 var image = ee.Image("projects/hardy-tenure-383607/assets/sum12_CloudShadow_Chaco"),
     image2 = ee.Image("projects/hardy-tenure-383607/assets/CountValid_7cl"),
     image3 = ee.Image("projects/hardy-tenure-383607/assets/TC_BRABOLPARURUARG"),
-    image4 = ee.Image("projects/hardy-tenure-383607/assets/12months_CloudShadows/sum12_CloudShadow_Chaco");
+    image4 = ee.Image("projects/hardy-tenure-383607/assets/12months_CloudShadows/sum12_CloudShadow_Chaco"),
+    geometry = /* color: #d63000 */ee.Geometry.Point([-63.36826125203669, -28.218686102480216]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var s2 = (ee.ImageCollection('COPERNICUS/S2_SR') // S2_SR_HARMONIZED
+    .filterBounds(geometry)
+    .filterDate("2020-05-01", "2020-06-01")
+    .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', 30)));
+    
+var s2m = s2.median();
+var projs2m = s2m.projection().getInfo()
+print(projs2m)
+print(s2)
+
 Map.addLayer(image3, null, "Tree Cover")
 Map.addLayer(image4, null, "Mask")
 
@@ -26,7 +37,7 @@ var pts = cross.stratifiedSample({
 	classBand: "Trees",
 //	region:null,
 	scale: 10,
-  projection: "EPSG:4326",
+  projection: "EPSG:32720",
 //	seed:false,
 //	classValues:null,
 //	classPoints:null,
@@ -39,21 +50,21 @@ var pts = cross.stratifiedSample({
 var bufsize = 250
 var samplesIn = pts.map(bufferPoints(bufsize, true));
 
-//var projection = image4.projection().getInfo();
-//print(projection)
 
-//print(samplesIn)
-
-Map.addLayer(samplesIn, {color: "red"}, "STRS")
 
 var si = samplesIn.geometry()
 
 var covgrid = si.coveringGrid({
-		proj: "EPSG:4326",
+		proj: "EPSG:32720",
   	scale: 10
 })
 
+var bands = ['B8', 'B4', 'B3'];
+Map.addLayer(s2m, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
+Map.addLayer(samplesIn, {color: "red"}, "STRS")
 Map.addLayer(covgrid, null, "covGrid")
+
+
 //crs: projection.crs,
 //crsTransform: projection.transform,
 
