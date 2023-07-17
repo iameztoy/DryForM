@@ -1,0 +1,44 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var image = ee.Image("projects/hardy-tenure-383607/assets/sum12_CloudShadow_Chaco"),
+    image2 = ee.Image("projects/hardy-tenure-383607/assets/CountValid_7cl"),
+    image3 = ee.Image("projects/hardy-tenure-383607/assets/TC_BRABOLPARURUARG"),
+    image4 = ee.Image("projects/hardy-tenure-383607/assets/12months_CloudShadows/sum12_CloudShadow_Chaco");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(image3, null, "Tree Cover")
+Map.addLayer(image4, null, "Mask")
+
+var cross = image3.multiply(image4).int8()
+print(cross)
+Map.addLayer(cross, null, "Cross")
+
+function bufferPoints(radius, bounds) {
+  return function(pt) {
+    pt = ee.Feature(pt);
+    return bounds ? pt.buffer(radius).bounds() : pt.buffer(radius);
+  };
+}
+
+
+
+var pts = cross.stratifiedSample({
+	numPoints: 1000,
+	classBand: "Trees",
+//	region:null,
+	scale: 10,
+  projection: "EPSG:4326",
+//	seed:false,
+//	classValues:null,
+//	classPoints:null,
+	dropNulls:true,
+//	tileScale:true,
+	geometries:true,
+})
+
+
+var bufsize = 250
+var samplesIn = pts.map(bufferPoints(bufsize, true));
+
+print(samplesIn)
+
+Map.addLayer(samplesIn, {color: "red"}, "STRS")
+
