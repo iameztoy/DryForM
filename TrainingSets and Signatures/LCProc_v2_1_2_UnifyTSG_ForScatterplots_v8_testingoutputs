@@ -547,6 +547,19 @@ Map.addLayer(s2_Oct_dif, cloudsum, 'Cloud Sum Oct dif', 0);
 Map.addLayer(s2_Nov_dif, cloudsum, 'Cloud Sum Nov dif', 0);
 Map.addLayer(s2_Dec_dif, cloudsum, 'Cloud Sum Dec dif', 0);
 */
+
+//Test site: Estancia Eriana Paraguay
+var s = "2020-06-01"
+var e = "2020-07-01"
+var s2 = (ee.ImageCollection('COPERNICUS/S2_SR')
+        .filterBounds(AOI)
+        .filterDate(s, e)
+        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
+        
+var s2med = s2.median()
+var bands = ['B8', 'B4', 'B3'];
+Map.addLayer(s2med, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
+
 Map.addLayer(s2_JunSCss, cloudsum, 'Cloud Sum June', 1);
 Map.addLayer(s2_JunSCSSc, cloudsum, 'Cloud Count June', 1);
 Map.addLayer(s2_Jun_dif, cloudsum, 'Cloud Sum Jun dif', 1);
