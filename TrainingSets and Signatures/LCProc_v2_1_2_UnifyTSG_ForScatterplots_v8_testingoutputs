@@ -131,9 +131,9 @@ function add_shadow_bands(img) {
 
     // # Identify the intersection of dark pixels with cloud shadow projection. 
     // IA: What if we add instead of intersect? It will not affect forests in any case.
-    //var shadows = cld_proj.multiply(dark_pixels).rename('shadows'); //original
+    var shadows = cld_proj.multiply(dark_pixels).rename('shadows'); //original
     
-    var shadows = cld_proj.eq(1).or(dark_pixels.eq(1)).rename('shadows');
+    //var shadows = cld_proj.eq(1).or(dark_pixels.eq(1)).rename('shadows');
 
     // # Add dark pixels, cloud projection, and identified shadows as image bands.
     return img.addBands(ee.Image([dark_pixels, cld_proj, shadows]));
