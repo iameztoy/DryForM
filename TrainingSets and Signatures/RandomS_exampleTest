@@ -8,6 +8,7 @@ Map.addLayer(image3, null, "Tree Cover")
 Map.addLayer(image4, null, "Mask")
 
 var cross = image3.multiply(image4).int8()
+
 print(cross)
 Map.addLayer(cross, null, "Cross")
 
@@ -38,13 +39,21 @@ var pts = cross.stratifiedSample({
 var bufsize = 250
 var samplesIn = pts.map(bufferPoints(bufsize, true));
 
-var projection = image4.projection().getInfo();
-print(projection)
+//var projection = image4.projection().getInfo();
+//print(projection)
 
 //print(samplesIn)
 
 Map.addLayer(samplesIn, {color: "red"}, "STRS")
 
+var si = samplesIn.geometry()
+
+var covgrid = si.coveringGrid({
+		proj: "EPSG:4326",
+  	scale: 10
+})
+
+Map.addLayer(covgrid, null, "covGrid")
 //crs: projection.crs,
 //crsTransform: projection.transform,
 
