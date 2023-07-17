@@ -508,7 +508,7 @@ var sum12clip = cor_scr_sum12.clip(AOI);
 
 //print(col_scr)
 
-/*
+
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan', 0); 
 Map.addLayer(s2_FebSCss, cloudsum, 'Cloud Sum Feb', 0); 
 Map.addLayer(s2_MarSCss, cloudsum, 'Cloud Sum Mar', 0); 
@@ -521,9 +521,9 @@ Map.addLayer(s2_SepSCss, cloudsum, 'Cloud Sum Sep', 0);
 Map.addLayer(s2_OctSCss, cloudsum, 'Cloud Sum Oct', 0);
 Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0); 
 Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0); 
-*/
 
-/*
+
+
 Map.addLayer(s2_Jan_dif, cloudsum, 'Cloud Sum Jan dif', 0);
 Map.addLayer(s2_Feb_dif, cloudsum, 'Cloud Sum Feb dif', 0);
 Map.addLayer(s2_Mar_dif, cloudsum, 'Cloud Sum Mar dif', 0);
@@ -536,8 +536,11 @@ Map.addLayer(s2_Sep_dif, cloudsum, 'Cloud Sum Sep dif', 0);
 Map.addLayer(s2_Oct_dif, cloudsum, 'Cloud Sum Oct dif', 0);
 Map.addLayer(s2_Nov_dif, cloudsum, 'Cloud Sum Nov dif', 0);
 Map.addLayer(s2_Dec_dif, cloudsum, 'Cloud Sum Dec dif', 0);
-*/
 
+Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
+Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
+
+/*
 //Test site: Estancia Eriana Paraguay
 var s = "2020-06-01"
 var e = "2020-07-01"
@@ -554,9 +557,7 @@ Map.addLayer(s2_JunSCSSc, cloudsum, 'Cloud Count June', 1);
 Map.addLayer(s2_Jun_dif, cloudsum, 'Cloud Sum Jun dif', 1);
 //Map.addLayer(AOI, null, "AOI", 0);
 //Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
-Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
-Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
-
+*/
 
 
 //var colcm = cm.toBands();
