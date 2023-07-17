@@ -23,8 +23,8 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     ee.Geometry.Polygon(
         [[[-62.46801827159624, -21.32877741760886],
           [-62.46801827159624, -21.941514386450592],
-          [-61.19085762706499, -21.941514386450592],
-          [-61.19085762706499, -21.32877741760886]]], null, false);
+          [-60.56189034190874, -21.941514386450592],
+          [-60.56189034190874, -21.32877741760886]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -533,7 +533,7 @@ Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0);
 Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0); 
 */
 
-
+/*
 Map.addLayer(s2_Jan_dif, cloudsum, 'Cloud Sum Jan dif', 0);
 Map.addLayer(s2_Feb_dif, cloudsum, 'Cloud Sum Feb dif', 0);
 Map.addLayer(s2_Mar_dif, cloudsum, 'Cloud Sum Mar dif', 0);
@@ -546,13 +546,16 @@ Map.addLayer(s2_Sep_dif, cloudsum, 'Cloud Sum Sep dif', 0);
 Map.addLayer(s2_Oct_dif, cloudsum, 'Cloud Sum Oct dif', 0);
 Map.addLayer(s2_Nov_dif, cloudsum, 'Cloud Sum Nov dif', 0);
 Map.addLayer(s2_Dec_dif, cloudsum, 'Cloud Sum Dec dif', 0);
+*/
+Map.addLayer(s2_JunSCss, cloudsum, 'Cloud Sum June', 1);
+Map.addLayer(s2_JunSCSSc, cloudsum, 'Cloud Count June', 1);
+Map.addLayer(s2_Jun_dif, cloudsum, 'Cloud Sum Jun dif', 1);
 
 
-Map.addLayer(AOI, null, "AOI", 0);
-Map.addLayer(s2_JanSCSSc, imgcount, 'Image Count', 0);
-Map.addLayer(s2_Jan_dif, imgcount, "Diference"); //Number of cloud-free pixels available to calculate the median
+
+
+//Map.addLayer(AOI, null, "AOI", 0);
 //Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
-Map.addLayer(s2_Jan_dif_r, null, "Jan Remap", 0);
 Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
 
