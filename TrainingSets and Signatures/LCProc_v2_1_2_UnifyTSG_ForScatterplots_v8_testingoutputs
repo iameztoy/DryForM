@@ -12,7 +12,20 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     cloudsum = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","26f7ff","79ffc5","7bff83","fffd56","ffae56","ff5a57","ff0000"]},
     imgcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","ff0f0c","ffaa75","ffef95","fff557","afff5f","18ff5c","3aefff"]},
     clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]},
-    sum12_chaco = ee.Image("projects/hardy-tenure-383607/assets/sum12_cloudShadows_Chaco");
+    sum12_chaco = ee.Image("projects/hardy-tenure-383607/assets/sum12_cloudShadows_Chaco"),
+    testAOI = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-62.46801827159624, -21.32877741760886],
+          [-62.46801827159624, -21.941514386450592],
+          [-61.19085762706499, -21.941514386450592],
+          [-61.19085762706499, -21.32877741760886]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -29,7 +42,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Chaco; //Chaco, Cerrado, Caatinga, Tanzania
+var AOI = testAOI; //Chaco, Cerrado, Caatinga, Tanzania
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -462,8 +475,14 @@ var s2_DecSCSSc = s2_DecSCs.count();
 var s2_Dec_dif = s2_DecSCSSc.subtract(s2_DecSCss);
 
 //Remap the differences such that each cloud/shadow is zero, the rest 1
-var from_dif = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
-var to_dif =   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+var from_dif = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+                11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+                21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 
+                31, 32, 33, 34, 35, 36, 37, 38, 39, 40];
+var to_dif =   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 
 var s2_Jan_dif_r = s2_Jan_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
@@ -514,6 +533,8 @@ Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0);
 Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0); 
 */
 
+var selfM = s2_Jan_dif.selfMask()
+Map.addLayer(selfM, cloudsum, "selfMask Test", 1)
 
 Map.addLayer(s2_Jan_dif, cloudsum, 'Cloud Sum Jan dif', 0);
 Map.addLayer(s2_Feb_dif, cloudsum, 'Cloud Sum Feb dif', 0);
