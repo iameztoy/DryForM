@@ -546,17 +546,12 @@ var s2 = (ee.ImageCollection('COPERNICUS/S2_SR')
         .filterDate(s, e)
         .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
         
-var s2med = s2.min()
+var s2med = s2.median()
 var bands = ['B8', 'B4', 'B3'];
 Map.addLayer(s2med, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
-
 Map.addLayer(s2_JunSCss, cloudsum, 'Cloud Sum June', 1);
 Map.addLayer(s2_JunSCSSc, cloudsum, 'Cloud Count June', 1);
 Map.addLayer(s2_Jun_dif, cloudsum, 'Cloud Sum Jun dif', 1);
-
-
-
-
 //Map.addLayer(AOI, null, "AOI", 0);
 //Map.addLayer(s2srMed_Jan, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-free mosaic January', 0);
 Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
