@@ -22,7 +22,7 @@ print(s2)
 var cross = image3.multiply(image4).int8()
 
 print(cross)
-Map.addLayer(cross, null, "Cross")
+
 
 function bufferPoints(radius, bounds) {
   return function(pt) {
@@ -60,6 +60,7 @@ var covgrid = si.coveringGrid({
   	scale: 10
 })
 
+Map.addLayer(cross, null, "Cross", 0)
 Map.addLayer(image3, null, "Tree Cover", 0)
 Map.addLayer(image4, null, "Mask", 0)
 var bands = ['B4', 'B3', 'B2'];
