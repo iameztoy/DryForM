@@ -14,14 +14,14 @@ var s2 = (ee.ImageCollection('COPERNICUS/S2_SR') // S2_SR_HARMONIZED
     .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', 30)));
     
 var s2m = s2.median();
-var projs2m = s2m.projection().getInfo()
-print(projs2m)
-print(s2)
+//var projs2m = s2m.projection().getInfo()
+//print(projs2m)
+//print(s2)
 
 
 var cross = image3.multiply(image4).int8()
 
-print(cross)
+//print(cross)
 
 
 function bufferPoints(radius, bounds) {
