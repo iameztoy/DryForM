@@ -522,7 +522,18 @@ Map.addLayer(s2_OctSCss, cloudsum, 'Cloud Sum Oct', 0);
 Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0); 
 Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0); 
 
-
+Map.addLayer(s2_JanSCSSc, cloudsum, 'Cloud Count Jan', 0); 
+Map.addLayer(s2_FebSCSSc, cloudsum, 'Cloud Count Feb', 0); 
+Map.addLayer(s2_MarSCSSc, cloudsum, 'Cloud Count Mar', 0); 
+Map.addLayer(s2_AprSCSSc, cloudsum, 'Cloud Count Apr', 0); 
+Map.addLayer(s2_MaySCSSc, cloudsum, 'Cloud Count May', 0); 
+Map.addLayer(s2_JunSCSSc, cloudsum, 'Cloud Count Jun', 0); 
+Map.addLayer(s2_JulSCSSc, cloudsum, 'Cloud Count Jul', 0); 
+Map.addLayer(s2_AugSCSSc, cloudsum, 'Cloud Count Aug', 0); 
+Map.addLayer(s2_SepSCSSc, cloudsum, 'Cloud Count Sep', 0); 
+Map.addLayer(s2_OctSCSSc, cloudsum, 'Cloud Count Oct', 0);
+Map.addLayer(s2_NovSCSSc, cloudsum, 'Cloud Count Nov', 0); 
+Map.addLayer(s2_DecSCSSc, cloudsum, 'Cloud Count Dec', 0); 
 
 Map.addLayer(s2_Jan_dif, cloudsum, 'Cloud Sum Jan dif', 0);
 Map.addLayer(s2_Feb_dif, cloudsum, 'Cloud Sum Feb dif', 0);
@@ -539,6 +550,7 @@ Map.addLayer(s2_Dec_dif, cloudsum, 'Cloud Sum Dec dif', 0);
 
 Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
+Map.addLayer(AOI, null, "AOI", 0);
 
 /*
 //Test site: Estancia Eriana Paraguay
