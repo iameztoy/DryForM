@@ -11,8 +11,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     cloudsum = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","26f7ff","79ffc5","7bff83","fffd56","ffae56","ff5a57","ff0000"]},
     imgcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","ff0f0c","ffaa75","ffef95","fff557","afff5f","18ff5c","3aefff"]},
-    clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]},
-    geometry = /* color: #98ff00 */ee.Geometry.Point([-59.17950086286792, -23.15772913876962]);
+    clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
