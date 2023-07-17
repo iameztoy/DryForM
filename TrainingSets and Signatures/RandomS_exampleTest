@@ -3,7 +3,10 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/sum12_CloudShadow_Chac
     image2 = ee.Image("projects/hardy-tenure-383607/assets/CountValid_7cl"),
     image3 = ee.Image("projects/hardy-tenure-383607/assets/TC_BRABOLPARURUARG"),
     image4 = ee.Image("projects/hardy-tenure-383607/assets/12months_CloudShadows/sum12_CloudShadow_Chaco"),
-    geometry = /* color: #d63000 */ee.Geometry.Point([-63.36826125203669, -28.218686102480216]);
+    geometry = 
+    /* color: #359bd6 */
+    /* shown: false */
+    ee.Geometry.Point([-63.36826125203669, -28.218686102480216]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var s2 = (ee.ImageCollection('COPERNICUS/S2_SR') // S2_SR_HARMONIZED
     .filterBounds(geometry)
@@ -59,7 +62,7 @@ var covgrid = si.coveringGrid({
 
 Map.addLayer(image3, null, "Tree Cover", 0)
 Map.addLayer(image4, null, "Mask", 0)
-var bands = ['B8', 'B4', 'B3'];
+var bands = ['B4', 'B3', 'B2'];
 Map.addLayer(s2m, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
 Map.addLayer(samplesIn, {color: "red"}, "STRS")
 Map.addLayer(covgrid, null, "covGrid")
