@@ -557,7 +557,12 @@ Map.addLayer(sum12clip, null, "Sum eq 12 to 1")
 Map.addLayer(AOI, null, "AOI", 0);
 */
 
+/*
 //Test site: Zona de Rio Verde (Paraguay)
+// Detected issues with haze. If I use "no shadow projection method" the removed area is very big as it
+// removes all the projected areas of haze shadow. Thus better to come back to the original approach.
+// i.e. Intersection of NIR Threshold with shadow projection and Cloud Probability 30. 
+
 var s = "2020-10-01"
 var e = "2020-11-01"
 var AOItest = geometry
@@ -575,7 +580,7 @@ Map.addLayer(s2_Oct_dif, cloudsum, 'Cloud Sum Oct', 1);
 Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
 Map.addLayer(sum12clip, null, "Sum eq 12 to 1")
-
+*/
 
 /*
 //Test site: Estancia Eriana Paraguay
