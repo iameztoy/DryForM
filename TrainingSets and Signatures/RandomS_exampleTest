@@ -15,8 +15,6 @@ var projs2m = s2m.projection().getInfo()
 print(projs2m)
 print(s2)
 
-Map.addLayer(image3, null, "Tree Cover")
-Map.addLayer(image4, null, "Mask")
 
 var cross = image3.multiply(image4).int8()
 
@@ -59,6 +57,8 @@ var covgrid = si.coveringGrid({
   	scale: 10
 })
 
+Map.addLayer(image3, null, "Tree Cover", 0)
+Map.addLayer(image4, null, "Mask", 0)
 var bands = ['B8', 'B4', 'B3'];
 Map.addLayer(s2m, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
 Map.addLayer(samplesIn, {color: "red"}, "STRS")
