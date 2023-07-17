@@ -11,7 +11,8 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     cloudsum = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","26f7ff","79ffc5","7bff83","fffd56","ffae56","ff5a57","ff0000"]},
     imgcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","ff0f0c","ffaa75","ffef95","fff557","afff5f","18ff5c","3aefff"]},
-    clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]};
+    clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]},
+    geometry = /* color: #98ff00 */ee.Geometry.Point([-59.17950086286792, -23.15772913876962]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -35,7 +36,7 @@ var bufsize = 1; //Buffer size for samples if run within the code
 var srt = '2020-01-01'; var end = '2021-01-01'; // For DW (Mode)
 var START_DATE = '2020-01-01'; var END_DATE = "2021-01-01"; // Filter for S-2
 var CLOUD_FILTER = 80;  // 70 does not cover all for Cerrado, Chaco, Caatinga (otherwise need to individualize)
-var CLD_PRB_THRESH = 20; //Original 30 | Adding lower threshold masks more clouds but risk of commission
+var CLD_PRB_THRESH = 30; //Original 30 | Adding lower threshold masks more clouds but risk of commission
 var NIR_DRK_THRESH = 0.15; //Original 0.15
 var CLD_PRJ_DIST = 1;
 var BUFFER = 50;
@@ -510,7 +511,7 @@ var sum12clip = (cor_scr_sum12.divide(cor_scr_sum12)).clip(AOI); //Make 12 = 1 |
 
 //print(col_scr)
 
-
+/*
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan', 0); 
 Map.addLayer(s2_FebSCss, cloudsum, 'Cloud Sum Feb', 0); 
 Map.addLayer(s2_MarSCss, cloudsum, 'Cloud Sum Mar', 0); 
@@ -554,6 +555,27 @@ Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
 Map.addLayer(sum12clip, null, "Sum eq 12 to 1")
 Map.addLayer(AOI, null, "AOI", 0);
+*/
+
+//Test site: Zona de Rio Verde (Paraguay)
+var s = "2020-10-01"
+var e = "2020-11-01"
+var AOItest = geometry
+var s2 = (ee.ImageCollection('COPERNICUS/S2_SR')
+        .filterBounds(AOItest)
+        .filterDate(s, e)
+        .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
+var s2med = s2.min()
+var bands = ['B8', 'B4', 'B3'];
+Map.addLayer(s2med, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
+Map.addLayer(s2_OctSCss, cloudsum, 'Cloud Sum Oct', 1);
+Map.addLayer(s2_OctSCSSc, cloudsum, 'Cloud Count Oct', 1);
+Map.addLayer(s2_Oct_dif, cloudsum, 'Cloud Sum Oct', 1);
+
+Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
+Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
+Map.addLayer(sum12clip, null, "Sum eq 12 to 1")
+
 
 /*
 //Test site: Estancia Eriana Paraguay
