@@ -38,7 +38,7 @@ var pts = cross.stratifiedSample({
 var bufsize = 250
 var samplesIn = pts.map(bufferPoints(bufsize, true));
 
-print(samplesIn)
+//print(samplesIn)
 
 Map.addLayer(samplesIn, {color: "red"}, "STRS")
 
