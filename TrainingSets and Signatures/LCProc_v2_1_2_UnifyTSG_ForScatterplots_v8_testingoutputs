@@ -11,7 +11,20 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
     Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     cloudsum = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","26f7ff","79ffc5","7bff83","fffd56","ffae56","ff5a57","ff0000"]},
     imgcount = {"opacity":1,"bands":["cloudmask"],"min":0,"max":8,"palette":["fff7f6","ff0f0c","ffaa75","ffef95","fff557","afff5f","18ff5c","3aefff"]},
-    clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]};
+    clsh_sum = {"opacity":1,"bands":["remapped"],"min":0,"max":12,"palette":["ff0606","9fff14","91ff46","65ff6e","59ffb8","4ed8ff","73b2ff","427dff","2642ff","8c0eff","be20ff","ff42de","ff3edd","ff9fd8"]},
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-40.27528230065074, -9.215524558810149],
+          [-40.27528230065074, -10.47925358897342],
+          [-38.09724274986949, -10.47925358897342],
+          [-38.09724274986949, -9.215524558810149]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //* Copied from and older file
 //------------------------------
@@ -513,7 +526,7 @@ var sum12clip = (cor_scr_sum12.divide(cor_scr_sum12)).clip(AOI); //Make 12 = 1 |
 
 //print(col_scr)
 
-/*
+
 Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan', 0); 
 Map.addLayer(s2_FebSCss, cloudsum, 'Cloud Sum Feb', 0); 
 Map.addLayer(s2_MarSCss, cloudsum, 'Cloud Sum Mar', 0); 
@@ -557,7 +570,7 @@ Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
 Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
 Map.addLayer(sum12clip, null, "Sum eq 12 to 1")
 Map.addLayer(AOI, null, "AOI", 0);
-*/
+
 
 /*
 //Test site: Zona de Rio Verde (Paraguay)
@@ -1022,11 +1035,12 @@ Export.image.toDrive({
 
 **/
 
+
 Export.image.toAsset({
   image: sum12clip,
   description: 'sum12',
   assetId: 'sum12_months',  // <> modify these
-  region: Chaco,
+  region: AOI,
   maxPixels: 1e13
   //crsTransform: [30, 0, -2493045, 0, -30, 3310005],
   //crs: 'EPSG:5070'
