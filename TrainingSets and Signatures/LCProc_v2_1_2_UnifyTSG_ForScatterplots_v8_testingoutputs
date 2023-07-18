@@ -28,7 +28,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Caatinga; //Chaco, Cerrado, Caatinga, Tanzania
+var AOI = Caatinga; //Chaco, Cerrado, Caatinga, Tanzania | or  Chaco.merge(Cerrado) etc.
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -504,6 +504,8 @@ var col_scr_sum = col_scr.sum(); //Get the sum of all montly scores (sum 12 = a 
 var mask_sum = col_scr_sum.eq(12); // Get only the pixels with score 12
 var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum); //Mask any pixel with score <12
 var sum12clip = (cor_scr_sum12.divide(cor_scr_sum12)).clip(AOI); //Make 12 = 1 | Others are masked (null)
+
+
 
 //----- END of CLOUD/SHADOW MASK
 
