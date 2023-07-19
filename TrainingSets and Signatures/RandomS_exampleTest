@@ -113,9 +113,11 @@ var bands = ['B4', 'B3', 'B2'];
 Map.addLayer(s2m, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
 /*
 Map.addLayer(samplesIn, {color: "red"}, "STRS")
-Map.addLayer(covgrid, null, "covGrid")
 Map.addLayer(pts, null, "pts")
 */
+
+Map.addLayer(covgrid4326, null, "covGrid")
+Map.addLayer(covgrid32720, null, "covGrid")
 
 
 
