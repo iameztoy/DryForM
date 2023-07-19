@@ -32,15 +32,6 @@ var cross = cross.clip(geometry)
 //print(cross)
 
 
-function bufferPoints(radius, bounds) {
-  return function(pt) {
-    pt = ee.Feature(pt);
-    return bounds ? pt.buffer(radius).bounds() : pt.buffer(radius);
-  };
-}
-
-
-
 var pts = cross.stratifiedSample({
 	numPoints: 10,
 	classBand: "Trees",
@@ -54,6 +45,13 @@ var pts = cross.stratifiedSample({
 	tileScale:4,
 	geometries:true,
 })
+
+function bufferPoints(radius, bounds) {
+  return function(pt) {
+    pt = ee.Feature(pt);
+    return bounds ? pt.buffer(radius).bounds() : pt.buffer(radius);
+  };
+}
 
 
 var bufsize = 250
