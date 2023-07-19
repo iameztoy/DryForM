@@ -68,6 +68,7 @@ var covgrid32720 = si32720.coveringGrid({
   	scale: 10
 })
 
+
 // ------------------------------
 // ------------------------------
 // EPSG:4326
@@ -116,8 +117,8 @@ Map.addLayer(samplesIn, {color: "red"}, "STRS")
 Map.addLayer(pts, null, "pts")
 */
 
-Map.addLayer(covgrid4326, null, "covGrid")
-Map.addLayer(covgrid32720, null, "covGrid")
+Map.addLayer(covgrid4326, null, "covGrid 4326")
+Map.addLayer(covgrid32720, null, "covGrid 32720")
 
 
 
