@@ -13,7 +13,10 @@ var image3 = ee.Image("projects/hardy-tenure-383607/assets/TC_BRABOLPARURUARG"),
         [[[-63.43647956864169, -28.181345505011045],
           [-63.43647956864169, -28.25243856355015],
           [-63.28764915482333, -28.25243856355015],
-          [-63.28764915482333, -28.181345505011045]]], null, false);
+          [-63.28764915482333, -28.181345505011045]]], null, false),
+    visparam = {"opacity":1,"bands":["Trees"],"min":0,"max":1,"gamma":1},
+    viscross = {"opacity":1,"bands":["Trees"],"min":0,"max":1,"gamma":1},
+    vistc = {"opacity":1,"bands":["Trees"],"max":1,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var s2 = (ee.ImageCollection('COPERNICUS/S2_SR') // S2_SR_HARMONIZED
     .filterBounds(geometry)
@@ -28,6 +31,7 @@ var projs2m = s2m.projection().getInfo()
 
 var cross = image3.multiply(image4).int8()
 var cross = cross.clip(geometry)
+
 
 //print(cross)
 
@@ -68,14 +72,15 @@ print(samplesIn)
 print(si)
 print(covgrid.limit(20))
 
-Map.addLayer(cross, null, "Cross", 0)
-Map.addLayer(image3, null, "Tree Cover", 0)
+Map.addLayer(cross, viscross, "Cross", 0)
+Map.addLayer(image3, vistc, "Tree Cover", 0)
 Map.addLayer(image4, null, "Mask", 0)
+
 var bands = ['B4', 'B3', 'B2'];
 Map.addLayer(s2m, {'bands': bands, 'min': 0, 'max': 2500}, "s2", 1)
 Map.addLayer(samplesIn, {color: "red"}, "STRS")
 Map.addLayer(covgrid, null, "covGrid")
-Map.addLayer(pts)
+Map.addLayer(pts, null, "pts")
 
 
 //crs: projection.crs,
