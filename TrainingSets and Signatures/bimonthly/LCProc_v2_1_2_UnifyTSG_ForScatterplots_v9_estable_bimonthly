@@ -823,8 +823,7 @@ var elev = ee.Image('MERIT/DEM/v1_0_3');
 
 
 // Concatenate Sentinel-2 monthly mosaics (x12) and Class product for Forest + Grass + Shrub (x3) and eventually any other dataset
-var colcat = ee.Image.cat(s2srMed_Jan, s2srMed_Feb, s2srMed_Mar, s2srMed_Apr, s2srMed_May, s2srMed_Jun, s2srMed_Jul, 
-                          s2srMed_Aug, s2srMed_Sep, s2srMed_Oct, s2srMed_Nov, s2srMed_Dec, chacoForestm_sr, chacoGrassm_sr, chacoShrubm_sr) // ,chacoForestm_sr, chacoGrassm_sr, chacoShrubm_sr, elev
+var colcat = ee.Image.cat(s2srMed_JanFeb, s2srMed_MarApr, s2srMed_MayJun, s2srMed_JulAug, s2srMed_SepOct, s2srMed_NovDec, chacoForestm_sr, chacoGrassm_sr, chacoShrubm_sr) // ,chacoForestm_sr, chacoGrassm_sr, chacoShrubm_sr, elev
                                                                                                                                             //, cerradoForestm_sr, cerradoGrass_sr, cerradoShrubm_sr, elev
                                                                                                                                             //, caatingaForestm_sr, caatingaGrassm_sr, caatingaShrubm_sr, elev
                                                                                                                                             //, tanzaniaForestm_sr, tanzaniaGrassm_sr, tanzaniaShrubm_sr, elev
@@ -838,6 +837,12 @@ var col4stats = ee.ImageCollection([colcat]);
 
 
 
+// #############                     #################
+// !!!!!!!!!!!!! NEEDS TO BE CHANGED !!!!!!!!!!!!!!!!!
+//
+// READAPT THE BANDS TO BIMONTHLY TIME SERIES
+
+/*
 // Define parameters for the zonalStats function.
 var params = {                                    //ref for each band in the image collection (monthly) for B4, B5, B8, B11, B12, NBR, NDVI, MSAVI2
   bands: [3, 4, 7, 10, 11, 12, 13, 14,            // e.g. 3 January, 4 February.... 14 December    
@@ -876,6 +881,7 @@ var params = {                                    //ref for each band in the ima
 
 // Extract zonal statistics per point per image. //image collection, points, parameters
 var sampleZStats = zonalStats(col4stats, samplesIn, params); //Select the samples in samples variable // (col4stats, samples, params);
+*/
 
 
 // **********************************************
