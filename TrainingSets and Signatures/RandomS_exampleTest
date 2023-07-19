@@ -41,7 +41,7 @@ var pts = cross.stratifiedSample({
 	classBand: "Trees",
 //	region:null,
 	scale: 10,
-  projection: "EPSG:4326", //EPSG:4326 | "EPSG:32720"
+  projection: "EPSG:32720", //EPSG:4326 | "EPSG:32720"
 //	seed:false,
 //	classValues:null,
 //	classPoints:null,
@@ -63,7 +63,7 @@ var samplesIn = pts.map(bufferPoints(bufsize, true));
 var si = samplesIn.geometry()
 
 var covgrid = si.coveringGrid({
-		proj: "EPSG:4326", //EPSG:32720
+		proj: "EPSG:32720", //EPSG:32720
   	scale: 10
 })
 
