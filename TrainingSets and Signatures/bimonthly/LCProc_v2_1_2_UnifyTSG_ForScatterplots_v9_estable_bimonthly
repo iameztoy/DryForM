@@ -28,7 +28,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Caatinga; //Chaco, Cerrado, Caatinga, Tanzania | or  Chaco.merge(Cerrado) etc.
+var AOI = Chaco; //Chaco, Cerrado, Caatinga, Tanzania | or  Chaco.merge(Cerrado) etc.
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
@@ -356,113 +356,67 @@ var select = altogether.filter(ee.Filter.lte("system:index", "20200101T142731_20
 // SPLIT COLLECTIONS BY MONTH AND APPLY FUNCTIONS
 
 
-var s2_Jan = s2_sr_cld_col.filterDate("2020-01-01", "2020-02-01");
-var s2_Feb = s2_sr_cld_col.filterDate("2020-02-01", "2020-03-01");
-var s2_Mar = s2_sr_cld_col.filterDate("2020-03-01", "2020-04-01");
-var s2_Apr = s2_sr_cld_col.filterDate("2020-04-01", "2020-05-01");
-var s2_May = s2_sr_cld_col.filterDate("2020-05-01", "2020-06-01");
-var s2_Jun = s2_sr_cld_col.filterDate("2020-06-01", "2020-07-01");
-var s2_Jul = s2_sr_cld_col.filterDate("2020-07-01", "2020-08-01");
-var s2_Aug = s2_sr_cld_col.filterDate("2020-08-01", "2020-09-01");
-var s2_Sep = s2_sr_cld_col.filterDate("2020-09-01", "2020-10-01");
-var s2_Oct = s2_sr_cld_col.filterDate("2020-10-01", "2020-11-01");
-var s2_Nov = s2_sr_cld_col.filterDate("2020-11-01", "2020-12-01");
-var s2_Dec = s2_sr_cld_col.filterDate("2020-12-01", "2021-01-01");
+var s2_JanFeb = s2_sr_cld_col.filterDate("2020-01-01", "2020-03-01");
+var s2_MarApr = s2_sr_cld_col.filterDate("2020-03-01", "2020-05-01");
+var s2_MayJun = s2_sr_cld_col.filterDate("2020-05-01", "2020-07-01");
+var s2_JulAug = s2_sr_cld_col.filterDate("2020-07-01", "2020-09-01");
+var s2_SepOct = s2_sr_cld_col.filterDate("2020-09-01", "2020-11-01");
+var s2_NovDec = s2_sr_cld_col.filterDate("2020-11-01", "2021-01-01");
 
 
-var s2srMed_Jan = (s2_Jan.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Feb = (s2_Feb.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);                          
-var s2srMed_Mar = (s2_Mar.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);                
-var s2srMed_Apr = (s2_Apr.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_May = (s2_May.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Jun = (s2_Jun.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Jul = (s2_Jul.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Aug = (s2_Aug.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Sep = (s2_Sep.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Oct = (s2_Oct.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Nov = (s2_Nov.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
-var s2srMed_Dec = (s2_Dec.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
+
+var s2srMed_JanFeb = (s2_JanFeb.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
+var s2srMed_MarApr = (s2_MarApr.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);                          
+var s2srMed_MayJun = (s2_MayJun.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);                
+var s2srMed_JulAug = (s2_JulAug.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
+var s2srMed_SepOct = (s2_SepOct.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
+var s2srMed_NovDec = (s2_NovDec.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex).median()).clip(AOI);
 
 //------------------------------------------------------
 //S2 Clouds and Shadows per month (it is added in the previous step but added the median so it affects the outcome)
 //To be optimized
 
-var s2_JanSC = s2_Jan.map(add_cld_shdw_mask); 
-var s2_FebSC = s2_Feb.map(add_cld_shdw_mask); 
-var s2_MarSC = s2_Mar.map(add_cld_shdw_mask); 
-var s2_AprSC = s2_Apr.map(add_cld_shdw_mask);
-var s2_MaySC = s2_May.map(add_cld_shdw_mask); 
-var s2_JunSC = s2_Jun.map(add_cld_shdw_mask); 
-var s2_JulSC = s2_Jul.map(add_cld_shdw_mask); 
-var s2_AugSC = s2_Aug.map(add_cld_shdw_mask); 
-var s2_SepSC = s2_Sep.map(add_cld_shdw_mask); 
-var s2_OctSC = s2_Oct.map(add_cld_shdw_mask);
-var s2_NovSC = s2_Nov.map(add_cld_shdw_mask); 
-var s2_DecSC = s2_Dec.map(add_cld_shdw_mask);
+var s2_JanFebSC = s2_JanFeb.map(add_cld_shdw_mask); 
+var s2_MarAprSC = s2_MarApr.map(add_cld_shdw_mask); 
+var s2_MayJunSC = s2_MayJun.map(add_cld_shdw_mask); 
+var s2_JulAugSC = s2_JulAug.map(add_cld_shdw_mask);
+var s2_SepOctSC = s2_SepOct.map(add_cld_shdw_mask); 
+var s2_NovDecSC = s2_NovDec.map(add_cld_shdw_mask); 
 
 //var s = s2_JanSC.toBands()
 
 // Select each cloud mask and sum + count | Then subtract count - sum 
 
-var s2_JanSCs = s2_JanSC.select("cloudmask");
-var s2_JanSCss = s2_JanSCs.sum();
-var s2_JanSCSSc = s2_JanSCs.count();
-var s2_Jan_dif = s2_JanSCSSc.subtract(s2_JanSCss);
+var s2_JanFebSCs = s2_JanFebSC.select("cloudmask");
+var s2_JanFebSCss = s2_JanFebSCs.sum();
+var s2_JanFebSCSSc = s2_JanFebSCs.count();
+var s2_JanFeb_dif = s2_JanFebSCSSc.subtract(s2_JanFebSCss);
 
-var s2_FebSCs = s2_FebSC.select("cloudmask");
-var s2_FebSCss = s2_FebSCs.sum();
-var s2_FebSCSSc = s2_FebSCs.count();
-var s2_Feb_dif = s2_FebSCSSc.subtract(s2_FebSCss);
+var s2_MarAprSCs = s2_MarAprSC.select("cloudmask");
+var s2_MarAprSCss = s2_MarAprSCs.sum();
+var s2_MarAprSCSSc = s2_MarAprSCs.count();
+var s2_MarApr_dif = s2_MarAprSCSSc.subtract(s2_MarAprSCss);
 
-var s2_MarSCs = s2_MarSC.select("cloudmask");
-var s2_MarSCss = s2_MarSCs.sum();
-var s2_MarSCSSc = s2_MarSCs.count();
-var s2_Mar_dif = s2_MarSCSSc.subtract(s2_MarSCss);
+var s2_MayJunSCs = s2_MayJunSC.select("cloudmask");
+var s2_MayJunSCss = s2_MayJunSCs.sum();
+var s2_MayJunSCSSc = s2_MayJunSCs.count();
+var s2_MayJun_dif = s2_MayJunSCSSc.subtract(s2_MayJunSCss);
 
-var s2_AprSCs = s2_AprSC.select("cloudmask");
-var s2_AprSCss = s2_AprSCs.sum();
-var s2_AprSCSSc = s2_AprSCs.count();
-var s2_Apr_dif = s2_AprSCSSc.subtract(s2_AprSCss);
+var s2_JulAugSCs = s2_JulAugSC.select("cloudmask");
+var s2_JulAugSCss = s2_JulAugSCs.sum();
+var s2_JulAugSCSSc = s2_JulAugSCs.count();
+var s2_JulAug_dif = s2_JulAugSCSSc.subtract(s2_JulAugSCss);
 
-var s2_MaySCs = s2_MaySC.select("cloudmask");
-var s2_MaySCss = s2_MaySCs.sum();
-var s2_MaySCSSc = s2_MaySCs.count();
-var s2_May_dif = s2_MaySCSSc.subtract(s2_MaySCss);
+var s2_SepOctSCs = s2_SepOctSC.select("cloudmask");
+var s2_SepOctSCss = s2_SepOctSCs.sum();
+var s2_SepOctSCSSc = s2_SepOctSCs.count();
+var s2_SepOct_dif = s2_SepOctSCSSc.subtract(s2_SepOctSCss);
 
-var s2_JunSCs = s2_JunSC.select("cloudmask");
-var s2_JunSCss = s2_JunSCs.sum();
-var s2_JunSCSSc = s2_JunSCs.count();
-var s2_Jun_dif = s2_JunSCSSc.subtract(s2_JunSCss);
+var s2_NovDecSCs = s2_NovDecSC.select("cloudmask");
+var s2_NovDecSCss = s2_NovDecSCs.sum();
+var s2_NovDecSCSSc = s2_NovDecSCs.count();
+var s2_NovDec_dif = s2_NovDecSCSSc.subtract(s2_NovDecSCss);
 
-var s2_JulSCs = s2_JulSC.select("cloudmask");
-var s2_JulSCss = s2_JulSCs.sum();
-var s2_JulSCSSc = s2_JulSCs.count();
-var s2_Jul_dif = s2_JulSCSSc.subtract(s2_JulSCss);
-
-var s2_AugSCs = s2_AugSC.select("cloudmask");
-var s2_AugSCss = s2_AugSCs.sum();
-var s2_AugSCSSc = s2_AugSCs.count();
-var s2_Aug_dif = s2_AugSCSSc.subtract(s2_AugSCss);
-
-var s2_SepSCs = s2_SepSC.select("cloudmask");
-var s2_SepSCss = s2_SepSCs.sum();
-var s2_SepSCSSc = s2_SepSCs.count();
-var s2_Sep_dif = s2_SepSCSSc.subtract(s2_SepSCss);
-
-var s2_OctSCs = s2_OctSC.select("cloudmask");
-var s2_OctSCss = s2_OctSCs.sum();
-var s2_OctSCSSc = s2_OctSCs.count();
-var s2_Oct_dif = s2_OctSCSSc.subtract(s2_OctSCss);
-
-var s2_NovSCs = s2_NovSC.select("cloudmask");
-var s2_NovSCss = s2_NovSCs.sum();
-var s2_NovSCSSc = s2_NovSCs.count();
-var s2_Nov_dif = s2_NovSCSSc.subtract(s2_NovSCss);
-
-var s2_DecSCs = s2_DecSC.select("cloudmask");
-var s2_DecSCss = s2_DecSCs.sum();
-var s2_DecSCSSc = s2_DecSCs.count();
-var s2_Dec_dif = s2_DecSCSSc.subtract(s2_DecSCss);
 
 //Remap the differences such that each cloud/shadow is zero, the rest 1
 var from_dif = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
@@ -475,33 +429,27 @@ var to_dif =   [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
                 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 
-var s2_Jan_dif_r = s2_Jan_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Feb_dif_r = s2_Feb_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Mar_dif_r = s2_Mar_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Apr_dif_r = s2_Apr_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_May_dif_r = s2_May_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Jun_dif_r = s2_Jun_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Jul_dif_r = s2_Jul_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Aug_dif_r = s2_Aug_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Sep_dif_r = s2_Sep_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Oct_dif_r = s2_Oct_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Nov_dif_r = s2_Nov_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
-var s2_Dec_dif_r = s2_Dec_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_JanFeb_dif_r = s2_JanFeb_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_MarApr_dif_r = s2_MarApr_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_MayJun_dif_r = s2_MayJun_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_JulAug_dif_r = s2_JulAug_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_SepOct_dif_r = s2_SepOct_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+var s2_NovDec_dif_r = s2_NovDec_dif.remap({from: from_dif, to: to_dif, defaultValue: 0});
+
 
 //print(s2_Jan_dif)
 //print(s2_Jan_dif_r)
 
-var scr = ee.List([s2_Jan_dif_r, s2_Feb_dif_r, s2_Mar_dif_r, s2_Apr_dif_r, s2_May_dif_r, s2_Jun_dif_r,
-                       s2_Jul_dif_r, s2_Aug_dif_r, s2_Sep_dif_r, s2_Oct_dif_r, s2_Nov_dif_r, s2_Dec_dif_r]);
+var scr = ee.List([s2_JanFeb_dif_r, s2_MarApr_dif_r, s2_MayJun_dif_r, s2_JulAug_dif_r, s2_SepOct_dif_r, s2_NovDec_dif_r]);
 
-// Sum all months remaped and select only those with value = 12
-// The objective is to get pixels with 12 valid observations; one per month. 
+// Sum all months remaped and select only those with value = 6 || 12 for monthly version
+// The objective is to get pixels with 6 valid observations; one per two months. 
 // These will be used in the stratified random sampling. 
-// The objective is to have 12 valid observations per year to train the model
+// The objective is to have 6 valid observations per year to train the model
 
 var col_scr = ee.ImageCollection.fromImages(scr); //Make a collection with all the remapped monthly bands (each is 0 or 1)
 var col_scr_sum = col_scr.sum(); //Get the sum of all montly scores (sum 12 = a cloud/shadow free pixel per month is available)
-var mask_sum = col_scr_sum.eq(12); // Get only the pixels with score 12
+var mask_sum = col_scr_sum.eq(6); // Get only the pixels with score 12
 var cor_scr_sum12 = col_scr_sum.updateMask(mask_sum); //Mask any pixel with score <12
 var sum12clip = (cor_scr_sum12.divide(cor_scr_sum12)).clip(AOI); //Make 12 = 1 | Others are masked (null)
 //mask sum can be used by selfMasking
@@ -511,54 +459,36 @@ var sum12clip = (cor_scr_sum12.divide(cor_scr_sum12)).clip(AOI); //Make 12 = 1 |
 //----- END of CLOUD/SHADOW MASK
 
 
-
-
-
 //print(col_scr)
 
 
-Map.addLayer(s2_JanSCss, cloudsum, 'Cloud Sum Jan', 0); 
-Map.addLayer(s2_FebSCss, cloudsum, 'Cloud Sum Feb', 0); 
-Map.addLayer(s2_MarSCss, cloudsum, 'Cloud Sum Mar', 0); 
-Map.addLayer(s2_AprSCss, cloudsum, 'Cloud Sum Apr', 0); 
-Map.addLayer(s2_MaySCss, cloudsum, 'Cloud Sum May', 0); 
-Map.addLayer(s2_JunSCss, cloudsum, 'Cloud Sum Jun', 0); 
-Map.addLayer(s2_JulSCss, cloudsum, 'Cloud Sum Jul', 0); 
-Map.addLayer(s2_AugSCss, cloudsum, 'Cloud Sum Aug', 0); 
-Map.addLayer(s2_SepSCss, cloudsum, 'Cloud Sum Sep', 0); 
-Map.addLayer(s2_OctSCss, cloudsum, 'Cloud Sum Oct', 0);
-Map.addLayer(s2_NovSCss, cloudsum, 'Cloud Sum Nov', 0); 
-Map.addLayer(s2_DecSCss, cloudsum, 'Cloud Sum Dec', 0); 
+Map.addLayer(s2_JanFebSCss, cloudsum, 'Cloud Sum JanFeb', 0); 
+Map.addLayer(s2_MarAprSCss, cloudsum, 'Cloud Sum MarApr', 0); 
+Map.addLayer(s2_MayJunSCss, cloudsum, 'Cloud Sum MayJun', 0); 
+Map.addLayer(s2_JulAugSCss, cloudsum, 'Cloud Sum JulAug', 0); 
+Map.addLayer(s2_SepOctSCss, cloudsum, 'Cloud Sum SepNov', 0); 
+Map.addLayer(s2_NovDecSCss, cloudsum, 'Cloud Sum NovDec', 0); 
 
-Map.addLayer(s2_JanSCSSc, cloudsum, 'Cloud Count Jan', 0); 
-Map.addLayer(s2_FebSCSSc, cloudsum, 'Cloud Count Feb', 0); 
-Map.addLayer(s2_MarSCSSc, cloudsum, 'Cloud Count Mar', 0); 
-Map.addLayer(s2_AprSCSSc, cloudsum, 'Cloud Count Apr', 0); 
-Map.addLayer(s2_MaySCSSc, cloudsum, 'Cloud Count May', 0); 
-Map.addLayer(s2_JunSCSSc, cloudsum, 'Cloud Count Jun', 0); 
-Map.addLayer(s2_JulSCSSc, cloudsum, 'Cloud Count Jul', 0); 
-Map.addLayer(s2_AugSCSSc, cloudsum, 'Cloud Count Aug', 0); 
-Map.addLayer(s2_SepSCSSc, cloudsum, 'Cloud Count Sep', 0); 
-Map.addLayer(s2_OctSCSSc, cloudsum, 'Cloud Count Oct', 0);
-Map.addLayer(s2_NovSCSSc, cloudsum, 'Cloud Count Nov', 0); 
-Map.addLayer(s2_DecSCSSc, cloudsum, 'Cloud Count Dec', 0); 
 
-Map.addLayer(s2_Jan_dif, cloudsum, 'Cloud Sum Jan dif', 0);
-Map.addLayer(s2_Feb_dif, cloudsum, 'Cloud Sum Feb dif', 0);
-Map.addLayer(s2_Mar_dif, cloudsum, 'Cloud Sum Mar dif', 0);
-Map.addLayer(s2_Apr_dif, cloudsum, 'Cloud Sum Apr dif', 0);
-Map.addLayer(s2_May_dif, cloudsum, 'Cloud Sum May dif', 0);
-Map.addLayer(s2_Jun_dif, cloudsum, 'Cloud Sum Jun dif', 0);
-Map.addLayer(s2_Jul_dif, cloudsum, 'Cloud Sum Jul dif', 0);
-Map.addLayer(s2_Aug_dif, cloudsum, 'Cloud Sum Aug dif', 0);
-Map.addLayer(s2_Sep_dif, cloudsum, 'Cloud Sum Sep dif', 0);
-Map.addLayer(s2_Oct_dif, cloudsum, 'Cloud Sum Oct dif', 0);
-Map.addLayer(s2_Nov_dif, cloudsum, 'Cloud Sum Nov dif', 0);
-Map.addLayer(s2_Dec_dif, cloudsum, 'Cloud Sum Dec dif', 0);
+Map.addLayer(s2_JanFebSCSSc, cloudsum, 'Cloud Count JanFeb', 0); 
+Map.addLayer(s2_MarAprSCSSc, cloudsum, 'Cloud Count MarApr', 0); 
+Map.addLayer(s2_MayJunSCSSc, cloudsum, 'Cloud Count MayJun', 0); 
+Map.addLayer(s2_JulAugSCSSc, cloudsum, 'Cloud Count JulAug', 0); 
+Map.addLayer(s2_SepOctSCSSc, cloudsum, 'Cloud Count SepOct', 0); 
+Map.addLayer(s2_NovDecSCSSc, cloudsum, 'Cloud Count NovDec', 0); 
+ 
 
-Map.addLayer(col_scr_sum, clsh_sum, "Sum of 12 Cloud/Shadows", 0);
-Map.addLayer(cor_scr_sum12, null, "Sum eq 12 for sampling", 1);
-Map.addLayer(sum12clip, null, "Sum eq 12 to 1")
+Map.addLayer(s2_JanFeb_dif, cloudsum, 'Cloud Sum JanFeb dif', 0);
+Map.addLayer(s2_MarApr_dif, cloudsum, 'Cloud Sum MarApr dif', 0);
+Map.addLayer(s2_MayJun_dif, cloudsum, 'Cloud Sum MayJun dif', 0);
+Map.addLayer(s2_JulAug_dif, cloudsum, 'Cloud Sum JulAug dif', 0);
+Map.addLayer(s2_SepOct_dif, cloudsum, 'Cloud Sum SepOct dif', 0);
+Map.addLayer(s2_NovDec_dif, cloudsum, 'Cloud Sum NovDec dif', 0);
+
+
+Map.addLayer(col_scr_sum, clsh_sum, "Sum of 6 Cloud/Shadows", 0);
+Map.addLayer(cor_scr_sum12, null, "Sum eq 6 for sampling", 1);
+Map.addLayer(sum12clip, null, "Sum eq 6 to 1")
 Map.addLayer(AOI, null, "AOI", 0);
 
 
