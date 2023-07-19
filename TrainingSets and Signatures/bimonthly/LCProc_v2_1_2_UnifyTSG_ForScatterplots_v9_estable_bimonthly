@@ -28,7 +28,7 @@ var VisParam8cl = {"opacity":1,"bands":["Map"],"min":0,"palette":["040404","ff0c
 //--------------
 // VARIABLES GENERAL
 
-var AOI = Chaco; //Chaco, Cerrado, Caatinga, Tanzania | or  Chaco.merge(Cerrado) etc.
+var AOI = Tanzania; //Chaco, Cerrado, Caatinga, Tanzania | or  Chaco.merge(Cerrado) etc.
 //var samples = RP_Chaco; //Otherwise use the samples in samplesIn generated within the code -> If so, save it as an asset (currently like this)
 var bufsize = 1; //Buffer size for samples if run within the code
 
