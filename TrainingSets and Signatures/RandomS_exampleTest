@@ -56,9 +56,6 @@ function bufferPoints(radius, bounds) {
 
 var bufsize = 250
 var samplesIn = pts.map(bufferPoints(bufsize, true));
-
-
-
 var si = samplesIn.geometry()
 
 var covgrid = si.coveringGrid({
@@ -82,8 +79,7 @@ Map.addLayer(covgrid, null, "covGrid")
 Export.table.toDrive({
   collection: covgrid,
   description:'GRID_Buf250_Scale10',
-  fileFormat: 'SHP',
-  folder: tiles
+  fileFormat: 'SHP'
   //crs: "EPSG:32720"
 });
 
