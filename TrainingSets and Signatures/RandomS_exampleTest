@@ -22,7 +22,7 @@ var s2 = (ee.ImageCollection('COPERNICUS/S2_SR') // S2_SR_HARMONIZED
     
 var s2m = s2.median();
 var projs2m = s2m.projection().getInfo()
-print(projs2m)
+//print(projs2m)
 //print(s2)
 
 
@@ -62,6 +62,11 @@ var covgrid = si.coveringGrid({
 		proj: "EPSG:32720",
   	scale: 10
 })
+
+print(pts)
+print(samplesIn)
+print(si)
+print(covgrid.limit(20))
 
 Map.addLayer(cross, null, "Cross", 0)
 Map.addLayer(image3, null, "Tree Cover", 0)
