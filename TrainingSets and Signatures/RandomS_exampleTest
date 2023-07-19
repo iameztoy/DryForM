@@ -61,7 +61,6 @@ var pts32720 = cross.stratifiedSample({
 })
 
 
-
 var samplesIn32720 = pts32720.map(bufferPoints(bufsize, true));
 var si32720 = samplesIn32720.geometry()
 var covgrid32720 = si32720.coveringGrid({
@@ -99,11 +98,12 @@ var covgrid4326 = si4326.coveringGrid({
 
 ///////////
 
-
+/*
 print(pts)
 print(samplesIn)
 print(si)
 print(covgrid.limit(20))
+*/
 
 Map.addLayer(cross, viscross, "Cross", 0)
 Map.addLayer(image3, vistc, "Tree Cover", 0)
@@ -128,7 +128,7 @@ Export.table.toDrive({
 });
 
 Export.table.toDrive({
-  collection: covgrid4326,
+  collection: covgrid32720,
   description:'B125_Scale10_crs32720',
   fileFormat: 'SHP'
   //crs: "EPSG:32720"
