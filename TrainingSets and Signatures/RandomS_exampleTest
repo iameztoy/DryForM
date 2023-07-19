@@ -89,7 +89,7 @@ Map.addLayer(pts, null, "pts")
 
 Export.table.toDrive({
   collection: covgrid,
-  description:'GRID_Buf250_Scale10',
+  description:'GRID_Buf125_Scale10',
   fileFormat: 'SHP'
   //crs: "EPSG:32720"
 });
