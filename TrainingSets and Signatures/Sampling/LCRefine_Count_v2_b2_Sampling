@@ -14,7 +14,7 @@ var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff90
 // 2/ LCProc_v2_1_2_UnifyTSG_ForScatterplots_v9_estable_monthly
 // 
 
-AOI = chaco
+var AOI = chaco
 
 
 var esa2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
