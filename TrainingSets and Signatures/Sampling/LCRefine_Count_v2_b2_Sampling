@@ -8,7 +8,8 @@ var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff90
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     vp_sum = {"opacity":0.5800000000000001,"bands":["f"],"min":0,"max":8,"palette":["000000","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff","6707ff"]},
     vp_4cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","25bd36"]},
-    vp_5cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","29d33c","368c57"]};
+    vp_5cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","29d33c","368c57"]},
+    geometry = /* color: #d63000 */ee.Geometry.Point([25.146619605465762, -3.3027116057747987]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //----------------------------------------------
 // Copied partially from:  
