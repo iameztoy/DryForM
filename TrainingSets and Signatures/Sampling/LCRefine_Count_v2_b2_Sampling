@@ -90,7 +90,7 @@ var sumTCc = sumTC.clip(AOI);
 var from_9cl = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 3];
 
-var sumTCc_r = sumTCc.remap({
+var sumTC_4cl_r = sumTCc.remap({
   from: from_9cl,
   to: to_4cl,
   defaultValue: 0,
@@ -100,10 +100,10 @@ var sumTCc_r = sumTCc.remap({
 //var laplacian = ee.Kernel.laplacian8({ normalize: true });
 //var edgy = sumTCc_r.convolve(laplacian);
 
-var SumTCc_rK = sumTCc_r.focalMode(7, "square", "pixels", 2)
+var SumTC_4cl_rK = sumTC_4cl_r.focalMode(7, "square", "pixels", 2)
 
 
-Map.addLayer(SumTCc_rK, vp_4cl, "AOI r and Kernel", 1);
+Map.addLayer(SumTC_4cl_rK, vp_4cl, "AOI r and Kernel", 1);
 //Map.addLayer(edgy, {}, 'edges', 0);
 Map.addLayer(sumTCc_r, vp_4cl, "AOI remaped", 1);
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
@@ -130,9 +130,9 @@ Export.image.toAsset({
 */
 
 Export.image.toAsset({
-    image: SumTCc_rK,
+    image: SumTC_4cl_rK,
     description: 'Sum_TF_4clK',
-    assetId: 'projects/hardy-tenure-383607/assets/SumTCc_rK',
+    assetId: 'projects/hardy-tenure-383607/assets/SumTC4cl_rK',
     scale: 10,
     maxPixels: 1e13
   });
