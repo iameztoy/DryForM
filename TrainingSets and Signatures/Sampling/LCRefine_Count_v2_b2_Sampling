@@ -110,6 +110,7 @@ Map.addLayer(glc10Forest_2017, {}, "GLC", 0);
 Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0);
 Map.addLayer(hansen_TC_2020_r, {}, "Hansen", 0);
 Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0);
+Map.addLayer(AOI, null, "AOI", 0);
 
 /*
 Export.image.toAsset({
