@@ -15,7 +15,7 @@ var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff90
 // 2/ LCProc_v2_1_2_UnifyTSG_ForScatterplots_v9_estable_monthly
 // 
 
-var AOI = chaco
+var AOI = chaco;
 
 
 var esa2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
@@ -24,7 +24,7 @@ var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
-var glc10m = GLC10.mosaic()
+var glc10m = GLC10.mosaic();
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
@@ -33,16 +33,16 @@ var srt = '2020-01-01'; var end = '2021-01-01'; //for dw
 var esa2020Forest = esa2020.eq(10);
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
-var dwM_Tree = dwMode.eq(1)
+var dwM_Tree = dwMode.eq(1);
 var wrimax = TC_wri.max();
 var wri80 = wrimax.eq(80);
 var wri90 = wrimax.eq(90);
 var wri100 = wrimax.eq(100);
 var wri_Tree = wri80.add(wri90).add(wri100);
-var wri_Tree = wri_Tree.gte(1)
+var wri_Tree = wri_Tree.gte(1);
 var esri_aoi = esri_lulc2020.mosaic(); 
 var esri_Tree = esri_aoi.eq(2).rename(['Trees']);
-var glc10m = GLC10.mosaic()
+var glc10m = GLC10.mosaic();
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 var gedi5 = CH_GEDI.gte(5);
 var hansen_treeCover = gfcImage.select(['treecover2000']);
@@ -68,14 +68,14 @@ var hansen_TC_2020_r = hansen_TC_2020.remap({
 });
 
 
-var r1 = esa2020Forest.rename("f")
-var r2 = dwM_Tree.rename("f")
-var r3 = wri_Tree.rename("f")
-var r4 = esri_Tree.rename("f")
-var r5 = glc10mForest.rename("f")
-var r6 = gedi5.rename("f")
-var r7 = hansen_TC_2020_r.rename("f")
-var r8 = gedi5L.rename("f")
+var r1 = esa2020Forest.rename("f");
+var r2 = dwM_Tree.rename("f");
+var r3 = wri_Tree.rename("f");
+var r4 = esri_Tree.rename("f");
+var r5 = glc10mForest.rename("f");
+var r6 = gedi5.rename("f");
+var r7 = hansen_TC_2020_r.rename("f");
+var r8 = gedi5L.rename("f");
 
 
 var plist = [r1, r2, r3, r4, r5, r6, r7, r8];
