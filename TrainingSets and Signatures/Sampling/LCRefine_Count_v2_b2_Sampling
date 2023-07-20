@@ -81,16 +81,21 @@ var plist = [r1, r2, r3, r4, r5, r6, r7, r8]
 
 
 var colTC = ee.ImageCollection.fromImages(plist); 
-print(colTC)
-
-
-
-
 var countTC = colTC.count()
 var sumTC = colTC.sum()
-print(sumTC)
 
 var sumTCc = sumTC.clip(AOI)
+
+var from_9cl = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 3,];
+
+var sumTCc_r = sumTCc_2020.remap({
+  from: from_9cl,
+  to: to_4cl,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
 
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
 Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1)
