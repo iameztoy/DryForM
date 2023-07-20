@@ -100,7 +100,7 @@ var sumTCc_r = sumTCc.remap({
 //var laplacian = ee.Kernel.laplacian8({ normalize: true });
 //var edgy = sumTCc_r.convolve(laplacian);
 
-var SumTCc_rK = sumTCc_r.focalMode(7, "square", "pixels", 1)
+var SumTCc_rK = sumTCc_r.focalMode(7, "square", "pixels", 2)
 
 
 Map.addLayer(SumTCc_rK, vp_4cl, "AOI r and Kernel", 1);
@@ -130,8 +130,8 @@ Export.image.toAsset({
 */
 
 Export.image.toAsset({
-    image: sumTCc_r,
-    description: 'Sum_TF_4cl',
+    image: sumTCc_rK,
+    description: 'Sum_TF_4clK',
     assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
     scale: 10,
     maxPixels: 1e13
