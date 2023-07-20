@@ -2,13 +2,19 @@
 var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff907b","ffe81c","a9ff6f","3ceeff","0e64ff"]},
     imageVisParam2 = {"opacity":1,"bands":["f"],"max":6,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff"]},
     imageVisParam3 = {"opacity":1,"bands":["f"],"max":7,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff"]},
-    vp_sum = {"opacity":1,"bands":["f"],"min":0,"max":8,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff","6707ff"]};
+    vp_sum = {"opacity":1,"bands":["f"],"min":0,"max":8,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff","6707ff"]},
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //----------------------------------------------
 // Copied partially from:  
 // 1/ LCRefine_Count_v2_b2 for sampling
 // 2/ LCProc_v2_1_2_UnifyTSG_ForScatterplots_v9_estable_monthly
 // 
+
+AOI = chaco
 
 
 var esa2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
@@ -21,9 +27,7 @@ var glc10m = GLC10.mosaic()
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
-var srt = '2020-01-01'; var end = '2021-01-01';
-
-
+var srt = '2020-01-01'; var end = '2021-01-01'; //for dw
 
 var esa2020Forest = esa2020.eq(10);
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
@@ -96,9 +100,18 @@ Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0)
 Map.addLayer(hansen_TC_2020_r, {}, "Hansen", 0)
 Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0)
 
-
+/*
 Export.image.toAsset({
     image: countTC,
+    description: 'CountValid',
+    assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
+    scale: 10,
+    maxPixels: 1e13
+  });
+*/
+
+Export.image.toAsset({
+    image: sumTC,
     description: 'CountValid',
     assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
     scale: 10,
