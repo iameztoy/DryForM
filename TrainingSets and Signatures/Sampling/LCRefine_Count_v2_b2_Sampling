@@ -61,7 +61,6 @@ var hansen_TC_2020_r = hansen_TC_2020.remap({
   bandName: 'treecover2000'
 });
 
-print(hansen_TC_2020)
 
 var r1 = esa2020Forest.rename("f")
 var r2 = dwM_Tree.rename("f")
@@ -76,12 +75,14 @@ var plist = [r1, r2, r3, r4, r5, r6, r7, r8]
 
 
 var col = ee.ImageCollection.fromImages(plist); 
-//print(col)
+print(col)
 
 
 var count = col.count()
-Map.addLayer(count, imageVisParam3, "Count", 0);
+var sum = col.sum()
+print(sum)
 
+Map.addLayer(count, imageVisParam3, "Count", 0);
 
 Map.addLayer(esa2020Forest, {}, "WC", 0)
 Map.addLayer(dwM_Tree, {}, "DW", 0)
