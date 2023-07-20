@@ -105,7 +105,7 @@ var SumTC_4cl_rK = sumTC_4cl_r.focalMode(7, "square", "pixels", 2)
 
 Map.addLayer(SumTC_4cl_rK, vp_4cl, "AOI r and Kernel", 1);
 //Map.addLayer(edgy, {}, 'edges', 0);
-Map.addLayer(sumTCc_r, vp_4cl, "AOI remaped", 1);
+Map.addLayer(sumTC_4cl_r, vp_4cl, "AOI remaped", 1);
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
 Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1);
 Map.addLayer(sumTC, vp_sum, "Sum Global", 0);
