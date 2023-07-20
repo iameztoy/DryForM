@@ -40,8 +40,7 @@ var glc10m = GLC10.mosaic()
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 var gedi5 = CH_GEDI.gte(5);
 var hansen_treeCover = gfcImage.select(['treecover2000']);
-var hansen_treeCover = gfcImage.select(['treecover2000']);
-var hansen_treeCover10 = treeCover.gte(10);
+var hansen_treeCover10 = hansen_treeCover.gte(10);
 var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
 var hansen_TC_2020 = hansen_treeCover10.subtract(lossb2020);
