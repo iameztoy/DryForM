@@ -130,9 +130,9 @@ Export.image.toAsset({
 */
 
 Export.image.toAsset({
-    image: sumTCc_rK,
+    image: SumTCc_rK,
     description: 'Sum_TF_4clK',
-    assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
+    assetId: 'projects/hardy-tenure-383607/assets/SumTCc_rK',
     scale: 10,
     maxPixels: 1e13
   });
