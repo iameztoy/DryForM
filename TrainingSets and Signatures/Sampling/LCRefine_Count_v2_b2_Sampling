@@ -1,7 +1,8 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff907b","ffe81c","a9ff6f","3ceeff","0e64ff"]},
     imageVisParam2 = {"opacity":1,"bands":["f"],"max":6,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff"]},
-    imageVisParam3 = {"opacity":1,"bands":["f"],"max":7,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff"]};
+    imageVisParam3 = {"opacity":1,"bands":["f"],"max":7,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff"]},
+    vp_sum = {"opacity":1,"bands":["f"],"min":0,"max":8,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff","6707ff"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //----------------------------------------------
 // Copied partially from:  
@@ -83,6 +84,7 @@ var sum = col.sum()
 print(sum)
 
 Map.addLayer(count, imageVisParam3, "Count", 0);
+Map.addLayer(sum, vp_sum, "Sum", 1);
 
 Map.addLayer(esa2020Forest, {}, "WC", 0)
 Map.addLayer(dwM_Tree, {}, "DW", 0)
