@@ -6,7 +6,8 @@ var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff90
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
-    vp_sum = {"opacity":0.5800000000000001,"bands":["f"],"min":0,"max":8,"palette":["000000","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff","6707ff"]};
+    vp_sum = {"opacity":0.5800000000000001,"bands":["f"],"min":0,"max":8,"palette":["000000","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff","6707ff"]},
+    vp_4cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","25bd36"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //----------------------------------------------
 // Copied partially from:  
@@ -85,29 +86,30 @@ var countTC = colTC.count()
 var sumTC = colTC.sum()
 
 var sumTCc = sumTC.clip(AOI)
+print(sumTCc)
 
 var from_9cl = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 3,];
 
-var sumTCc_r = sumTCc_2020.remap({
+var sumTCc_r = sumTCc.remap({
   from: from_9cl,
   to: to_4cl,
   defaultValue: 0,
-  bandName: 'treecover2000'
+  bandName: 'f'
 });
 
-
+Map.addLayer(sumTCc_r, vp_4cl, "AOI remaped", 1);
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
-Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1)
+Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1);
 Map.addLayer(sumTC, vp_sum, "Sum Global", 0);
-Map.addLayer(esa2020Forest, {}, "WC", 0)
-Map.addLayer(dwM_Tree, {}, "DW", 0)
-Map.addLayer(wri_Tree, {}, "WRI", 0)
-Map.addLayer(esri_Tree, {}, "ESRI", 0)
-Map.addLayer(glc10Forest_2017, {}, "GLC", 0)
-Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0)
-Map.addLayer(hansen_TC_2020_r, {}, "Hansen", 0)
-Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0)
+Map.addLayer(esa2020Forest, {}, "WC", 0);
+Map.addLayer(dwM_Tree, {}, "DW", 0);
+Map.addLayer(wri_Tree, {}, "WRI", 0);
+Map.addLayer(esri_Tree, {}, "ESRI", 0);
+Map.addLayer(glc10Forest_2017, {}, "GLC", 0);
+Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0);
+Map.addLayer(hansen_TC_2020_r, {}, "Hansen", 0);
+Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0);
 
 /*
 Export.image.toAsset({
