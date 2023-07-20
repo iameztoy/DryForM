@@ -89,7 +89,7 @@ var sumTCc = sumTC.clip(AOI)
 print(sumTCc)
 
 var from_9cl = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 3,];
+var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 3];
 
 var sumTCc_r = sumTCc.remap({
   from: from_9cl,
