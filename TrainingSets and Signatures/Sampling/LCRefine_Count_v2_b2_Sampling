@@ -54,22 +54,22 @@ var gedi5L = GEDI_Lang.gte(5);
 var fromList = [-1, 0, 1];
 var toList =   [0, 0, 1];
 
-var HTC_2020 = HTC_2020.remap({
+var hansen_TC_2020_r = hansen_TC_2020.remap({
   from: fromList,
   to: toList,
   defaultValue: 0,
   bandName: 'treecover2000'
 });
 
-print(HTC_2020)
+print(hansen_TC_2020)
 
-var r1 = WC2020Forest.rename("f")
+var r1 = esa2020Forest.rename("f")
 var r2 = dwM_Tree.rename("f")
 var r3 = wri_Tree.rename("f")
 var r4 = esri_Tree.rename("f")
-var r5 = glc10mForest.rename("f")
+var r5 = glc10Forest_2017.rename("f")
 var r6 = gedi5.rename("f")
-var r7 = HTC_2020.rename("f")
+var r7 = hansen_TC_2020_r.rename("f")
 var r8 = gedi5L.rename("f")
 
 var plist = [r1, r2, r3, r4, r5, r6, r7, r8]
@@ -83,13 +83,13 @@ var count = col.count()
 Map.addLayer(count, imageVisParam3, "Count", 0);
 
 
-Map.addLayer(WC2020Forest, {}, "WC", 0)
+Map.addLayer(esa2020Forest, {}, "WC", 0)
 Map.addLayer(dwM_Tree, {}, "DW", 0)
 Map.addLayer(wri_Tree, {}, "WRI", 0)
 Map.addLayer(esri_Tree, {}, "ESRI", 0)
-Map.addLayer(glc10mForest, {}, "GLC", 0)
+Map.addLayer(glc10Forest_2017, {}, "GLC", 0)
 Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0)
-Map.addLayer(HTC_2020, {}, "Hansen", 0)
+Map.addLayer(hansen_TC_2020_r, {}, "Hansen", 0)
 Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0)
 
 
