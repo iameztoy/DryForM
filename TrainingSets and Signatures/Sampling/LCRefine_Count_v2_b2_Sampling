@@ -7,7 +7,8 @@ var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff90
     caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     vp_sum = {"opacity":0.5800000000000001,"bands":["f"],"min":0,"max":8,"palette":["000000","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff","6707ff"]},
-    vp_4cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","25bd36"]};
+    vp_4cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","25bd36"]},
+    vp_5cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","29d33c","368c57"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //----------------------------------------------
 // Copied partially from:  
@@ -85,10 +86,10 @@ var colTC = ee.ImageCollection.fromImages(plist);
 var countTC = colTC.count();
 var sumTC = colTC.sum();
 
-var sumTCc = sumTC.clip(AOI);
+var sumTCc = sumTC //.clip(AOI);
 
-var from_9cl = [0, 1, 2, 3, 4, 5, 6, 7, 8];
-var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 3];
+var from_9cl = [0, 1, 2, 3, 4, 5, 6, 7, 8]; 
+var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 4]; //5 classes
 
 var sumTC_4cl_r = sumTCc.remap({
   from: from_9cl,
@@ -103,9 +104,9 @@ var sumTC_4cl_r = sumTCc.remap({
 var SumTC_4cl_rK = sumTC_4cl_r.focalMode(7, "square", "pixels", 2)
 
 
-Map.addLayer(SumTC_4cl_rK, vp_4cl, "AOI r and Kernel", 1);
+Map.addLayer(SumTC_4cl_rK, vp_5cl, "AOI r and Kernel", 1);
 //Map.addLayer(edgy, {}, 'edges', 0);
-Map.addLayer(sumTC_4cl_r, vp_4cl, "AOI remaped", 1);
+Map.addLayer(sumTC_4cl_r, vp_5cl, "AOI remaped", 1);
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
 Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1);
 Map.addLayer(sumTC, vp_sum, "Sum Global", 0);
