@@ -84,12 +84,17 @@ var colTC = ee.ImageCollection.fromImages(plist);
 print(colTC)
 
 
+
+
 var countTC = colTC.count()
 var sumTC = colTC.sum()
 print(sumTC)
 
+var sumTCc = sumTC.clip(AOI)
+
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
-Map.addLayer(sumTC, vp_sum, "Sum", 1);
+Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1)
+Map.addLayer(sumTC, vp_sum, "Sum", 0);
 
 Map.addLayer(esa2020Forest, {}, "WC", 0)
 Map.addLayer(dwM_Tree, {}, "DW", 0)
