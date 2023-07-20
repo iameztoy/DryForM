@@ -94,8 +94,7 @@ var sumTCc = sumTC.clip(AOI)
 
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
 Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1)
-Map.addLayer(sumTC, vp_sum, "Sum", 0);
-
+Map.addLayer(sumTC, vp_sum, "Sum Global", 0);
 Map.addLayer(esa2020Forest, {}, "WC", 0)
 Map.addLayer(dwM_Tree, {}, "DW", 0)
 Map.addLayer(wri_Tree, {}, "WRI", 0)
