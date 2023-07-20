@@ -97,6 +97,14 @@ var sumTCc_r = sumTCc.remap({
   bandName: 'f'
 });
 
+//var laplacian = ee.Kernel.laplacian8({ normalize: true });
+//var edgy = sumTCc_r.convolve(laplacian);
+
+var SumTCc_rK = sumTCc_r.focalMode(7, "square", "pixels", 1)
+
+
+Map.addLayer(SumTCc_rK, vp_4cl, "AOI r and Kernel", 1);
+//Map.addLayer(edgy, {}, 'edges', 0);
 Map.addLayer(sumTCc_r, vp_4cl, "AOI remaped", 1);
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
 Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1);
