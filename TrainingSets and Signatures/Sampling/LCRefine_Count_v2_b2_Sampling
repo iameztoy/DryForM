@@ -3,10 +3,16 @@ var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff90
     imageVisParam2 = {"opacity":1,"bands":["f"],"max":6,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff"]},
     imageVisParam3 = {"opacity":1,"bands":["f"],"max":7,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
+//----------------------------------------------
+// Copied partially from:  
+// 1/ LCRefine_Count_v2_b2 for sampling
+// 2/ LCProc_v2_1_2_UnifyTSG_ForScatterplots_v9_estable_monthly
+// 
+
+
+var esa2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
-var esawc2020 = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
@@ -17,9 +23,8 @@ var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var srt = '2020-01-01'; var end = '2021-01-01';
 
 
-var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 
-var WC2020Forest = WC2020.eq(10);
+var esa2020Forest = esa2020.eq(10);
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
 var dwM_Tree = dwMode.eq(1)
@@ -34,16 +39,18 @@ var esri_Tree = esri_aoi.eq(2).rename(['Trees']);
 var glc10m = GLC10.mosaic()
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 var gedi5 = CH_GEDI.gte(5);
-var treeCover = gfcImage.select(['treecover2000']);
-var treeCover = gfcImage.select(['treecover2000']);
-var treeCover10 = treeCover.gte(10);
+var hansen_treeCover = gfcImage.select(['treecover2000']);
+var hansen_treeCover = gfcImage.select(['treecover2000']);
+var hansen_treeCover10 = treeCover.gte(10);
 var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+var hansen_TC_2020 = hansen_treeCover10.subtract(lossb2020);
+var lossb2017 = lossYear.gte(17).and(lossYear.lte(20));
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var glc10Forest_2017 = glc10mForest.subtract(lossb2017);
 var gedi5L = GEDI_Lang.gte(5);
 //var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
 
-
-var HTC_2020 = treeCover10.subtract(lossb2020);
 
 var fromList = [-1, 0, 1];
 var toList =   [0, 0, 1];
