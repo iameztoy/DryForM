@@ -123,7 +123,7 @@ Export.image.toAsset({
 */
 
 Export.image.toAsset({
-    image: sumTC,
+    image: sumTCc_r,
     description: 'CountValid',
     assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
     scale: 10,
