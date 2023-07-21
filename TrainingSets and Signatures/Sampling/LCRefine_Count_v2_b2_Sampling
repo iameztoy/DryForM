@@ -11,8 +11,16 @@ var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff90
     vp_5cl = {"opacity":0.5800000000000001,"bands":["remapped"],"palette":["000000","ffc85a","a4ff7b","29d33c","368c57"]},
     geometry = 
     /* color: #d63000 */
-    /* shown: false */
-    ee.Geometry.Point([25.146619605465762, -3.3027116057747987]);
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-61.82640276875554, -22.795061894624915],
+          [-61.82640276875554, -24.06516394139491],
+          [-60.33226214375554, -24.06516394139491],
+          [-60.33226214375554, -22.795061894624915]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //----------------------------------------------
 // Copied partially from:  
@@ -121,22 +129,22 @@ var sumTC_test = ee.Image(0)
   .where(sumTCc.eq(8), 4)
   .selfMask()
   
-Map.addLayer(sumTC_test, null, "Where", 1)
+Map.addLayer(sumTC_test, null, "Where", 0)
 //END OF TEST
 
 //var laplacian = ee.Kernel.laplacian8({ normalize: true });
 //var edgy = sumTCc_r.convolve(laplacian);
 
 var SumTC_4cl_rK = sumTC_4cl_r.focalMode(7, "square", "pixels", 2)
-print(SumTC_4cl_rK)
+print(SumTC_4cl_rK, null, "SumTC rK, 0")
 
 
 
-Map.addLayer(SumTC_4cl_rK, vp_5cl, "AOI r and Kernel", 1);
+Map.addLayer(SumTC_4cl_rK, vp_5cl, "AOI r and Kernel", 0);
 //Map.addLayer(edgy, {}, 'edges', 0);
-Map.addLayer(sumTC_4cl_r, vp_5cl, "AOI remaped", 1);
+Map.addLayer(sumTC_4cl_r, vp_5cl, "AOI remaped", 0);
 Map.addLayer(countTC, imageVisParam3, "Count", 0);
-Map.addLayer(sumTCc, vp_sum, "Sum AOI", 1);
+Map.addLayer(sumTCc, vp_sum, "Sum AOI", 0);
 Map.addLayer(sumTC, vp_sum, "Sum Global", 0);
 Map.addLayer(esa2020Forest, {}, "WC", 0);
 Map.addLayer(dwM_Tree, {}, "DW", 0);
@@ -167,13 +175,13 @@ Export.image.toAsset({
   });
   
 */
-var chaco = chaco.geometry();
+var chaco = geometry //chaco.geometry();
 var Zones = chaco.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
   	scale: 100000
 });
 
-print(Zones)
+Map.addLayer(Zones, null, "zones", 1)
 
 
 ////////////// EXPORTING ///////////////////////
