@@ -28,38 +28,63 @@ var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://develope
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
-var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var glc10m = GLC10.mosaic();
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
 var srt = '2020-01-01'; var end = '2021-01-01'; //for dw
 
 var esa2020Forest = esa2020.eq(10);
+
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
 var dwM_Tree = dwMode.eq(1);
+
 var wrimax = TC_wri.max();
 var wri80 = wrimax.eq(80);
 var wri90 = wrimax.eq(90);
 var wri100 = wrimax.eq(100);
 var wri_Tree = wri80.add(wri90).add(wri100);
 var wri_Tree = wri_Tree.gte(1);
+
 var esri_aoi = esri_lulc2020.mosaic(); 
 var esri_Tree = esri_aoi.eq(2).rename(['Trees']);
-var glc10m = GLC10.mosaic();
-var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+
+
 var gedi5 = CH_GEDI.gte(5);
+var gedi5L = GEDI_Lang.gte(5);
+
 var hansen_treeCover = gfcImage.select(['treecover2000']);
 var hansen_treeCover10 = hansen_treeCover.gte(10);
 var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
 var hansen_TC_2020 = hansen_treeCover10.subtract(lossb2020);
-var lossb2017 = lossYear.gte(17).and(lossYear.lte(20));
+
+var glc10m = GLC10.mosaic();
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var lossb2017 = lossYear.gte(17).and(lossYear.lte(20));
 var glc10Forest_2017 = glc10mForest.subtract(lossb2017); //Not used in this version
-var gedi5L = GEDI_Lang.gte(5);
+
+
+
+
 //var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+
+
+
+var sc_esa = ee.Image(esa2020Forest).projection().nominalScale();
+var sc_dwi = ee.Image(dwM_Tree).projection().nominalScale();
+var sc_wri = ee.Image(wri_Tree).projection().nominalScale();
+var sc_esri = ee.Image(esri_Tree).projection().nominalScale();
+var sc_glc = ee.Image(glc10mForest).projection().nominalScale();
+var sc_gediP = ee.Image(gedi5).projection().nominalScale();
+var sc_gediL = ee.Image(gedi5L).projection().nominalScale();
+var sc_han = ee.Image(hansen_TC_2020).projection().nominalScale();
+
+print(sc_esa)
+
+
 
 
 var fromList = [-1, 0, 1];
@@ -102,10 +127,27 @@ var sumTC_4cl_r = sumTCc.remap({
   bandName: 'f'
 });
 
+//Test with where instead of remap
+var sumTC_test = ee.Image(0)
+  .where(sumTCc.eq(1), 1)
+  .where(sumTCc.eq(2), 1)
+  .where(sumTCc.eq(3), 1)
+  .where(sumTCc.eq(4), 2)
+  .where(sumTCc.eq(5), 2)
+  .where(sumTCc.eq(6), 3)
+  .where(sumTCc.eq(7), 3)
+  .where(sumTCc.eq(8), 4)
+  .selfMask()
+  
+Map.addLayer(sumTC_test, null, "Where", 1)
+//END OF TEST
+
 //var laplacian = ee.Kernel.laplacian8({ normalize: true });
 //var edgy = sumTCc_r.convolve(laplacian);
 
 var SumTC_4cl_rK = sumTC_4cl_r.focalMode(7, "square", "pixels", 2)
+print(SumTC_4cl_rK)
+
 
 
 Map.addLayer(SumTC_4cl_rK, vp_5cl, "AOI r and Kernel", 1);
