@@ -156,7 +156,7 @@ Export.image.toAsset({
     scale: 10,
     maxPixels: 1e13
   });
-*/
+
 
 Export.image.toAsset({
     image: SumTC_4cl_rK,
@@ -165,3 +165,24 @@ Export.image.toAsset({
     scale: 10,
     maxPixels: 1e13
   });
+  
+*/
+
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+////////////// EXPORTING ///////////////////////
+var featlist = Zones.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: SumTC_4cl_rK,
+    description: name+disS.toString(),
+    folder: "EEtest",
+    fileNamePrefix: name+disS.toString(),
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
