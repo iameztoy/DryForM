@@ -168,10 +168,10 @@ Export.image.toAsset({
   
 */
 
-var Zones = aoi.coveringGrid({
+var Zones = chaco.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
   	scale: 100000
-})
+});
 
 
 ////////////// EXPORTING ///////////////////////
