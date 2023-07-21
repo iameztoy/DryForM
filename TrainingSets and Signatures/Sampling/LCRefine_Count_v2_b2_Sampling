@@ -33,6 +33,8 @@ var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9");
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
+
+
 var srt = '2020-01-01'; var end = '2021-01-01'; //for dw
 
 var esa2020Forest = esa2020.eq(10);
@@ -82,7 +84,15 @@ var sc_gediP = ee.Image(gedi5).projection().nominalScale();
 var sc_gediL = ee.Image(gedi5L).projection().nominalScale();
 var sc_han = ee.Image(hansen_TC_2020).projection().nominalScale();
 
-print(sc_esa)
+
+print(esa2020); print(dw.limit(1)); print(esri_lulc2020); print(TC_wri); 
+print(GLC10.limit(1)); print(gfcImage); print(CH_GEDI); print(GEDI_Lang)
+
+print(esa2020Forest); print(dwM_Tree); print(wri_Tree); print(esri_Tree);
+print(glc10mForest); print(gedi5); print(gedi5); print(hansen_TC_2020);
+
+print(sc_esa); print(sc_dwi); print(sc_wri); print(sc_esri);
+print(sc_glc); print(sc_gediP); print(sc_gediL); print(sc_han);
 
 
 
