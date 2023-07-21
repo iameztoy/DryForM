@@ -69,49 +69,6 @@ var lossb2017 = lossYear.gte(17).and(lossYear.lte(20));
 var glc10Forest_2017 = glc10mForest.subtract(lossb2017); //Not used in this version
 
 
-
-
-//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
-
-var sc_o_esa = ee.Image(esa2020).projection().nominalScale();
-var sc_o_dwi = ee.Image(dw).projection().nominalScale();
-var sc_o_wri = ee.Image(TC_wri).projection().nominalScale();
-var sc_o_esri = ee.Image(esri_lulc2020).projection().nominalScale();
-var sc_o_glc = ee.Image(GLC10).projection().nominalScale();
-var sc_o_gediP = ee.Image(gedi5).projection().nominalScale();
-var sc_o_gediL = ee.Image(gedi5L).projection().nominalScale();
-var sc_o_han = ee.Image(gfcImage).projection().nominalScale();
-
-var sc_esa = ee.Image(esa2020Forest).projection().nominalScale();
-var sc_dwi = ee.Image(dwM_Tree).projection().nominalScale();
-var sc_wri = ee.Image(wri_Tree).projection().nominalScale();
-var sc_esri = ee.Image(esri_Tree).projection().nominalScale();
-var sc_glc = ee.Image(glc10mForest).projection().nominalScale();
-var sc_gediP = ee.Image(gedi5).projection().nominalScale();
-var sc_gediL = ee.Image(gedi5L).projection().nominalScale();
-var sc_han = ee.Image(hansen_TC_2020).projection().nominalScale();
-
-/*
-print(sc_o_esa); print(sc_o_dwi); print(sc_o_wri); print(sc_o_esri);
-print(sc_o_glc); print(sc_o_gediP); print(sc_o_gediL); print(sc_o_han);
-
-print(esa2020); print(dw.limit(1)); print(esri_lulc2020); print(TC_wri); 
-print(GLC10.limit(1)); print(gfcImage); print(CH_GEDI); print(GEDI_Lang);
-
-print(esa2020Forest); print(dwM_Tree); print(wri_Tree); print(esri_Tree);
-print(glc10mForest); print(gedi5); print(gedi5L); print(hansen_TC_2020);
-
-
-print(sc_esa); print(sc_dwi); print(sc_wri); print(sc_esri);
-print(sc_glc); print(sc_gediP); print(sc_gediL); print(sc_han);
-*/
-
-print(sc_esa); print(sc_dwi); print(sc_wri); print(sc_esri);
-print(sc_glc); print(sc_gediP); print(sc_gediL); print(sc_han);
-
-
-
-
 var fromList = [-1, 0, 1];
 var toList =   [0, 0, 1];
 
