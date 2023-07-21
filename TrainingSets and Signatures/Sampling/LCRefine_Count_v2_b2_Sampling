@@ -97,7 +97,7 @@ var colTC = ee.ImageCollection.fromImages(plist);
 var countTC = colTC.count();
 var sumTC = colTC.sum();
 
-var sumTCc = sumTC //.clip(AOI);
+var sumTCc = sumTC.clip(AOI);
 
 var from_9cl = [0, 1, 2, 3, 4, 5, 6, 7, 8]; 
 var to_4cl =   [0, 1, 1, 1, 2, 2, 3, 3, 4]; //5 classes
@@ -167,11 +167,13 @@ Export.image.toAsset({
   });
   
 */
-
+var chaco = chaco.geometry();
 var Zones = chaco.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
   	scale: 100000
 });
+
+print(Zones)
 
 
 ////////////// EXPORTING ///////////////////////
@@ -183,9 +185,9 @@ for (var f in featlist) {
   var name = "chip";  
   Export.image.toDrive({
     image: SumTC_4cl_rK,
-    description: name+disS.toString(),
+    //description: name+disS.toString(),
     folder: "EEtest",
-    fileNamePrefix: name+disS.toString(),
+    //fileNamePrefix: name+disS.toString(),
     region: feat.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
