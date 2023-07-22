@@ -181,7 +181,6 @@ var Zones = chaco.coveringGrid({
   	scale: 100000
 });
 
-//https://gis.stackexchange.com/questions/358095/change-systemindex-of-featurecollection-in-gee
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
 // featureCollection to a List
