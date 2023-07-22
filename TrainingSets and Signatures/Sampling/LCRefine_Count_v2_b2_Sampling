@@ -181,9 +181,20 @@ var Zones = chaco.coveringGrid({
   	scale: 100000
 });
 
-print(Zones)
+// make a list of length of features
+var idList = ee.List.sequence(0,Zones.size().subtract(1));
+// featureCollection to a List
+var list = Zones.toList(Zones.size());
 
-Map.addLayer(Zones, null, "zones", 1)
+// set the system:index
+var assetID = ee.FeatureCollection(idList.map(function(newSysIndex){
+  var feat = ee.Feature(list.get(newSysIndex));
+  // format number to string (system:index must be a string)
+  var indexString = ee.Number(newSysIndex).format('%03d')
+  return feat.set('system:index', indexString, 'ID', indexString);
+}));
+print(assetID)
+Map.addLayer(assetID, null, "assetID", 1)
 
 
 ////////////// EXPORTING ///////////////////////
