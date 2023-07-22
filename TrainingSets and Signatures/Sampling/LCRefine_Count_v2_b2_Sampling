@@ -171,6 +171,7 @@ var Zones = chaco.coveringGrid({
 
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
+print(idList)
 // featureCollection to a List
 var list = Zones.toList(Zones.size());
 
