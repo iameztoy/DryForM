@@ -169,9 +169,15 @@ var Zones = chaco.coveringGrid({
   	scale: 100000
 });
 
+// CoveringGrid produces a strage ID so I make a new fc with proper
+// unique id so are parsed to the name while exporting.
+// with earth engine plugin for Chrome we can use "Run All" option to 
+// run all at once (note that client may crash if there are many features,
+// although if we wait, it may still work; just push wait)
+
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
-print(idList)
+
 // featureCollection to a List
 var list = Zones.toList(Zones.size());
 
@@ -183,11 +189,13 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
-//print('list system:index OLD',Zones.aggregate_array('system:index'));
-//print('list system:index NEW',ZonesID.aggregate_array('system:index'));
+print('list system:index OLD', Zones.aggregate_array('system:index'));
+print('list system:index NEW', zonesID.aggregate_array('system:index'));
 
 Map.addLayer(zonesID)
 Map.addLayer(chaco)
+
+/*
 
 ////////////// EXPORTING ///////////////////////
 var featlist = zonesID.getInfo()["features"];
@@ -206,3 +214,4 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
+*/
