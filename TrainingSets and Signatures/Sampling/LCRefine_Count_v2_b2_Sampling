@@ -181,6 +181,8 @@ var Zones = chaco.coveringGrid({
   	scale: 100000
 });
 
+print(Zones)
+
 Map.addLayer(Zones, null, "zones", 1)
 
 
