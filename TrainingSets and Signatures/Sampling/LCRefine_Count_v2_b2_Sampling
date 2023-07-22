@@ -183,6 +183,9 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
+//print('list system:index OLD',Zones.aggregate_array('system:index'));
+//print('list system:index NEW',ZonesID.aggregate_array('system:index'));
+
 Map.addLayer(zonesID)
 Map.addLayer(chaco)
 
