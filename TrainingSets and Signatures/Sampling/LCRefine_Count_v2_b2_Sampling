@@ -163,6 +163,8 @@ Export.image.toAsset({
   });
   
 */
+
+// Create a covering GRID
 var chaco = chaco.geometry();
 var Zones = chaco.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
@@ -177,10 +179,8 @@ var Zones = chaco.coveringGrid({
 
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
-
 // featureCollection to a List
 var list = Zones.toList(Zones.size());
-
 // set the system:index
 var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   var feat = ee.Feature(list.get(newSysIndex));
