@@ -188,7 +188,7 @@ var idList = ee.List.sequence(0,Zones.size().subtract(1));
 var list = Zones.toList(Zones.size());
 
 // set the system:index
-var assetID = ee.FeatureCollection(idList.map(function(newSysIndex){
+var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   var feat = ee.Feature(list.get(newSysIndex));
   // format number to string (system:index must be a string)
   var indexString = ee.Number(newSysIndex).format('%03d')
@@ -197,17 +197,17 @@ var assetID = ee.FeatureCollection(idList.map(function(newSysIndex){
 
 
 ////////////// EXPORTING ///////////////////////
-var featlist = Zones.getInfo()["features"];
+var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("id");
+  var dis = feat.get("ID");
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toDrive({
     image: SumTC_4cl_rK,
-    //description: name+disS.toString(),
+    description: name+disS.toString(),
     folder: "Zones_test",
-    //fileNamePrefix: name+disS.toString(),
+    fileNamePrefix: name+disS.toString(),
     region: feat.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
