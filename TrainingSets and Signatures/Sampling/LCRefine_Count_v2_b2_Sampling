@@ -189,13 +189,13 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
-print('list system:index OLD', Zones.aggregate_array('system:index'));
-print('list system:index NEW', zonesID.aggregate_array('system:index'));
+// print('list system:index OLD', Zones.aggregate_array('system:index'));
+// print('list system:index NEW', zonesID.aggregate_array('system:index'));
 
 Map.addLayer(zonesID)
 Map.addLayer(chaco)
 
-/*
+
 
 ////////////// EXPORTING ///////////////////////
 var featlist = zonesID.getInfo()["features"];
@@ -214,4 +214,4 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
-*/
+
