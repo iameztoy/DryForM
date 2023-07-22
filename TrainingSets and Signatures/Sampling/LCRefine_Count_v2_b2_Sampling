@@ -194,7 +194,7 @@ for (var f in featlist) {
   Export.image.toDrive({
     image: SumTC_4cl_rK,
     //description: name+disS.toString(),
-    folder: "EEtest",
+    folder: "Zones_test",
     //fileNamePrefix: name+disS.toString(),
     region: feat.geometry().bounds(),
     scale: 10,
