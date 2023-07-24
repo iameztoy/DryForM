@@ -26,7 +26,8 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
         [[[-63.51138476667105, -21.305116294344735],
           [-63.51138476667105, -24.30242636804977],
           [-56.85366992292105, -24.30242636804977],
-          [-56.85366992292105, -21.305116294344735]]], null, false);
+          [-56.85366992292105, -21.305116294344735]]], null, false),
+    geometry2 = /* color: #98ff00 */ee.Geometry.MultiPoint();
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 var longitude = ee.Image.pixelLonLat().select('longitude');
