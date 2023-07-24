@@ -41,6 +41,7 @@ var utm2vec = utmZones.reduceToVectors({
 })
 
 
+
 var s0 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KQA")
 var s1 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KQV")
 var s2 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KRA")
@@ -53,16 +54,24 @@ var s8 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRA")
 var s9 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRV")
 var s10 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T21KTQ")
 
+var band = "B8"
+var s0s = s0.select(band); var s1s = s1.select(band); var s2s = s2.select(band);
+var s3s = s3.select(band); var s4s = s4.select(band); var s5s = s5.select(band);
+var s6s = s6.select(band); var s7s = s7.select(band); var s8s = s8.select(band);
+var s9s = s9.select(band); var s10s = s10.select(band); 
+
 Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
 Map.addLayer(utm2vec, null, "utm vector", 1)
-Map.addLayer(s0.select("B8"), null, "s0", 0)
-Map.addLayer(s1.select("B8"), null, "s1", 0)
-Map.addLayer(s2.select("B8"), null, "s2", 0)
-Map.addLayer(s3.select("B8"), null, "s3", 0)
-Map.addLayer(s4.select("B8"), null, "s4", 0)
-Map.addLayer(s5.select("B8"), null, "s5", 0)
-Map.addLayer(s6.select("B8"), null, "s6", 0)
-Map.addLayer(s7.select("B8"), null, "s7", 0)
-Map.addLayer(s8.select("B8"), null, "s8", 0)
-Map.addLayer(s9.select("B8"), null, "s9", 0)
-Map.addLayer(s10.select("B8"), null, "s10", 0)
+Map.addLayer(s0s, null, "s0", 0)
+Map.addLayer(s1s, null, "s1", 0)
+Map.addLayer(s2s, null, "s2", 0)
+Map.addLayer(s3s, null, "s3", 0)
+Map.addLayer(s4s, null, "s4", 0)
+Map.addLayer(s5s, null, "s5", 0)
+Map.addLayer(s6s, null, "s6", 0)
+Map.addLayer(s7s, null, "s7", 0)
+Map.addLayer(s8s, null, "s8", 0)
+Map.addLayer(s9s, null, "s9", 0)
+Map.addLayer(s10s, null, "s10", 0)
+
+print('Projections s0:', s0.projection())
