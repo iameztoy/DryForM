@@ -1,32 +1,25 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #d63000 */
-    /* shown: false */
+var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
+    point = /* color: #98ff00 */ee.Geometry.Point([-60.02705455232434, -22.641549205616815]),
+    geometry = 
+    /* color: #0b4a8b */
     /* displayProperties: [
-      {
-        "type": "rectangle"
-      },
       {
         "type": "rectangle"
       }
     ] */
-    ee.Geometry.MultiPolygon(
-        [[[[-60.156206205856876, -22.493371281536692],
-           [-60.156206205856876, -22.845650770923317],
-           [-59.851335600388126, -22.845650770923317],
-           [-59.851335600388126, -22.493371281536692]]],
-         [[[-152.37438122749285, 66.28139193818542],
-           [-152.37438122749285, -45.7423169434075],
-           [161.21936877250715, -45.7423169434075],
-           [161.21936877250715, 66.28139193818542]]]], null, false),
-    ic = ee.ImageCollection("COPERNICUS/S2_SR");
+    ee.Geometry.Polygon(
+        [[[-162.323752524189, 83.89173626183896],
+          [-162.323752524189, -61.16129975477671],
+          [177.285622475811, -61.16129975477671],
+          [177.285622475811, 83.89173626183896]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 var longitude = ee.Image.pixelLonLat().select('longitude');
 var utmZones = longitude.add(180).divide(6).int();
 Map.addLayer(utmZones, {min:0, max: 60}, 'UTM zones');
 
-var s2 = ic.filterDate("2020-06-01", "2020-06-05").filterBounds(geometry)
+var s2 = ic.filterDate("2020-06-01", "2020-06-05").filterBounds(point)
 print(s2)
 
 var utm2vec = utmZones.reduceToVectors({
