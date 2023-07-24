@@ -1,0 +1,17 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.Point([-2.1768878213835374, 43.26986076745834]),
+    ic = ee.ImageCollection("COPERNICUS/S2_SR_HARMONIZED");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var ic = ic.filterBounds(geometry).filterDate("2023-07-07", "2023-07-30")
+
+function resamp(img) {
+   
+    return img.toFloat().resample('bilinear').reproject(img.select('B2').projection());
+}
+
+var remapic = ic.map(resamp)
+
+print(ic)
+print(remapic)
+
+
