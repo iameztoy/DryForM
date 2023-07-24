@@ -60,6 +60,7 @@ var s3s = s3.select(band); var s4s = s4.select(band); var s5s = s5.select(band);
 var s6s = s6.select(band); var s7s = s7.select(band); var s8s = s8.select(band);
 var s9s = s9.select(band); var s10s = s10.select(band); 
 
+Map.addLayer(longitude, null, "Longitude", 0)
 Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
 Map.addLayer(utm2vec, null, "utm vector", 1)
 Map.addLayer(s0s, null, "s0", 0)
