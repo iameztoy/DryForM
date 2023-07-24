@@ -30,7 +30,8 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
     geometry2 = 
     /* color: #98ff00 */
     /* shown: false */
-    ee.Geometry.MultiPoint();
+    ee.Geometry.MultiPoint(),
+    S2_grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 var longitude = ee.Image.pixelLonLat().select('longitude');
@@ -97,8 +98,10 @@ Map.addLayer(s9s, null, "s9", 0)
 Map.addLayer(s10s, null, "s10", 0)
 
 Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
-Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids")
-print(TGrid_centroid.limit(2))
+Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids- S2")
+Map.addLayer(S2_grid, null, "UTM Grid - S2")
+
+//print(TGrid_centroid.limit(2))
 
 print('Projections s0:', s0s.projection()); print('Projections s1:', s1s.projection());
 print('Projections s2:', s2s.projection()); print('Projections s3:', s3s.projection());
