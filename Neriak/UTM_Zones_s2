@@ -53,7 +53,7 @@ var s8 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRA")
 var s9 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRV")
 var s10 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T21KTQ")
 
-Map.addLayer(utmZones, {min:0, max: 60}, 'UTM zones', 0;
+Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
 Map.addLayer(utm2vec, null, "utm vector", 1)
 Map.addLayer(s0.select("B8"), null, "s0", 0)
 Map.addLayer(s1.select("B8"), null, "s1", 0)
