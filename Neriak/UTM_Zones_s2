@@ -48,9 +48,9 @@ Map.addLayer(ee.FeatureCollection(s2), {}, 'Granule boundaries');
 //var s2utm = s2.updateMask(utm)
 
 var utm2vec = utmZones.reduceToVectors({
-  	reducer:null,
-  	geometry:geometry,
-    scale: 1000,
+    reducer:null,
+    geometry: geometry,
+    scale: 10000,
     geometryType:"polygon",
 //	eightConnected:true,
 //	labelProperty:"label",
