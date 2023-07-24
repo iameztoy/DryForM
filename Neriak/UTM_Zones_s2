@@ -16,7 +16,8 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
         [[[-162.323752524189, 83.89173626183896],
           [-162.323752524189, -61.16129975477671],
           [177.285622475811, -61.16129975477671],
-          [177.285622475811, 83.89173626183896]]], null, false);
+          [177.285622475811, 83.89173626183896]]], null, false),
+    TGrid_centroid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid_centroid");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 var longitude = ee.Image.pixelLonLat().select('longitude');
@@ -82,7 +83,9 @@ Map.addLayer(s8s, null, "s8", 0)
 Map.addLayer(s9s, null, "s9", 0)
 Map.addLayer(s10s, null, "s10", 0)
 
-Map.addLayer(utm2vec, {color: 'red'}, "utm vector", 1)
+Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
+Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids")
+print(TGrid_centroid.limit(2))
 
 print('Projections s0:', s0s.projection()); print('Projections s1:', s1s.projection());
 print('Projections s2:', s2s.projection()); print('Projections s3:', s3s.projection());
