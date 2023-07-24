@@ -21,7 +21,6 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
 // https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 var longitude = ee.Image.pixelLonLat().select('longitude');
 var utmZones = longitude.add(180).divide(6).int();
-Map.addLayer(utmZones, {min:0, max: 60}, 'UTM zones');
 
 var s2 = ic.filterDate("2020-06-01", "2020-06-05").filterBounds(point)
 print(s2)
@@ -54,6 +53,7 @@ var s8 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRA")
 var s9 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRV")
 var s10 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T21KTQ")
 
+Map.addLayer(utmZones, {min:0, max: 60}, 'UTM zones'), 0;
 Map.addLayer(utm2vec, null, "utm vector", 1)
 Map.addLayer(s0.select("B8"), null, "s0", 0)
 Map.addLayer(s1.select("B8"), null, "s1", 0)
