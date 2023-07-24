@@ -16,6 +16,7 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
     TGrid_centroid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid_centroid"),
     aoi = 
     /* color: #4cd011 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -49,15 +50,15 @@ Map.addLayer(ee.FeatureCollection(s2), {}, 'Granule boundaries');
 var utm2vec = utmZones.reduceToVectors({
   	reducer:null,
   	geometry:geometry,
-    scale:10000,
+    scale: 1000,
     geometryType:"polygon",
 //	eightConnected:true,
 //	labelProperty:"label",
 //	crs:null,
 //	crsTransform:null,
 //	bestEffort:false,
-//	maxPixels:10000000,
-//	tileScale:true,
+    maxPixels: 1e13,
+    tileScale: 6,
 //	geometryInNativeProjection:false,
 })
 
