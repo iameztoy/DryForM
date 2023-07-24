@@ -1,0 +1,4 @@
+// https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
+var longitude = ee.Image.pixelLonLat().select('longitude');
+var utmZones = longitude.add(180).divide(6).int();
+Map.addLayer(utmZones, {min:0, max: 60}, 'UTM zones');
