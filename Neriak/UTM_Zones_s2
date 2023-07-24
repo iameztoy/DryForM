@@ -69,7 +69,7 @@ var s9s = s9.select(band); var s10s = s10.select(band);
 
 Map.addLayer(longitude, null, "Longitude", 0)
 Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
-Map.addLayer(utm2vec, {color: 'red'}, "utm vector", 1)
+
 Map.addLayer(s0s, null, "s0", 0)
 Map.addLayer(s1s, null, "s1", 0)
 Map.addLayer(s2s, null, "s2", 0)
@@ -81,6 +81,8 @@ Map.addLayer(s7s, null, "s7", 0)
 Map.addLayer(s8s, null, "s8", 0)
 Map.addLayer(s9s, null, "s9", 0)
 Map.addLayer(s10s, null, "s10", 0)
+
+Map.addLayer(utm2vec, {color: 'red'}, "utm vector", 1)
 
 print('Projections s0:', s0s.projection()); print('Projections s1:', s1s.projection());
 print('Projections s2:', s2s.projection()); print('Projections s3:', s3s.projection());
