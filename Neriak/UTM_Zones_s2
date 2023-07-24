@@ -16,7 +16,6 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
     TGrid_centroid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid_centroid"),
     aoi = 
     /* color: #4cd011 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
