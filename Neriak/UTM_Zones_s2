@@ -22,8 +22,13 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
 var longitude = ee.Image.pixelLonLat().select('longitude');
 var utmZones = longitude.add(180).divide(6).int();
 
+var utm = 20 
+var utm = utmZones.eq(utm)
+
 var s2 = ic.filterDate("2020-06-01", "2020-06-05").filterBounds(point)
 print(s2)
+
+//var s2utm = s2.updateMask(utm)
 
 var utm2vec = utmZones.reduceToVectors({
   	reducer:null,
