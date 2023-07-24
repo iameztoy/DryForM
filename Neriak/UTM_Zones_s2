@@ -1,0 +1,46 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.156206205856876, -22.493371281536692],
+          [-60.156206205856876, -22.845650770923317],
+          [-59.851335600388126, -22.845650770923317],
+          [-59.851335600388126, -22.493371281536692]]], null, false),
+    ic = ee.ImageCollection("COPERNICUS/S2_SR");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
+var longitude = ee.Image.pixelLonLat().select('longitude');
+var utmZones = longitude.add(180).divide(6).int();
+Map.addLayer(utmZones, {min:0, max: 60}, 'UTM zones');
+
+var s2 = ic.filterDate("2020-06-01", "2020-06-05").filterBounds(geometry)
+print(s2)
+
+var s0 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KQA")
+var s1 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KQV")
+var s2 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KRA")
+var s3 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KRV")
+var s4 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T21KTQ")
+var s5 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T21KTR")
+var s6 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KQA")
+var s7 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KQV")
+var s8 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRA")
+var s9 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T20KRV")
+var s10 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141855_T21KTQ")
+
+Map.addLayer(s0.select("B8"), null, "s0")
+Map.addLayer(s1.select("B8"), null, "s1")
+Map.addLayer(s2.select("B8"), null, "s2")
+Map.addLayer(s3.select("B8"), null, "s3")
+Map.addLayer(s4.select("B8"), null, "s4")
+Map.addLayer(s5.select("B8"), null, "s5")
+Map.addLayer(s6.select("B8"), null, "s6")
+Map.addLayer(s7.select("B8"), null, "s7")
+Map.addLayer(s8.select("B8"), null, "s8")
+Map.addLayer(s9.select("B8"), null, "s9")
+Map.addLayer(s10.select("B8"), null, "s10")
