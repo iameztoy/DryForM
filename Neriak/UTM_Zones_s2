@@ -74,4 +74,12 @@ Map.addLayer(s8s, null, "s8", 0)
 Map.addLayer(s9s, null, "s9", 0)
 Map.addLayer(s10s, null, "s10", 0)
 
-print('Projections s0:', s0.projection())
+print('Projections s0:', s0s.projection()); print('Projections s1:', s1s.projection());
+print('Projections s2:', s2s.projection()); print('Projections s3:', s3s.projection());
+print('Projections s4:', s4s.projection()); print('Projections s5:', s5s.projection());
+print('Projections s6:', s6s.projection()); print('Projections s7:', s7s.projection());
+print('Projections s8:', s8s.projection()); print('Projections s9:', s9s.projection());
+print('Projections s10:', s10s.projection());
+
+
+
