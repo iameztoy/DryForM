@@ -97,9 +97,9 @@ Map.addLayer(s8s, null, "s8", 0)
 Map.addLayer(s9s, null, "s9", 0)
 Map.addLayer(s10s, null, "s10", 0)
 
-Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
 Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids- S2")
 Map.addLayer(S2_grid, null, "UTM Grid - S2")
+Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
 
 //print(TGrid_centroid.limit(2))
 
