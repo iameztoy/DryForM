@@ -1,9 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
-    point = 
-    /* color: #98ff00 */
-    /* shown: false */
-    ee.Geometry.Point([-60.02705455232434, -22.641549205616815]),
     geometry = 
     /* color: #0b4a8b */
     /* shown: false */
@@ -17,7 +13,20 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
           [-162.323752524189, -61.16129975477671],
           [177.285622475811, -61.16129975477671],
           [177.285622475811, 83.89173626183896]]], null, false),
-    TGrid_centroid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid_centroid");
+    TGrid_centroid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid_centroid"),
+    aoi = 
+    /* color: #4cd011 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-63.51138476667105, -21.305116294344735],
+          [-63.51138476667105, -24.30242636804977],
+          [-56.85366992292105, -24.30242636804977],
+          [-56.85366992292105, -21.305116294344735]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
 var longitude = ee.Image.pixelLonLat().select('longitude');
@@ -26,7 +35,7 @@ var utmZones = longitude.add(180).divide(6).int();
 var utm = 20 
 var utm = utmZones.eq(utm)
 
-var s2 = ic.filterDate("2020-06-01", "2020-06-05").filterBounds(point)
+var s2 = ic.filterDate("2020-06-01", "2020-06-10").filterBounds(aoi)
 print(s2)
 
 Map.addLayer(ee.FeatureCollection(s2), {}, 'Granule boundaries');  
