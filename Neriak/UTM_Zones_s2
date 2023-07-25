@@ -41,9 +41,6 @@ var utm = utmZones.eq(utm)
 var str = "2020-06-01"; var end = "2020-06-10"
 
 var s2c = ic.filterDate("2020-06-01", "2020-06-10").filterBounds(aoi)
-print(s2)
-
-Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
 
 //var s2utm = s2.updateMask(utm)
 
@@ -83,8 +80,10 @@ var s6s = s6.select(band); var s7s = s7.select(band); var s8s = s8.select(band);
 var s9s = s9.select(band); var s10s = s10.select(band); 
 */
 
+Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
 Map.addLayer(longitude, null, "Longitude", 0)
 Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
+
 /*
 Map.addLayer(s0s, null, "s0", 0)
 Map.addLayer(s1s, null, "s1", 0)
