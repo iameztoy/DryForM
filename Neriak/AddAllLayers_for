@@ -1,0 +1,26 @@
+var DMS_to_Decimal = function (d, m, s) {
+  var dec = Math.abs(d) + Math.abs(m/60) + Math.abs(s/3600);
+  return d/Math.abs(d)*dec;
+}
+
+var oros = ee.Geometry.Point(DMS_to_Decimal(-39, 0, 10), 
+                             DMS_to_Decimal(-6, 15, 12))
+Map.addLayer(oros)
+Map.centerObject(oros, 12)
+
+// Set period to search for images
+var start_dt = ee.Date.fromYMD(2018, 12, 1)
+var end_dt = ee.Date.fromYMD(2018, 12, 31)
+var img_collection = ee.ImageCollection("COPERNICUS/S2_SR")
+
+// Filter the collection
+var filtered = img_collection.filterBounds(oros).filterDate(start_dt, end_dt)
+
+var list = filtered.toList(filtered.size().getInfo())
+print(list)
+
+for (var i = 0; i < list.length().getInfo(); i++) {
+  var img = ee.Image(list.get(i))
+  Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 3000})
+  print (i, img)
+}
