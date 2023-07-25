@@ -68,13 +68,13 @@ for (var i = 0; i < list.length().getInfo(); i++) {
   print (i, img, projection)
 }
 
-Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
 Map.addLayer(longitude, null, "Longitude", 0)
 Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
 Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids- S2")
 Map.addLayer(S2_grid, null, "UTM Grid - S2")
 Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
 Map.centerObject(aoi, 8)
+Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
 
 
 
