@@ -63,7 +63,7 @@ var utm2vec = utmZones.reduceToVectors({
 })
 
 
-
+/*
 var s0 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KQA")
 var s1 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KQV")
 var s2 = ee.Image("COPERNICUS/S2_SR/20200603T141051_20200603T141052_T20KRA")
@@ -81,6 +81,7 @@ var s0s = s0.select(band); var s1s = s1.select(band); var s2s = s2.select(band);
 var s3s = s3.select(band); var s4s = s4.select(band); var s5s = s5.select(band);
 var s6s = s6.select(band); var s7s = s7.select(band); var s8s = s8.select(band);
 var s9s = s9.select(band); var s10s = s10.select(band); 
+*/
 
 Map.addLayer(longitude, null, "Longitude", 0)
 Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
@@ -103,13 +104,14 @@ Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
 Map.centerObject(aoi, 8)
 //print(TGrid_centroid.limit(2))
 
+/*
 print('Projections s0:', s0s.projection()); print('Projections s1:', s1s.projection());
 print('Projections s2:', s2s.projection()); print('Projections s3:', s3s.projection());
 print('Projections s4:', s4s.projection()); print('Projections s5:', s5s.projection());
 print('Projections s6:', s6s.projection()); print('Projections s7:', s7s.projection());
 print('Projections s8:', s8s.projection()); print('Projections s9:', s9s.projection());
 print('Projections s10:', s10s.projection());
-
+*/
 
 //Same with for loop
 
