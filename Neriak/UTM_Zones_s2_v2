@@ -1,0 +1,85 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
+    geometry = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-162.323752524189, 83.89173626183896],
+          [-162.323752524189, -61.16129975477671],
+          [177.285622475811, -61.16129975477671],
+          [177.285622475811, 83.89173626183896]]], null, false),
+    TGrid_centroid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid_centroid"),
+    aoi = 
+    /* color: #4cd011 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.55606250104605, -22.04020751008818],
+          [-60.55606250104605, -23.095274303076256],
+          [-59.51236132917105, -23.095274303076256],
+          [-59.51236132917105, -22.04020751008818]]], null, false),
+    geometry2 = 
+    /* color: #98ff00 */
+    /* shown: false */
+    ee.Geometry.MultiPoint(),
+    S2_grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system
+var longitude = ee.Image.pixelLonLat().select('longitude');
+var utmZones = longitude.add(180).divide(6).int();
+
+var utm = 20 
+var utm = utmZones.eq(utm)
+var str = "2020-06-01"; var end = "2020-06-10"
+
+var s2c = ic.filterDate("2020-06-01", "2020-06-10").filterBounds(aoi)
+print(s2c.size())
+//var s2utm = s2.updateMask(utm)
+
+var utm2vec = utmZones.reduceToVectors({
+    reducer:null,
+    geometry: geometry,
+    scale: 10000,
+    geometryType:"polygon",
+//	eightConnected:true,
+//	labelProperty:"label",
+//	crs:null,
+//	crsTransform:null,
+//	bestEffort:false,
+    maxPixels: 1e13,
+    tileScale: 6,
+//	geometryInNativeProjection:false,
+})
+
+
+Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
+Map.addLayer(longitude, null, "Longitude", 0)
+Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
+Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids- S2")
+Map.addLayer(S2_grid, null, "UTM Grid - S2")
+Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
+Map.centerObject(aoi, 8)
+//print(TGrid_centroid.limit(2))
+
+
+
+//Same with for loop
+
+var list = s2c.toList(s2c.size().getInfo())
+
+for (var i = 0; i < list.length().getInfo(); i++) {
+  var img = ee.Image(list.get(i))
+  var projection = img.select("B8").projection()
+  Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 3000}, null, 0)
+  print (i, img, projection)
+}
+
+
