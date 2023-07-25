@@ -100,7 +100,7 @@ Map.addLayer(s10s, null, "s10", 0)
 Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids- S2")
 Map.addLayer(S2_grid, null, "UTM Grid - S2")
 Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
-Map.centerObject(AOI, 8)
+Map.centerObject(aoi, 8)
 //print(TGrid_centroid.limit(2))
 
 print('Projections s0:', s0s.projection()); print('Projections s1:', s1s.projection());
