@@ -59,20 +59,6 @@ var utm2vec = utmZones.reduceToVectors({
 //	geometryInNativeProjection:false,
 })
 
-
-Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
-Map.addLayer(longitude, null, "Longitude", 0)
-Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
-Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids- S2")
-Map.addLayer(S2_grid, null, "UTM Grid - S2")
-Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
-Map.centerObject(aoi, 8)
-//print(TGrid_centroid.limit(2))
-
-
-
-//Same with for loop
-
 var list = s2c.toList(s2c.size().getInfo())
 
 for (var i = 0; i < list.length().getInfo(); i++) {
@@ -81,5 +67,16 @@ for (var i = 0; i < list.length().getInfo(); i++) {
   Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 3000}, null, 0)
   print (i, img, projection)
 }
+
+Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
+Map.addLayer(longitude, null, "Longitude", 0)
+Map.addLayer(utmZones, {min:0, max: 60}, "UTM zones", 0);
+Map.addLayer(TGrid_centroid, null, "UTM Grid Centroids- S2")
+Map.addLayer(S2_grid, null, "UTM Grid - S2")
+Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
+Map.centerObject(aoi, 8)
+
+
+
 
 
