@@ -2,7 +2,6 @@
 var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
     geometry = 
     /* color: #0b4a8b */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -16,17 +15,16 @@ var ic = ee.ImageCollection("COPERNICUS/S2_SR"),
     TGrid_centroid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid_centroid"),
     aoi = 
     /* color: #4cd011 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-66.75235156354604, -18.307991013584786],
-          [-66.75235156354604, -27.562220820645944],
-          [-53.62368945417105, -27.562220820645944],
-          [-53.62368945417105, -18.307991013584786]]], null, false),
+        [[[-61.52285937604605, -22.01983913405573],
+          [-61.52285937604605, -23.075061150669466],
+          [-60.47915820417105, -23.075061150669466],
+          [-60.47915820417105, -22.01983913405573]]], null, false),
     geometry2 = 
     /* color: #98ff00 */
     /* shown: false */
@@ -39,11 +37,12 @@ var utmZones = longitude.add(180).divide(6).int();
 
 var utm = 20 
 var utm = utmZones.eq(utm)
+var str = "2020-06-01"; var end = "2020-06-10"
 
-var s2 = ic.filterDate("2020-06-01", "2020-06-10").filterBounds(aoi)
+var s2c = ic.filterDate("2020-06-01", "2020-06-10").filterBounds(aoi)
 print(s2)
 
-Map.addLayer(ee.FeatureCollection(s2), {}, 'Granule boundaries');  
+Map.addLayer(ee.FeatureCollection(s2c), {}, 'Granule boundaries');  
 
 //var s2utm = s2.updateMask(utm)
 
@@ -112,18 +111,14 @@ print('Projections s10:', s10s.projection());
 
 
 //Same with for loop
-/*
 
-var filtered = img_collection.filterBounds(oros).filterDate(start_dt, end_dt)
-
-var list = filtered.toList(filtered.size().getInfo())
-print(list)
+var list = s2c.toList(s2c.size().getInfo())
 
 for (var i = 0; i < list.length().getInfo(); i++) {
   var img = ee.Image(list.get(i))
   var projection = img.select("B8").projection()
   Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 3000})
   print (i, img, projection)
-}*/
+}
 
 
