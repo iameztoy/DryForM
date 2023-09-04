@@ -1143,7 +1143,7 @@ var VisParam10cl = {min: 0, max: 9, palette: [
     "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff", '339825', 'F9F6EE'], opacity: 0.6}; //added one color more after including BLM 2020
     
 //  Palette with legend colors
-var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '339825'];
+var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '339825', 'F9F6EE'];
  
 // name of the legend
 var names8 = ["0", "1", "2", "3", "4", "5", "6", "7"];
@@ -1151,7 +1151,6 @@ var names9 = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
 var names10 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 
- 
 // Add color and names to legend
 for (var i = 0; i < 10; i++) {
   legend.add(makeRow(palette[i], names10[i]));
