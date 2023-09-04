@@ -73,7 +73,7 @@ var rgbTs = require(
 // #############################################################################
 
 var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
-var RefineStep2 = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2");
+var RefineStep2 = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2"); //Our second processing Sept. 2023
 
 
 //var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
