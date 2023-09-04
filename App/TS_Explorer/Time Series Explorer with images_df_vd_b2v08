@@ -1053,10 +1053,12 @@ var gedi5Llt5 = GEDI_Lang.lt(5);
 var gedi5L_gte5 = gedi5L_gte5.unmask();
 var gedi5Llt5 = gedi5Llt5.unmask();
 
+//9. Refine Step 2 - JRC Baseline Map 2020
+
 
 // n. Overall Trees 2020
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5).add(RefineStep2m);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 //Stack Tree/Forest
@@ -1069,13 +1071,14 @@ var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_Potapov_gte5']);
 var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5']);
+var RefineStep2_r = RefineStep2m.rename(['RefineStep2']);
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 
 
 //Image Collection of all Tree/Forest bands
 
-var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r]);
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r, RefineStep2_r]);
 //print(allFT)
 //system:index: 0, 1, 2, 3, 4, 5, 6, 7, 8
 
@@ -1141,17 +1144,18 @@ var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267f
 // name of the legend
 var names8 = ["0", "1", "2", "3", "4", "5", "6", "7"];
 var names9 = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
+var names10 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
 
  
 // Add color and names to legend
-for (var i = 0; i < 9; i++) {
+for (var i = 0; i < 10; i++) {
   legend.add(makeRow(palette[i], names9[i]));
   }  
 
 // Palette for Valid Count
-var vcVis = {min: 0, max: 8, palette: [
-    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '339825']};
+var vcVis = {min: 0, max: 9, palette: [
+    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '339825', 'F9F6EE']};
 
 
 // #############################################################################
