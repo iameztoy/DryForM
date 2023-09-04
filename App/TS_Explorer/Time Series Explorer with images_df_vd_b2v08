@@ -1055,6 +1055,7 @@ var gedi5Llt5 = gedi5Llt5.unmask();
 
 //9. Refine Step 2 - JRC Baseline Map 2020
 
+var RefineStep2m = RefineStep2.max();
 
 // n. Overall Trees 2020
 
