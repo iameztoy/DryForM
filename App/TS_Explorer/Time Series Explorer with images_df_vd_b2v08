@@ -1072,7 +1072,7 @@ var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_Potapov_gte5']);
 var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5']);
-var RefineStep2_r = RefineStep2m.rename(['RefineStep2']);
+var RefineStep2_r = RefineStep2m.rename(['JRC_BaselineM_2020']);
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 
