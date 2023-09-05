@@ -18,10 +18,10 @@
  * 
  ** = Priority
  * 
- *  1/ Need to adequate masks per layer coverage e.g. If I click wri outside its own Spatial coverage
- *     I currently get 0, it should be null
- *  2/ Valid count layer should be changed with new calculation, meanwhile I added + 1 to the previous
- **  3/ Remember to update Count values after including JRC Baseline Map 2020. I should +1
+ *   1/   Need to adequate masks per layer coverage e.g. If I click wri outside its own Spatial coverage
+ *         I currently get 0, it should be null
+ *   2/   Valid count layer should be changed with new calculation, meanwhile I added + 1 to the previous
+ **  2.1/ Remember to update Count values after including JRC Baseline Map 2020. I should +1
  * 
  *    ###############
  *    ## IDEAS
