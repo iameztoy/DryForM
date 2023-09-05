@@ -19,6 +19,7 @@
  *  1/ Need to adequate masks per layer coverage e.g. If I click wri outside its own Spatial coverage
  *     I currently get 0, it should be null
  *  2/ Valid count layer should be changed with new calculation, meanwhile I added + 1 to the previous
+ *  3/ Remember to update Count values after including JRC Baseline Map 2020. I should +1
  * 
  *    ###############
  *    ## IDEAS
@@ -1156,7 +1157,7 @@ for (var i = 0; i < 10; i++) {
   legend.add(makeRow(palette[i], names10[i]));
   }  
 
-// Palette for Valid Count
+// Palette for Valid Count 
 var vcVis = {min: 0, max: 9, palette: [
     '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '339825', '124429']};
 
