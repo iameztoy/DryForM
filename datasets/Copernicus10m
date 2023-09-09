@@ -34,7 +34,7 @@ Map.addLayer(cop_mosm, {min: 0, max: 100, palette: palette}, "Copernicus 10m, 0 
 //In case we want to export it as an asset.
 
 Export.image.toAsset({
-  image: cop_mos,
+  image: cop_mosm,
   description: 'CopernicusMOS',
   assetId: 'projects/ee-dryforestia/assets/TCD_2018_010m_eu_03035_V2_0',
   //crs: 'EPSG:4326',
