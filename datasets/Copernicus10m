@@ -18,8 +18,8 @@ var boolean = cop_mos.gte(10).and(cop_mos.lte(100)); // To comply to FAO definit
 var cop_mosm = cop_mos.updateMask(boolean);
 
 
-Map.addLayer(cop_mosm, {min: 0, max:100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
-Map.addLayer(boolean)
+Map.addLayer(cop_mosm, {min: 0, max: 100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
+Map.addLayer(boolean, {min: 0, max: 1}, "Copernicus 10m, => 10%", true);)
 Map.centerObject(cop_mosm);
 
 
