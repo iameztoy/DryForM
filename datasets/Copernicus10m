@@ -8,7 +8,7 @@ var image1 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image7 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m7");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 /*
-September 2023. TCD ingested as an asset. Iban Ameztoy
+September 2023. TCD ingested as an asset. Iban Ameztoy | JRC Bioeconomy Unit
 Source: Tree Cover Density 2018 — Copernicus Land Monitoring Service (File name & version: TCD_2018_010m_eu_03035_V2_0)
 Link: land.copernicus.eu/pan-european/high-resolution-layers/forests/tree-cover-density/status-maps/tree-cover-density-2018?tab=download
 
