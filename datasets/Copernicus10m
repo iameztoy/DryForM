@@ -14,7 +14,7 @@ var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, im
 var cop_mos = col.mosaic();
 //print(mos)
 
-Map.addLayer(cop_mos, {min: 0, max:100}, "Copernicus 10m, 0 - 100%", true);
+Map.addLayer(cop_mos, {min: 0, max:100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
 Map.centerObject(cop_mos);
 
 
