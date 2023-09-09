@@ -7,6 +7,17 @@ var image1 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image6 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m8"),
     image7 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m7");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+/*
+September 2023. TCD ingested as an asset. Iban Ameztoy
+Source: Tree Cover Density 2018 — Copernicus Land Monitoring Service 
+https://land.copernicus.eu/pan-european/high-resolution-layers/forests/tree-cover-density/status-maps/tree-cover-density-2018?tab=download
+
+Previous steps: Size reduction of the original 10 meter mosaic; split in 9 tiles.
+
+*/
+
+
+
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.cmocean.Speed[7]; //https://github.com/gee-community/ee-palettes 
 
