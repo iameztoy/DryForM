@@ -8,5 +8,6 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD201801
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var col = ee.ImageCollection([image, image2, image3, image4, image5, image6]);
 var mos = col.mosaic()
-print(mos)
-Map.addLayer(mos)
+//print(mos)
+
+Map.addLayer(mos, {min: 0, max:100}, "Copernicus 10m mosaic", true)
