@@ -13,17 +13,14 @@ Source: Tree Cover Density 2018 — Copernicus Land Monitoring Service
 https://land.copernicus.eu/pan-european/high-resolution-layers/forests/tree-cover-density/status-maps/tree-cover-density-2018?tab=download
 
 Previous steps: Size reduction of the original 10 meter mosaic; split in 9 tiles.
-
 */
-
-
 
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.cmocean.Speed[7]; //https://github.com/gee-community/ee-palettes 
 
 var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, image7]);
 var cop_mos = col.mosaic();
-//print(mos)
+//print(cop_mos)
 
 var boolean = cop_mos.gte(10).and(cop_mos.lte(100)); // To comply to FAO definition of Forest: dens. =>10%
 var cop_mosm = cop_mos.updateMask(boolean); //Original Copernicus Forest dataset (10m). Background value 255 masked. Range 0 - 100%
