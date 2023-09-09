@@ -10,12 +10,16 @@ var image1 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.cmocean.Speed[7]; //https://github.com/gee-community/ee-palettes 
 
-var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, image7, image8, image9]);
+var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, image7]);
 var cop_mos = col.mosaic();
 //print(mos)
 
-Map.addLayer(cop_mos, {min: 0, max:100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
-Map.centerObject(cop_mos);
+var mask = cop_mos.gt(10);
+var cop_mosm = cop_mos.updateMask(mask);
+
+
+Map.addLayer(cop_mosm, {min: 0, max:100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
+Map.centerObject(cop_mosm);
 
 
 /*
