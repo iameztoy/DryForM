@@ -14,7 +14,7 @@ Source: Tree Cover Density 2018 — Copernicus Land Monitoring Service (File nam
 Link: land.copernicus.eu/pan-european/high-resolution-layers/forests/tree-cover-density/status-maps/tree-cover-density-2018?tab=download
 
 Previous steps: Size reduction of the original 10 meter mosaic; split in 9 tiles. Approx. processing time: 25 minutes
-Approx. upload time: 6h + 0.5 to 3h processing 
+Approx. upload time: 6h + 0.5 to 2h processing 
 */
 
 var palettes = require('users/gena/packages:palettes');
