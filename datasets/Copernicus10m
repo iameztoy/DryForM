@@ -7,6 +7,9 @@ var image1 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image6 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m8"),
     image7 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m7");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+var palettes = require('users/gena/packages:palettes');
+var palette = palettes.cmocean.Speed[7]; //https://github.com/gee-community/ee-palettes 
+
 var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, image7, image8, image9]);
 var cop_mos = col.mosaic();
 //print(mos)
