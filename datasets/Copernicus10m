@@ -8,10 +8,11 @@ var image1 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image7 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m7");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, image7, image8, image9]);
-var cop_mos = col.mosaic()
+var cop_mos = col.mosaic();
 //print(mos)
 
-Map.addLayer(cop_mos, {min: 0, max:100}, "Copernicus 10m, 0 - 100%", true)
+Map.addLayer(cop_mos, {min: 0, max:100}, "Copernicus 10m, 0 - 100%", true);
+Map.centerObject(cop_mos);
 
 
 /*
