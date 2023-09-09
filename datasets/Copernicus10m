@@ -10,4 +10,4 @@ var col = ee.ImageCollection([image, image2, image3, image4, image5, image6]);
 var mos = col.mosaic()
 //print(mos)
 
-Map.addLayer(mos, {min: 0, max:100}, "Copernicus 10m mosaic", true)
+Map.addLayer(mos, {min: 0, max:100}, "Copernicus 10m 0 - 100%", true)
