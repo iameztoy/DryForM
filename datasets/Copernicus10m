@@ -33,6 +33,7 @@ Map.addLayer(cop_mosm, {min: 0, max: 100, palette: palette}, "Copernicus 10m, 0 
 
 //In case we want to export it as an asset.
 
+/*
 Export.image.toAsset({
   image: cop_mosm,
   description: 'CopernicusMOS',
@@ -42,4 +43,5 @@ Export.image.toAsset({
   scale: 10,
   maxPixels: 1e13
 });
+*/
 
