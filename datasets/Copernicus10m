@@ -14,11 +14,12 @@ var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, im
 var cop_mos = col.mosaic();
 //print(mos)
 
-var mask = cop_mos.gt(10).and(cop_mos.lte(100));;
-var cop_mosm = cop_mos.updateMask(mask);
+var boolean = cop_mos.gt(10).and(cop_mos.lte(100));
+var cop_mosm = cop_mos.updateMask(boolean);
 
 
 Map.addLayer(cop_mosm, {min: 0, max:100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
+Map.addLayer(boolean)
 Map.centerObject(cop_mosm);
 
 
