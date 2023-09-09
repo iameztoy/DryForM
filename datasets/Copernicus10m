@@ -9,10 +9,11 @@ var image1 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 /*
 September 2023. TCD ingested as an asset. Iban Ameztoy
-Source: Tree Cover Density 2018 — Copernicus Land Monitoring Service 
-https://land.copernicus.eu/pan-european/high-resolution-layers/forests/tree-cover-density/status-maps/tree-cover-density-2018?tab=download
+Source: Tree Cover Density 2018 — Copernicus Land Monitoring Service (File name & version: TCD_2018_010m_eu_03035_V2_0)
+Link: land.copernicus.eu/pan-european/high-resolution-layers/forests/tree-cover-density/status-maps/tree-cover-density-2018?tab=download
 
-Previous steps: Size reduction of the original 10 meter mosaic; split in 9 tiles.
+Previous steps: Size reduction of the original 10 meter mosaic; split in 9 tiles. Approx. processing time: 25 minutes
+Approx. upload time: 6h + 0.5 to 1h processing 
 */
 
 var palettes = require('users/gena/packages:palettes');
@@ -30,7 +31,7 @@ var cop_gt10p = boolean.updateMask(boolean); //Boolean mask (Only => 10%, value 
 Map.addLayer(cop_gt10p, {min: 0, max: 1}, "Copernicus 10m, => 10%", true);
 Map.addLayer(cop_mosm, {min: 0, max: 100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
 
-
+//In case we want to export it as an asset.
 /*
 Export.image.toAsset({
   image: cop_mos,
