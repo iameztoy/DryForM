@@ -6,7 +6,7 @@ var image0 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image6 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m6"),
     image8 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m8"),
     image7 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m7"),
-    image4 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m4");
+    image2 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m2");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 /*
 September 2023. TCD ingested as an asset. Iban Ameztoy | JRC Bioeconomy Unit
