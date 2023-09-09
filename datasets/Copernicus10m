@@ -25,8 +25,8 @@ var col = ee.ImageCollection([image1, image2, image3, image4, image5, image6, im
 var cop_mos = col.mosaic();
 //print(mos)
 
-var boolean = cop_mos.gte(10).and(cop_mos.lte(100)); // To comply to FAO definition of Forest dens =>10
-var cop_mosm = cop_mos.updateMask(boolean); //Original Copernicus Forest dataset (10m). Background value 255 masked
+var boolean = cop_mos.gte(10).and(cop_mos.lte(100)); // To comply to FAO definition of Forest: dens. =>10%
+var cop_mosm = cop_mos.updateMask(boolean); //Original Copernicus Forest dataset (10m). Background value 255 masked. Range 0 - 100%
 var cop_gt10p = boolean.updateMask(boolean); //Boolean mask (Only => 10%, value 255 masked)
 
 
