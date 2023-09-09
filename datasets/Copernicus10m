@@ -13,8 +13,8 @@ September 2023. TCD ingested as an asset. Iban Ameztoy | JRC Bioeconomy Unit
 Source: Tree Cover Density 2018 — Copernicus Land Monitoring Service (File name & version: TCD_2018_010m_eu_03035_V2_0)
 Link: land.copernicus.eu/pan-european/high-resolution-layers/forests/tree-cover-density/status-maps/tree-cover-density-2018?tab=download
 
-Previous steps: Size reduction of the original 10 meter mosaic; split in 9 tiles. Approx. processing time: 25 minutes
-Approx. upload time: 6h + 0.5 to 2h processing 
+Previous steps: Size reduction of the original 10 meter mosaic; split in 9 tiles. Approx. processing time: 30 minutes
+Approx. upload time + proecessing: 6h + 0.5 - 2h
 */
 
 var palettes = require('users/gena/packages:palettes');
