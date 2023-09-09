@@ -6,8 +6,21 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD201801
     image5 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m6"),
     image6 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m8");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var col = ee.ImageCollection([image, image2, image3, image4, image5, image6]);
-var mos = col.mosaic()
+var col = ee.ImageCollection([image, image2, image3, image4, image5, image6, image7, image8]);
+var cop_mos = col.mosaic()
 //print(mos)
 
-Map.addLayer(mos, {min: 0, max:100}, "Copernicus 10m 0 - 100%", true)
+Map.addLayer(cop_mos, {min: 0, max:100}, "Copernicus 10m 0 - 100%", true)
+
+
+/*
+Export.image.toAsset({
+  image: cop_mos,
+  description: 'CopernicusMOS',
+  assetId: 'projects/ee-dryforestia/assets/TCD_2018_010m_eu_03035_V2_0',
+  //crs: 'EPSG:4326',
+  //region: AOI_Islands, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+*/
