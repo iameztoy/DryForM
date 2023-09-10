@@ -21,9 +21,6 @@ Approx. upload time + proccessing: 6h + 0.5 - 2h
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.cmocean.Speed[7]; //https://github.com/gee-community/ee-palettes 
 
-// Baseline Map 2020
-var blm20 = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2");
-
 
 //Copernicus TCD
 var ctcd = ee.ImageCollection([image0, image1, image2, image3, image4, image5, image6, image7, image8]);
