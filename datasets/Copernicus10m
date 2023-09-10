@@ -34,8 +34,12 @@ var boolean = ctcd_mos.gte(10).and(ctcd_mos.lte(100)); // To comply to FAO defin
 var ctcd_mosm = ctcd_mos.updateMask(boolean); //Original Copernicus Forest dataset (10m). Background value 255 masked. Range 0 - 100%
 var ctcd_mosm_gt10 = boolean.updateMask(boolean); //Boolean mask (Only => 10%, value 255 masked)
 
+Map.setCenter(10.75, 49.29, 4)
 Map.addLayer(ctcd_mosm_gt10, {min: 0, max: 1}, "Copernicus 10m, => 10%", true);
 Map.addLayer(ctcd_mosm, {min: 0, max: 100, palette: palette}, "Copernicus 10m, 0 - 100%", true);
+
+
+
 
 //In case we want to export it as an asset ->
 /*
