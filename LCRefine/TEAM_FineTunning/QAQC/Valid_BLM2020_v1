@@ -162,6 +162,10 @@ var params = {
 
 var sampleZStats = zonalStats(colTC, iiasa, params);
 
+Map.addLayer(blm20_m, {min: 0, max: 1}, "BLM2020", true);
+Map.addLayer(iiasa, {color: "red"}, "IIASA Reference", true );
+
+
 Export.table.toDrive({
   collection: sampleZStats,
   description:'Samples2Drive',
@@ -169,5 +173,3 @@ Export.table.toDrive({
   folder: "blm20"
 });
     
-Map.addLayer(blm20_m, {min: 0, max: 1}, "BLM2020", true);
-Map.addLayer(iiasa, {color: "red"}, "IIASA Reference", true );
