@@ -75,12 +75,6 @@ var r8 = gedi5L.rename("f");
 var r9 = blm20_m.rename("f");
 
 
-var plist = [r1, r2, r3, r4, r5, r6, r7, r8, r9];
-var colTC = ee.ImageCollection.fromImages(plist); 
-
-
-
-
 function zonalStats(ic, fc, params) {
   // Initialize internal params dictionary.
   var _params = {
@@ -144,23 +138,19 @@ function zonalStats(ic, fc, params) {
   return results;
 }
 
-var r1 = esa2020Forest.rename("f");
-var r2 = dwM_Tree.rename("f");
-var r3 = wri_Tree.rename("f");
-var r4 = esri_Tree.rename("f");
-var r5 = glc10mForest.rename("f");
-var r6 = gedi5.rename("f");
-var r7 = hansen_TC_2020_r.rename("f");
-var r8 = gedi5L.rename("f");
-var r9 = blm20_m.rename("f");
+var colcat = ee.Image.cat(r1, r2, r3, r4, r5, r6, r7, r8, r9)
+  // Computed images do not have a 'system:time_start' property; add one based
+  // on when the data were collected.
+  .set('system:time_start', ee.Date('2020-01-01').millis());
 
+var col4stats = ee.ImageCollection([colcat]);
 
 var params = {                                    
   bands: [1, 2, 3, 4, 5, 6, 7, 8, 9],
   bandsRename : ["esa", "dw", "wri", "esri", "glc", "gediP", "hansen", "gediL", "blm20"]
   };
 
-var sampleZStats = zonalStats(colTC, iiasa, params);
+var sampleZStats = zonalStats(colcat, iiasa, params);
 
 Map.addLayer(blm20_m, {min: 0, max: 1}, "BLM2020", true);
 Map.addLayer(iiasa, {color: "red"}, "IIASA Reference", true );
