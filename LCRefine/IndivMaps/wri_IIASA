@@ -97,7 +97,7 @@ print(col4stats);
 
 var params = {                                    
   bands: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-  bandsRename : ["esa", "dw", "wri", "esri", "glc", "gediP", "hansen", "gediL", "blm20"]
+  bandsRename : ["trhs10", "trhs20", "trhs30", "trhs40", "trhs50", "trhs60", "trhs70", "trhs80", "trhs90"]
   };
 
 var sampleZStats = zonalStats(col4stats, iiasa, params);
