@@ -108,3 +108,7 @@ Export.table.toDrive({
   fileFormat: 'CSV',
   folder: "blm20"
 });
+
+
+Map.addLayer(TC_wri);
+Map.addLayer(iiasa, {color: "red"}, "IIASA Reference", true );
