@@ -1,0 +1,87 @@
+var blm20 = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2");
+var iiasa = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/IIASA/IIASA_CrEz_join");
+
+
+var blm20_m = blm20.mosaic();
+var blm20_mr = blm20_m.rename("blm20")
+print(blm20_mr)
+
+function zonalStats(ic, fc, params) {
+  // Initialize internal params dictionary.
+  var _params = {
+    reducer: ee.Reducer.mean(),
+    scale: 10,
+    crs: null,
+    bands: null,
+    bandsRename: null,
+    imgProps: null,
+    imgPropsRename: null,
+    datetimeName: 'datetime',
+    datetimeFormat: 'YYYY-MM-dd HH:mm:ss'
+  };
+
+  // Replace initialized params with provided params.
+  if (params) {
+    for (var param in params) {
+      _params[param] = params[param] || _params[param];
+    }
+  }
+
+  // Set default parameters based on an image representative.
+  var imgRep = ic.first();
+  var nonSystemImgProps = ee.Feature(null)
+    .copyProperties(imgRep).propertyNames();
+  if (!_params.bands) _params.bands = imgRep.bandNames();
+  if (!_params.bandsRename) _params.bandsRename = _params.bands;
+  if (!_params.imgProps) _params.imgProps = nonSystemImgProps;
+  if (!_params.imgPropsRename) _params.imgPropsRename = _params.imgProps;
+
+  // Map the reduceRegions function over the image collection.
+  var results = ic.map(function(img) {
+    // Select bands (optionally rename), set a datetime & timestamp property.
+    img = ee.Image(img.select(_params.bands, _params.bandsRename))
+      .set(_params.datetimeName, img.date().format(_params.datetimeFormat))
+      .set('timestamp', img.get('system:time_start'));
+
+    // Define final image property dictionary to set in output features.
+    var propsFrom = ee.List(_params.imgProps)
+      .cat(ee.List([_params.datetimeName, 'timestamp']));
+    var propsTo = ee.List(_params.imgPropsRename)
+      .cat(ee.List([_params.datetimeName, 'timestamp']));
+    var imgProps = img.toDictionary(propsFrom).rename(propsFrom, propsTo);
+
+    // Subset points that intersect the given image.
+    var fcSub = fc.filterBounds(img.geometry());
+
+    // Reduce the image by regions.
+    return img.reduceRegions({
+      collection: fcSub,
+      reducer: _params.reducer,
+      scale: _params.scale,
+      crs: _params.crs
+    })
+    // Add metadata to each feature.
+    .map(function(f) {
+      return f.set(imgProps);
+    });
+  }).flatten().filter(ee.Filter.notNull(_params.bandsRename));
+
+  return results;
+}
+
+var params = {                                    
+  bands: [1],
+  bandsRename : ["blm20"]
+  };
+
+var sampleZStats = zonalStats(blm20, iiasa, params);
+
+Export.table.toDrive({
+  collection: sampleZStats,
+  description:'Samples2Drive',
+  fileFormat: 'CSV',
+  folder: "blm20"
+});
+    
+Map.addLayer(blm20_m, {min: 0, max: 1}, "BLM2020", true);
+Map.addLayer(iiasa, {color: "red"}, "IIASA Reference", true );
