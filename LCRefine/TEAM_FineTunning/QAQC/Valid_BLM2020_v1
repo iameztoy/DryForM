@@ -1,10 +1,85 @@
-var blm20 = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2");
+
 var iiasa = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/IIASA/IIASA_CrEz_join");
 
 
+var esa2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); 
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
+var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
+var glc10m = GLC10.mosaic();
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
+var blm20 = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2");
+
+
+
+var srt = '2020-01-01'; var end = '2021-01-01'; //for dw
+
+var esa2020Forest = esa2020.eq(10);
+
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dwM_Tree = dwMode.eq(1);
+
+var wrimax = TC_wri.max();
+var wri80 = wrimax.eq(80);
+var wri90 = wrimax.eq(90);
+var wri100 = wrimax.eq(100);
+var wri_Tree = wri80.add(wri90).add(wri100);
+var wri_Tree = wri_Tree.gte(1);
+
+var esri_aoi = esri_lulc2020.mosaic(); 
+var esri_Tree = esri_aoi.eq(2).rename(['Trees']);
+
+
+var gedi5 = CH_GEDI.gte(5);
+var gedi5L = GEDI_Lang.gte(5);
+
+var hansen_treeCover = gfcImage.select(['treecover2000']);
+var hansen_treeCover10 = hansen_treeCover.gte(10);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+var hansen_TC_2020 = hansen_treeCover10.subtract(lossb2020);
+
+var glc10m = GLC10.mosaic();
+var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var lossb2017 = lossYear.gte(17).and(lossYear.lte(20));
+var glc10Forest_2017 = glc10mForest.subtract(lossb2017); //Not used in this version
+
+
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var hansen_TC_2020_r = hansen_TC_2020.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
 var blm20_m = blm20.mosaic();
-var blm20_mr = blm20_m.rename("blm20")
-print(blm20_mr)
+
+
+
+
+var r1 = esa2020Forest.rename("f");
+var r2 = dwM_Tree.rename("f");
+var r3 = wri_Tree.rename("f");
+var r4 = esri_Tree.rename("f");
+var r5 = glc10mForest.rename("f");
+var r6 = gedi5.rename("f");
+var r7 = hansen_TC_2020_r.rename("f");
+var r8 = gedi5L.rename("f");
+var r9 = blm20_m.rename("f");
+
+
+var plist = [r1, r2, r3, r4, r5, r6, r7, r8, r9];
+var colTC = ee.ImageCollection.fromImages(plist); 
+
+
+
 
 function zonalStats(ic, fc, params) {
   // Initialize internal params dictionary.
@@ -69,12 +144,23 @@ function zonalStats(ic, fc, params) {
   return results;
 }
 
+var r1 = esa2020Forest.rename("f");
+var r2 = dwM_Tree.rename("f");
+var r3 = wri_Tree.rename("f");
+var r4 = esri_Tree.rename("f");
+var r5 = glc10mForest.rename("f");
+var r6 = gedi5.rename("f");
+var r7 = hansen_TC_2020_r.rename("f");
+var r8 = gedi5L.rename("f");
+var r9 = blm20_m.rename("f");
+
+
 var params = {                                    
-  bands: [1],
-  bandsRename : ["blm20"]
+  bands: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+  bandsRename : ["esa", "dw", "wri", "esri", "glc", "gediP", "hansen", "gediL", "blm20"]
   };
 
-var sampleZStats = zonalStats(blm20, iiasa, params);
+var sampleZStats = zonalStats(colTC, iiasa, params);
 
 Export.table.toDrive({
   collection: sampleZStats,
