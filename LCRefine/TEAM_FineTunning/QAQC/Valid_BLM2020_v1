@@ -1,6 +1,10 @@
+// Crossing IIASA reference dataset with different tree/forest products
+// IIASA dataset was crossed with 1/ FAO ecozones and 2/ WB country boundaries:
+// Therefore each points contains the information related to land use class, ecozone and country,
+// among others.
+
 
 var iiasa = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/IIASA/IIASA_CrEz_join");
-
 
 var esa2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); 
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
@@ -60,9 +64,6 @@ var hansen_TC_2020_r = hansen_TC_2020.remap({
 });
 
 var blm20_m = blm20.mosaic();
-
-
-
 
 var r1 = esa2020Forest.rename("f");
 var r2 = dwM_Tree.rename("f");
