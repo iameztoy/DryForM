@@ -129,3 +129,24 @@ var built = image.select('built_characteristics').gte(1);
 Map.addLayer(built.updateMask(built),{},'built',false);
 
 
+////GEDI CH 2019 //DOes it actulally make an impact??? OVer high lat -> only fully extrapolation
+
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+Map.addLayer(CH_GEDI.updateMask(CH_GEDI),{min:0,max:40,palette:['red','green']},'CH_GEDI',false);
+
+//REPLACE WITH LANG
+var CH_GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
+Map.addLayer(CH_GEDI_Lang.updateMask(CH_GEDI_Lang),{min:0,max:40,palette:['red','green']},'CH_GEDI_Lang',false);
+
+//////////////// PROCESSING
+
+var Global_forest_step1 = WC2020_21_foret;
+Global_forest_step1 = Global_forest_step1.where(lc2019_otherlandcover,0);
+Global_forest_step1 = Global_forest_step1.where(lossYearGFC2000_2020,0);
+Global_forest_step1 = Global_forest_step1.where(cropmask_UMD.eq(1),0);
+Global_forest_step1 = Global_forest_step1.where(temporarycrops,0);
+Global_forest_step1 = Global_forest_step1.where((CH_GEDI.gte(1)).and(CH_GEDI.lte(5)).and(humidDomain),0); // useful: -48.856771, -2.739434 //however potential issue with planted forest: -1.22444, 43.95502? 
+Global_forest_step1 = Global_forest_step1.where(GFSAD_crop,0); 
+Global_forest_step1 = Global_forest_step1.where(built,0); 
+
+
