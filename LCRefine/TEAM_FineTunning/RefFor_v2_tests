@@ -1,0 +1,19 @@
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first();
+var WC2020_foret = WC2020.eq(10);
+
+Map.addLayer(WC2020, null, "WC 2020", 1)
+Map.addLayer(WC2020_foret, null, "Forest 2020 2021", 1)
+
+//2021 shows a greater extent of the Tree Cover class 10 
+//We can select maximum extent of class 10 on 2020 and 2021
+var WC2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
+var WC2021_foret = WC2021.eq(10);
+var WC2020_21_foret = WC2021_foret.or(WC2020_foret);
+Map.addLayer(WC2020_21_foret.updateMask(WC2020_21_foret),{min:1,max:1, palette:['green']},'WC2020_21_foret',true);
+
+var lc2019 = ee.Image("COPERNICUS/Landcover/100m/Proba-V-C3/Global/2019");
+Map.addLayer(lc2019, null, "lc2019 100m");
+
+//Shrub, herbaceous vegetation, Cultivated and managed vegetation / agriculture, urban/built-up, bare, wetlands.
+var lc2019_otherlandcover = ((lc2019.select('discrete_classification').gte(20)).and(lc2019.select('discrete_classification').lte(100)));
+Map.addLayer(lc2019_otherlandcover.updateMask(lc2019_otherlandcover),{},'lc2019_otherlandcover',false);
