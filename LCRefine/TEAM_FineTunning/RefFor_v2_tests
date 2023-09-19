@@ -149,4 +149,6 @@ Global_forest_step1 = Global_forest_step1.where((CH_GEDI.gte(1)).and(CH_GEDI.lte
 Global_forest_step1 = Global_forest_step1.where(GFSAD_crop,0); 
 Global_forest_step1 = Global_forest_step1.where(built,0); 
 
+Map.addLayer(Global_forest_step1, null, "BLM2020", 1)
+
 
