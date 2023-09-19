@@ -55,4 +55,15 @@ Map.addLayer(lc2019_otherlandcover.updateMask(lc2019_otherlandcover),{},'lc2019_
 var CurtisMapDrivers = ee.Image('projects/planet-guido/assets/curtis');
 CurtisMapDrivers=(CurtisMapDrivers.eq(3)).or(CurtisMapDrivers.eq(4));
 
-Map.addLayer(CurtisMapDrivers, null, "Curtis Map Drivers", 0)
+Map.addLayer(CurtisMapDrivers, null, "Curtis Map Drivers", 0);
+
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2019=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
+Map.addLayer(cropmask_UMD.updateMask(cropmask_UMD),{},'cropmask_UMD',false);
