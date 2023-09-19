@@ -1,8 +1,35 @@
+// ‘forest’ means land spanning more than 0,5 hectares (5000 m2 - 50 pixels of 10m) with trees higher than 5 metres and a canopy cover of more
+// than 10 %, or trees able to reach those thresholds in situ, excluding land that is predominantly under agricultural
+// or urban land use;
+
+// ‘agricultural use’ means the use of land for the purpose of agriculture, including for 
+// agricultural plantations and setaside agricultural areas, and for rearing livestock;
+
+// agricultural plantation’ means land with tree stands in agricultural production systems, such as fruit tree plantations, oil palm plantations,
+// olive orchards and agroforestry systems where crops are grown under tree cover; it
+// includes all plantations of relevant commodities other than wood; agricultural plantations are excluded from the
+// definition of ‘forest’;
+
+////////////////////////////////////////////
+////Step1 GLOBAL PROCESSING
+////////////////////////////////////////////
+
+//////////////// INPUT DATA
+
+////JRC-TMF: 
+
+var Transition = ee.ImageCollection('projects/JRC/TMF/v1_2022/TransitionMap_Subtypes').mosaic();
+var humidDomain= ((Transition.gte(10)).and(Transition.lte(69))).or((Transition.gte(80)).and(Transition.lte(89)));
+
+Map.addLayer(humidDomain, null, "TMF Humid Domain", 1);
+
+////WorldCover 2020
+
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first();
 var WC2020_foret = WC2020.eq(10);
 
-Map.addLayer(WC2020, null, "WC 2020", 1)
-Map.addLayer(WC2020_foret, null, "Forest 2020 2021", 1)
+Map.addLayer(WC2020, null, "WC 2020", 1);
+Map.addLayer(WC2020_foret, null, "Forest 2020 2021", 1);
 
 //2021 shows a greater extent of the Tree Cover class 10 
 //We can select maximum extent of class 10 on 2020 and 2021
@@ -17,3 +44,13 @@ Map.addLayer(lc2019, null, "lc2019 100m");
 //Shrub, herbaceous vegetation, Cultivated and managed vegetation / agriculture, urban/built-up, bare, wetlands.
 var lc2019_otherlandcover = ((lc2019.select('discrete_classification').gte(20)).and(lc2019.select('discrete_classification').lte(100)));
 Map.addLayer(lc2019_otherlandcover.updateMask(lc2019_otherlandcover),{},'lc2019_otherlandcover',false);
+
+////Drivers of forest cover loss : https://data.globalforestwatch.org/documents/gfw::tree-cover-loss-by-dominant-driver-2022/about
+//1 Commodity-driven deforestation: Large-scale deforestation linked primarily to commercial agricultural expansion.
+//2 Shifting agriculture: Temporary loss or permanent deforestation due to small- and medium-scale agriculture.
+//3 Forestry: Temporary loss from plantation and natural forest harvesting, with some deforestation of primary forests.
+//4 Wildfire: Temporary loss, does not include fire clearing for agriculture.
+//5 Urbanization: Deforestation for expansion of urban centers.
+
+var CurtisMapDrivers = ee.Image('projects/planet-guido/assets/curtis');
+CurtisMapDrivers=(CurtisMapDrivers.eq(3)).or(CurtisMapDrivers.eq(4));
