@@ -54,3 +54,5 @@ Map.addLayer(lc2019_otherlandcover.updateMask(lc2019_otherlandcover),{},'lc2019_
 
 var CurtisMapDrivers = ee.Image('projects/planet-guido/assets/curtis');
 CurtisMapDrivers=(CurtisMapDrivers.eq(3)).or(CurtisMapDrivers.eq(4));
+
+Map.addLayer(CurtisMapDrivers, null, "Curtis Map Drivers", 1)
