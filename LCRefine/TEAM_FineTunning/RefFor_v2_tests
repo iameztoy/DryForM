@@ -113,3 +113,19 @@ var GFSAD_crop = (GFSAD.eq(2)).or(GFSAD.eq(3));
 Map.addLayer(GFSAD_crop,{},'GFSAD_crop',false);
 
 
+////Global human settlement JRC: GHS built-up surface (https://gee-community-catalog.org/projects/ghsl/?h=urban)
+//UPDATE WITH: https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_BUILT_C#bands
+// var GHSL = (ee.Image("JRC/GHSL/P2016/BUILT_LDSMT_GLOBE_V1").select('built')).gte(3);
+// Map.addLayer(GHSL.updateMask(GHSL),{'min':0, 'max': 1, 'palette':'black'},'GHSL')
+// var maxDist = 60; //Buffer of 2 Landsat pixel
+// var sources = ee.Image().toByte().paint(GHSL.geometry(), 1);
+// sources = sources.updateMask(GHSL);
+// var dist = GHSL.cumulativeCost({source: sources, maxDistance: maxDist});
+// var GHSLBuf = ee.Image.constant(0).where((dist.lte(maxDist)).and(dist.gte(0)),1);
+
+
+var image = ee.Image("JRC/GHSL/P2023A/GHS_BUILT_C/2018");
+var built = image.select('built_characteristics').gte(1);
+Map.addLayer(built.updateMask(built),{},'built',false);
+
+
