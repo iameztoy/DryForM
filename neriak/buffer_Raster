@@ -1,0 +1,6 @@
+var  DistType = 100
+var ForestYreclass = ee.Image('users/bourgoinclement2/Global_forest_step1_AOI_SPAIN').unmask()
+var dist = ForestYreclass.cumulativeCost({source: ForestYreclass, maxDistance: DistType});
+var Edge200 = ee.Image.constant(0).where((dist.lte(DistType)).and(dist.gt(0)),1);
+Map.addLayer(Edge200.updateMask(Edge200),{},'Edge200')
+Map.addLayer(ForestYreclass.updateMask(ForestYreclass),{},'Spain_filtered')
