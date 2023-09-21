@@ -10,6 +10,12 @@ var WC2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
 var WC2021_foret = WC2021.eq(10);
 var WC2020_21_foret = WC2021_foret.or(WC2020_foret);
 
+var lc2019 = ee.Image("COPERNICUS/Landcover/100m/Proba-V-C3/Global/2019");
+var lc2019_otherlandcover = ((lc2019.select('discrete_classification').gte(20)).and(lc2019.select('discrete_classification').lte(100)));
+
+
+
+
 var CurtisMapDrivers = ee.Image('projects/planet-guido/assets/curtis');
 CurtisMapDrivers=(CurtisMapDrivers.eq(3)).or(CurtisMapDrivers.eq(4));
 
@@ -57,6 +63,7 @@ Map.addLayer(WC2020_21_foret.updateMask(WC2020_21_foret),{min:1,max:1, palette:[
 Map.addLayer(WC2020_foret, null, "WC Forest v100");
 Map.addLayer(kernel3, ivis, "Kernel");
 Map.addLayer(NA, ivis, "No Kernel");
+Map.addLayer(lc2019_otherlandcover.updateMask(lc2019_otherlandcover),{},'lc2019_otherlandcover',false);
 
 Map.addLayer(ghsl_built.updateMask(ghsl_built),{color:"blue"},'built',false);
 Map.addLayer(GFSAD_crop,{},'GFSAD_crop',false);
