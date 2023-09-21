@@ -13,9 +13,6 @@ var WC2020_21_foret = WC2021_foret.or(WC2020_foret);
 var lc2019 = ee.Image("COPERNICUS/Landcover/100m/Proba-V-C3/Global/2019");
 var lc2019_otherlandcover = ((lc2019.select('discrete_classification').gte(20)).and(lc2019.select('discrete_classification').lte(100)));
 
-
-
-
 var CurtisMapDrivers = ee.Image('projects/planet-guido/assets/curtis');
 CurtisMapDrivers=(CurtisMapDrivers.eq(3)).or(CurtisMapDrivers.eq(4));
 
