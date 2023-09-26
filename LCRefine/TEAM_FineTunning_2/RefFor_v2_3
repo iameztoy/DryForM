@@ -1,0 +1,459 @@
+// ‘forest’ means land spanning more than 0,5 hectares (5000 m2 - 50 pixels of 10m) with trees higher than 5 metres and a canopy cover of more
+// than 10 %, or trees able to reach those thresholds in situ, excluding land that is predominantly under agricultural
+// or urban land use;
+
+// ‘agricultural use’ means the use of land for the purpose of agriculture, including for 
+// agricultural plantations and setaside agricultural areas, and for rearing livestock;
+
+// agricultural plantation’ means land with tree stands in agricultural production systems, such as fruit tree plantations, oil palm plantations,
+// olive orchards and agroforestry systems where crops are grown under tree cover; it
+// includes all plantations of relevant commodities other than wood; agricultural plantations are excluded from the
+// definition of ‘forest’;
+
+////////////////////////////////////////////
+////Step1 GLOBAL PROCESSING
+//////////////////////////////////////////// 
+
+//////////////// INPUT DATA
+
+//// UMD Land cover map 2019 // https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
+var map = ee.ImageCollection('projects/glad/GLCmap2019').mosaic();
+var treecoverUMD=map.gte(54).and(map.lte(91))
+
+////FAO ecological zones
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Carbon/GridTMF_COR_1deg_ctry_ctnt_GEZ');
+
+var Ecozone1 = Zones.filter(ee.Filter.eq('GEZ_CODE', 11)); // = Tropical rain forest 
+var Ecozone2 = Zones.filter(ee.Filter.eq('GEZ_CODE', 12)); // = Tropical Moist Deciduous forest
+var Ecozone3 = Zones.filter(ee.Filter.eq('GEZ_CODE', 13));// = Tropical Dry forest
+var Ecozone4 = Zones.filter(ee.Filter.eq('GEZ_CODE', 16));// = Tropical mountain system
+
+var Ecozone1_img = (ee.Image.constant(1)).clip(Ecozone1);
+Map.addLayer(Ecozone1_img,{},'Ecozone1_img',false);
+
+////JRC-TMF: 
+
+var Transition = ee.ImageCollection('projects/JRC/TMF/v1_2022/TransitionMap_Subtypes').mosaic();
+Map.addLayer(Transition.updateMask(Transition),{},'Transition',false);
+
+var humidDomain= ((Transition.gte(10)).and(Transition.lte(69))).or((Transition.gte(80)).and(Transition.lte(89)));
+Map.addLayer(humidDomain,{},'humidDomain',false);
+
+var plantation = (Transition.gte(80)).and(Transition.lte(89));
+var old_regrowth = (Transition.eq(31)); 
+Map.addLayer(old_regrowth,{},'old_regrowth',false);
+
+var AC= ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic().select('Dec2020');
+Map.addLayer(AC,{},'AC',false);
+
+var tmf_forest2020= (AC.eq(1)).or(AC.eq(2));
+tmf_forest2020 = tmf_forest2020.where(plantation,0); 
+tmf_forest2020 = tmf_forest2020.add(old_regrowth);
+
+////WorldCover 2020 and 2021
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first();
+var WC2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
+Map.addLayer(WC2021.updateMask(WC2021),{},'WC2021',false);
+
+
+//2021 shows a greater extent of the Tree Cover class 10  and mangroves 95
+//We can select maximum extent of class 10 and 95 on 2020 and 2021
+var WC2020_foret = (WC2020.eq(10)).or(WC2020.eq(95));
+var WC2021_foret = (WC2021.eq(10)).or(WC2021.eq(95));
+var WC2020_21_foret = WC2021_foret.or(WC2020_foret).or(treecoverUMD.unmask()); //add UMD tree cover 2019 to maximize initial tree cover
+Map.addLayer(WC2020_21_foret.updateMask(WC2020_21_foret),{min:1,max:1, palette:['green']},'WC2020_21_foret',true);
+
+
+// ////Copernicus 2019
+
+// var lc2019 = ee.Image("COPERNICUS/Landcover/100m/Proba-V-C3/Global/2019");
+// Map.addLayer(lc2019.select('discrete_classification'),{},'lc2019',false);
+
+// //Shrub, herbaceous vegetation, Cultivated and managed vegetation / agriculture, urban/built-up, bare, wetlands.
+// //REVISED: Cultivated and managed vegetation / agriculture, bare, snow, water, moss
+// var lc2019_otherlandcover = ((lc2019.select('discrete_classification').eq(40))).or((lc2019.select('discrete_classification').eq(100)))
+// .or( ((lc2019.select('discrete_classification').gte(60)).and(lc2019.select('discrete_classification').lte(80))));
+// Map.addLayer(lc2019_otherlandcover.updateMask(lc2019_otherlandcover),{},'lc2019_otherlandcover',false);
+
+
+////Drivers of forest cover loss : https://data.globalforestwatch.org/documents/gfw::tree-cover-loss-by-dominant-driver-2022/about
+//1 Commodity-driven deforestation: Large-scale deforestation linked primarily to commercial agricultural expansion.
+//2 Shifting agriculture: Temporary loss or permanent deforestation due to small- and medium-scale agriculture.
+//3 Forestry: Temporary loss from plantation and natural forest harvesting, with some deforestation of primary forests.
+//4 Wildfire: Temporary loss, does not include fire clearing for agriculture.
+//5 Urbanization: Deforestation for expansion of urban centers.
+
+var CurtisMapDrivers = ee.Image('projects/planet-guido/assets/curtis');
+Map.addLayer(CurtisMapDrivers,{},'CurtisMapDrivers',false);
+CurtisMapDrivers=(CurtisMapDrivers.eq(1)).or(CurtisMapDrivers.eq(2));
+
+////GFC 2001-2022 + 
+//// Fire (UMD) : if use, need to integrate with gfc loss
+
+var gfcImage = ee.Image("UMD/hansen/global_forest_change_2022_v1_10"); 
+var treeCover = gfcImage.select(['treecover2000']);
+var lossImage = gfcImage.select(['loss']);
+var gainImage = gfcImage.select(['gain']);
+var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
+Map.addLayer(lossYear,{},'lossYear',false);
+Map.addLayer(treeCover,{},'treeCover',false);
+
+var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossYear.gte(1)).and(lossYear.lte(20));
+lossYearGFC2000_2020= lossYearGFC2000_2020.updateMask(CurtisMapDrivers); //Remove the loss of GFC loss when falling within forestry, wildfire or urban by Curtis
+lossYearGFC2000_2020= lossYearGFC2000_2020.where(tmf_forest2020,0); //avoid masking degraded from fire or logging
+lossYearGFC2000_2020= lossYearGFC2000_2020.where(humidDomain,0); //avoid masking in tmf
+
+var fire_loss = ee.ImageCollection('users/sashatyu/2001-2022_fire_forest_loss').mosaic();
+var no_fire_loss = fire_loss.eq(1);
+
+lossYearGFC2000_2020= lossYearGFC2000_2020.updateMask(no_fire_loss);
+
+// fire_loss = (fire_loss.gte(2)).and(fire_loss.lte(5)); 
+// var loss_annual = ee.ImageCollection('users/sashatyu/2001-2022_fire_forest_loss_annual').mosaic();
+// //var loss_Year =  loss_annual.add(ee.Image.constant(2000))
+// var fire_all_annual= (loss_annual.updateMask(fire_loss));
+
+Map.addLayer(lossYearGFC2000_2020,{},'lossYearGFC2000_2020',false);
+
+
+////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2019=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
+
+var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
+Map.addLayer(cropmask_UMD.updateMask(cropmask_UMD),{},'cropmask_UMD',false);
+
+////Add ESA World Cereal 2021 for cereals crop mapping (wheat, barley and rye) https://zenodo.org/record/7875105  
+//Evaluate if makes any difference - very marginal overlap between forest classes from worldcover and worldcereals 
+//https://developers.google.com/earth-engine/datasets/catalog/ESA_WorldCereal_2021_MODELS_v100
+// crop/no crop is the temporary crops products
+
+var dataset = ee.ImageCollection('ESA/WorldCereal/2021/MODELS/v100')
+
+// Typically we'd want to mask the "other" class (value 0)
+// in the images
+function mask_other(img) {
+  return img.updateMask(img.neq(0))
+}
+// Apply the mask_other function to the collection
+dataset = dataset.map(mask_other);
+
+// Get a global mosaic for all agro-ecological zone (AEZ) of temporary crops
+var temporarycrops = dataset.filter('product == "temporarycrops"').mosaic().select('classification');
+
+// Visualization specifics
+var visualization_class = {
+  bands: ["classification"],
+  max: 100,
+  palette: ["ff0000"]
+};
+
+//Map.centerObject(temporarycrops);
+Map.addLayer(temporarycrops, visualization_class, 'ESA WorldCereals Temporary crops', false);
+
+////GFSAD USGS Landsat-Derived Global Rainfed and Irrigated-Cropland Product (https://gee-community-catalog.org/projects/lgrip30/?h=)
+//Cropland that is permanently cropped with plantations (for example, orchards, vineyards, coffee, tea, and rubber) is included
+
+var GFSAD = ee.ImageCollection('projects/sat-io/open-datasets/GFSAD/LGRIP30').mosaic();
+var dataset = ee.Image('USGS/SRTMGL1_003').select('elevation')
+var slope = ee.Terrain.slope(dataset)
+Map.addLayer(slope,{},'slope',false);
+var low_slope = slope.lte(10);
+
+/*
+Class Label	Name	Description
+0	Ocean	Ocean and Water bodies
+1	Non-croplands	Land with other land use
+2	Irrigated croplands	Agricultural croplands that are irrigated
+3	Rainfed croplands	Agricultural croplands that are rainfed
+*/
+
+var GFSAD_crop = (GFSAD.eq(2)).or(GFSAD.eq(3));
+GFSAD_crop = GFSAD_crop.updateMask(low_slope);
+Map.addLayer(GFSAD_crop.updateMask(GFSAD_crop),{},'GFSAD_crop',false);
+
+////Global human settlement JRC: GHS built-up surface (https://gee-community-catalog.org/projects/ghsl/?h=urban)
+//UPDATE WITH: https://developers.google.com/earth-engine/datasets/catalog/JRC_GHSL_P2023A_GHS_BUILT_C#bands
+// var GHSL = (ee.Image("JRC/GHSL/P2016/BUILT_LDSMT_GLOBE_V1").select('built')).gte(3);
+// Map.addLayer(GHSL.updateMask(GHSL),{'min':0, 'max': 1, 'palette':'black'},'GHSL')
+// var maxDist = 60; //Buffer of 2 Landsat pixel
+// var sources = ee.Image().toByte().paint(GHSL.geometry(), 1);
+// sources = sources.updateMask(GHSL);
+// var dist = GHSL.cumulativeCost({source: sources, maxDistance: maxDist});
+// var GHSLBuf = ee.Image.constant(0).where((dist.lte(maxDist)).and(dist.gte(0)),1);
+
+
+var image = ee.Image("JRC/GHSL/P2023A/GHS_BUILT_C/2018");
+var built = image.select('built_characteristics').gte(1);
+Map.addLayer(built.updateMask(built),{},'built',false);
+
+
+////GEDI CH 2019 
+
+var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+Map.addLayer(CH_GEDI.updateMask(CH_GEDI),{min:0,max:40,palette:['red','green']},'CH_GEDI',false);
+
+
+//////////////// PROCESSING
+
+var Global_forest_step1 = WC2020_21_foret;
+// Global_forest_step1 = Global_forest_step1.where(lc2019_otherlandcover,0);
+Global_forest_step1 = Global_forest_step1.where(lossYearGFC2000_2020,0);
+Global_forest_step1 = Global_forest_step1.where(cropmask_UMD.eq(1),0);
+Global_forest_step1 = Global_forest_step1.where(temporarycrops,0);
+Global_forest_step1 = Global_forest_step1.where((CH_GEDI.gte(1)).and(CH_GEDI.lte(5)).and(Ecozone1_img),0); // useful: -48.856771, -2.739434 //however potential issue with planted forest: -1.22444, 43.95502? 
+Global_forest_step1 = Global_forest_step1.where(GFSAD_crop.and(Ecozone1_img),0); 
+Global_forest_step1 = Global_forest_step1.where(built,0); 
+
+
+
+////Palm plantation Descals
+
+var dataset = ee.ImageCollection('BIOPAMA/GlobalOilPalm/v1').select('classification').mosaic();
+var opClass = ((dataset.eq(1)).or(dataset.eq(2))).rename('b1').unmask();
+var COCONUTfinal = ee.ImageCollection('projects/ee-globaloilpalm/assets/_COCONUT/results/GCL_2020_v1-1') // same as '_COCONUT/shared/GCL_2020_v1-1'
+  .mosaic();
+
+Map.addLayer(opClass.updateMask(opClass),{},'opClass',false);
+Map.addLayer(COCONUTfinal.updateMask(COCONUTfinal),{},'COCONUTfinal',false);
+
+Global_forest_step1 = Global_forest_step1.where(opClass,0);
+Global_forest_step1 = Global_forest_step1.where(COCONUTfinal,0);
+
+
+
+////WRI-SDPT v1 (tree crops: stands of perennial tree crops, such as rubber, oil palm, coffee, coconut, cocoa, and orchards)
+// planted forests: stands of planted trees—other than tree crops—grown for wood and wood fiber production or for ecosystem protection against wind and/or soil erosion
+
+var arg =  (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/arg').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var aus = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/aus').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var bra = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/bra').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var chl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/chl').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var civ = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/civ').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var cmr = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/cmr').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var cod = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/cod').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var col = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/col').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var cri = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/cri').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ecu = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ecu').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var eu =  (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/eu').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var gab = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/gab').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var gha = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/gha').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var gtm = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/gtm').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var hnd = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/hnd').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var idn_1 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/idn_1').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var idn_2 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/idn_2').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ind_1 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ind_1').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ind_2 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ind_2').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ind_3 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ind_3').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ind_4 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ind_4').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var jpn = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/jpn').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ken = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ken').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var khm = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/khm').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var kor_1 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/kor_1').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var kor_2 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/kor_2').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var lbr = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/lbr').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var lka = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/lka').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mex = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mex').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mmr = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mmr').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mwi = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mwi').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var mys = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/mys').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var nga = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/nga').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var nic = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/nic').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var npl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/npl').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var nzl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/nzl').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var pak = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/pak').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var pan = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/pan').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var per = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/per').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var phl = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/phl').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var rwa = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/rwa').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var slb = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/slb').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var tha = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/tha').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ury = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ury').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa_1 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa_1').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa_2 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa_2').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa_3 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa_3').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa_4 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa_4').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa_5 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa_5').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa_6 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa_6').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var usa_7 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/usa_7').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var ven = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/ven').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var vnm = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/vnm').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var zaf_1 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/zaf_1').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var zaf_2 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/zaf_2').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+var zaf_3 = (ee.Image.constant(1)).clip(ee.FeatureCollection('users/bourgoinclement2/SDPT/zaf_3').filter(ee.Filter.inList('plant_ag', ['Tree crops']))).unmask()//.filter(ee.Filter.inList('plant_ag', ['Planted forest']))).unmask();
+
+var SDPT_ori = arg.or(aus).or(bra).or(chl).or(civ).or(cmr).or(cod).or(col)
+          .or(cri).or(ecu).or(eu).or(gab).or(gha).or(gtm).or(hnd).or(idn_1).or(idn_2)
+          .or(ind_1).or(ind_2).or(ind_3).or(ind_4).or(jpn).or(ken).or(khm).or(kor_1).or(kor_2).or(lbr).or(lka).or(mex)
+          .or(mmr).or(mwi).or(mys).or(nga).or(nic).or(npl).or(nzl).or(pak)
+          .or(pan).or(per).or(phl).or(rwa).or(slb).or(tha).or(ury).or(usa_1).or(usa_2).or(usa_3).or(usa_4).or(usa_5).or(usa_6).or(usa_7)
+          .or(ven).or(vnm).or(zaf_1).or(zaf_2).or(zaf_3);
+
+Map.addLayer(SDPT_ori.updateMask(SDPT_ori),{},'SDPT_ori',false);
+
+Global_forest_step1 = Global_forest_step1.where(SDPT_ori,0);
+
+////JRC-TMF: 
+
+var notmf_forest =  (AC.eq(3)).or(AC.eq(4));
+notmf_forest = notmf_forest.add(plantation);
+notmf_forest = notmf_forest.where(old_regrowth,0); 
+notmf_forest = notmf_forest.updateMask(humidDomain)
+
+Map.addLayer(notmf_forest.updateMask(notmf_forest),{},'notmf_forest',false);
+
+var Global_forest_step1 = Global_forest_step1.where(humidDomain.and(notmf_forest.gte(1)),0); //(108.1318291, 11.5650313)
+
+Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1),{},'Global_forest_step1',false)
+
+
+/////Export: 
+
+
+var AOI_America1 =ee.Geometry.Polygon(
+        [[[-175.76416450683655, 69.8],
+          [-175.76416450683655, 0],
+          [-49, 0],
+          [-49, 69.8]]], null, false);
+          
+
+var AOI_America2 =ee.Geometry.Polygon(
+        [[[-92.6, 0],
+          [-92.6, -56.769203390873436],
+          [-33,  -56.769203390873436],
+          [-33, 0]]], null, false);
+
+                    var AOI_Africa =ee.Geometry.Polygon(
+        [[[-27.4, 18.8],
+          [-27.4,-37.4],
+          [63.856,  -37.4],
+          [63.856, 18.8]]], null, false);
+var AOI_Asia2 = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[89.2559348418062, 0],
+          [89.2559348418062, -49.67306507025235],
+          [183.8262473418062, -49.67306507025235],
+          [183.8262473418062, 0]]], null, false),
+    AOI_Europe = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-36.29773812318371, 73.0571480732895],
+          [-36.29773812318371, 23.35015186157351],
+          [70.57726187681628, 23.35015186157351],
+          [70.57726187681628, 73.0571480732895]]], null, false),
+    AOI_Asia1 = 
+    /* color: #0b4a8b */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[70.57726187681628, 72.94261832226674],
+          [70.57726187681628, 0],
+          [181.70472360061206, 0],
+          [181.70472360061206, 72.94261832226674]]], null, false);
+          
+          var AOI_Islands = 
+    /* color: #ffc82d */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-175.56723908732576, -10.708315738822103],
+          [-175.56723908732576, -24.090792474009252],
+          [-143.53110627482576, -24.090792474009252],
+          [-143.53110627482576, -10.708315738822103]]], null, false);
+ 
+
+// // // --------------------------------------------- EXPORT
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'AOI_Africa',
+  assetId: 'users/bourgoinclement2/EUFO_Forest2020/AOI_Africa',
+  crs: 'EPSG:4326',
+  region: AOI_Africa, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+ 
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'AOI_America1',
+  assetId: 'users/bourgoinclement2/EUFO_Forest2020/AOI_America1',
+  crs: 'EPSG:4326',
+  region: AOI_America1, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+ 
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'AOI_America2',
+  assetId: 'users/bourgoinclement2/EUFO_Forest2020/AOI_America2',
+  crs: 'EPSG:4326',
+  region: AOI_America2, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'AOI_Europe',
+  assetId: 'users/bourgoinclement2/EUFO_Forest2020/AOI_Europe',
+  crs: 'EPSG:4326',
+  region: AOI_Europe, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'AOI_Asia1',
+  assetId: 'users/bourgoinclement2/EUFO_Forest2020/AOI_Asia1',
+  crs: 'EPSG:4326',
+  region: AOI_Asia1, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'AOI_Asia2',
+  assetId: 'users/bourgoinclement2/EUFO_Forest2020/AOI_Asia2',
+  crs: 'EPSG:4326',
+  region: AOI_Asia2, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'AOI_Islands',
+  assetId: 'users/bourgoinclement2/EUFO_Forest2020/AOI_Islands',
+  crs: 'EPSG:4326',
+  region: AOI_Islands, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+
