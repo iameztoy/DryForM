@@ -69,6 +69,15 @@ Map.onClick(function(coords) {
 Add Layers and set Map
 --------------------------------*/
 Map.addLayer(forest_NA, {min:1,max:1, palette:['green']}, 'Forest BL 2020 - North America', true);
+// AOIs visu - To be removed
+Map.addLayer(NorthAmerica, null, "North America", false);
+Map.addLayer(Asia, null, "Asia", false);
+Map.addLayer(Europe, null, "Europe", false);
+Map.addLayer(LatinAmerica, null, "Latin America", false);
+Map.addLayer(Africa, null, "Africa", false);
+Map.addLayer(Siberia, null, "Siberia", false);
+Map.addLayer(Tropics, null, "Tropics", false);
+
 Map.centerObject(NorthAmerica, 4);
 Map.style().set('cursor', 'crosshair');
 
