@@ -1,11 +1,13 @@
-/*
+/*#####################################################################
 
  September 2023 IAA - JRC Bioeconomy
  Activity: Baseline Map 2020 preparation - Feedback App v.0 (Template)
 
-*/
+#######################################################################*/
 
-//Set Areas of Interest
+/* -----------------------------
+Set Areas of Interest & Layers
+--------------------------------*/
 
 var NorthAmerica = ee.Geometry.Polygon([[[-170.05779793621525, 71.44398194429216],[-170.05779793621525, 6.411426070626747],
           [-47.88982918621525, 6.411426070626747],[-47.88982918621525, 71.44398194429216]]], null, false);
@@ -22,7 +24,6 @@ var Siberia = ee.Geometry.Polygon([[[50.28399893878477, 78.59282214664536],[50.2
 var Tropics =  ee.Geometry.Polygon([[[-129.36443856121522, 32.09057856136751],[-129.36443856121522, -29.39308885991816],
           [173.33087393878475, -29.39308885991816],[173.33087393878475, 32.09057856136751]]], null, false);
 
-// Load Layers
 var ndvi = ee.ImageCollection('NOAA/VIIRS/001/VNP13A1')
     .filterDate('2021-01-01', '2022-01-01').select('NDVI');
 Map.addLayer(
@@ -42,7 +43,8 @@ Map.style().set('cursor', 'crosshair');
 // Create an empty panel.
 // The layout is vertical flow by default.
 var panel = ui.Panel({style: {width: '400px'}})
-    .add(ui.Label('Click on the map'));
+    .add(ui.Label('Forest Baseline Map 2020'))
+    .add(ui.Label('Click on the map to get point coordinates'));
 
 // Set a callback function for when the user clicks the map.
 Map.onClick(function(coords) {
