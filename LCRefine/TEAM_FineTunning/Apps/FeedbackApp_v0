@@ -9,6 +9,7 @@
 Set Areas of Interest & Layers
 --------------------------------*/
 
+// Areas of Interest
 var NorthAmerica = ee.Geometry.Polygon([[[-170.05779793621525, 71.44398194429216],[-170.05779793621525, 6.411426070626747],
           [-47.88982918621525, 6.411426070626747],[-47.88982918621525, 71.44398194429216]]], null, false);
 var Asia =  ee.Geometry.Polygon([[[25.586733313784766, 81.94878398109365],[25.586733313784766, -48.45391172946717],
@@ -24,21 +25,14 @@ var Siberia = ee.Geometry.Polygon([[[50.28399893878477, 78.59282214664536],[50.2
 var Tropics =  ee.Geometry.Polygon([[[-129.36443856121522, 32.09057856136751],[-129.36443856121522, -29.39308885991816],
           [173.33087393878475, -29.39308885991816],[173.33087393878475, 32.09057856136751]]], null, false);
 
-var ndvi = ee.ImageCollection('NOAA/VIIRS/001/VNP13A1')
-    .filterDate('2021-01-01', '2022-01-01').select('NDVI');
-Map.addLayer(
-  ndvi.median(), {min: 0, max: 10000, palette: ['99c199', '006400']}, 'NDVI');
-  
-//Load Forest BLM 2020
+// Load Forest BLM 2020
 var forest = ee.ImageCollection('users/bourgoinclement2/EUFO_Forest2020').mosaic();
 var forestm = forest.updateMask(forest);
-
 var forest_NA = forestm.clip(NorthAmerica); //Change this for each App
-Map.addLayer(forest_NA, {min:1,max:1, palette:['green']}, 'Forest BL 2020 - North America', true);
 
-// Configure the map.
-Map.centerObject(NorthAmerica, 4);
-Map.style().set('cursor', 'crosshair');
+/* -----------------------------
+Panels and Layouts
+--------------------------------*/
 
 // Create an empty panel.
 // The layout is vertical flow by default.
@@ -58,36 +52,25 @@ var intro = ui.Panel([
     value: 'Clic on point to get coordinates',
     style: {fontSize: '14px', fontWeight: 'bold'}
   }),
-
-
 ]);
 
 panel.add(intro);
 
 // Set a callback function for when the user clicks the map.
 Map.onClick(function(coords) {
-  // Create or update the location label (the second widget in the panel)
   var location = 'lon: ' + coords.lon.toFixed(4) + ' ' +
                  'lat: ' + coords.lat.toFixed(4);
   panel.widgets().set(1, ui.Label(location));
-
-  // Add a red dot to the map where the user clicked.
   var point = ee.Geometry.Point(coords.lon, coords.lat);
   Map.layers().set(1, ui.Map.Layer(point, {color: 'FF0000'}));
-
-  // Create a chart of NDVI over time.
-  var chart = ui.Chart.image.series(ndvi, point, ee.Reducer.mean(), 200)
-      .setOptions({
-        title: 'NDVI Over Time',
-        vAxis: {title: 'NDVI'},
-        lineWidth: 1,
-        pointSize: 3,
-      });
-
-  // Add (or replace) the third widget in the panel by
-  // manipulating the widgets list.
-  panel.widgets().set(2, chart);
 });
+
+/* -----------------------------
+Add Layers and set Map
+--------------------------------*/
+Map.addLayer(forest_NA, {min:1,max:1, palette:['green']}, 'Forest BL 2020 - North America', true);
+Map.centerObject(NorthAmerica, 4);
+Map.style().set('cursor', 'crosshair');
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
