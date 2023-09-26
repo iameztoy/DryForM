@@ -49,7 +49,7 @@ var intro = ui.Panel([
   }),
   
   ui.Label({
-    value: 'Clic on point to get coordinates',
+    value: 'Clic on a location to get coordinates',
     style: {fontSize: '14px', fontWeight: 'bold'}
   }),
 ]);
