@@ -10,6 +10,10 @@ var ndvi = ee.ImageCollection('NOAA/VIIRS/001/VNP13A1')
     .filterDate('2021-01-01', '2022-01-01').select('NDVI');
 Map.addLayer(
   ndvi.median(), {min: 0, max: 10000, palette: ['99c199', '006400']}, 'NDVI');
+  
+//Load Forest BLM 2020
+var forest = ee.ImageCollection('users/bourgoinclement2/EUFO_Forest2020').mosaic()
+Map.addLayer(forest.updateMask(forest),{min:1,max:1, palette:['green']},'Forest Baseline Map 2020',true);
 
 // Configure the map.
 Map.setCenter(-94.84497, 39.01918, 8);
