@@ -42,9 +42,27 @@ Map.style().set('cursor', 'crosshair');
 
 // Create an empty panel.
 // The layout is vertical flow by default.
-var panel = ui.Panel({style: {width: '400px'}})
-    .add(ui.Label('Forest Baseline Map 2020'))
-    .add(ui.Label('Click on the map to get point coordinates'));
+var panel = ui.Panel({
+  layout: ui.Panel.Layout.flow('vertical'),
+  style: {width: '300px'}
+});
+
+// Create an intro panel with labels.
+var intro = ui.Panel([
+  ui.Label({
+    value: 'Forest Baseline Map 2020',
+    style: {fontSize: '20px', fontWeight: 'bold'}
+  }),
+  
+  ui.Label({
+    value: 'Clic on point to get coordinates',
+    style: {fontSize: '14px', fontWeight: 'bold'}
+  }),
+
+
+]);
+
+panel.add(intro);
 
 // Set a callback function for when the user clicks the map.
 Map.onClick(function(coords) {
