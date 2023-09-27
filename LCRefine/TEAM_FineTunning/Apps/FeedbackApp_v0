@@ -70,7 +70,10 @@ Map.onClick(function(coords) {
 /* -----------------------------
 Add Layers and set Map
 --------------------------------*/
-Map.addLayer(forest_NA, {min:1,max:1, palette:['green']}, 'Forest BL 2020 - North America', true);
+
+//Visu Params
+var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"]};
+Map.addLayer(forest_NA, visPar, 'Forest BL 2020 - North America', true);
 // AOIs visu - To be removed
 Map.addLayer(NorthAmerica, null, "North America", false);
 Map.addLayer(Asia, null, "Asia", false);
