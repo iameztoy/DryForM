@@ -28,7 +28,7 @@ var Tropics =  ee.Geometry.Polygon([[[-129.36443856121522, 32.09057856136751],[-
 var AOI = NorthAmerica;
 
 // Load Forest BLM 2020
-var forest = ee.ImageCollection('users/bourgoinclement2/EUFO_Forest2020').mosaic();
+var forest = ee.ImageCollection('users/bourgoinclement2/EUFO_Forest2020').mosaic(); //Preliminary version
 var forestm = forest.updateMask(forest);
 var forest_NA = forestm.clip(AOI); //Change this for each App
 
