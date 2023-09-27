@@ -71,9 +71,6 @@ Map.onClick(function(coords) {
 Add Layers and set Map
 --------------------------------*/
 
-//Visu Params
-var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"]};
-Map.addLayer(forest_NA, visPar, 'Forest BL 2020 - North America', true);
 // AOIs visu - To be removed
 Map.addLayer(NorthAmerica, null, "North America", false);
 Map.addLayer(Asia, null, "Asia", false);
@@ -82,6 +79,10 @@ Map.addLayer(LatinAmerica, null, "Latin America", false);
 Map.addLayer(Africa, null, "Africa", false);
 Map.addLayer(Siberia, null, "Siberia", false);
 Map.addLayer(Tropics, null, "Tropics", false);
+
+//Visu Params
+var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"]};
+Map.addLayer(forest_NA, visPar, 'Forest BL 2020 - North America', true);
 
 Map.centerObject(AOI, 4);
 Map.style().set('cursor', 'crosshair');
