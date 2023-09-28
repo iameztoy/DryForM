@@ -87,6 +87,7 @@ Map.addLayer(forest_NA, visPar, 'Forest BL 2020 - North America', true);
 Map.centerObject(AOI, 4);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
+Map.setControlVisibility({drawingToolsControl:false});
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
