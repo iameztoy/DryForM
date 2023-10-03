@@ -146,15 +146,30 @@ Map.onClick(function(coords) {
 Add Layers and set Map
 --------------------------------*/
 
+//Visu Params
 
-Map.addLayer(forestcl, {min:1,max:1, palette:['green'],opacity: 0.7}, 'Global_forest_step1 postprocessing', true)
+// Create an empty image into which to paint the features, cast to byte.
+var empty = ee.Image().byte();
 
+// Paint all the polygon edges with the same number and width, display.
+var outline = empty.paint({
+  featureCollection: AOI,
+  color: 1,
+  width: 3
+});
 
-Map.setCenter(96.78, 15.28, 3); //Changed to setCenter instead to centerObject
+var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"]};
+
+//Add Layers
+
+Map.addLayer(outline, {palette: 'FF0000'}, 'Area of Interest', false);
+Map.addLayer(forestcl, visPar, 'Forest BL 2020 - South East Asia', true);
+
+//Set Map params
+Map.centerObject(AOI, 4);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
 Map.setControlVisibility({drawingToolsControl:false});
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
-
