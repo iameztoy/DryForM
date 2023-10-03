@@ -163,7 +163,7 @@ Map.addLayer(forestcl, visPar, 'Forest BL 2020 - Oceania & Middle East', true);
 Map.setCenter(128.24, 13.9, 3);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
-//Map.setControlVisibility({drawingToolsControl:false});
+Map.setControlVisibility({drawingToolsControl:false});
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
