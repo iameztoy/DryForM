@@ -1,0 +1,176 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var NorthAmerica = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.MultiPolygon(
+        [[[[-166.6921609586214, 70.00178956236937],
+           [-166.6921609586214, 24.3170117412486],
+           [-47.512473458621415, 24.3170117412486],
+           [-47.512473458621415, 70.00178956236937]]],
+         [[[-160.6716531461214, 22.624097900764557],
+           [-160.6716531461214, 18.260597536297272],
+           [-153.9919656461214, 18.260597536297272],
+           [-153.9919656461214, 22.624097900764557]]]], null, false),
+    CentralAmerica = 
+    /* color: #98ff00 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[-123.07453628245578, 33.64007981731625],
+          [-123.07453628245578, 5.690146139428705],
+          [-51.88313003245579, 5.690146139428705],
+          [-51.88313003245579, 33.64007981731625]]], null, false),
+    SouthAmerica = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[-96.53156753245578, 12.970121244082918],
+          [-96.53156753245578, -56.128511485781786],
+          [-31.84406753245579, -56.128511485781786],
+          [-31.84406753245579, 12.970121244082918]]], null, false),
+    SouthAfrica = 
+    /* color: #ffc82d */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[6.174398959576255, 0.2500001270768458],
+          [6.174398959576255, -35.68625207974746],
+          [59.78768020957625, -35.68625207974746],
+          [59.78768020957625, 0.2500001270768458]]], null, false),
+    NorthAfrica = 
+    /* color: #00ffff */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[-22.477944790423745, 37.98490805054794],
+          [-22.477944790423745, 0.23840437229675962],
+          [52.58064895957625, 0.23840437229675962],
+          [52.58064895957625, 37.98490805054794]]], null, false),
+    Europe = 
+    /* color: #bf04c2 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[-25.58079558449292, 71.40646952667058],
+          [-25.58079558449292, 36.156371322972824],
+          [50.44459504050708, 36.156371322972824],
+          [50.44459504050708, 71.40646952667058]]], null, false),
+    SouthEastAsia = 
+    /* color: #ff0000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[67.62775915892391, 35.95627214376445],
+          [67.62775915892391, -12.473525885376155],
+          [165.0105716589239, -12.473525885376155],
+          [165.0105716589239, 35.95627214376445]]], null, false),
+    NorthAsia = 
+    /* color: #00ff00 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[50.68020888836477, 75.52797852088183],
+          [50.68020888836477, 35.70382719873776],
+          [181.63724013836475, 35.70382719873776],
+          [181.63724013836475, 75.52797852088183]]], null, false),
+    OceaniaMiddleEast = 
+    /* color: #0000ff */
+    /* shown: false */
+    ee.Geometry.MultiPolygon(
+        [[[[111.21558176082816, -9.35582862459628],
+           [111.21558176082816, -50.11633832898156],
+           [193.48120676082812, -50.11633832898156],
+           [193.48120676082812, -9.35582862459628]]],
+         [[[153.9618520451955, 13.437648548178716],
+           [153.9618520451955, -9.6387230851929],
+           [180.6366567326955, -9.6387230851929],
+           [180.6366567326955, 13.437648548178716]]],
+         [[[175.77236754931093, 8.323380261506184],
+           [175.77236754931093, -44.148383873978744],
+           [267.17861754931096, -44.148383873978744],
+           [267.17861754931096, 8.323380261506184]]],
+         [[[26.810023561237937, 55.64759003194291],
+           [26.810023561237937, 13.530226950615672],
+           [89.21236731123794, 13.530226950615672],
+           [89.21236731123794, 55.64759003194291]]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+/*#####################################################################
+
+ September 26 2023 IAA - JRC Bioeconomy
+ Activity: Baseline Map 2020 preparation - Feedback App v.0.2 South Africa
+ CL: Oct. 3 2023. App with latest BLM20. 
+
+#######################################################################*/
+
+/* -----------------------------
+Set Areas of Interest & Layers
+--------------------------------*/
+
+var AOI = OceaniaMiddleEast;
+
+// Load Forest BLM 2020
+var forest =ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Preliminary version
+var forestm = forest.updateMask(forest);
+var forestcl= forestm.clip(AOI); //Change this for each App
+
+/* -----------------------------
+Panels and Layouts
+--------------------------------*/
+
+// Create an empty panel.
+// The layout is vertical flow by default.
+var panel = ui.Panel({
+  layout: ui.Panel.Layout.flow('vertical'),
+  style: {width: '300px'}
+});
+
+// Create an intro panel with labels.
+var intro = ui.Panel([
+  ui.Label({
+    value: 'Forest Baseline Map 2020',
+    style: {fontSize: '20px', fontWeight: 'bold'}
+  }),
+  
+  ui.Label({
+    value: 'Clic on a location to get coordinates',
+    style: {fontSize: '14px', fontWeight: 'bold'}
+  }),
+]);
+
+panel.add(intro);
+
+// Set a callback function for when the user clicks the map.
+Map.onClick(function(coords) {
+  var location = 'lon: ' + coords.lon.toFixed(5) + ' ' +
+                 'lat: ' + coords.lat.toFixed(5);
+  panel.widgets().set(1, ui.Label(location));
+  var point = ee.Geometry.Point(coords.lon, coords.lat);
+  Map.layers().set(1, ui.Map.Layer(point, {color: 'FF0000'}, "Point of Interest"));
+});
+
+/* -----------------------------
+Add Layers and set Map
+--------------------------------*/
+
+//Visu Params
+
+// Create an empty image into which to paint the features, cast to byte.
+var empty = ee.Image().byte();
+
+// Paint all the polygon edges with the same number and width, display.
+var outline = empty.paint({
+  featureCollection: AOI,
+  color: 1,
+  width: 3
+});
+
+var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"]};
+
+//Add Layers
+
+//Map.addLayer(outline, {palette: 'FF0000'}, 'Area of Interest', true);
+Map.addLayer(forestcl, visPar, 'Forest BL 2020 - South Africa', true);
+
+//Set Map params
+//Map.centerObject(AOI, 4);
+Map.setCenter(96.81, 19.91, 3);
+Map.style().set('cursor', 'crosshair');
+Map.setOptions('SATELLITE');
+Map.setControlVisibility({drawingToolsControl:false});
+
+// Add the panel to the ui.root.
+ui.root.add(panel);
