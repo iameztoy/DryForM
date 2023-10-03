@@ -1,8 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var NorthAmerica = 
-    /* color: #d63000 */
-    /* shown: false */
-    ee.Geometry.MultiPolygon(
+var NorthAmerica = /* color: #d63000 */ee.Geometry.MultiPolygon(
         [[[[-166.6921609586214, 70.00178956236937],
            [-166.6921609586214, 24.3170117412486],
            [-47.512473458621415, 24.3170117412486],
@@ -67,10 +64,7 @@ var NorthAmerica =
           [50.68020888836477, 35.70382719873776],
           [181.63724013836475, 35.70382719873776],
           [181.63724013836475, 75.52797852088183]]], null, false),
-    OceaniaMiddleEast = 
-    /* color: #0000ff */
-    /* shown: false */
-    ee.Geometry.MultiPolygon(
+    OceaniaMiddleEast = /* color: #0000ff */ee.Geometry.MultiPolygon(
         [[[[111.21558176082816, -9.35582862459628],
            [111.21558176082816, -50.11633832898156],
            [193.48120676082812, -50.11633832898156],
@@ -79,10 +73,6 @@ var NorthAmerica =
            [153.9618520451955, -9.6387230851929],
            [180.6366567326955, -9.6387230851929],
            [180.6366567326955, 13.437648548178716]]],
-         [[[175.77236754931093, 8.323380261506184],
-           [175.77236754931093, -44.148383873978744],
-           [267.17861754931096, -44.148383873978744],
-           [267.17861754931096, 8.323380261506184]]],
          [[[26.810023561237937, 55.64759003194291],
            [26.810023561237937, 13.530226950615672],
            [89.21236731123794, 13.530226950615672],
@@ -100,7 +90,11 @@ var NorthAmerica =
 Set Areas of Interest & Layers
 --------------------------------*/
 
+
+
+
 var AOI = OceaniaMiddleEast;
+Map.addLayer(AOI)
 
 // Load Forest BLM 2020
 var forest =ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Preliminary version
@@ -169,7 +163,7 @@ Map.addLayer(forestcl, visPar, 'Forest BL 2020 - Oceania & Middle East', true);
 Map.setCenter(128.24, 13.9, 3);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
-Map.setControlVisibility({drawingToolsControl:false});
+//Map.setControlVisibility({drawingToolsControl:false});
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
