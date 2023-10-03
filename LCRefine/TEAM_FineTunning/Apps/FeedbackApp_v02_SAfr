@@ -2,14 +2,6 @@
 var NorthAmerica = 
     /* color: #d63000 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      },
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.MultiPolygon(
         [[[[-166.6921609586214, 70.00178956236937],
            [-166.6921609586214, 24.3170117412486],
@@ -22,11 +14,6 @@ var NorthAmerica =
     CentralAmerica = 
     /* color: #98ff00 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[-123.07453628245578, 33.64007981731625],
           [-123.07453628245578, 5.690146139428705],
@@ -35,11 +22,6 @@ var NorthAmerica =
     SouthAmerica = 
     /* color: #0b4a8b */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[-96.53156753245578, 12.970121244082918],
           [-96.53156753245578, -56.128511485781786],
@@ -48,11 +30,6 @@ var NorthAmerica =
     SouthAfrica = 
     /* color: #ffc82d */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[6.174398959576255, 0.2500001270768458],
           [6.174398959576255, -35.68625207974746],
@@ -61,11 +38,6 @@ var NorthAmerica =
     NorthAfrica = 
     /* color: #00ffff */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[-22.477944790423745, 37.98490805054794],
           [-22.477944790423745, 0.23840437229675962],
@@ -74,11 +46,6 @@ var NorthAmerica =
     Europe = 
     /* color: #bf04c2 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[-25.58079558449292, 71.40646952667058],
           [-25.58079558449292, 36.156371322972824],
@@ -87,11 +54,6 @@ var NorthAmerica =
     SouthEastAsia = 
     /* color: #ff0000 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[67.62775915892391, 35.95627214376445],
           [67.62775915892391, -12.473525885376155],
@@ -100,11 +62,6 @@ var NorthAmerica =
     NorthAsia = 
     /* color: #00ff00 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.Polygon(
         [[[50.68020888836477, 75.52797852088183],
           [50.68020888836477, 35.70382719873776],
@@ -113,20 +70,6 @@ var NorthAmerica =
     OceaniaMiddleEast = 
     /* color: #0000ff */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      },
-      {
-        "type": "rectangle"
-      },
-      {
-        "type": "rectangle"
-      },
-      {
-        "type": "rectangle"
-      }
-    ] */
     ee.Geometry.MultiPolygon(
         [[[[111.21558176082816, -9.35582862459628],
            [111.21558176082816, -50.11633832898156],
@@ -203,10 +146,26 @@ Map.onClick(function(coords) {
 Add Layers and set Map
 --------------------------------*/
 
+//Visu Params
 
-Map.addLayer(forestcl, {min:1,max:1, palette:['green'],opacity: 0.7}, 'Global_forest_step1 postprocessing', true)
+// Create an empty image into which to paint the features, cast to byte.
+var empty = ee.Image().byte();
 
+// Paint all the polygon edges with the same number and width, display.
+var outline = empty.paint({
+  featureCollection: AOI,
+  color: 1,
+  width: 3
+});
 
+var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"]};
+
+//Add Layers
+
+Map.addLayer(outline, {palette: 'FF0000'}, 'Area of Interest', false);
+Map.addLayer(forestcl, visPar, 'Forest BL 2020 - South East Asia', true);
+
+//Set Map params
 Map.centerObject(AOI, 4);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
@@ -214,4 +173,3 @@ Map.setControlVisibility({drawingToolsControl:false});
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
-
