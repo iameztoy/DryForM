@@ -167,7 +167,7 @@ Map.addLayer(forestcl, visPar, 'Forest BL 2020 - South Africa', true);
 Map.setCenter(96.81, 19.91, 3);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
-Map.setControlVisibility({drawingToolsControl:true});
+Map.setControlVisibility({drawingToolsControl:false});
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
