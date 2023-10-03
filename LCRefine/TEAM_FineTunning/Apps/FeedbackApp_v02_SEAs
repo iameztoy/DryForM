@@ -203,10 +203,14 @@ Map.onClick(function(coords) {
 Add Layers and set Map
 --------------------------------*/
 
+//Visu Params
 
-Map.addLayer(forestcl, {min:1,max:1, palette:['green'],opacity: 0.7}, 'Global_forest_step1 postprocessing', true)
+var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"]};
 
+//Add Layers
+Map.addLayer(forestcl, visPar, 'Forest BL 2020 - South East Asia', true)
 
+//Set Map params
 Map.centerObject(AOI, 4);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
