@@ -90,11 +90,7 @@ var NorthAmerica = /* color: #d63000 */ee.Geometry.MultiPolygon(
 Set Areas of Interest & Layers
 --------------------------------*/
 
-
-
-
 var AOI = OceaniaMiddleEast;
-Map.addLayer(AOI)
 
 // Load Forest BLM 2020
 var forest =ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Preliminary version
