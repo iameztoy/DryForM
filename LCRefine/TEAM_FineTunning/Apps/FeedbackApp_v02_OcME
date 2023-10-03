@@ -1,33 +1,19 @@
 /*#####################################################################
 
  September 26 2023 IAA - JRC Bioeconomy
- Activity: Baseline Map 2020 preparation - Feedback App v.0.2 South Africa
- CL: Oct. 3 2023. App with latest BLM20. 
+ Activity: Baseline Map 2020 preparation - Feedback App v.0.2 Oceania & Middle East
+ CL: Oct. 3 2023. App with latest BLM20. FC by RC (preliminary version by CB)
 
 #######################################################################*/
 
 /* -----------------------------
 Set Areas of Interest & Layers
 --------------------------------*/
+var AOI = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/bbox4feedback"); 
 
-var AOI = ee.Geometry.MultiPolygon(
-        [[[[107.73889969564004, -10.177086328250287],
-           [107.73889969564004, -50.1012085834927],
-           [182.00647782064004, -50.1012085834927],
-           [182.00647782064004, -10.177086328250287]]],
-         [[[154.06824539876504, -0.3653019987679177],
-           [154.06824539876504, -10.014843226330488],
-           [167.25183914876504, -10.014843226330488],
-           [167.25183914876504, -0.3653019987679177]]],
-         [[[-177.86354442489016, 2.867095419185493],
-           [-177.86354442489016, -45.29746943889416],
-           [-99.90456004989011, -45.29746943889416],
-           [-99.90456004989011, 2.867095419185493]]],
-         [[[25.51536182510988, 55.572145973898174],
-           [25.51536182510988, 11.25385837391952],
-           [88.70872120010988, 11.25385837391952],
-           [88.70872120010988, 55.572145973898174]]]], null, false);
-
+//Id = 1 Europe, Id = 2 NorthAmerica, Id = 3 CentralAmerica, Id = 4 SouthAmerica, Id = 5 NorthAfrica
+//Id = 6 SouthAfrica, Id = 7 NorthAsia, Id = 8 SouthEastAsia, Id = 9 OceaniaMiddleEast
+var AOI = AOI.filter(ee.Filter.eq('Id', 9)); //Values from 1 to 9
 
 // Load Forest BLM 2020
 var forest =ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Preliminary version
@@ -90,14 +76,17 @@ var visPar = {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":["008000"
 //Add Layers
 
 //Map.addLayer(outline, {palette: 'FF0000'}, 'Area of Interest', true);
-Map.addLayer(forestcl, visPar, 'Forest BL 2020 - South Africa', true);
+Map.addLayer(forestcl, visPar, 'Forest BL 2020 - Central America', true);
 
 //Set Map params
 //Map.centerObject(AOI, 4);
-Map.setCenter(96.81, 19.91, 3);
+Map.setCenter(96.38, 24.04, 3)
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
 Map.setControlVisibility({drawingToolsControl:false});
 
 // Add the panel to the ui.root.
 ui.root.add(panel);
+
+
+
