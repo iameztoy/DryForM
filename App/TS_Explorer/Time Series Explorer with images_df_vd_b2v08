@@ -79,7 +79,7 @@ var rgbTs = require(
 // #############################################################################
 
 var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
-var RefineStep2 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Our second processing Sept. 2023
+var RefineStep2 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Our second processing Sept/Oct 2023
 
 
 
