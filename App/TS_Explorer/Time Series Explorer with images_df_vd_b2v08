@@ -13,6 +13,7 @@
  *  Error corrected for ESA_Tree (it was = ESRI_Tree while renaming)
  * 
  * 2023-06-20 Current version comes from TSE branch.2 v.1 started in July 2022
+ * 2023-10-04 Added BLM 20 maps version 1 and 2
  * 
  *    ###############
  *    ## TODO 
@@ -78,7 +79,8 @@ var rgbTs = require(
 // #############################################################################
 
 var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
-var RefineStep2 = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2"); //Our second processing Sept. 2023
+var RefineStep2 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Our second processing Sept. 2023
+
 
 
 //var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
@@ -1060,11 +1062,11 @@ var gedi5Llt5 = gedi5Llt5.unmask();
 
 //9. Refine Step 2 - JRC Baseline Map 2020
 
-var RefineStep2m = RefineStep2.max();
+var RefineStep2 = RefineStep2.updateMask(RefineStep2);
 
 // n. Overall Trees 2020
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5).add(RefineStep2m);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5).add(RefineStep2);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 //Stack Tree/Forest
@@ -1077,7 +1079,7 @@ var Hansen_Tree_r = HTC_2020.rename(['Hansen_Trees']);
 var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_Potapov_gte5']);
 var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5']);
-var RefineStep2_r = RefineStep2m.rename(['JRC_BaselineM_2020']);
+var RefineStep2_r = RefineStep2.rename(['JRC_BaselineM_2020']);
 var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
 
 
