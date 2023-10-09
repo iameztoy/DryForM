@@ -7,6 +7,8 @@ var TC_wri_map = TC_wri.gte(80)
 //Tree Cover UMD
 var GLCmap = ee.ImageCollection('projects/glad/GLCmap2019').mosaic();
 var treecoverUMD=(GLCmap.gte(54).and(GLCmap.lte(91))).or(GLCmap.gte(174).and(GLCmap.lte(211)));
+var agriUMD = ((GLCmap.gte(0)).and(GLCmap.lte(53))).or((GLCmap.gte(120)).and(GLCmap.lte(170))).or((GLCmap.gte(240)).and(GLCmap.lte(249))).or((GLCmap.gte(251)).and(GLCmap.lte(252)))
+var agriUMD_51_53 = GLCmap.gte(51).and(GLCmap.lte(53));
 
 
 //Loss Year
@@ -44,3 +46,5 @@ Map.addLayer(WC2021,{},'ESA WC2021',false);
 Map.addLayer(WC2021_foret.updateMask(WC2021_foret),{min:1,max:1, palette:['black']},'WC2021_foret',false);
 Map.addLayer(WC2020_21_foret.updateMask(WC2020_21_foret),{min:1,max:1, palette:['black']},'Initial forest',false);
 Map.addLayer(WC2020_21_foret_NoWRI.updateMask(WC2020_21_foret_NoWRI),{min:1,max:1, palette:['black']},'Initial forest No WRI',false);
+Map.addLayer(agriUMD.updateMask(agriUMD), null, "Agri UMD 0 - 53")
+Map.addLayer(agriUMD_51_53.updateMask(agriUMD_51_53), null, "Agri UMD 51 - 53")
