@@ -114,7 +114,7 @@ var visP2 = {"opacity":1,"bands":["Trees"],"palette":["7cff2b"]}; // Tree Boolea
 var visP3 = {"opacity":1,"bands":["b1"],"palette":["ff3210"]}; // UMD 3, 4 and 5 meter Trees
 
 Map.setOptions('SATELLITE');
-Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80", 0);
+Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80", 1);
 Map.addLayer(TotTreeFor, null, "Total Tree/Forest", 0);
 Map.addLayer(TreeThr, null, "Tree thresholded", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
