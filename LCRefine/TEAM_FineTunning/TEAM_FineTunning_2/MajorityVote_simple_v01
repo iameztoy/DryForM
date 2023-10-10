@@ -7,6 +7,10 @@
 // Note that while applying the MV threshold the number of observations vary depending on the region. 
 // Therefore, number of pixels with valid observations have been calculated (count)
 // Sum of products have been divided by the previous variable || perc = TotTreeFor/count
+// A threshold of e.g. perc > 0.5 (50%) can be set to get a new boolean map, so the outcome (majority) is 
+//    calculated based on the number of observations regardless their unequal distribution.
+
+
 
 
 //****************************
