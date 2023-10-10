@@ -5,7 +5,7 @@
 // Adapted from previous DryForM versions
 // Sum of different datasets for Majority Vote calculation
 // Note that while applying the MV threshold the number of observations vary depending on the region. 
-//
+// Ideally the threshold should be adapted per macro-region.
 
 
 //****************************
@@ -15,7 +15,8 @@
 //var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
-var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //v100 also available
+var esawc2020 = ee.ImageCollection("ESA/WorldCover/v100").first();
+var esawc2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
 var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
@@ -35,7 +36,6 @@ var image0 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
 // SIMPLE PROCESSING
 //****************************
 
-
 // 1. Dynamic World
 var srt = '2020-01-01'; var end = '2021-01-01'; //For DW processing
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
@@ -46,8 +46,12 @@ var dwM_Tree = dwMode.eq(1).unmask().rename(['Trees']);  //Trees 1, shrub_and_sc
 var esri_aoi = esri_lulc2020.mosaic(); 
 var esri_Tree = esri_aoi.eq(2).unmask().rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2
 
-// 3. ESA World Cover 2020
-var esa_Tree = esawc2020.eq(10).unmask().rename(['Trees']);
+// 3. ESA World Cover 2020/2021
+
+var esa_Tree2020 = (esawc2020.eq(10)).or(esawc2020.eq(95));
+var esa_Tree2021 = (esawc2021.eq(10)).or(esawc2021.eq(95));
+var esa_Tree_p = esa_Tree2020.or(esa_Tree2021);
+var esa_Tree = esa_Tree_p.unmask().rename(['Trees']);
 
 // 4. WRI Tree Cover 2020
 var TC_wri_m = TC_wri.gte(80).unmask().rename(['Trees']);
@@ -57,7 +61,6 @@ var treeCover = gfcImage.select(['treecover2000']);
 var treeCover10 = treeCover.gte(10);
 var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
-//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
 var HTC_2020 = treeCover10.subtract(lossb2020);
 var HTC_2020_1 = HTC_2020.eq(1).unmask().rename(['Trees']); //remove negative values
 
@@ -99,10 +102,16 @@ var TreeThrBool = TreeThr.gte(4);
 // ADD LAYERS
 //****************************
 
+//Vis params
+var visP1 = {"opacity":1,"bands":["Trees"],"palette":["ffac64"]};
+var visP2 = {"opacity":1,"bands":["Trees"],"palette":["7cff2b"]};
 
-Map.addLayer(TotTreeFor, null, "Total Tree/Forest");
-Map.addLayer(TreeThr, null, "Tree thresholded");
-Map.addLayer(TreeThrBool.updateMask(TreeThrBool), null, "Tree Boolean Thresholded");
+Map.setOptions('SATELLITE');
+Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80");
+Map.addLayer(TotTreeFor, null, "Total Tree/Forest", 0);
+Map.addLayer(TreeThr, null, "Tree thresholded", 0);
+Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
+Map.addLayer(esa_Tree.updateMask(esa_Tree), visP1, "World Cover 2020/2021", 1);
 
 
 
