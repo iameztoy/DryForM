@@ -2,7 +2,7 @@
 /////////////////////
 // IAA Oct. 2023
 //
-// Adapted from previous DryForM versions (from LCProc_v.2.1 Branch 2)
+// Adapted from previous DryForM versions (selfNote; from LCProc_v.2.1 Branch 2)
 // Sum of different datasets for Majority Vote calculation
 // Note that while applying the MV threshold the number of observations vary depending on the region. 
 // Therefore, number of pixels with valid observations have been calculated (count)
@@ -101,7 +101,7 @@ Cop10m = Cop10m.unmask().rename(['Trees']);
 //10. TMF
 var plantation = (Transition.gte(80)).and(Transition.lte(89));
 var old_regrowth = (Transition.eq(31)); 
-var AC= ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic().select('Dec2020');
+var AC = ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic().select('Dec2020');
 var tmf = (AC.eq(1)).or(AC.eq(2));
 var tmf_pl = tmf.where(plantation,0); 
 var tmf_plrg = tmf_pl.add(old_regrowth).unmask().rename(['Trees']);
