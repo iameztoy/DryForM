@@ -154,6 +154,7 @@ print(col)
 var visP1 = {"opacity":1,"bands":["Trees"],"palette":["ffac64"]}; // World Cover 2020/2021
 var visP2 = {"opacity":1,"bands":["Trees"],"palette":["7cff2b"]}; // Tree Boolean Thresholded
 var visP3 = {"opacity":1,"bands":["b1"],"palette":["ff3210"]}; // UMD 3, 4 and 5 meter Trees
+var visP4 = {"opacity":1,"bands":["f"],"max":9,"palette":["000000","ffb497","ffd916","cfff84","9aff82","3fffa7","58aaff","c4b5ff","a662ff","ff8686"]};
 
 Map.setOptions('SATELLITE');
 Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80", 1);
@@ -162,7 +163,7 @@ Map.addLayer(TreeThr, null, "Tree thresholded", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
 Map.addLayer(esa_Tree.updateMask(esa_Tree), visP1, "World Cover 2020/2021", 1);
 Map.addLayer(UMD_T3to5m.updateMask(UMD_T3to5m), visP3, "UMD 3, 4 and 5 meter Trees", 1);
-Map.addLayer(count, null, "Count", 0);
+Map.addLayer(count, visP4, "Count", 0);
 
 
 
