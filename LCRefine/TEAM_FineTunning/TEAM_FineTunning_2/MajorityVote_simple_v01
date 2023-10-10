@@ -2,7 +2,7 @@
 /////////////////////
 // IAA Oct. 2023
 //
-// Adapted from previous DryForM versions
+// Adapted from previous DryForM versions (from LCProc_v.2.1 Branch 2)
 // Sum of different datasets for Majority Vote calculation
 // Note that while applying the MV threshold the number of observations vary depending on the region. 
 // Therefore, number of pixels with valid observations have been calculated (count)
