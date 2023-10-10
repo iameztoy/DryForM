@@ -63,7 +63,7 @@ var HTC_2020_1 = HTC_2020.eq(1).unmask().rename(['Trees']); //remove negative va
 
 // 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
 var glc10m = GLC10.mosaic();
-var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
+var glc10mForest = glc10m.eq(20); //Forest 20
 var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
 var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
 var glc10Loss_1 = glc10Loss.eq(1).unmask().rename(['Trees']);
