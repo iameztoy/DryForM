@@ -97,11 +97,11 @@ Cop10m = Cop10m.unmask().rename(['Trees']);
 var plantation = (Transition.gte(80)).and(Transition.lte(89));
 var old_regrowth = (Transition.eq(31)); 
 var AC= ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic().select('Dec2020');
-var tmf_forest2020= (AC.eq(1)).or(AC.eq(2));
-tmf_forest2020 = tmf_forest2020.where(plantation,0); 
-tmf_forest2020 = tmf_forest2020.add(old_regrowth).unmask().rename(['Trees']);
-tmf_forest2020 = tmf_forest2020.gte(1);
-tmf_forest2020 = tmf_forest2020.updateMask(tmf_forest2020);
+var tmf = (AC.eq(1)).or(AC.eq(2));
+var tmf_pl = tmf.where(plantation,0); 
+var tmf_plrg = tmf_pl.add(old_regrowth).unmask().rename(['Trees']);
+var tmf_plrg_m = tmf_plrg.gte(1);
+var tmf_final = tmf_plrg_m.updateMask(tmf_plrg_m).unmask();
 
 ////////////////////////////
 
@@ -113,7 +113,7 @@ var UMD_T3to5m = GLCmap.gte(50).and(GLCmap.lte(53)); //3 4 and 5m stable open tr
 // SIMPLE PROCESSING 2
 //****************************
 
-var TotTreeFor_p = dwM_Tree.add(esri_Tree).add(esa_Tree).add(TC_wri_m).add(HTC_2020_1).add(glc10Loss_1).add(gedi5P).add(gedi5L).add(Cop10m).add(tmf_forest2020);
+var TotTreeFor_p = dwM_Tree.add(esri_Tree).add(esa_Tree).add(TC_wri_m).add(HTC_2020_1).add(glc10Loss_1).add(gedi5P).add(gedi5L).add(Cop10m).add(tmf_final);
 var mask = TotTreeFor_p.gte(1);
 var TotTreeFor = TotTreeFor_p.updateMask(mask);
 
@@ -126,23 +126,29 @@ var TreeThrBool = TreeThr.gte(4);
 //****************************
 // COUNT OBS.
 //****************************
+var dwM_c = dwMode.eq(1); var esri_c = esri_aoi.eq(2);
+var esa_c = esa_Tree_p; var wri_c = TC_wri.gte(80);
+var HTC2020_c = HTC_2020.eq(1); var glc10_c = glc10Loss.eq(1);
+var gedi5P_c = CH_GEDI.gte(5); var gedi5L_c = GEDI_Lang.gte(5);
+var Cop10m_c = ctcd_mos.gte(10).and(ctcd_mos.lte(100)); var tmf_c = tmf_plrg.gte(1);
 
-var r1 = dwM_Tree.rename("f");
-var r2 = esri_Tree.rename("f");
-var r3 = esa_Tree.rename("f");
-var r4 = TC_wri_m.rename("f");
-var r5 = HTC_2020_1.rename("f");
-var r6 = glc10Loss_1.rename("f");
-var r7 = gedi5P.rename("f");
-var r8 = gedi5L.rename("f");
-var r9 = Cop10m.rename("f");
-var r10 = tmf_forest2020.rename("f");
+var r1 = dwM_c.rename("f");
+var r2 = esri_c.rename("f");
+var r3 = esa_c.rename("f");
+var r4 = wri_c.rename("f");
+var r5 = HTC2020_c.rename("f");
+var r6 = glc10_c.rename("f");
+var r7 = gedi5P_c.rename("f");
+var r8 = gedi5L_c.rename("f");
+var r9 = Cop10m_c.rename("f");
+var r10 = tmf_c.rename("f");
 
 var plist = [r1, r2, r3, r4, r5, r6, r7, r8,r9, r10];
 var col = ee.ImageCollection.fromImages(plist);
 var count = col.count();
 
-print(col)
+print(col);
+
 
 
 
