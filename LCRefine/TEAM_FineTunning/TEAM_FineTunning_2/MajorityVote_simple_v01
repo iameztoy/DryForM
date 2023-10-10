@@ -5,7 +5,8 @@
 // Adapted from previous DryForM versions
 // Sum of different datasets for Majority Vote calculation
 // Note that while applying the MV threshold the number of observations vary depending on the region. 
-// Ideally the threshold should be adapted per macro-region.
+// Therefore, number of pixels with valid observations have been calculated (count)
+// Sum of products have been divided by the previous variable || perc = TotTreeFor/count
 
 
 //****************************
