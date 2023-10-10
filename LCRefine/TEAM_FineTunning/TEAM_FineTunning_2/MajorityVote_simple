@@ -107,7 +107,7 @@ var visP1 = {"opacity":1,"bands":["Trees"],"palette":["ffac64"]};
 var visP2 = {"opacity":1,"bands":["Trees"],"palette":["7cff2b"]};
 
 Map.setOptions('SATELLITE');
-Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80");
+Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80", 0);
 Map.addLayer(TotTreeFor, null, "Total Tree/Forest", 0);
 Map.addLayer(TreeThr, null, "Tree thresholded", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
