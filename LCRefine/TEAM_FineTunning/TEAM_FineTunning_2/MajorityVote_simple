@@ -99,7 +99,7 @@ var tmf_forest2020= (AC.eq(1)).or(AC.eq(2));
 tmf_forest2020 = tmf_forest2020.where(plantation,0); 
 tmf_forest2020 = tmf_forest2020.add(old_regrowth).unmask().rename(['Trees']);
 tmf_forest2020 = tmf_forest2020.gte(1);
-tmf_forest2020 = tmf_forest2020.updateMask(tmf_forest2020);
+tmf_forest2020 = tmf_forest2020.updateMask(tmf_forest2020).unmask();
 
 ////////////////////////////
 
