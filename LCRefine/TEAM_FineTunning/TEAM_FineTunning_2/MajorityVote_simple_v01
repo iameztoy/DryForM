@@ -64,6 +64,7 @@ var esa_Tree = esa_Tree_p.unmask().rename(['Trees']);
 // 4. WRI Tree Cover 2020
 var TC_wri_m = TC_wri.gte(80).unmask().rename(['Trees']);
 
+
 // 5. GFC 2001-2020
 var treeCover = gfcImage.select(['treecover2000']);
 var treeCover10 = treeCover.gte(10);
@@ -71,6 +72,7 @@ var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
 var HTC_2020 = treeCover10.subtract(lossb2020);
 var HTC_2020_1 = HTC_2020.eq(1).unmask().rename(['Trees']); //remove negative values
+
 
 // 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
 var glc10m = GLC10.mosaic();
@@ -98,6 +100,8 @@ var AC= ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic().se
 var tmf_forest2020= (AC.eq(1)).or(AC.eq(2));
 tmf_forest2020 = tmf_forest2020.where(plantation,0); 
 tmf_forest2020 = tmf_forest2020.add(old_regrowth).unmask().rename(['Trees']);
+tmf_forest2020 = tmf_forest2020.gte(1);
+tmf_forest2020 = tmf_forest2020.updateMask(tmf_forest2020);
 
 ////////////////////////////
 
@@ -109,7 +113,7 @@ var UMD_T3to5m = GLCmap.gte(50).and(GLCmap.lte(53)); //3 4 and 5m stable open tr
 // SIMPLE PROCESSING 2
 //****************************
 
-var TotTreeFor_p = esa_Tree.add(dwM_Tree).add(esri_Tree).add(TC_wri_m).add(glc10Loss).add(HTC_2020).add(gedi5P).add(gedi5L).add(Cop10m).add(tmf_forest2020);
+var TotTreeFor_p = dwM_Tree.add(esri_Tree).add(esa_Tree).add(TC_wri_m).add(HTC_2020_1).add(glc10Loss_1).add(gedi5P).add(gedi5L).add(Cop10m).add(tmf_forest2020);
 var mask = TotTreeFor_p.gte(1);
 var TotTreeFor = TotTreeFor_p.updateMask(mask);
 
@@ -123,12 +127,12 @@ var TreeThrBool = TreeThr.gte(4);
 // COUNT OBS.
 //****************************
 
-var r1 = esa_Tree.rename("f");
-var r2 = dwM_Tree.rename("f");
-var r3 = esri_Tree.rename("f");
+var r1 = dwM_Tree.rename("f");
+var r2 = esri_Tree.rename("f");
+var r3 = esa_Tree.rename("f");
 var r4 = TC_wri_m.rename("f");
-var r5 = glc10Loss.rename("f");
-var r6 = HTC_2020.rename("f");
+var r5 = HTC_2020_1.rename("f");
+var r6 = glc10Loss_1.rename("f");
 var r7 = gedi5P.rename("f");
 var r8 = gedi5L.rename("f");
 var r9 = Cop10m.rename("f");
@@ -137,7 +141,9 @@ var r10 = tmf_forest2020.rename("f");
 var plist = [r1, r2, r3, r4, r5, r6, r7, r8,r9, r10];
 var col = ee.ImageCollection.fromImages(plist);
 var count = col.count();
-Map.addLayer(count, imageVisParam3, "Count", 0);
+
+print(col)
+
 
 
 //****************************
@@ -156,6 +162,7 @@ Map.addLayer(TreeThr, null, "Tree thresholded", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
 Map.addLayer(esa_Tree.updateMask(esa_Tree), visP1, "World Cover 2020/2021", 1);
 Map.addLayer(UMD_T3to5m.updateMask(UMD_T3to5m), visP3, "UMD 3, 4 and 5 meter Trees", 1);
+Map.addLayer(count, null, "Count", 0);
 
 
 
