@@ -126,7 +126,7 @@ var thr = 5; //Majority Vote threshold
 
 var majmask = TotTreeFor.gte(thr);
 var TreeThr =TotTreeFor.updateMask(majmask);
-var TreeThrBool = TreeThr.gte(4);
+var TreeThrBool = TreeThr.gte(thr);
 
 //****************************
 // COUNT OBS.
