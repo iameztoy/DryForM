@@ -149,7 +149,7 @@ var count = col.count();
 
 print(col);
 
-
+var perc = TotTreeFor_p.divide(count);
 
 
 //****************************
@@ -170,6 +170,7 @@ Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Threshold
 Map.addLayer(esa_Tree.updateMask(esa_Tree), visP1, "World Cover 2020/2021", 1);
 Map.addLayer(UMD_T3to5m.updateMask(UMD_T3to5m), visP3, "UMD 3, 4 and 5 meter Trees", 1);
 Map.addLayer(count, visP4, "Count", 0);
+Map.addLayer(perc, null, "Percentage", 0);
 
 
 
