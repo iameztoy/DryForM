@@ -31,6 +31,8 @@ var image0 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image7 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m7"),
     image2 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m2"),
     image4 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m4");
+    
+var GLCmap = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //Legend: https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
 
 //****************************
 // SIMPLE PROCESSING
@@ -84,6 +86,10 @@ var Cop10m = ctcd_mos.gte(10).and(ctcd_mos.lte(100)); // To comply to FAO defini
 Cop10m = Cop10m.unmask().rename(['Trees']);
 ////////////////////////////
 
+// UMD Dataset
+var UMD_T3to5m = GLCmap.gte(50).and(GLCmap.lte(53)); //3 4 and 5m stable open trees
+
+
 //****************************
 // SIMPLE PROCESSING 2
 //****************************
@@ -103,8 +109,9 @@ var TreeThrBool = TreeThr.gte(4);
 //****************************
 
 //Vis params
-var visP1 = {"opacity":1,"bands":["Trees"],"palette":["ffac64"]};
-var visP2 = {"opacity":1,"bands":["Trees"],"palette":["7cff2b"]};
+var visP1 = {"opacity":1,"bands":["Trees"],"palette":["ffac64"]}; // World Cover 2020/2021
+var visP2 = {"opacity":1,"bands":["Trees"],"palette":["7cff2b"]}; // Tree Boolean Thresholded
+var visP3 = {"opacity":1,"bands":["b1"],"palette":["ff3210"]}; // UMD 3, 4 and 5 meter Trees
 
 Map.setOptions('SATELLITE');
 Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80", 0);
@@ -112,6 +119,7 @@ Map.addLayer(TotTreeFor, null, "Total Tree/Forest", 0);
 Map.addLayer(TreeThr, null, "Tree thresholded", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
 Map.addLayer(esa_Tree.updateMask(esa_Tree), visP1, "World Cover 2020/2021", 1);
+Map.addLayer(UMD_T3to5m.updateMask(UMD_T3to5m), visP3, "UMD 3, 4 and 5 meter Trees", 1);
 
 
 
