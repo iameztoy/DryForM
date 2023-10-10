@@ -31,6 +31,12 @@ var image0 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image7 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m7"),
     image2 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m2"),
     image4 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m4");
+
+var Transition = ee.ImageCollection('projects/JRC/TMF/v1_2020/TransitionMap_Subtypes').mosaic();
+var humidDomain= ((Transition.gte(10)).and(Transition.lte(69))).or((Transition.gte(80)).and(Transition.lte(89)));
+var AnnualChange= ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic()
+
+//////////////////
     
 var GLCmap = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //Legend: https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
 
@@ -84,6 +90,15 @@ var ctcd = ee.ImageCollection([image0, image1, image2, image3, image4, image5, i
 var ctcd_mos = ctcd.mosaic();
 var Cop10m = ctcd_mos.gte(10).and(ctcd_mos.lte(100)); // To comply to FAO definition of Forest: dens. =>10%
 Cop10m = Cop10m.unmask().rename(['Trees']);
+
+//10. TMF
+var plantation = (Transition.gte(80)).and(Transition.lte(89));
+var old_regrowth = (Transition.eq(31)); 
+var AC= ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic().select('Dec2020');
+var tmf_forest2020= (AC.eq(1)).or(AC.eq(2));
+tmf_forest2020 = tmf_forest2020.where(plantation,0); 
+tmf_forest2020 = tmf_forest2020.add(old_regrowth).unmask().rename(['Trees']);
+
 ////////////////////////////
 
 // UMD Dataset
@@ -94,7 +109,7 @@ var UMD_T3to5m = GLCmap.gte(50).and(GLCmap.lte(53)); //3 4 and 5m stable open tr
 // SIMPLE PROCESSING 2
 //****************************
 
-var TotTreeFor_p = esa_Tree.add(dwM_Tree).add(TC_wri_m).add(TC_wri_m).add(glc10Loss).add(HTC_2020).add(gedi5P).add(gedi5L).add(Cop10m);
+var TotTreeFor_p = esa_Tree.add(dwM_Tree).add(TC_wri_m).add(TC_wri_m).add(glc10Loss).add(HTC_2020).add(gedi5P).add(gedi5L).add(Cop10m).add(tmf_forest2020);
 var mask = TotTreeFor_p.gte(1);
 var TotTreeFor = TotTreeFor_p.updateMask(mask);
 
