@@ -115,11 +115,11 @@ var TotTreeFor_p = dwM_Tree.add(esri_Tree).add(esa_Tree).add(TC_wri_m).add(HTC_2
 var mask = TotTreeFor_p.gte(1);
 var TotTreeFor = TotTreeFor_p.updateMask(mask);
 
-var thr = 6; //Majority Vote threshold
+var thr = 5; //Majority Vote threshold
 
 var majmask = TotTreeFor.gte(thr);
 var TreeThr =TotTreeFor.updateMask(majmask);
-var TreeThrBool = TreeThr.gte(4);
+var TreeThrBool = TreeThr.gte(thr);
 
 //****************************
 // ADD LAYERS
