@@ -1,4 +1,17 @@
 
+/////////////////////
+// IAA Oct. 2023
+//
+// Adapted from previous DryForM versions
+// Sum of different datasets for Majority Vote calculation
+// Note that while applying the MV threshold the number of observations vary depending on the region. 
+//
+
+
+//****************************
+// DATASETS
+//****************************
+
 //var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
 var esri_lulc2020 = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m"); //+Info https://gee-community-catalog.org/projects/esrilc2020/
@@ -18,21 +31,26 @@ var image0 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD20180
     image2 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m2"),
     image4 = ee.Image("projects/hardy-tenure-383607/assets/CopForest10m/TCD2018010m4");
 
+//****************************
+// SIMPLE PROCESSING
+//****************************
+
+
 // 1. Dynamic World
 var srt = '2020-01-01'; var end = '2021-01-01'; //For DW processing
 var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
 var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
-var dwM_Tree = dwMode.eq(1).rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
+var dwM_Tree = dwMode.eq(1).unmask().rename(['Trees']);  //Trees 1, shrub_and_scrub 5, Grass 2
 
 // 2. ESRI LULC 2020
 var esri_aoi = esri_lulc2020.mosaic(); 
-var esri_Tree = esri_aoi.eq(2).rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2
+var esri_Tree = esri_aoi.eq(2).unmask().rename(['Trees']); // Trees 3, shrubs 7, Grass 4 NEED TO DOUBLE CHECK WHICH CLASS ARE TREES APPARENTLY IT IS BAND 3 BUT THEN IT SEEMS IT IS 2
 
 // 3. ESA World Cover 2020
-var esa_Tree = esawc2020.eq(10).rename(['Trees']);
+var esa_Tree = esawc2020.eq(10).unmask().rename(['Trees']);
 
 // 4. WRI Tree Cover 2020
-var TC_wri_m = TC_wri.gte(80).rename(['Trees']);
+var TC_wri_m = TC_wri.gte(80).unmask().rename(['Trees']);
 
 // 5. GFC 2001-2020
 var treeCover = gfcImage.select(['treecover2000']);
@@ -41,17 +59,17 @@ var lossYear = gfcImage.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
 //var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
 var HTC_2020 = treeCover10.subtract(lossb2020);
-var HTC_2020_1 = HTC_2020.eq(1).rename(['Trees']); //remove negative values
+var HTC_2020_1 = HTC_2020.eq(1).unmask().rename(['Trees']); //remove negative values
 
 // 6. GLC10 (2017) and 6.1 Hansen Loss (2018-2020)
 var glc10m = GLC10.mosaic();
 var glc10mForest = glc10m.eq(20); //Forest 20, Shrub	40
 var HLoss2018_2020 = lossYear.gte(2018).and(lossYear.lte(20));
 var glc10Loss = glc10mForest.subtract(HLoss2018_2020);
-var glc10Loss_1 = glc10Loss.eq(1).rename(['Trees']);
+var glc10Loss_1 = glc10Loss.eq(1).unmask().rename(['Trees']);
 
 //7. GEDI => 5 Potapov
-var gedi5P = CH_GEDI.gte(5).rename(['Trees']);
+var gedi5P = CH_GEDI.gte(5).unmask().rename(['Trees']);
 
 //8. GEDI Lang  => 5
 var gedi5L = GEDI_Lang.gte(5).unmask().rename(['Trees']);
@@ -59,21 +77,32 @@ var gedi5L = GEDI_Lang.gte(5).unmask().rename(['Trees']);
 //9. Copernicus Europe
 var ctcd = ee.ImageCollection([image0, image1, image2, image3, image4, image5, image6, image7, image8]);
 var ctcd_mos = ctcd.mosaic();
-var Cop10m = ctcd_mos.gte(10).and(ctcd_mos.lte(100)).rename(['Trees']); // To comply to FAO definition of Forest: dens. =>10%
-
+var Cop10m = ctcd_mos.gte(10).and(ctcd_mos.lte(100)); // To comply to FAO definition of Forest: dens. =>10%
+Cop10m = Cop10m.unmask().rename(['Trees']);
 ////////////////////////////
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(TC_wri_m).add(glc10Loss).add(HTC_2020).add(gedi5P).add(gedi5L);
+//****************************
+// SIMPLE PROCESSING 2
+//****************************
+
+var TotTreeFor_p = esa_Tree.add(dwM_Tree).add(TC_wri_m).add(TC_wri_m).add(glc10Loss).add(HTC_2020).add(gedi5P).add(gedi5L).add(Cop10m);
+var mask = TotTreeFor_p.gte(1);
+var TotTreeFor = TotTreeFor_p.updateMask(mask);
+
+var thr = 4; //Majority Vote threshold
+
+var majmask = TotTreeFor.gte(thr);
+var TreeThr =TotTreeFor.updateMask(majmask);
+var TreeThrBool = TreeThr.gte(4);
+
+//****************************
+// ADD LAYERS
+//****************************
 
 
+Map.addLayer(TotTreeFor, null, "Total Tree/Forest");
+Map.addLayer(TreeThr, null, "Tree thresholded");
+Map.addLayer(TreeThrBool.updateMask(TreeThrBool), null, "Tree Boolean Thresholded");
 
-var thr = 5
-
-
-
-
-
-Map.addLayer(TotTreeFor, null, "Total Tree/Forest")
-Map.addLayer(Cop10m, null, "Copernicus 10m")
 
 
