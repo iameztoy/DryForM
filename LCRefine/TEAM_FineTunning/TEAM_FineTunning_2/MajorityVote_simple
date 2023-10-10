@@ -109,7 +109,7 @@ var UMD_T3to5m = GLCmap.gte(50).and(GLCmap.lte(53)); //3 4 and 5m stable open tr
 // SIMPLE PROCESSING 2
 //****************************
 
-var TotTreeFor_p = esa_Tree.add(dwM_Tree).add(TC_wri_m).add(TC_wri_m).add(glc10Loss).add(HTC_2020).add(gedi5P).add(gedi5L).add(Cop10m).add(tmf_forest2020);
+var TotTreeFor_p = esa_Tree.add(dwM_Tree).add(TC_wri_m).add(glc10Loss).add(HTC_2020).add(gedi5P).add(gedi5L).add(Cop10m).add(tmf_forest2020);
 var mask = TotTreeFor_p.gte(1);
 var TotTreeFor = TotTreeFor_p.updateMask(mask);
 
