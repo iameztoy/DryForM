@@ -104,9 +104,9 @@ var old_regrowth = (Transition.eq(31));
 var AC = ee.ImageCollection('projects/JRC/TMF/v1_2022/AnnualChanges').mosaic().select('Dec2020');
 var tmf = (AC.eq(1)).or(AC.eq(2));
 var tmf_pl = tmf.where(plantation,0); 
-var tmf_plrg = tmf_pl.add(old_regrowth).unmask().rename(['Trees']);
+var tmf_plrg = tmf_pl.add(old_regrowth).unmask();
 var tmf_plrg_m = tmf_plrg.gte(1);
-var tmf_final = tmf_plrg_m.updateMask(tmf_plrg_m).unmask();
+var tmf_final = tmf_plrg_m.updateMask(tmf_plrg_m).unmask().rename(['Trees']);
 
 ////////////////////////////
 
