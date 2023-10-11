@@ -259,7 +259,7 @@ var AOI_Asia2 =
 
 
 Export.image.toAsset({
-  image: Global_forest_step1,
+  image: TreeThrBool_p,
   description: 'AOI_Africa',
   assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_Africa',
   crs: 'EPSG:4326',
@@ -270,9 +270,9 @@ Export.image.toAsset({
 
  
 Export.image.toAsset({
-  image: Global_forest_step1,
+  image: TreeThrBool_p,
   description: 'AOI_America1',
-  assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_America1',
+  assetId: 'projects/hardy-tenure-383607/assets/MajorityVote_p_gt05/AOI_America1',
   crs: 'EPSG:4326',
   region: AOI_America1, //.getInfo().coordinates,
   scale: 10,
@@ -281,9 +281,9 @@ Export.image.toAsset({
 
  
 Export.image.toAsset({
-  image: Global_forest_step1,
+  image: TreeThrBool_p,
   description: 'AOI_America2',
-  assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_America2',
+  assetId: 'projects/hardy-tenure-383607/assets/MajorityVote_p_gt05/AOI_America2',
   crs: 'EPSG:4326',
   region: AOI_America2, //.getInfo().coordinates,
   scale: 10,
@@ -291,9 +291,9 @@ Export.image.toAsset({
 });
  
 Export.image.toAsset({
-  image: Global_forest_step1,
+  image: TreeThrBool_p,
   description: 'AOI_Europe',
-  assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_Europe',
+  assetId: 'projects/hardy-tenure-383607/assets/MajorityVote_p_gt05/AOI_Europe',
   crs: 'EPSG:4326',
   region: AOI_Europe, //.getInfo().coordinates,
   scale: 10,
@@ -301,9 +301,9 @@ Export.image.toAsset({
 });
  
 Export.image.toAsset({
-  image: Global_forest_step1,
+  image: TreeThrBool_p,
   description: 'AOI_Asia1',
-  assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_Asia1',
+  assetId: 'projects/hardy-tenure-383607/assets/MajorityVote_p_gt05/AOI_Asia1',
   crs: 'EPSG:4326',
   region: AOI_Asia1, //.getInfo().coordinates,
   scale: 10,
@@ -311,9 +311,9 @@ Export.image.toAsset({
 });
 
 Export.image.toAsset({
-  image: Global_forest_step1,
+  image: TreeThrBool_p,
   description: 'AOI_Asia2',
-  assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_Asia2',
+  assetId: 'projects/hardy-tenure-383607/assets/MajorityVote_p_gt05/AOI_Asia2',
   crs: 'EPSG:4326',
   region: AOI_Asia2, //.getInfo().coordinates,
   scale: 10,
@@ -321,9 +321,9 @@ Export.image.toAsset({
 });
  
 Export.image.toAsset({
-  image: Global_forest_step1,
+  image: TreeThrBool_p,
   description: 'AOI_Islands',
-  assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_Islands',
+  assetId: 'projects/hardy-tenure-383607/assets/MajorityVote_p_gt05/AOI_Islands',
   crs: 'EPSG:4326',
   region: AOI_Islands, //.getInfo().coordinates,
   scale: 10,
