@@ -187,5 +187,7 @@ Map.addLayer(perc, null, "Percentage", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
 Map.addLayer(TreeThrBool_p.updateMask(TreeThrBool_p), visP2, "Tree Boolean Thresholded %", 1);
 
-
+//****************************
+// EXPORT LAYERS
+//****************************
 
