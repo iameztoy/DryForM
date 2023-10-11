@@ -163,7 +163,7 @@ var TreeThrBool = TreeThr.gte(thr);
 
 var majmask_p = perc.gt(thr_per);
 var TreeThr_p = perc.updateMask(majmask_p);
-var TreeThrBool_p = TreeThr_p.gt(thr_p);
+var TreeThrBool_p = TreeThr_p.gt(thr_per);
 
 
 //****************************
