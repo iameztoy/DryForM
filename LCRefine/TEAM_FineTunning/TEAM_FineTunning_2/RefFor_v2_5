@@ -215,7 +215,7 @@ var GLCmap = ee.ImageCollection('projects/glad/GLCmap2019').mosaic();
 Map.addLayer(GLCmap,{},'GLCmap2019',false);
 
 var treecoverUMD=(GLCmap.gte(54).and(GLCmap.lte(91))).or(GLCmap.gte(174).and(GLCmap.lte(211)));
-var agriUMD = ((GLCmap.gte(0)).and(GLCmap.lte(53))).or((GLCmap.gte(120)).and(GLCmap.lte(170))).or((GLCmap.gte(240)).and(GLCmap.lte(249))).or((GLCmap.gte(251)).and(GLCmap.lte(252)))
+var agriUMD = ((GLCmap.gte(0)).and(GLCmap.lt(51))).or((GLCmap.gte(120)).and(GLCmap.lte(170))).or((GLCmap.gte(240)).and(GLCmap.lte(249))).or((GLCmap.gte(251)).and(GLCmap.lte(252)))
 agriUMD= agriUMD.where(((GLCmap.gte(38)).and(GLCmap.lte(53))).and(tmf_forest2020.gte(1)),0); //avoid masking degraded from fire or logging
 
 Map.addLayer(agriUMD,{},'agriUMD',false);
@@ -578,7 +578,7 @@ var AOI_Asia2 =
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'AOI_Africa',
-  assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0/AOI_Africa',
+  assetId: 'users/ameztib/Team_Fine_Tunning/GlobalForest_v2_5/AOI_Africa',
   crs: 'EPSG:4326',
   region: AOI_Africa, //.getInfo().coordinates,
   scale: 10,
@@ -589,7 +589,7 @@ Export.image.toAsset({
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'AOI_America1',
-  assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0/AOI_America1',
+  assetId: 'users/ameztib/Team_Fine_Tunning/GlobalForest_v2_5/AOI_America1',
   crs: 'EPSG:4326',
   region: AOI_America1, //.getInfo().coordinates,
   scale: 10,
@@ -600,7 +600,7 @@ Export.image.toAsset({
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'AOI_America2',
-  assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0/AOI_America2',
+  assetId: 'users/ameztib/Team_Fine_Tunning/GlobalForest_v2_5/AOI_America2',
   crs: 'EPSG:4326',
   region: AOI_America2, //.getInfo().coordinates,
   scale: 10,
@@ -610,7 +610,7 @@ Export.image.toAsset({
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'AOI_Europe',
-  assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0/AOI_Europe',
+  assetId: 'users/ameztib/Team_Fine_Tunning/GlobalForest_v2_5/AOI_Europe',
   crs: 'EPSG:4326',
   region: AOI_Europe, //.getInfo().coordinates,
   scale: 10,
@@ -620,7 +620,7 @@ Export.image.toAsset({
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'AOI_Asia1',
-  assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0/AOI_Asia1',
+  assetId: 'users/ameztib/Team_Fine_Tunning/GlobalForest_v2_5/AOI_Asia1',
   crs: 'EPSG:4326',
   region: AOI_Asia1, //.getInfo().coordinates,
   scale: 10,
@@ -630,7 +630,7 @@ Export.image.toAsset({
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'AOI_Asia2',
-  assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0/AOI_Asia2',
+  assetId: 'users/ameztib/Team_Fine_Tunning/GlobalForest_v2_5/AOI_Asia2',
   crs: 'EPSG:4326',
   region: AOI_Asia2, //.getInfo().coordinates,
   scale: 10,
@@ -640,7 +640,7 @@ Export.image.toAsset({
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'AOI_Islands',
-  assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0/AOI_Islands',
+  assetId: 'users/ameztib/Team_Fine_Tunning/GlobalForest_v2_5/AOI_Islands',
   crs: 'EPSG:4326',
   region: AOI_Islands, //.getInfo().coordinates,
   scale: 10,
