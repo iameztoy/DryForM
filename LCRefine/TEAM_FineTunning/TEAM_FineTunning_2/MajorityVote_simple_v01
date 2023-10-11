@@ -122,14 +122,8 @@ var TotTreeFor_p = dwM_Tree.add(esri_Tree).add(esa_Tree).add(TC_wri_m).add(HTC_2
 var mask = TotTreeFor_p.gte(1);
 var TotTreeFor = TotTreeFor_p.updateMask(mask);
 
-var thr = 5; //Majority Vote threshold
-
-var majmask = TotTreeFor.gte(thr);
-var TreeThr =TotTreeFor.updateMask(majmask);
-var TreeThrBool = TreeThr.gte(thr);
-
 //****************************
-// COUNT OBS.
+// COUNT OBS. & Percentage
 //****************************
 var dwM_c = dwMode.eq(1); var esri_c = esri_aoi.eq(2);
 var esa_c = esa_Tree_p; var wri_c = TC_wri.gte(80);
@@ -152,9 +146,24 @@ var plist = [r1, r2, r3, r4, r5, r6, r7, r8,r9, r10];
 var col = ee.ImageCollection.fromImages(plist);
 var count = col.count();
 
-print(col);
+//print(col);
 
 var perc = TotTreeFor_p.divide(count);
+
+//****************************
+// APPLYT THRESHOLDS
+//****************************
+
+var thr = 5; //Majority Vote threshold
+var thr_per = 0.5; //Majority Vote threshold for percentage
+
+var majmask = TotTreeFor.gte(thr);
+var TreeThr = TotTreeFor.updateMask(majmask);
+var TreeThrBool = TreeThr.gte(thr);
+
+var majmask_p = perc.gt(thr_per);
+var TreeThr_p = perc.updateMask(majmask_p);
+var TreeThrBool_p = TreeThr_p.gt(thr_p);
 
 
 //****************************
@@ -176,6 +185,7 @@ Map.addLayer(UMD_T3to5m.updateMask(UMD_T3to5m), visP3, "UMD 3, 4 and 5 meter Tre
 Map.addLayer(count, visP4, "Count", 0);
 Map.addLayer(perc, null, "Percentage", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
+Map.addLayer(TreeThrBool_p.updateMask(TreeThrBool_p), visP2, "Tree Boolean Thresholded %", 1);
 
 
 
