@@ -10,9 +10,6 @@
 // A threshold of e.g. perc > 0.5 (50%) can be set to get a new boolean map, so the outcome (majority) is 
 //    calculated based on the number of observations regardless their unequal distribution.
 
-
-
-
 //****************************
 // DATASETS
 //****************************
@@ -151,7 +148,7 @@ var count = col.count();
 var perc = TotTreeFor_p.divide(count);
 
 //****************************
-// APPLYT THRESHOLDS
+// APPLY THRESHOLDS
 //****************************
 
 var thr = 5; //Majority Vote threshold
