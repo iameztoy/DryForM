@@ -261,7 +261,7 @@ var AOI_Asia2 =
 Export.image.toAsset({
   image: TreeThrBool_p,
   description: 'AOI_Africa',
-  assetId: 'projects/ee-dryforestia/assets/Global_forest_step1v5/AOI_Africa',
+  assetId: 'projects/hardy-tenure-383607/assets/MajorityVote_p_gt05/AOI_Africa',
   crs: 'EPSG:4326',
   region: AOI_Africa, //.getInfo().coordinates,
   scale: 10,
