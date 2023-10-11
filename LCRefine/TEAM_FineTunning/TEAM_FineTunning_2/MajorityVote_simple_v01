@@ -108,7 +108,7 @@ var tmf_final = tmf_plrg_m.updateMask(tmf_plrg_m).unmask().rename(['Trees']);
 ////////////////////////////
 
 // UMD Dataset
-var UMD_T3to5m = GLCmap.gte(50).and(GLCmap.lte(53)); //3 4 and 5m stable open trees
+var UMD_T3to5m = GLCmap.gte(51).and(GLCmap.lte(53)); //3 4 and 5m stable open trees
 
 
 //****************************
