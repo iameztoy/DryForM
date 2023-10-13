@@ -172,8 +172,14 @@ var TreeThrBool_p = TreeThr_p.gt(thr_per);
 var objectSizeMask = TreeThrBool_p.connectedPixelCount(100).gte(50).reproject(ee.Image(TreeThrBool_p).projection());
 var TreeThrBool_pcp = TreeThrBool_p.updateMask(objectSizeMask);
 
-var ksize = 10; // Window size in pixels
-var TreeThrBool_pcpK = TreeThrBool_pcp.focalMode(ksize, "square", "pixels", 1);
+var ksize = 3; // Window size in pixels
+var TreeThrBool_pcpK = TreeThrBool_pcp.focalMode(ksize, "circle", "pixels", 3);
+var TreeThrBool_pcpK = TreeThrBool_pcp.focalMode(ksize, "square", "pixels", 3);
+
+var resampled = TreeThrBool_p.resample('bilinear');
+var res_buf = resampled.cumulativeCost({source: resampled, maxDistance: 10});
+Map.addLayer(resampled, null, "Resampled")
+Map.addLayer(res_buf, null, "Resampled + Buffered")
 
 /*
 // Apply Buffer
