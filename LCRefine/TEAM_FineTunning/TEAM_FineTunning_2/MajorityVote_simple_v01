@@ -209,7 +209,7 @@ Map.addLayer(perc, null, "Percentage", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 0);
 Map.addLayer(TreeThrBool_p.updateMask(TreeThrBool_p), visP2, "Tree Boolean Thresholded %", 1);
 Map.addLayer(TreeThrBool_pcpK.updateMask(TreeThrBool_pcpK), visP5, "Tree Boolean Thresholded % - smoothing + Kernel", 1);
-Map.addLayer(TC_wri_lte70.updateMask(TC_wri_lte70), null, "WRI <= 70", 1);
+Map.addLayer(TC_wri_lte70.updateMask(TC_wri_lte70), null, "WRI <= 70", 0);
 
 
 //****************************
