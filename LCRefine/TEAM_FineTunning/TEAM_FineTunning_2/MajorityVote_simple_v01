@@ -185,7 +185,7 @@ var Edge100 = ee.Image.constant(0).where((dist1.lte(d1)).and(dist1.gt(0)),1);
 
 var d1 = 8; //Buffer distance (is it possible to erode with this method, adding a negative buffer?)
 var buffer_test = TreeThrBool_pcpK.cumulativeCost({source: TreeThrBool_pcpK, maxDistance: d1});
-Map.addLayer(buffer_test, null, "Buffer test =" + " d1");
+Map.addLayer(buffer_test, null, "Buffer test = " + d1);
 
 //****************************
 // ADD LAYERS
