@@ -166,8 +166,10 @@ var TreeThrBool_p = TreeThr_p.gt(thr_per);
 //****************************
 // POST-PROCESSING
 //****************************
+var objectSizeMask = TreeThrBool_p.connectedPixelCount(100).gte(50).reproject(ee.Image(TreeThrBool_p).projection())
+var TreeThrBool_pcp = TreeThrBool_p.updateMask(objectSizeMask)
 
-var TreeThrBool_ps = TreeThrBool_p.focalMode(2, "square", "pixels", 1);
+var TreeThrBool_pcpK = TreeThrBool_pcp.focalMode(2, "square", "pixels", 1);
 
 
 //****************************
@@ -190,7 +192,7 @@ Map.addLayer(count, visP4, "Count", 0);
 Map.addLayer(perc, null, "Percentage", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
 Map.addLayer(TreeThrBool_p.updateMask(TreeThrBool_p), visP2, "Tree Boolean Thresholded %", 1);
-Map.addLayer(TreeThrBool_ps.updateMask(TreeThrBool_ps), visP2, "Tree Boolean Thresholded % - smoothing", 1);
+Map.addLayer(TreeThrBool_pcpK.updateMask(TreeThrBool_pcpK), visP2, "Tree Boolean Thresholded % - smoothing + Kernel", 1);
 Map.addLayer(TC_wri_lte70.updateMask(TC_wri_lte70), null, "WRI <= 70", 1);
 
 
