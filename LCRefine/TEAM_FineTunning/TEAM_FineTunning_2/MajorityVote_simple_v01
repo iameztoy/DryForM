@@ -65,6 +65,7 @@ var esa_Tree = esa_Tree_p.unmask().rename(['Trees']);
 
 // 4. WRI Tree Cover 2020
 var TC_wri_m = TC_wri.gte(80).unmask().rename(['Trees']);
+var TC_wri_lte70 = TC_wri.gte(70).unmask().rename(['Trees']);
 
 
 // 5. GFC 2001-2020
@@ -184,6 +185,7 @@ Map.addLayer(perc, null, "Percentage", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
 Map.addLayer(TreeThrBool_p.updateMask(TreeThrBool_p), visP2, "Tree Boolean Thresholded %", 1);
 
+/*
 //****************************
 // EXPORT LAYERS
 //****************************
@@ -329,3 +331,4 @@ Export.image.toAsset({
   scale: 10,
   maxPixels: 1e13
 });
+
