@@ -176,6 +176,7 @@ var visP4 = {"opacity":1,"bands":["f"],"max":9,"palette":["000000","ffb497","ffd
 
 Map.setOptions('SATELLITE');
 Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80", 1);
+Map.addLayer(TC_wri_lte70.updateMask(TC_wri_lte70), null, "WRI <= 70", 1);
 Map.addLayer(TotTreeFor, null, "Total Tree/Forest", 0);
 Map.addLayer(TreeThr, null, "Tree thresholded", 0);
 Map.addLayer(esa_Tree.updateMask(esa_Tree), visP1, "World Cover 2020/2021", 1);
