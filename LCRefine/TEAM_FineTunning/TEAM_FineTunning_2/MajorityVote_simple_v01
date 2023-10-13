@@ -1,3 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageVisParam = {"opacity":1,"bands":["Trees"],"palette":["499719"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 /////////////////////
 // IAA Oct. 2023
@@ -181,6 +184,7 @@ var visP1 = {"opacity":1,"bands":["Trees"],"palette":["ffac64"]}; // World Cover
 var visP2 = {"opacity":1,"bands":["Trees"],"palette":["7cff2b"]}; // Tree Boolean Thresholded
 var visP3 = {"opacity":1,"bands":["b1"],"palette":["ff3210"]}; // UMD 3, 4 and 5 meter Trees
 var visP4 = {"opacity":1,"bands":["f"],"max":9,"palette":["000000","ffb497","ffd916","cfff84","9aff82","3fffa7","58aaff","c4b5ff","a662ff","ff8686"]};
+var visP5 = {"opacity":1,"bands":["Trees"],"palette":["499719"]}; // Majority Thresholded + Connected Pixels + Kernel
 
 Map.setOptions('SATELLITE');
 Map.addLayer(TC_wri_m.updateMask(TC_wri_m), null, "WRI >= 80", 1);
@@ -192,7 +196,7 @@ Map.addLayer(count, visP4, "Count", 0);
 Map.addLayer(perc, null, "Percentage", 0);
 Map.addLayer(TreeThrBool.updateMask(TreeThrBool), visP2, "Tree Boolean Thresholded", 1);
 Map.addLayer(TreeThrBool_p.updateMask(TreeThrBool_p), visP2, "Tree Boolean Thresholded %", 1);
-Map.addLayer(TreeThrBool_pcpK.updateMask(TreeThrBool_pcpK), visP2, "Tree Boolean Thresholded % - smoothing + Kernel", 1);
+Map.addLayer(TreeThrBool_pcpK.updateMask(TreeThrBool_pcpK), visP5, "Tree Boolean Thresholded % - smoothing + Kernel", 1);
 Map.addLayer(TC_wri_lte70.updateMask(TC_wri_lte70), null, "WRI <= 70", 1);
 
 
