@@ -1,0 +1,19 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var mv = ee.ImageCollection("projects/hardy-tenure-383607/assets/MajorityVote_p_gt05"),
+    vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]},
+    vp_cp = {"opacity":1,"bands":["Trees"],"palette":["000000","ff0c0c"]},
+    vp_mx = {"opacity":1,"bands":["Trees"],"max":1,"palette":["000000","64ac17"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
+
+var un = m.unmask();
+var cp = un.connectedPixelCount(20).lte(18);
+var cp_unm = cp.updateMask(cp);
+var mix = un.add(cp);
+
+
+Map.addLayer(un, vp_or, "original unmasked");
+Map.addLayer(cp, vp_cp, "connected pixels lte 20");
+Map.addLayer(mix, vp_mx, "Mix - corrected s&p");
+Map.addLayer(cp_unm, null, "Only Connected Pixes");
