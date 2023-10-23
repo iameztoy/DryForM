@@ -22,3 +22,5 @@ Map.addLayer(mix, vp_mx, "Mix - corrected CP <= 18");
 Map.addLayer(cp_unm, vp_cp, "Only Connected Pixes");
 Map.addLayer(final, vp_final, "Final - CP => 50");
 Map.addLayer(cp.selfMask(), vp_cp, "connected pixels lte 18");
+
+Map.setOptions('SATELLITE');
