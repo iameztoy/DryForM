@@ -18,7 +18,7 @@ var final = mix_sf.connectedPixelCount(50).gte(50).selfMask();
 
 
 Map.addLayer(un, vp_or, "original unmasked");
-Map.addLayer(cp, vp_cp, "connected pixels lte 20");
 Map.addLayer(mix, vp_mx, "Mix - corrected s&p");
 Map.addLayer(cp_unm, vp_cp, "Only Connected Pixes");
-Map.addLayer(final, vp_final, "Final")
+Map.addLayer(final, vp_final, "Final");
+Map.addLayer(cp.selfMask(), vp_cp, "connected pixels lte 18");
