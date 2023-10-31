@@ -85,7 +85,7 @@ Map.addLayer(forestcl_v01, visPar2, 'Forest BL 2020 - North Asia v.01', true);
 Map.addLayer(forestcl_v0, visPar, 'Forest BL 2020 - North Asia v.0', true);
 
 //Set Map params
-Map.centerObject(AOI, 4);
+Map.centerObject(forestm_v0, 3);
 Map.style().set('cursor', 'crosshair');
 Map.setOptions('SATELLITE');
 Map.setControlVisibility({drawingToolsControl:false});
