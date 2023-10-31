@@ -16,7 +16,8 @@ var AOI = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/bbo
 var AOI = AOI.filter(ee.Filter.eq('Id', 7)); //Values from 1 to 9
 
 // Load Forest BLM 2020
-var forest =ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Preliminary version
+//var forest =ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Preliminary version
+var forest = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01').mosaic();
 var forestm = forest.updateMask(forest);
 var forestcl= forestm.clip(AOI); //Change this for each App
 
