@@ -23,7 +23,7 @@ m = m.rename("Trees")
 
 
 var un = m.unmask();
-var cp = un.connectedPixelCount(100).lte(50);
+var cp = un.connectedPixelCount(100).lte(50); //Original threshold was 2 landsat pixels. At 10 meter res. = lte(18)
 var cp_unm = cp.updateMask(cp);
 var mix = un.add(cp);
 
