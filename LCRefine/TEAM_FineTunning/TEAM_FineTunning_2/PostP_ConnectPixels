@@ -5,18 +5,17 @@ var mv = ee.ImageCollection("projects/hardy-tenure-383607/assets/MajorityVote_p_
     vp_mx = {"opacity":1,"bands":["Trees"],"max":1,"palette":["000000","64ac17"]},
     vp_final = {"opacity":1,"bands":["Trees"],"palette":["287d1e"]},
     geometry = 
-    /* color: #0b4a8b */
-    /* shown: false */
+    /* color: #ffc82d */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-57.25121566790302, -17.399067443250637],
-          [-57.25121566790302, -17.440096500238766],
-          [-57.19405242937763, -17.440096500238766],
-          [-57.19405242937763, -17.399067443250637]]], null, false);
+        [[[-57.23842523667201, -17.40603069777314],
+          [-57.23842523667201, -17.426995997718336],
+          [-57.20241926285609, -17.426995997718336],
+          [-57.20241926285609, -17.40603069777314]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
