@@ -31,10 +31,10 @@ var final = mix_sf.connectedPixelCount(100).gte(50).selfMask();
 
 
 Map.addLayer(un, vp_or, "original unmasked");
-Map.addLayer(mix, vp_mx, "Mix - corrected CP <= 18");
-Map.addLayer(cp_unm, vp_cp, "Only Connected Pixes <= 18");
+Map.addLayer(mix, vp_mx, "Mix - corrected CP <= 50");
+Map.addLayer(cp_unm, vp_cp, "Only Connected Pixes <= 50");
 Map.addLayer(final, vp_final, "Final - CP => 50");
-Map.addLayer(cp.selfMask(), vp_cp, "connected pixels lte 18");
+Map.addLayer(cp.selfMask(), vp_cp, "connected pixels lte 50");
 
 Map.setOptions('SATELLITE');
 
