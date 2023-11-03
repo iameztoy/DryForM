@@ -1,24 +1,26 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var mv = ee.ImageCollection("projects/hardy-tenure-383607/assets/MajorityVote_p_gt05"),
-    vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]},
+var vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]},
     vp_cp = {"opacity":1,"bands":["Trees"],"palette":["000000","ff0c0c"]},
     vp_mx = {"opacity":1,"bands":["Trees"],"max":1,"palette":["000000","64ac17"]},
     vp_final = {"opacity":1,"bands":["Trees"],"palette":["287d1e"]},
     geometry = 
-    /* color: #ffc82d */
+    /* color: #00ffff */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-57.293185215920055, -17.355081553989297],
-          [-57.293185215920055, -17.426995997718336],
-          [-57.19692609879359, -17.426995997718336],
-          [-57.19692609879359, -17.355081553989297]]], null, false);
+        [[[-56.35331065170418, -22.296017877641003],
+          [-56.35331065170418, -22.58351556295286],
+          [-56.02269083969246, -22.58351556295286],
+          [-56.02269083969246, -22.296017877641003]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
+//var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
+var m = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0').mosaic();
+m = m.rename("Trees")
+
 
 var un = m.unmask();
 var cp = un.connectedPixelCount(100).lte(50);
