@@ -48,6 +48,7 @@ Map.addLayer(test, null, "test");
 Export.image.toDrive({
   image: final,
   description: 'Postprocessed',
+  folder: "GEEtest",
   //crs: projection.crs,
   //crsTransform: projection.transform,
   region: geometry
