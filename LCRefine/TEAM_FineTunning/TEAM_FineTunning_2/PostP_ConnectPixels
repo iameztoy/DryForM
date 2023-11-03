@@ -5,7 +5,6 @@ var vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]
     vp_final = {"opacity":1,"bands":["Trees"],"palette":["287d1e"]},
     geometry = 
     /* color: #00ffff */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
