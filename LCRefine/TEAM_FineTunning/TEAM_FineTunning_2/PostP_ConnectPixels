@@ -6,17 +6,16 @@ var mv = ee.ImageCollection("projects/hardy-tenure-383607/assets/MajorityVote_p_
     vp_final = {"opacity":1,"bands":["Trees"],"palette":["287d1e"]},
     geometry = 
     /* color: #ffc82d */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-57.23842523667201, -17.40603069777314],
-          [-57.23842523667201, -17.426995997718336],
-          [-57.20241926285609, -17.426995997718336],
-          [-57.20241926285609, -17.40603069777314]]], null, false);
+        [[[-57.293185215920055, -17.355081553989297],
+          [-57.293185215920055, -17.426995997718336],
+          [-57.19692609879359, -17.426995997718336],
+          [-57.19692609879359, -17.355081553989297]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
@@ -45,7 +44,7 @@ Map.addLayer(test, null, "test")
 
 Export.image.toDrive({
   image: final,
-  description: 'connectedP',
+  description: 'Postprocessed',
   //crs: projection.crs,
   //crsTransform: projection.transform,
   region: geometry
@@ -54,6 +53,15 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: un,
   description: 'original',
+  folder: "GEEtest",
+  //crs: projection.crs,
+  //crsTransform: projection.transform,
+  region: geometry
+});
+
+Export.image.toDrive({
+  image: cp,
+  description: 'CP_lte50',
   folder: "GEEtest",
   //crs: projection.crs,
   //crsTransform: projection.transform,
