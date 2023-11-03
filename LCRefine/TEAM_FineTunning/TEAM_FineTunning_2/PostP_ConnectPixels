@@ -6,6 +6,7 @@ var mv = ee.ImageCollection("projects/hardy-tenure-383607/assets/MajorityVote_p_
     vp_final = {"opacity":1,"bands":["Trees"],"palette":["287d1e"]},
     geometry = 
     /* color: #ffc82d */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -37,6 +38,9 @@ Map.addLayer(cp.selfMask(), vp_cp, "connected pixels lte 18");
 
 Map.setOptions('SATELLITE');
 
+var test = un.connectedPixelCount(100)
+Map.addLayer(test, null, "test")
+
 // Export the image
 
 Export.image.toDrive({
@@ -50,6 +54,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: un,
   description: 'original',
+  folder: "GEEtest",
   //crs: projection.crs,
   //crsTransform: projection.transform,
   region: geometry
