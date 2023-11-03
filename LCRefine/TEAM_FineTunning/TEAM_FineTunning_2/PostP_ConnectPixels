@@ -5,6 +5,7 @@ var vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]
     vp_final = {"opacity":1,"bands":["Trees"],"palette":["287d1e"]},
     geometry = 
     /* color: #00ffff */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -39,8 +40,8 @@ Map.addLayer(cp.selfMask(), vp_cp, "connected pixels lte 50");
 
 Map.setOptions('SATELLITE');
 
-var test = un.connectedPixelCount(100)
-Map.addLayer(test, null, "test")
+var test = un.connectedPixelCount(100);
+Map.addLayer(test, null, "test");
 
 // Export the image
 
