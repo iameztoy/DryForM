@@ -23,7 +23,7 @@ var mix_sf = mix.selfMask();
 
 var fcount2 = mix_sf.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
 var farea2 = ee.Image.pixelArea().reproject({crs:proj});
-var area2 = fcount2.multiply(farea);
+var area2 = fcount2.multiply(farea2);
 
 var mask_gte = area2.gte(mmu);
 var final = mix_sf.updateMask(mask_gte);
