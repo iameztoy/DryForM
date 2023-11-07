@@ -22,12 +22,12 @@ var mask_gte = area2.gte(mmu);
 var final = mix_sf.updateMask(mask_gte);
 
 
-Map.addLayer(forest_v01, vp_fv01, "Forest v01");
-Map.addLayer(mask_lte, null, "Forest Mask LTE 5000");
-Map.addLayer(mix, vp_fv01, "Voids Filled");
-Map.addLayer(mix_sf, vp_fv01, "Voids Filled SelfMask")
-Map.addLayer(mask_gte, null, "Forest Mask GTE 5000")
-Map.addLayer(final, null, "Final");
+Map.addLayer(fmos.selfMask(), vp_fv01, "Forest v01", 1);
+Map.addLayer(mask_lte, null, "Forest Mask LTE 5000", 0);
+Map.addLayer(mix, vp_fv01, "Voids Filled", 0);
+Map.addLayer(mix_sf, vp_fv01, "Voids Filled SelfMask", 0);
+Map.addLayer(mask_gte, null, "Forest Mask GTE 5000", 0);
+Map.addLayer(final, null, "Final", 1);
 
 
 Map.setOptions('SATELLITE');
