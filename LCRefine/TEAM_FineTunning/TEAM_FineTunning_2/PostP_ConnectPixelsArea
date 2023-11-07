@@ -31,6 +31,3 @@ Map.addLayer(final, null, "Final");
 
 
 Map.setOptions('SATELLITE');
-/*
-Map.addLayer(add, vp_add, "Voids Filled");
-*/
