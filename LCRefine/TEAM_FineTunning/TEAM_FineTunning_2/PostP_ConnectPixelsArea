@@ -1,5 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var vp_fv01 = {"opacity":1,"bands":["Map"],"min":0,"max":1,"gamma":1};
+var vp_final = {"opacity":1,"bands":["Map"],"min":0,"max":1,"palette":["4bff59"]},
+    vp_original = {"opacity":1,"bands":["Map"],"min":0,"max":1,"palette":["ca3513"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01');
 var proj = forest_v01.first().projection();
@@ -22,12 +23,12 @@ var mask_gte = area2.gte(mmu);
 var final = mix_sf.updateMask(mask_gte);
 
 
-Map.addLayer(fmos.selfMask(), vp_fv01, "Forest v01", 1);
+Map.addLayer(fmos.selfMask(), vp_original, "Forest v01", 1);
 Map.addLayer(mask_lte, null, "Forest Mask LTE 5000", 0);
-Map.addLayer(mix, vp_fv01, "Voids Filled", 0);
-Map.addLayer(mix_sf, vp_fv01, "Voids Filled SelfMask", 0);
+Map.addLayer(mix, null, "Voids Filled", 0);
+Map.addLayer(mix_sf, null, "Voids Filled SelfMask", 0);
 Map.addLayer(mask_gte, null, "Forest Mask GTE 5000", 0);
-Map.addLayer(final, null, "Final", 1);
+Map.addLayer(final, vp_final, "Final", 1);
 
 
 Map.setOptions('SATELLITE');
