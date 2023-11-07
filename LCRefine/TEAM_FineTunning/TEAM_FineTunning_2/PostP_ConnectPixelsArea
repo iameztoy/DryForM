@@ -1,12 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var vp_mask = {"opacity":1,"bands":["Map"],"palette":["ff5e10"]},
-    vp_add = {"opacity":1,"bands":["Map"],"max":1,"palette":["16ff49"]};
+var vp_fv01 = {"opacity":1,"bands":["Map"],"min":0,"max":1,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01');
 var proj = forest_v01.first().projection();
 var fmos = forest_v01.mosaic();
-
-var forest_unm = fmos.unmask();
 
 var fcount = fmos.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
 var farea = ee.Image.pixelArea().reproject({crs:proj});
@@ -14,16 +11,23 @@ var area = fcount.multiply(farea);
 var mmu = 5000;
 
 var mask_lte = area.lte(mmu);
-var mask_lte_unm = mask_lte.updateMask(mask_lte);
-var mix = forest_unm.add(mask_lte_unm);
+var mask_gte = area.gte(mmu);
+var mix = fmos.add(mask_lte);
 var mix_sf = mix.selfMask();
 
 var mask_gte = area.gte(mmu);
+var final = mix_sf.updateMask(mask_gte);
 
-Map.addLayer(forest_v01, vp_fmos, "Forest v01");
-Map.addLayer(mask_lte.selfMask(), vp_mask, "Forest Mask");
-Map.addLayer(mix_sf, vp_add, "Voids Filled");
 
+Map.addLayer(forest_v01, vp_fv01, "Forest v01");
+Map.addLayer(mask_lte, null, "Forest Mask LTE 5000");
+Map.addLayer(mix, vp_fv01, "Voids Filled");
+Map.addLayer(mix_sf, vp_fv01, "Voids Filled SelfMask")
+Map.addLayer(mask_gte, null, "Forest Mask GTE 5000")
+Map.addLayer(final, null, "Final");
+
+
+Map.setOptions('SATELLITE');
 /*
 Map.addLayer(add, vp_add, "Voids Filled");
 */
