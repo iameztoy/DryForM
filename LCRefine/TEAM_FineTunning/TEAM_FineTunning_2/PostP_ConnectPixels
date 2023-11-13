@@ -18,8 +18,7 @@ var vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
-var m = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1').mosaic(); //users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1
-m = m.rename("Trees")
+var m = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1').mosaic(); 
 
 
 var un = m.unmask();
