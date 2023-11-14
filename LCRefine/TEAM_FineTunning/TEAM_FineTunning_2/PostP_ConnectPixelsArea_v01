@@ -1,0 +1,37 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var vp_area = {"opacity":1,"bands":["Map"],"min":6695.83100920014,"max":8941.438217099632,"gamma":1},
+    vp_mix = {"opacity":1,"bands":["Map"],"max":2,"gamma":1},
+    vp_final = {"opacity":1,"bands":["Map"],"palette":["51ac3a"]},
+    vp_fmos = {"opacity":1,"bands":["Map"],"max":1,"palette":["000000","e51b05"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1'); //users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01
+var proj = forest_v01.first().projection();
+var fmos = forest_v01.mosaic();
+
+
+var fcount = fmos.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
+var farea = ee.Image.pixelArea().reproject({crs:proj});
+var area = fcount.multiply(farea);
+var mmu = 5000;
+
+var mask_lte = area.lte(mmu);
+var mix = fmos.add(mask_lte);
+var mix_s = mix.gte(1);
+var mix_s_sm = mix_s.selfMask();
+
+var fcount2 = mix_s_sm.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
+var farea2 = ee.Image.pixelArea().reproject({crs:proj});
+var area2 = fcount2.multiply(farea2);
+
+var mask_gte = area2.gte(mmu);
+var final = mask_gte.updateMask(mask_gte)
+
+Map.addLayer(fmos, vp_fmos, "fmos", 1) // Unsigned int8
+Map.addLayer(area, vp_area, "area", 0)       // float
+Map.addLayer(mask_lte, null, "LTE", 0)    // Int [0, 1]
+Map.addLayer(mix, vp_mix, "mix", 0)         // Int [0, 256] range 0 - 2
+Map.addLayer(mix_s, null, "mix_s", 0)  
+Map.addLayer(mask_gte, null, "mask_gte", 0)
+Map.addLayer(final, vp_final, "final", 1)
+
+print(mask_gte)
