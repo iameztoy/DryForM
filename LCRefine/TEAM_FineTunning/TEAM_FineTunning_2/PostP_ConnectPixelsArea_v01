@@ -58,6 +58,7 @@ Map.addLayer(area, vp_area, "area", 0);
 Map.addLayer(mask_lte, null, "LTE", 0);   
 Map.addLayer(mix, vp_mix, "mix", 0);       
 Map.addLayer(mix_s, null, "mix_s", 0); 
+Map.addLayer(mix_s_sm, null, "mix_s_sm", 0);
 Map.addLayer(mask_gte, null, "mask_gte", 0);
 Map.addLayer(final, vp_final, "final", 1);
 
