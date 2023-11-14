@@ -5,7 +5,6 @@ var vp_area = {"opacity":1,"bands":["Map"],"min":6695.83100920014,"max":8941.438
     vp_fmos = {"opacity":1,"bands":["Map"],"max":1,"palette":["000000","e51b05"]},
     geometry = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -18,7 +17,6 @@ var vp_area = {"opacity":1,"bands":["Map"],"min":6695.83100920014,"max":8941.438
           [-102.83067296666243, 60.43906613094563]]], null, false),
     geometry2 = 
     /* color: #ff138a */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -36,8 +34,8 @@ var fmos = forest_v01.mosaic();
 var mmu = 5000;
 
 
-var fcount = fmos.connectedPixelCount({eightConnected:true})//.reproject({crs:proj});
-var farea = ee.Image.pixelArea()//.reproject({crs:proj});
+var fcount = fmos.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
+var farea = ee.Image.pixelArea().reproject({crs:proj});
 var area = fcount.multiply(farea);
 
 
@@ -46,8 +44,8 @@ var mix = fmos.add(mask_lte);
 var mix_s = mix.gte(1);
 var mix_s_sm = mix_s.selfMask();
 
-var fcount2 = mix_s_sm.connectedPixelCount({eightConnected:true})//.reproject({crs:proj});
-var farea2 = ee.Image.pixelArea()//.reproject({crs:proj});
+var fcount2 = mix_s_sm.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
+var farea2 = ee.Image.pixelArea().reproject({crs:proj});
 var area2 = fcount2.multiply(farea2);
 
 var mask_gte = area2.gte(mmu);
@@ -63,6 +61,7 @@ Map.addLayer(mask_gte, null, "mask_gte", 0);
 Map.addLayer(final, vp_final, "final", 1);
 
 //geometry1 Above 60º, geometry2 Below 60º
+Map.centerObject(geometry)
 
 Export.image.toDrive({
   image: final,
