@@ -66,13 +66,16 @@ var mask_gte = area2.gte(mmu);
 var final = mask_gte.updateMask(mask_gte);
 
 Map.addLayer(fmos, vp_fmos, "fmos", 1); 
-Map.addLayer(fcount, null, "fcount", 0)
-Map.addLayer(farea, null, "farea", 0)
+Map.addLayer(fcount, null, "fcount", 0);
+Map.addLayer(farea, null, "farea", 0);
 Map.addLayer(area, vp_area, "area", 0);   
-Map.addLayer(mask_lte, null, "LTE", 0);   
+Map.addLayer(mask_lte, null, "LTE 5000", 0);   
 Map.addLayer(mix, vp_mix, "mix", 0);       
 Map.addLayer(mix_s, null, "mix_s", 0); 
 Map.addLayer(mix_s_sm, null, "mix_s_sm", 0);
+Map.addLayer(fcount2, null, "fcount 2", 0);
+Map.addLayer(farea2, null, "farea 2", 0);
+Map.addLayer(area2, vp_area, "area 2", 0); 
 Map.addLayer(mask_gte, null, "mask_gte", 0);
 Map.addLayer(final, vp_final, "final", 1);
 
