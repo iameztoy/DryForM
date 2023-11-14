@@ -1,6 +1,18 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var vp_final = {"opacity":1,"bands":["Map"],"min":0,"max":1,"palette":["4bff59"]},
-    vp_original = {"opacity":1,"bands":["Map"],"min":0,"max":1,"palette":["ca3513"]};
+    vp_original = {"opacity":1,"bands":["Map"],"min":0,"max":1,"palette":["ca3513"]},
+    geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-97.73437096251125, 61.41242102556253],
+          [-97.73437096251125, 61.2688394852427],
+          [-97.35740257872219, 61.2688394852427],
+          [-97.35740257872219, 61.41242102556253]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 /*
 
@@ -111,7 +123,7 @@ var AOI_Asia2 =
  
 
 // // // --------------------------------------------- EXPORT
-Export.image.toAsset({
+Export.image.toDrive({
   image: final,
   description: 'GeomTest_MMU_Area_NoRep',
   //assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post/AOI_Africa',
