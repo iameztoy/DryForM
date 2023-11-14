@@ -8,12 +8,12 @@ Preliminary MMU post-processing considering pixelArea
 
 */
 
-var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01');
+var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1'); //users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01
 var proj = forest_v01.first().projection();
 var fmos = forest_v01.mosaic();
 
-var fcount = fmos.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
-var farea = ee.Image.pixelArea().reproject({crs:proj});
+var fcount = fmos.connectedPixelCount({eightConnected:true})//.reproject({crs:proj});
+var farea = ee.Image.pixelArea()//.reproject({crs:proj});
 var area = fcount.multiply(farea);
 var mmu = 5000;
 
@@ -21,8 +21,8 @@ var mask_lte = area.lte(mmu);
 var mix = fmos.add(mask_lte);
 var mix_sf = mix.selfMask();
 
-var fcount2 = mix_sf.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
-var farea2 = ee.Image.pixelArea().reproject({crs:proj});
+var fcount2 = mix_sf.connectedPixelCount({eightConnected:true})//.reproject({crs:proj});
+var farea2 = ee.Image.pixelArea()//.reproject({crs:proj});
 var area2 = fcount2.multiply(farea2);
 
 var mask_gte = area2.gte(mmu);
@@ -113,10 +113,10 @@ var AOI_Asia2 =
 // // // --------------------------------------------- EXPORT
 Export.image.toAsset({
   image: final,
-  description: 'AOI_America1_MMU_Area',
+  description: 'GeomTest_MMU_Area_NoRep',
   //assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post/AOI_Africa',
   crs: 'EPSG:4326',
-  region: AOI_America1, //.getInfo().coordinates,
+  region: geometry, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
