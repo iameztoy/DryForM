@@ -9,8 +9,8 @@ var proj = forest_v01.first().projection();
 var fmos = forest_v01.mosaic();
 
 
-var fcount = fmos.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
-var farea = ee.Image.pixelArea().reproject({crs:proj});
+var fcount = fmos.connectedPixelCount({eightConnected:true})//.reproject({crs:proj});
+var farea = ee.Image.pixelArea()//.reproject({crs:proj});
 var area = fcount.multiply(farea);
 var mmu = 5000;
 
@@ -19,8 +19,8 @@ var mix = fmos.add(mask_lte);
 var mix_s = mix.gte(1);
 var mix_s_sm = mix_s.selfMask();
 
-var fcount2 = mix_s_sm.connectedPixelCount({eightConnected:true}).reproject({crs:proj});
-var farea2 = ee.Image.pixelArea().reproject({crs:proj});
+var fcount2 = mix_s_sm.connectedPixelCount({eightConnected:true})//.reproject({crs:proj});
+var farea2 = ee.Image.pixelArea()//.reproject({crs:proj});
 var area2 = fcount2.multiply(farea2);
 
 var mask_gte = area2.gte(mmu);
