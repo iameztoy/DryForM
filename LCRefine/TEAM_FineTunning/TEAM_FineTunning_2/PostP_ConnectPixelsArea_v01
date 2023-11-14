@@ -5,6 +5,7 @@ var vp_area = {"opacity":1,"bands":["Map"],"min":6695.83100920014,"max":8941.438
     vp_fmos = {"opacity":1,"bands":["Map"],"max":1,"palette":["000000","e51b05"]},
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -75,7 +76,7 @@ Map.addLayer(mix, vp_mix, "mix", 0);
 Map.addLayer(mix_s, null, "mix_s", 0); 
 Map.addLayer(mix_s_sm, null, "mix_s_sm", 0);
 Map.addLayer(fcount2, null, "fcount 2", 0);
-Map.addLayer(farea2, null, "farea 2", 0);
+Map.addLayer(farea2, vp_farea, "farea 2", 0);
 Map.addLayer(area2, vp_area, "area 2", 0); 
 Map.addLayer(mask_gte, null, "mask_gte", 0);
 Map.addLayer(final, vp_final, "final", 1);
