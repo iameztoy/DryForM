@@ -50,10 +50,10 @@ var fmos = forest_v01.mosaic();
 var mmu = 5000;
 
 // Considering that the pixel areas depend on the latitude and that the minimum size of these pixel
-// areas is 46 meters, we have to increase the maxSize number to more than (5000/min size pixel) in order to
+// areas is around 11 meters in the northern lats, we have to increase the maxSize number to more than (5000/min size pixel) in order to
 // reach at least half an hectare. To be checked.
 
-var fcount = fmos.connectedPixelCount({maxSize: 150, eightConnected:true}).reproject({crs:proj});
+var fcount = fmos.connectedPixelCount({maxSize: 500, eightConnected:true}).reproject({crs:proj});
 var farea = ee.Image.pixelArea().reproject({crs:proj});
 var area = fcount.multiply(farea);
 
@@ -63,7 +63,7 @@ var mix = fmos.add(mask_lte);
 var mix_s = mix.gte(1);
 var mix_s_sm = mix_s.selfMask();
 
-var fcount2 = mix_s_sm.connectedPixelCount({maxSize: 150, eightConnected:true}).reproject({crs:proj});
+var fcount2 = mix_s_sm.connectedPixelCount({maxSize: 500, eightConnected:true}).reproject({crs:proj});
 var farea2 = ee.Image.pixelArea().reproject({crs:proj});
 var area2 = fcount2.multiply(farea2);
 
