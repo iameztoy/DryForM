@@ -61,9 +61,9 @@ var fmos = forest_v01.mosaic();
 var mmu = 5000;
 
 // Considering that the pixel areas depend on the latitude and that the minimum size of these pixel
-// areas is around 11 meters in the northern lats, we have to increase the maxSize number to more than (5000/min size pixel which
-// for fmos is around 35 pixels. ) in order to
-// reach at least half an hectare. To be checked.
+// areas is around 35 meters for fmos extent, we have to increase the maxSize number to more than (5000/min size pixel) in order to
+// reach at least half an hectare. E.g. 200 connexted pixels * 35 > MMU. Thus, we can filter any area with 
+// at least 0.5 ha. 
 
 var fcount = fmos.connectedPixelCount({maxSize: 200, eightConnected:true}).reproject({crs:proj});
 var farea = ee.Image.pixelArea().reproject({crs:proj});
