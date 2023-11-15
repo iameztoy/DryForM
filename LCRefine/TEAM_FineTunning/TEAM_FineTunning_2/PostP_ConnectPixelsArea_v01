@@ -5,7 +5,6 @@ var vp_area = {"opacity":1,"bands":["Map"],"min":6695.83100920014,"max":8941.438
     vp_fmos = {"opacity":1,"bands":["Map"],"max":1,"palette":["000000","e51b05"]},
     geometry = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -42,7 +41,19 @@ var vp_area = {"opacity":1,"bands":["Map"],"min":6695.83100920014,"max":8941.438
           [-60.27421582357701, -22.619140541673097],
           [-60.269892102645, -22.619140541673097],
           [-60.269892102645, -22.61613972020898]]], null, false),
-    vp_farea = {"opacity":1,"bands":["area"],"min":49.49585922678552,"max":49.54894921126505,"gamma":1};
+    vp_farea = {"opacity":1,"bands":["area"],"min":49.49585922678552,"max":49.54894921126505,"gamma":1},
+    geometry4 = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-115.91631013184204, 66.85050569870955],
+          [-115.91631013184204, 66.84905471743131],
+          [-115.91253358154907, 66.84905471743131],
+          [-115.91253358154907, 66.85050569870955]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1'); //users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01
 var proj = forest_v01.first().projection();
@@ -90,17 +101,17 @@ Map.centerObject(geometry)
 
 // EXPORT test
 
-/*
+
 Export.image.toDrive({
   image: final,
   description: 'GeomTest_MMU_Area_v01',
   //assetId: 'users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post/AOI_Africa',
   crs: 'EPSG:4326',
-  region: geometry, //.getInfo().coordinates,
+  region: geometry4, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
-*/
+
 
 // EXPORT
 
