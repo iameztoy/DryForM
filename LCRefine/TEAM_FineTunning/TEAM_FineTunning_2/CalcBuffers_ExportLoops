@@ -109,8 +109,39 @@ var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal
 Zones = Zones.filterBounds(AOI_Europe)
 
 
-// -----------------------------------------------------------------//
 
+
+////////////// EXPORTING to ASSET ///////////////////////
+//
+// NOTES (IAA 2023/03/02):
+//
+// There is no fileNamePrefix option while exporting to asset ->
+// the name should be moved to assetId
+//
+// 
+// 10 deg. fishnet with 301 features. Unique identifier attribute: id
+// Note: this method will probably trigger several browser errors. 
+// If so -> click "wait" x times until the task is loaded into the unsubmitted tasks
+// If it takes too long, use python API version. 
+
+var featlist = Zones.getInfo()["features"];
+//print(featlist)
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toAsset({
+    image: Edged1,
+    description: name+disS.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/' + name+disS.toString(),
+    crs: 'EPSG:4326',
+    //fileNamePrefix: name+disS.toString(),
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
 
 // EXPORT LOOPING
 /*
@@ -143,37 +174,5 @@ for (var f in featlist) {
   });
 }
 */
-
-////////////// EXPORTING to ASSET ///////////////////////
-//
-// NOTES (IAA 2023/03/02):
-//
-// There is no fileNamePrefix option while exporting to asset ->
-// the name should be moved to assetId
-//
-// 
-// 10 deg. fishnet with 301 features. Unique identifier attribute: id
-// Note: this method may trigger browser error. 
-// If the browser throws an error -> click wait x times until the task is loaded into the unsubmitted tasks
-// If it takes too long, use python API version. 
-
-var featlist = Zones.getInfo()["features"];
-//print(featlist)
-for (var f in featlist) {
-  var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("id");
-  var disS = dis.getInfo();
-  var name = "chip";  
-  Export.image.toAsset({
-    image: Edged1,
-    description: name+disS.toString(),
-    assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/' + name+disS.toString(),
-    crs: 'EPSG:4326',
-    //fileNamePrefix: name+disS.toString(),
-    region: feat.geometry().bounds(),
-    scale: 10,
-    maxPixels: 1e13
-  });
-}
 
 
