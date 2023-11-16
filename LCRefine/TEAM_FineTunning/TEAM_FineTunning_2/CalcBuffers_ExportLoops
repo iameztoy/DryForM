@@ -110,6 +110,13 @@ var AOI_Islands =
 var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
 Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
 
+var colFunc = function(feat) {
+  var dis = feat.get("id");
+  var clipped = Edged1.clip(feat).set("id", dis);
+  return clipped;
+};
+
+var imcol = ee.ImageCollection(Zones.map(colFunc));
 
 ////////////// EXPORTING to ASSET ///////////////////////
 //
@@ -124,6 +131,9 @@ Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entir
 // If so -> click "wait" x times until the task is loaded into the unsubmitted tasks
 // If it takes too long, use python API version. 
 
+
+
+// Loop to export
 var featlist = Zones.getInfo()["features"];
 //print(featlist)
 for (var f in featlist) {
@@ -144,17 +154,6 @@ for (var f in featlist) {
   });
 }
 
-// EXPORT LOOPING
-/*
-var colFunc = function(feat) {
-  var dis = feat.get("id");
-  var clipped = Edged1.clip(feat).set("id", dis);
-  return clipped;
-};
-
-var imcol = ee.ImageCollection(Zones.map(colFunc));
-
-print(imcol);
 
 /*
 ////////////// EXPORTING to DRIVE ///////////////////////
