@@ -16,10 +16,9 @@ var vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]
           [-56.02269083969246, -22.806500234409178],
           [-56.02269083969246, -22.296017877641003]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
 //var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
 var m = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1').mosaic(); 
-
+m = m.rename("Trees")
 
 var un = m.unmask();
 var cp = un.connectedPixelCount(100).lte(50); //Original threshold was 2 landsat pixels. At 10 meter res. = lte(18)
