@@ -3,57 +3,7 @@ var vp_area = {"opacity":1,"bands":["Map"],"min":6695.83100920014,"max":8941.438
     vp_mix = {"opacity":1,"bands":["Map"],"max":2,"gamma":1},
     vp_final = {"opacity":1,"bands":["Map"],"palette":["51ac3a"]},
     vp_fmos = {"opacity":1,"bands":["Map"],"max":1,"palette":["000000","e51b05"]},
-    geometry = 
-    /* color: #d63000 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-102.9000241629515, 60.43906613094563],
-          [-102.9000241629515, 60.41585307199566],
-          [-102.83067296666243, 60.41585307199566],
-          [-102.83067296666243, 60.43906613094563]]], null, false),
-    geometry2 = 
-    /* color: #ff138a */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-103.7821985551138, 57.844291034355905],
-          [-103.7821985551138, 57.82852764822503],
-          [-103.74125731671047, 57.82852764822503],
-          [-103.74125731671047, 57.844291034355905]]], null, false),
-    geometry3 = 
-    /* color: #ffc82d */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-60.27421582357701, -22.61613972020898],
-          [-60.27421582357701, -22.619140541673097],
-          [-60.269892102645, -22.619140541673097],
-          [-60.269892102645, -22.61613972020898]]], null, false),
-    vp_farea = {"opacity":1,"bands":["area"],"min":49.49585922678552,"max":49.54894921126505,"gamma":1},
-    geometry4 = 
-    /* color: #d63000 */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-115.91631013184204, 66.85050569870955],
-          [-115.91631013184204, 66.84905471743131],
-          [-115.91253358154907, 66.84905471743131],
-          [-115.91253358154907, 66.85050569870955]]], null, false);
+    vp_farea = {"opacity":1,"bands":["area"],"min":49.49585922678552,"max":49.54894921126505,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1'); //users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01
 var proj = forest_v01.first().projection();
@@ -96,12 +46,11 @@ Map.addLayer(area2, vp_area, "area 2", 0);
 Map.addLayer(mask_gte, null, "mask_gte", 0);
 Map.addLayer(final, vp_final, "final", 1);
 
-//geometry1 Above 60º, geometry2 Below 60º
-Map.centerObject(geometry)
+
 
 // EXPORT test
 
-
+/*
 Export.image.toDrive({
   image: final,
   description: 'GeomTest_MMU_Area_v01',
@@ -110,7 +59,7 @@ Export.image.toDrive({
   region: geometry4, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
-});
+});*/
 
 
 // EXPORT
