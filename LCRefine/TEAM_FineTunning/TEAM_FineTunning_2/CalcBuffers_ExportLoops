@@ -43,11 +43,67 @@ Map.addLayer(Edged3.updateMask(Edged3),{},'Edged3',false)
 Map.addLayer(forest.updateMask(forest),{},'forest',false)
 
 
+
+var AOI_America1 =ee.Geometry.Polygon(
+        [[[-175.76416450683655, 69.8],
+          [-175.76416450683655, 0],
+          [-49, 0],
+          [-49, 69.8]]], null, false);
+          
+
+var AOI_America2 =ee.Geometry.Polygon(
+        [[[-92.6, 0],
+          [-92.6, -56.769203390873436],
+          [-33,  -56.769203390873436],
+          [-33, 0]]], null, false);
+
+var AOI_Africa =ee.Geometry.Polygon(
+        [[[-27.4, 23.35015186157351],
+          [-27.4,-37.4],
+          [63.856,  -37.4],
+          [63.856, 23.35015186157351]]], null, false);
+          
+var AOI_Asia2 = 
+    ee.Geometry.Polygon(
+        [[[89.2559348418062, 0],
+          [89.2559348418062, -49.67306507025235],
+          [183.8262473418062, -49.67306507025235],
+          [183.8262473418062, 0]]], null, false),
+
+AOI_Europe = 
+    ee.Geometry.Polygon(
+        [[[-36.29773812318371, 73.0571480732895],
+          [-36.29773812318371, 23.35015186157351],
+          [70.57726187681628, 23.35015186157351],
+          [70.57726187681628, 73.0571480732895]]], null, false),
+          
+AOI_Asia1 = 
+    ee.Geometry.Polygon(
+        [[[70.57726187681628, 72.94261832226674],
+          [70.57726187681628, 0],
+          [181.70472360061206, 0],
+          [181.70472360061206, 72.94261832226674]]], null, false);
+          
+var AOI_Islands = 
+    ee.Geometry.Polygon(
+        [[[-175.56723908732576, -10.708315738822103],
+          [-175.56723908732576, -24.090792474009252],
+          [-143.53110627482576, -24.090792474009252],
+          [-143.53110627482576, -10.708315738822103]]], null, false);
+
+
+// Test for only one of the AOIs already calculated
+
+var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+Zones = Zones.filterBounds(AOI_Europe)
+
+
+// -----------------------------------------------------------------//
+
+
 // EXPORT LOOPING
 
-var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
-
-Map.addLayer(Zones);
+Map.addLayer(Zones_s);
 
 ////////////// EXPORTING ///////////////////////
 var featlist = Zones.getInfo()["features"];
