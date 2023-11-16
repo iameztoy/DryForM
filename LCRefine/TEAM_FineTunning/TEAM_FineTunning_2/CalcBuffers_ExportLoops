@@ -125,16 +125,34 @@ for (var f in featlist) {
   var name = "chip";  
   Export.image.toAsset({
     image: Edged1,
-    description: name+disS, //.toString(),
+    description: name+disS.toString(),
     assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/',
     crs: 'EPSG:4326',
-    fileNamePrefix: name+disS, //.toString(),
+    fileNamePrefix: name+disS.toString(),
     region: feat.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
   });
 }
 
-
+/*
+////////////// EXPORTING ///////////////////////
+var featlist = zonesID.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: SumTC_4cl_rK,
+    description: name+disS, //.toString(),
+    folder: "Zones_test",
+    fileNamePrefix: name+disS, //.toString(), (only if integer ID)
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+*/
 
 
