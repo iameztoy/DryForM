@@ -36,7 +36,7 @@ function rgb(r,g,b){
 // ADD LAYERS
 //---------------------
 
-Map.addLayer(WC2020)
+Map.addLayer(WC2020, null, "WC2020", 0)
 Map.addLayer(final.updateMask(final),{  
 'min':1,  
 'max': 4,  
@@ -133,7 +133,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toAsset({
-    image: imcol,
+    image: Edged1,
     description: name+disS.toString(),
     assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/',
     crs: 'EPSG:4326',
