@@ -149,6 +149,7 @@ for (var f in featlist) {
 // therefore, the name should be moved to assetId
 
 var featlist = Zones.getInfo()["features"];
+//print(featlist)
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
   var dis = feat.get("id");
