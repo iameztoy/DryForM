@@ -3,18 +3,54 @@ var vp_or = {"opacity":1,"bands":["Trees"],"max":1,"palette":["020401","4eff2f"]
     vp_cp = {"opacity":1,"bands":["Trees"],"palette":["000000","ff0c0c"]},
     vp_mx = {"opacity":1,"bands":["Trees"],"max":1,"palette":["000000","64ac17"]},
     vp_final = {"opacity":1,"bands":["Trees"],"palette":["287d1e"]},
-    geometry = 
+    disapearingPoint = 
     /* color: #00ffff */
     /* displayProperties: [
       {
         "type": "rectangle"
+      },
+      {
+        "type": "marker"
       }
     ] */
-    ee.Geometry.Polygon(
-        [[[-56.78589732162605, -22.296017877641003],
-          [-56.78589732162605, -22.806500234409178],
-          [-56.02269083969246, -22.806500234409178],
-          [-56.02269083969246, -22.296017877641003]]], null, false);
+    ee.Geometry({
+      "type": "GeometryCollection",
+      "geometries": [
+        {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [
+                -56.78589732162605,
+                -22.296017877641003
+              ],
+              [
+                -56.78589732162605,
+                -22.806500234409178
+              ],
+              [
+                -56.02269083969246,
+                -22.806500234409178
+              ],
+              [
+                -56.02269083969246,
+                -22.296017877641003
+              ]
+            ]
+          ],
+          "geodesic": false,
+          "evenOdd": true
+        },
+        {
+          "type": "Point",
+          "coordinates": [
+            -95.06230886782285,
+            36.79968888603456
+          ]
+        }
+      ],
+      "coordinates": []
+    });
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //var m = ee.ImageCollection('projects/hardy-tenure-383607/assets/MajorityVote_p_gt05').mosaic();
 var m = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1').mosaic(); 
