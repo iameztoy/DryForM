@@ -116,7 +116,7 @@ Zones = Zones.filterBounds(AOI_Europe)
 
 var colFunc = function(feat) {
   var dis = feat.get("id");
-  var clipped = img.clip(feat).set("id", dis);
+  var clipped = Edged1.clip(feat).set("id", dis);
   return clipped;
 };
 
