@@ -1,0 +1,46 @@
+var d1 = 200
+var d2 = 500
+var d5 = 1000
+
+var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic().unmask()
+
+var dist1 = forest.cumulativeCost({source: forest, maxDistance: d1});
+var Edged1 = ee.Image.constant(0).where((dist1.lte(d1)).and(dist1.gt(0)),1);
+var dist2 = forest.cumulativeCost({source: forest, maxDistance: d2});
+var Edged2 = ee.Image.constant(0).where((dist2.lte(d2)).and(dist2.gt(0)),1);
+var dist5 = forest.cumulativeCost({source: forest, maxDistance: d5});
+var Edged3 = ee.Image.constant(0).where((dist5.lte(d5)).and(dist5.gt(0)),1);
+
+var final = forest.where(Edged3,4);
+final = final.where(Edged2,3);
+final = final.where(Edged1,2);
+
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
+
+final = final.where(WC2020.eq(80),0)
+
+Map.addLayer(WC2020)
+
+var PALETTE = [rgb(65, 131, 0), rgb(229, 37, 71), rgb(229, 165, 0), rgb(253, 255, 0)]
+
+function rgb(r,g,b){  
+    var bin = r << 16 | g << 8 | b;  
+    return (function(h){  
+        return new Array(7-h.length).join("0")+h;  
+    })(bin.toString(16).toUpperCase());  
+}
+Map.addLayer(final.updateMask(final),{  
+'min':1,  
+'max': 4,  
+'palette': PALETTE},'final',true)
+
+Map.addLayer(Edged1.updateMask(Edged1),{},'Edged1',false)
+Map.addLayer(Edged2.updateMask(Edged2),{},'Edged2',false)
+Map.addLayer(Edged3.updateMask(Edged3),{},'Edged3',false)
+Map.addLayer(forest.updateMask(forest),{},'forest',false)
+
+
+
+
+
+
