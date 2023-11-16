@@ -1,3 +1,6 @@
+//----------------------------
+// Calculate buffer distances and export by looping on the feature list (10x10 deg)
+
 var d1 = 200
 var d2 = 500
 var d5 = 1000
@@ -40,7 +43,30 @@ Map.addLayer(Edged3.updateMask(Edged3),{},'Edged3',false)
 Map.addLayer(forest.updateMask(forest),{},'forest',false)
 
 
+// EXPORT LOOPING
 
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+
+Map.addLayer(Zones);
+
+////////////// EXPORTING ///////////////////////
+var featlist = Zones.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toAsset({
+    image: Edged1,
+    description: name+disS.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/',
+    crs: 'EPSG:4326',
+    fileNamePrefix: name+disS.toString(),
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
 
 
 
