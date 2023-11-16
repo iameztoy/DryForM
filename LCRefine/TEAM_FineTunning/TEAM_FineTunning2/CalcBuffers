@@ -1,0 +1,186 @@
+var d1 = 200
+var d2 = 500
+var d5 = 1000
+
+var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic().unmask()
+
+var dist1 = forest.cumulativeCost({source: forest, maxDistance: d1});
+var Edged1 = ee.Image.constant(0).where((dist1.lte(d1)).and(dist1.gt(0)),1);
+var dist2 = forest.cumulativeCost({source: forest, maxDistance: d2});
+var Edged2 = ee.Image.constant(0).where((dist2.lte(d2)).and(dist2.gt(0)),1);
+var dist5 = forest.cumulativeCost({source: forest, maxDistance: d5});
+var Edged3 = ee.Image.constant(0).where((dist5.lte(d5)).and(dist5.gt(0)),1);
+
+var final = forest.where(Edged3,4);
+final = final.where(Edged2,3);
+final = final.where(Edged1,2);
+
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
+
+final = final.where(WC2020.eq(80),0)
+
+Map.addLayer(WC2020)
+
+var PALETTE = [rgb(65, 131, 0), rgb(229, 37, 71), rgb(229, 165, 0), rgb(253, 255, 0)]
+
+function rgb(r,g,b){  
+    var bin = r << 16 | g << 8 | b;  
+    return (function(h){  
+        return new Array(7-h.length).join("0")+h;  
+    })(bin.toString(16).toUpperCase());  
+}
+Map.addLayer(final.updateMask(final),{  
+'min':1,  
+'max': 4,  
+'palette': PALETTE},'final',true)
+
+Map.addLayer(Edged1.updateMask(Edged1),{},'Edged1',false)
+Map.addLayer(Edged2.updateMask(Edged2),{},'Edged2',false)
+Map.addLayer(Edged3.updateMask(Edged3),{},'Edged3',false)
+Map.addLayer(forest.updateMask(forest),{},'forest',false)
+
+// /////Export: 
+
+var AOI_America1 =ee.Geometry.Polygon(
+        [[[-175.76416450683655, 69.8],
+          [-175.76416450683655, 0],
+          [-49, 0],
+          [-49, 69.8]]], null, false);
+          
+
+var AOI_America2 =ee.Geometry.Polygon(
+        [[[-92.6, 0],
+          [-92.6, -56.769203390873436],
+          [-33,  -56.769203390873436],
+          [-33, 0]]], null, false);
+
+                    var AOI_Africa =ee.Geometry.Polygon(
+        [[[-27.4, 23.35015186157351],
+          [-27.4,-37.4],
+          [63.856,  -37.4],
+          [63.856, 23.35015186157351]]], null, false);
+var AOI_Asia2 = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[89.2559348418062, 0],
+          [89.2559348418062, -49.67306507025235],
+          [183.8262473418062, -49.67306507025235],
+          [183.8262473418062, 0]]], null, false),
+    AOI_Europe = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-36.29773812318371, 73.0571480732895],
+          [-36.29773812318371, 23.35015186157351],
+          [70.57726187681628, 23.35015186157351],
+          [70.57726187681628, 73.0571480732895]]], null, false),
+    AOI_Asia1 = 
+    /* color: #0b4a8b */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[70.57726187681628, 72.94261832226674],
+          [70.57726187681628, 0],
+          [181.70472360061206, 0],
+          [181.70472360061206, 72.94261832226674]]], null, false);
+          
+          var AOI_Islands = 
+    /* color: #ffc82d */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-175.56723908732576, -10.708315738822103],
+          [-175.56723908732576, -24.090792474009252],
+          [-143.53110627482576, -24.090792474009252],
+          [-143.53110627482576, -10.708315738822103]]], null, false);
+ 
+
+
+
+// // // --------------------------------------------- EXPORT
+Export.image.toAsset({
+  image: final,
+  description: 'AOI_Africa',
+  assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1_post_buffer/AOI_Africa',
+  crs: 'EPSG:4326',
+  region: AOI_Africa, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+ 
+Export.image.toAsset({
+  image: final,
+  description: 'AOI_America1',
+  assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1_post_buffer/AOI_America1',
+  crs: 'EPSG:4326',
+  region: AOI_America1, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+ 
+Export.image.toAsset({
+  image: final,
+  description: 'AOI_America2',
+  assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1_post_buffer/AOI_America2',
+  crs: 'EPSG:4326',
+  region: AOI_America2, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+Export.image.toAsset({
+  image: final,
+  description: 'AOI_Europe',
+  assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1_post_buffer/AOI_Europe',
+  crs: 'EPSG:4326',
+  region: AOI_Europe, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+Export.image.toAsset({
+  image: final,
+  description: 'AOI_Asia1',
+  assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1_post_buffer/AOI_Asia1',
+  crs: 'EPSG:4326',
+  region: AOI_Asia1, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: final,
+  description: 'AOI_Asia2',
+  assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1_post_buffer/AOI_Asia2',
+  crs: 'EPSG:4326',
+  region: AOI_Asia2, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+Export.image.toAsset({
+  image: final,
+  description: 'AOI_Islands',
+  assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1_post_buffer/AOI_Islands',
+  crs: 'EPSG:4326',
+  region: AOI_Islands, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
