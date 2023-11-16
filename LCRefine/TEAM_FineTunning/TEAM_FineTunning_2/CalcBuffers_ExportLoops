@@ -114,7 +114,15 @@ Zones = Zones.filterBounds(AOI_Europe)
 
 // EXPORT LOOPING
 
-Map.addLayer(Zones);
+var colFunc = function(feat) {
+  var dis = feat.get("id");
+  var clipped = img.clip(feat).set("id", dis);
+  return clipped;
+};
+
+var imcol = ee.ImageCollection(Zones.map(colFunc));
+
+print(imcol);
 
 ////////////// EXPORTING ///////////////////////
 var featlist = Zones.getInfo()["features"];
