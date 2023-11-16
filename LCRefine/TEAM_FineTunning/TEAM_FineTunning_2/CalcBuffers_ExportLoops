@@ -145,7 +145,7 @@ for (var f in featlist) {
     image: Edged1,
     description: name+disS.toString(),
     assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/' + name+disS.toString(),
-    //pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
     region: feat.geometry().bounds(),
