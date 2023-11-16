@@ -102,13 +102,13 @@ var AOI_Islands =
           [-143.53110627482576, -10.708315738822103]]], null, false);
 
 
+
+
 // Test for only one of the AOIs already calculated
 // Zones = 10x10 degree tiles
 
 var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
-Zones = Zones.filterBounds(AOI_Europe)
-
-
+Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
 
 
 ////////////// EXPORTING to ASSET ///////////////////////
