@@ -123,28 +123,6 @@ var colFunc = function(feat) {
 var imcol = ee.ImageCollection(Zones.map(colFunc));
 
 print(imcol);
-*/
-
-////////////// EXPORTING to ASSET ///////////////////////
-// Note that there is no fileNamePrefix while exporting to asset
-
-var featlist = Zones.getInfo()["features"];
-for (var f in featlist) {
-  var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("id");
-  var disS = dis.getInfo();
-  var name = "chip";  
-  Export.image.toAsset({
-    image: Edged1,
-    description: name+disS.toString(),
-    assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/' + name+disS.toString(),
-    crs: 'EPSG:4326',
-    //fileNamePrefix: name+disS.toString(),
-    region: feat.geometry().bounds(),
-    scale: 10,
-    maxPixels: 1e13
-  });
-}
 
 /*
 ////////////// EXPORTING to DRIVE ///////////////////////
@@ -165,5 +143,27 @@ for (var f in featlist) {
   });
 }
 */
+
+////////////// EXPORTING to ASSET ///////////////////////
+// Note that there is no fileNamePrefix while exporting to asset
+// therefore, the name should be moved to assetId
+
+var featlist = Zones.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toAsset({
+    image: Edged1,
+    description: name+disS.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/' + name+disS.toString(),
+    crs: 'EPSG:4326',
+    //fileNamePrefix: name+disS.toString(),
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
 
 
