@@ -106,14 +106,14 @@ var AOI_Islands =
 // Zones = 10x10 degree tiles
 
 var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
-Zones = Zones.filterBounds(AOI_Europe)
+//Zones = Zones.filterBounds(AOI_Europe)
 
 
 // -----------------------------------------------------------------//
 
 
 // EXPORT LOOPING
-
+/*
 var colFunc = function(feat) {
   var dis = feat.get("id");
   var clipped = Edged1.clip(feat).set("id", dis);
@@ -123,6 +123,7 @@ var colFunc = function(feat) {
 var imcol = ee.ImageCollection(Zones.map(colFunc));
 
 print(imcol);
+*/
 
 ////////////// EXPORTING ///////////////////////
 var featlist = Zones.getInfo()["features"];
@@ -132,7 +133,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toAsset({
-    image: Edged1,
+    image: imcol,
     description: name+disS.toString(),
     assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/',
     crs: 'EPSG:4326',
