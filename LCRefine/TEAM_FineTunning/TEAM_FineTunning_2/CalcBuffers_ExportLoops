@@ -145,8 +145,17 @@ for (var f in featlist) {
 */
 
 ////////////// EXPORTING to ASSET ///////////////////////
-// Note that there is no fileNamePrefix while exporting to asset
-// therefore, the name should be moved to assetId
+//
+// NOTES (IAA 2023/03/02):
+//
+// There is no fileNamePrefix option while exporting to asset ->
+// the name should be moved to assetId
+//
+// 
+// 10 deg. fishnet with 301 features. Unique identifier attribute: id
+// Note: this method may trigger browser error. 
+// If the browser throws an error -> click wait x times until the task is loaded into the unsubmitted tasks
+// If it takes too long, use python API version. 
 
 var featlist = Zones.getInfo()["features"];
 //print(featlist)
