@@ -19,10 +19,9 @@ final = final.where(Edged2,3);
 final = final.where(Edged1,2);
 
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
-
 final = final.where(WC2020.eq(80),0)
 
-Map.addLayer(WC2020)
+
 
 var PALETTE = [rgb(65, 131, 0), rgb(229, 37, 71), rgb(229, 165, 0), rgb(253, 255, 0)]
 
@@ -32,6 +31,12 @@ function rgb(r,g,b){
         return new Array(7-h.length).join("0")+h;  
     })(bin.toString(16).toUpperCase());  
 }
+
+//---------------------
+// ADD LAYERS
+//---------------------
+
+Map.addLayer(WC2020)
 Map.addLayer(final.updateMask(final),{  
 'min':1,  
 'max': 4,  
@@ -42,6 +47,11 @@ Map.addLayer(Edged2.updateMask(Edged2),{},'Edged2',false)
 Map.addLayer(Edged3.updateMask(Edged3),{},'Edged3',false)
 Map.addLayer(forest.updateMask(forest),{},'forest',false)
 
+
+
+//---------------------
+// Areas of Interest
+//---------------------
 
 
 var AOI_America1 =ee.Geometry.Polygon(
@@ -93,6 +103,7 @@ var AOI_Islands =
 
 
 // Test for only one of the AOIs already calculated
+// Zones = 10x10 degree tiles
 
 var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
 Zones = Zones.filterBounds(AOI_Europe)
@@ -103,7 +114,7 @@ Zones = Zones.filterBounds(AOI_Europe)
 
 // EXPORT LOOPING
 
-Map.addLayer(Zones_s);
+Map.addLayer(Zones);
 
 ////////////// EXPORTING ///////////////////////
 var featlist = Zones.getInfo()["features"];
