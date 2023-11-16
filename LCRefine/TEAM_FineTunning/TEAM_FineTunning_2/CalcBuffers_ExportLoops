@@ -106,7 +106,7 @@ var AOI_Islands =
 // Zones = 10x10 degree tiles
 
 var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
-//Zones = Zones.filterBounds(AOI_Europe)
+Zones = Zones.filterBounds(AOI_Europe)
 
 
 // -----------------------------------------------------------------//
@@ -125,7 +125,9 @@ var imcol = ee.ImageCollection(Zones.map(colFunc));
 print(imcol);
 */
 
-////////////// EXPORTING ///////////////////////
+////////////// EXPORTING to ASSET ///////////////////////
+// Note that there is no fileNamePrefix while exporting to asset
+
 var featlist = Zones.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
@@ -145,7 +147,7 @@ for (var f in featlist) {
 }
 
 /*
-////////////// EXPORTING ///////////////////////
+////////////// EXPORTING to DRIVE ///////////////////////
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
