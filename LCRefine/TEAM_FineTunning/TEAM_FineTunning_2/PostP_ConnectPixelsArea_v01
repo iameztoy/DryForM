@@ -132,11 +132,16 @@ var AOI_Asia2 =
           [-143.53110627482576, -24.090792474009252],
           [-143.53110627482576, -10.708315738822103]]], null, false);
           
-          
-// Additional
+
+// ------------------------------------          
+// Additional remaining small sets
 
 var NorthAmerica = 
-
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
     ] */
     ee.Geometry.Polygon(
         [[[-175.64960116502795, 75.17348385003042],
@@ -144,21 +149,36 @@ var NorthAmerica =
           [-48.911319915027946, 69.70142412452682],
           [-48.911319915027946, 75.17348385003042]]], null, false),
     EastSiberia = 
-
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
     ee.Geometry.Polygon(
         [[[177.73133893450142, 71.59221381938302],
           [177.73133893450142, 64.45084695133362],
           [186.6961826845014, 64.45084695133362],
           [186.6961826845014, 71.59221381938302]]], null, false),
     Greenland = 
-
+    /* color: #0b4a8b */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
     ee.Geometry.Polygon(
         [[[-49.19694953874936, 67.35963114355692],
           [-49.19694953874936, 59.71582517470014],
           [-35.96941047624936, 59.71582517470014],
           [-35.96941047624936, 67.35963114355692]]], null, false),
     NorthRussia = 
-
+    /* color: #ffc82d */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
     ee.Geometry.Polygon(
         [[[52.416527190097796, 77.9535397944287],
           [52.416527190097796, 72.86951956620854],
@@ -169,11 +189,11 @@ var NorthAmerica =
 
 Export.image.toAsset({
   image: final,
-  description: 'AOI_Africa',
-  assetId: 'EUFO_Forest2020_v1_post_MMUAreaProj/AOI_Africa',
+  description: 'NorthAmerica',
+  assetId: 'EUFO_Forest2020_v1_post_MMUAreaProj/NorthAmerica_small',
   pyramidingPolicy:'mode', 
   crs: 'EPSG:4326',
-  region: AOI_Africa, //.getInfo().coordinates,
+  region: NorthAmerica, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
@@ -181,11 +201,11 @@ Export.image.toAsset({
  
 Export.image.toAsset({
   image: final,
-  description: 'AOI_America1',
-  assetId: 'EUFO_Forest2020_v1_post_MMUAreaProj/AOI_America1',
+  description: 'EastSiberia',
+  assetId: 'EUFO_Forest2020_v1_post_MMUAreaProj/EastSiberia_small',
   pyramidingPolicy:'mode', 
   crs: 'EPSG:4326',
-  region: AOI_America1, //.getInfo().coordinates,
+  region: EastSiberia, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
@@ -193,15 +213,28 @@ Export.image.toAsset({
  
 Export.image.toAsset({
   image: final,
-  description: 'AOI_America2',
-  assetId: 'EUFO_Forest2020_v1_post_MMUAreaProj/AOI_America2',
+  description: 'Greenland',
+  assetId: 'EUFO_Forest2020_v1_post_MMUAreaProj/Greenland_small',
   pyramidingPolicy:'mode', 
   crs: 'EPSG:4326',
-  region: AOI_America2, //.getInfo().coordinates,
+  region: Greenland, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: final,
+  description: 'NorthRussia',
+  assetId: 'EUFO_Forest2020_v1_post_MMUAreaProj/NorthRussia_small',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: NorthRussia, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
  
+/*
+
 Export.image.toAsset({
   image: final,
   description: 'AOI_Europe',
@@ -245,4 +278,5 @@ Export.image.toAsset({
   scale: 10,
   maxPixels: 1e13
 });
+*/
 
