@@ -15,6 +15,9 @@ var mmu = 5000;
 // reach at least half an hectare. E.g. 200 connexted pixels * 35 > MMU. Thus, we can filter any area with 
 // at least 0.5 ha. 
 
+//We have added new tiles that were missing in the original forest product. Some of this tiles are in the northern 
+//regions. Thus, we need to change the pixel size to 250. This is missing in the current version 1 processing.
+
 var fcount = fmos.connectedPixelCount({maxSize: 200, eightConnected:true}).reproject({crs:proj});
 var farea = ee.Image.pixelArea().reproject({crs:proj});
 var area = fcount.multiply(farea);
