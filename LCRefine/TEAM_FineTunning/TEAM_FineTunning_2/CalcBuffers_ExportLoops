@@ -104,12 +104,13 @@ var AOI_Islands =
 
 
 
-// Test for only one of the AOIs already calculated
-// Zones = 10x10 degree tiles
+¡
 
 var Zones=ee.FeatureCollection('users/bourgoinclement2/ForestReferenceMap/Grid10deg')
 //Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
-//var filter3 = Zones.filter(ee.Filter.gt('id', 250))
+
+//Use fields to split the grid in different subsets
+
 var fields = ee.List.sequence(0,276,1);
 //var fields = ee.List.sequence(277,510,1);
 Zones= Zones.filter(ee.Filter.inList('id', fields));
