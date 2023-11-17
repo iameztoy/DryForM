@@ -103,9 +103,6 @@ var AOI_Islands =
 
 
 
-
-¡
-
 var Zones=ee.FeatureCollection('users/bourgoinclement2/ForestReferenceMap/Grid10deg')
 //Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
 
