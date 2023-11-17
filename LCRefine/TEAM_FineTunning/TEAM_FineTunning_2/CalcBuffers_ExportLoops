@@ -107,10 +107,10 @@ var AOI_Islands =
 // Test for only one of the AOIs already calculated
 // Zones = 10x10 degree tiles
 
-var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+var Zones=ee.FeatureCollection('users/bourgoinclement2/ForestReferenceMap/Grid10deg')
 //Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
 //var filter3 = Zones.filter(ee.Filter.gt('id', 250))
-Zones.filter(ee.Filter.lte('id', 250))
+//Zones.filter(ee.Filter.lte('id', 250))
 
 
 var colFunc = function(feat) {
@@ -145,7 +145,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toAsset({
-    image: Edged1,
+    image: Edged3,
     description: name+disS.toString(),
     assetId: 'projects/hardy-tenure-383607/assets/BufferLoopTest/' + name+disS.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
