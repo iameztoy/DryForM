@@ -108,7 +108,10 @@ var AOI_Islands =
 // Zones = 10x10 degree tiles
 
 var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
-Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
+//Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
+//var filter3 = Zones.filter(ee.Filter.gt('id', 250))
+Zones.filter(ee.Filter.lte('id', 250))
+
 
 var colFunc = function(feat) {
   var dis = feat.get("id");
