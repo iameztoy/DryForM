@@ -115,7 +115,7 @@ Zones= Zones.filter(ee.Filter.inList('id', fields));
 
 var colFunc = function(feat) {
   var dis = feat.get("id");
-  var clipped = Edged1.clip(feat).set("id", dis);
+  var clipped = Edged3.clip(feat).set("id", dis);
   return clipped;
 };
 
