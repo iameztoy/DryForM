@@ -1,4 +1,4 @@
-var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic().unmask();
+var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic();
 
 var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DistanceForestEdge3_1");
 var b = ee.ImageCollection("projects/ee-dryforestia/assets/DistanceForestEdge3_2");
