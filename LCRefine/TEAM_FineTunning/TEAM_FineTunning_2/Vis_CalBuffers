@@ -1,0 +1,4 @@
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DistanceForestEdge3_1");
+var b = ee.ImageCollection("projects/ee-dryforestia/assets/DistanceForestEdge3_2");
+var c = a.merge(b).mosaic().selfMask();
+Map.addLayer(c);
