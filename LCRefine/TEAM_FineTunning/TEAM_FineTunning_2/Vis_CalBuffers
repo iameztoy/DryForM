@@ -1,11 +1,15 @@
-var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic();
+var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1').mosaic();
+var forest_MMU = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic();
 
-var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DistanceForestEdge3_1");
-var b = ee.ImageCollection("projects/ee-dryforestia/assets/DistanceForestEdge3_2");
-var c = a.merge(b).mosaic().selfMask();
+var buf1000_set1 = ee.ImageCollection("projects/hardy-tenure-383607/assets/DistanceForestEdge3_1");
+var buf1000_set2 = ee.ImageCollection("projects/ee-dryforestia/assets/DistanceForestEdge3_2");
+var buf1000 = buf1000_set1.merge(buf1000_set2).mosaic().selfMask();
 
 
-var vp_forest = {"opacity":1,"max":1,"palette":["3ec01e"]};
-Map.addLayer(forest, vp_forest, "Forest MMU");
-Map.addLayer(c, null, "Buffer 1km");
+var vp_forest1 = {"opacity":1,"max":1,"palette":["3ec01e"]};
+var vp_forest0 = {"opacity":1,"max":1,"palette":["21781b"]};
+
+Map.addLayer(forest_v01.selfMask(), vp_forest0, "Forest Original")
+Map.addLayer(forest_MMU, vp_forest1, "Forest MMU");
+Map.addLayer(buf1000, null, "Buffer 1km");
 
