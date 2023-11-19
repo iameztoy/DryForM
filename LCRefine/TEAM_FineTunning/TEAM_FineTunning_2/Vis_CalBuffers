@@ -9,7 +9,7 @@ var buf1000 = buf1000_set1.merge(buf1000_set2).mosaic().selfMask();
 var vp_forest1 = {"opacity":1,"max":1,"palette":["3ec01e"]};
 var vp_forest0 = {"opacity":1,"max":1,"palette":["21781b"]};
 
-Map.addLayer(forest_v01.selfMask(), vp_forest0, "Forest Original", 0)
+Map.addLayer(forest_v01.selfMask(), vp_forest0, "Forest Original")
 Map.addLayer(forest_MMU, vp_forest1, "Forest MMU");
 Map.addLayer(buf1000, null, "Buffer 1km");
 
