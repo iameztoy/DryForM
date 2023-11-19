@@ -1,4 +1,11 @@
+var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic().unmask();
+
 var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DistanceForestEdge3_1");
 var b = ee.ImageCollection("projects/ee-dryforestia/assets/DistanceForestEdge3_2");
 var c = a.merge(b).mosaic().selfMask();
-Map.addLayer(c);
+
+
+var vp_forest = {"opacity":1,"max":1,"palette":["3ec01e"]};
+Map.addLayer(forest, vp_forest, "Forest MMU");
+Map.addLayer(c, null, "Buffer 1km");
+
