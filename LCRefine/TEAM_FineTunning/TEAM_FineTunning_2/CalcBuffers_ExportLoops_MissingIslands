@@ -54,7 +54,7 @@ Map.addLayer(forest.updateMask(forest),{},'forest',false)
 //---------------------
 
 
-var MissingIslands = 
+var Zones = 
     ee.FeatureCollection(
         [ee.Feature(
             ee.Geometry.Polygon(
