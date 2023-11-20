@@ -184,33 +184,7 @@ var MissingIslands =
                   [-175.7236215133505, 52.18222398049554]]], null, false),
             {
               "system:index": "14"
-            })]),
-    testIban = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-176.52340132027993, -43.897726506744746],
-          [-176.52340132027993, -43.922955045672566],
-          [-176.48898321420083, -43.922955045672566],
-          [-176.48898321420083, -43.897726506744746]]], null, false),
-    testIban2 = 
-    /* color: #98ff00 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-176.92803598847314, -43.810719859460015],
-          [-176.92803598847314, -43.82459237370797],
-          [-176.23727060761377, -43.82459237370797],
-          [-176.23727060761377, -43.810719859460015]]], null, false);
+            })]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // ‘forest’ means land spanning more than 0,5 hectares (5000 m2 - 50 pixels of 10m) with trees higher than 5 metres and a canopy cover of more
 // than 10 %, or trees able to reach those thresholds in situ, excluding land that is predominantly under agricultural
