@@ -1701,7 +1701,7 @@ var correction_WC_raster =  (ee.Image.constant(1)).clip(correction_WC).unmask()
 
 Global_forest_step1 = Global_forest_step1.where(stripes_raster,0);
 Global_forest_step1 = Global_forest_step1.where(correction_WC_raster.and(WC2021_foret),1);
-Global_forest_step1 = Global_forest_step1
+
 
 
 Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1),{min:1,max:1, palette:['green'],opacity: 0.7},'Global_forest_step1 final',false)
