@@ -237,7 +237,7 @@ for (var f in featlist) {
   Export.image.toAsset({
     image: Edged1,
     description: name+disS,
-    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS,
+    assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Buf200/' + name+disS,
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
