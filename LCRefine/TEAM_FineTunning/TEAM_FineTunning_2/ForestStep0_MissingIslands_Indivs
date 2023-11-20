@@ -1832,20 +1832,20 @@ var NorthAmerica =
 
 // Correction of Missing Islands
 
-
-var isl1 =
+                  
+var isl2 =
+ee.Geometry.Polygon(
+                [[[-177, -15.712740350066985],
+                  [-177, -19.461206940445855],
+                  [-180, -19.461206940445855],
+                  [-180, -15.712740350066985]]], null, false);
+                  
+/*var isl1 =
 ee.Geometry.Polygon(
                 [[[-140.90400568080602, -7.825500316356672],
                   [-140.90400568080602, -10.612228088213836],
                   [-138.36616388393102, -10.612228088213836],
                   [-138.36616388393102, -7.825500316356672]]], null, false);
-
-var isl2 =
-ee.Geometry.Polygon(
-                [[[179.95104785031958, -15.712740350066985],
-                  [179.95104785031958, -19.461206940445855],
-                  [182.01647753781955, -19.461206940445855],
-                  [182.01647753781955, -15.712740350066985]]], null, false);
 
 var isl3 =
 ee.Geometry.Polygon(
@@ -1937,20 +1937,9 @@ ee.Geometry.Polygon(
                   [-179.5139047164755, 51.03953479498419],
                   [-175.7236215133505, 51.03953479498419],
                   [-175.7236215133505, 52.18222398049554]]], null, false);
+*/
 
 
-
-
-Export.image.toAsset({
-  image: Global_forest_step1,
-  description: 'MissingIslands1',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands1',
-  pyramidingPolicy:"mode",
-  crs: 'EPSG:4326',
-  region: isl1, //.getInfo().coordinates,
-  scale: 10,
-  maxPixels: 1e13
-});
 
 Export.image.toAsset({
   image: Global_forest_step1,
@@ -1959,6 +1948,18 @@ Export.image.toAsset({
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl2, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+/*
+Export.image.toAsset({
+  image: Global_forest_step1,
+  description: 'MissingIslands1',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands1',
+  pyramidingPolicy:"mode",
+  crs: 'EPSG:4326',
+  region: isl1, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
@@ -2105,6 +2106,8 @@ Export.image.toAsset({
   scale: 10,
   maxPixels: 1e13
 });
+
+*/
 
 
 
