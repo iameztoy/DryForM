@@ -1858,137 +1858,16 @@ var NorthAmerica =
           [154.08400765884778, 77.9535397944287]]], null, false);
 
 
-// var test = Mangroves2020.and(Global_forest_step1.not())
-// Map.addLayer(test.updateMask(test),{min:1,max:1, palette:['red']},'test',true)
-// Map.setCenter(91.106737, 22.125126,20)
-
-
-// // // --------------------------------------------- EXPORT
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_NorthAmerica',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_NorthAmerica',
-//   crs: 'EPSG:4326',
-//   region: NorthAmerica, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_EastSiberia',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_EastSiberia',
-//   crs: 'EPSG:4326',
-//   region: EastSiberia, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_Greenland',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_Greenland',
-//   crs: 'EPSG:4326',
-//   region: Greenland, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_NorthRussia',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_NorthRussia',
-//   crs: 'EPSG:4326',
-//   region: NorthRussia, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands',
+  description: 'MissingIslands_clip',
   assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_clip/MissingIslands',
+  pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   //region: MissingIslands, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
 
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_Africa',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_Africa',
-//   crs: 'EPSG:4326',
-//   region: AOI_Africa, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
 
- 
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_America1',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_America1',
-//   crs: 'EPSG:4326',
-//   region: AOI_America1, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
-
- 
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_America2',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_America2',
-//   crs: 'EPSG:4326',
-//   region: AOI_America2, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
- 
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_Europe',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_Europe',
-//   crs: 'EPSG:4326',
-//   region: AOI_Europe, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
- 
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_Asia1',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_Asia1',
-//   crs: 'EPSG:4326',
-//   region: AOI_Asia1, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
-
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_Asia2',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_Asia2',
-//   crs: 'EPSG:4326',
-//   region: AOI_Asia2, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
- 
-// Export.image.toAsset({
-//   image: Global_forest_step1,
-//   description: 'AOI_Islands',
-//   assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1/AOI_Islands',
-//   crs: 'EPSG:4326',
-//   region: AOI_Islands, //.getInfo().coordinates,
-//   scale: 10,
-//   maxPixels: 1e13
-// });
-
-
-
-// Map.setCenter(-179.9426, -16.826,20)
-Map.addLayer(AOI_Asia2)
-var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1').mosaic();
-Map.addLayer(forest_v01,{},'forest_v01')
-
-var Zones=ee.FeatureCollection('users/bourgoinclement2/ForestReferenceMap/Grid10deg')//.filter(ee.Filter.inList('id', [8, 6, 3, 2, 1, 13, 12, 11, 10, 9]))
-Map.addLayer(Zones)
