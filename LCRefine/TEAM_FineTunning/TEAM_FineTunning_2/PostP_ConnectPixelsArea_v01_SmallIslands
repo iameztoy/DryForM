@@ -252,6 +252,91 @@ Export.image.toAsset({
   scale: 10,
   maxPixels: 1e13
 });
- 
 
+Export.image.toAsset({
+  image: final,
+  description: 'Island8',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island8',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl8, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: final,
+  description: 'Island9',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island9',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl9, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: final,
+  description: 'Island10',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island10',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl10, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
  
+Export.image.toAsset({
+  image: final,
+  description: 'Island11',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island11',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl11, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: final,
+  description: 'Island12',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island12',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl12, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: final,
+  description: 'Island13',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island13',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl13, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+ 
+Export.image.toAsset({
+  image: final,
+  description: 'Island14',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island14',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl14, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: final,
+  description: 'Island15',
+  assetId: 'MissingIslands_Forest_indivs_MMUAreaProj/Island15',
+  pyramidingPolicy:'mode', 
+  crs: 'EPSG:4326',
+  region: isl15, //.getInfo().coordinates,
+  scale: 10,
+  maxPixels: 1e13
+});
