@@ -1906,7 +1906,7 @@ Export.image.toAsset({
   description: 'MissingIslands',
   assetId: 'projects/hardy-tenure-383607/assets/deteleme_testIslands/MissingIslands_Forest',
   crs: 'EPSG:4326',
-  region: MissingIslands, //.getInfo().coordinates,
+  //region: MissingIslands, //.getInfo().coordinates,
   scale: 10,
   maxPixels: 1e13
 });
