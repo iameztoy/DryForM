@@ -1,0 +1,271 @@
+//----------------------------
+// Calculate buffer distances and export by looping on the feature list (10x10 deg)
+
+var d1 = 200
+var d2 = 500
+var d5 = 1000
+
+var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs_MMUAreaProj').mosaic().unmask()
+
+var dist1 = forest.cumulativeCost({source: forest, maxDistance: d1});
+var Edged1 = ee.Image.constant(0).where((dist1.lte(d1)).and(dist1.gt(0)),1);
+var dist2 = forest.cumulativeCost({source: forest, maxDistance: d2});
+var Edged2 = ee.Image.constant(0).where((dist2.lte(d2)).and(dist2.gt(0)),1);
+var dist5 = forest.cumulativeCost({source: forest, maxDistance: d5});
+var Edged3 = ee.Image.constant(0).where((dist5.lte(d5)).and(dist5.gt(0)),1);
+
+var final = forest.where(Edged3,4);
+final = final.where(Edged2,3);
+final = final.where(Edged1,2);
+
+var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
+final = final.where(WC2020.eq(80),0)
+
+
+
+var PALETTE = [rgb(65, 131, 0), rgb(229, 37, 71), rgb(229, 165, 0), rgb(253, 255, 0)]
+
+function rgb(r,g,b){  
+    var bin = r << 16 | g << 8 | b;  
+    return (function(h){  
+        return new Array(7-h.length).join("0")+h;  
+    })(bin.toString(16).toUpperCase());  
+}
+
+//---------------------
+// ADD LAYERS
+//---------------------
+
+Map.addLayer(WC2020, null, "WC2020", 0)
+Map.addLayer(final.updateMask(final),{  
+'min':1,  
+'max': 4,  
+'palette': PALETTE},'final',true)
+
+Map.addLayer(Edged1.updateMask(Edged1),{},'Edged1',false)
+Map.addLayer(Edged2.updateMask(Edged2),{},'Edged2',false)
+Map.addLayer(Edged3.updateMask(Edged3),{},'Edged3',false)
+Map.addLayer(forest.updateMask(forest),{},'forest',false)
+
+
+
+//---------------------
+// Areas of Interest
+//---------------------
+
+
+var MissingIslands = 
+    ee.FeatureCollection(
+        [ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-140.90400568080602, -7.825500316356672],
+                  [-140.90400568080602, -10.612228088213836],
+                  [-138.36616388393102, -10.612228088213836],
+                  [-138.36616388393102, -7.825500316356672]]], null, false),
+            {
+              "system:index": "0"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-178, -15.712740350066985],
+                  [-178, -19.461206940445855],
+                  [-180, -19.461206940445855],
+                  [-180, -15.712740350066985]]], null, false),
+            {
+              "system:index": "1"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-178.76904492311795, -20.576020109539172],
+                  [-178.76904492311795, -20.694257156081804],
+                  [-178.67566113405545, -20.694257156081804],
+                  [-178.67566113405545, -20.576020109539172]]], null, false),
+            {
+              "system:index": "2"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-178.2828999035867, -19.779421111237347],
+                  [-178.2828999035867, -19.869854306134755],
+                  [-178.19226269655545, -19.869854306134755],
+                  [-178.19226269655545, -19.779421111237347]]], null, false),
+            {
+              "system:index": "3"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-178.28110342920095, -14.156537607420583],
+                  [-178.28110342920095, -14.385454322963747],
+                  [-177.92954092920095, -14.385454322963747],
+                  [-177.92954092920095, -14.156537607420583]]], null, false),
+            {
+              "system:index": "4"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-176.28159171045095, -13.163723911216803],
+                  [-176.28159171045095, -13.425675114186392],
+                  [-176.10581046045095, -13.425675114186392],
+                  [-176.10581046045095, -13.163723911216803]]], null, false),
+            {
+              "system:index": "5"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-176.23215323388845, -14.124577302929838],
+                  [-176.23215323388845, -14.124577302929838],
+                  [-176.23215323388845, -14.124577302929838],
+                  [-176.23215323388845, -14.124577302929838]]], null, false),
+            {
+              "system:index": "6"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-175.72128897607595, -15.547624785291259],
+                  [-175.72128897607595, -15.68517480795491],
+                  [-175.55100089013845, -15.68517480795491],
+                  [-175.55100089013845, -15.547624785291259]]], null, false),
+            {
+              "system:index": "7"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-109.48618591580271, -27.027059175619335],
+                  [-109.48618591580271, -27.212849152935235],
+                  [-109.21152771267771, -27.212849152935235],
+                  [-109.21152771267771, -27.027059175619335]]], null, false),
+            {
+              "system:index": "8"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-128.3858535750469, -24.310477085776068],
+                  [-128.3858535750469, -24.44306858244311],
+                  [-128.25676421957814, -24.44306858244311],
+                  [-128.25676421957814, -24.310477085776068]]], null, false),
+            {
+              "system:index": "9"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-130.1436660750469, -25.04670754258767],
+                  [-130.1436660750469, -25.098950735729353],
+                  [-130.07500152426564, -25.098950735729353],
+                  [-130.07500152426564, -25.04670754258767]]], null, false),
+            {
+              "system:index": "10"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-177.16388434195633, -43.56100653684589],
+                  [-177.16388434195633, -44.49309434531101],
+                  [-175.86749762320633, -44.49309434531101],
+                  [-175.86749762320633, -43.56100653684589]]], null, false),
+            {
+              "system:index": "11"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[165.71039192305096, -50.42505800400462],
+                  [165.71039192305096, -51.00243693162028],
+                  [166.40253059492596, -51.00243693162028],
+                  [166.40253059492596, -50.42505800400462]]], null, false),
+            {
+              "system:index": "12"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[169.00629036055096, -52.451743072570764],
+                  [169.00629036055096, -52.624645770676274],
+                  [169.2727088175822, -52.624645770676274],
+                  [169.2727088175822, -52.451743072570764]]], null, false),
+            {
+              "system:index": "13"
+            }),
+        ee.Feature(
+            ee.Geometry.Polygon(
+                [[[-179.5139047164755, 52.18222398049554],
+                  [-179.5139047164755, 51.03953479498419],
+                  [-175.7236215133505, 51.03953479498419],
+                  [-175.7236215133505, 52.18222398049554]]], null, false),
+            {
+              "system:index": "14"
+            })]);
+
+
+//var Zones=ee.FeatureCollection('users/bourgoinclement2/ForestReferenceMap/Grid10deg')
+//Zones = Zones.filterBounds(AOI_Europe) //This can be removed to launch the entire globe in one go.
+
+//Use fields to split the grid in different subsets
+
+//var fields = ee.List.sequence(0,276,1);
+//var fields = ee.List.sequence(277,510,1);
+//Zones= Zones.filter(ee.Filter.inList('id', fields));
+
+
+var colFunc = function(feat) {
+  var dis = feat.get("system:index");
+  var clipped = Edged1.clip(feat).set("system:index", dis);
+  return clipped;
+};
+
+var imcol = ee.ImageCollection(Zones.map(colFunc));
+
+////////////// EXPORTING to ASSET ///////////////////////
+//
+// NOTES (IAA 2023/03/02):
+//
+// There is no fileNamePrefix option while exporting to asset ->
+// the name should be moved to assetId
+//
+// 
+// 10 deg. fishnet with 301 features. Unique identifier attribute: id
+// Note: this method will probably trigger several browser errors. 
+// If so -> click "wait" x times until the task is loaded into the unsubmitted tasks
+// If it takes too long, use python API version. 
+
+
+
+// Loop to export
+var featlist = Zones.getInfo()["features"];
+//print(featlist)
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("system:index");
+  var disS = dis.getInfo();
+  var name = "chip_MI_";  
+  Export.image.toAsset({
+    image: Edged1,
+    description: name+disS,
+    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS,
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+
+
+/*
+////////////// EXPORTING to DRIVE ///////////////////////
+var featlist = zonesID.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: SumTC_4cl_rK,
+    description: name+disS, //.toString(),
+    folder: "Zones_test",
+    fileNamePrefix: name+disS, //.toString(), (only if integer ID)
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+*/
+
+
