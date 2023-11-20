@@ -1983,15 +1983,7 @@ Export.image.toAsset({
 //   maxPixels: 1e13
 // });
 
-// Export the image, specifying the CRS, transform, and region.
-Export.image.toDrive({
-  image: Global_forest_step1,
-  description: 'testIban',
-  crs: 'EPSG:4326',
-  //crsTransform: projection.transform,
-  scale: 10,
-  region: testIban2
-});
+
 
 // Map.setCenter(-179.9426, -16.826,20)
 Map.addLayer(AOI_Asia2)
