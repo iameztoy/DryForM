@@ -1,6 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var MissingIslands = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -710,7 +711,7 @@ Global_forest_step1 = Global_forest_step1.where(cond,1);
 //Permanent water (inc. new permanent and seasonal to permanent)
 
 Global_forest_step1 = Global_forest_step1.where((gsw_transition.eq(1)).or(gsw_transition.eq(2)).or(gsw_transition.eq(7)),0);
-
+Global_forest_step1 = Global_forest_step1.clip(MissingIslands)
 
 Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1),{min:1,max:1, palette:['gray']},'Removal of other land cover classes ',false);
 
@@ -1903,7 +1904,7 @@ var NorthAmerica =
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'MissingIslands',
-  assetId: 'projects/hardy-tenure-383607/assets/deteleme_testIslands/MissingIslands',
+  assetId: 'projects/hardy-tenure-383607/assets/deteleme_testIslands/MissingIslands_Forest',
   crs: 'EPSG:4326',
   region: MissingIslands, //.getInfo().coordinates,
   scale: 10,
