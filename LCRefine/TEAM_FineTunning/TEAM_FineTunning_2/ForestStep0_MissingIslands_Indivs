@@ -1943,8 +1943,8 @@ ee.Geometry.Polygon(
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 1',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands1',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands1',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl1, //.getInfo().coordinates,
@@ -1954,8 +1954,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 2',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands2',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands2',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl2, //.getInfo().coordinates,
@@ -1965,8 +1965,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 3',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands3',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands3',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl3, //.getInfo().coordinates,
@@ -1976,8 +1976,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 4',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands4',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands4',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl4, //.getInfo().coordinates,
@@ -1987,8 +1987,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 5',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands5',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands5',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl5, //.getInfo().coordinates,
@@ -1998,8 +1998,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 6',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands6',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands6',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl6, //.getInfo().coordinates,
@@ -2009,8 +2009,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 7',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands7',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands7',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl7, //.getInfo().coordinates,
@@ -2020,8 +2020,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 8',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands8',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands8',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl8, //.getInfo().coordinates,
@@ -2031,8 +2031,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 9',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands9',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands9',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl9, //.getInfo().coordinates,
@@ -2042,8 +2042,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 10',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands10',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands10',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl10, //.getInfo().coordinates,
@@ -2053,8 +2053,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 11',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands11',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands11',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl11, //.getInfo().coordinates,
@@ -2064,8 +2064,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 12',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands12',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands12',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl12, //.getInfo().coordinates,
@@ -2075,8 +2075,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 13',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands13',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands13',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl13, //.getInfo().coordinates,
@@ -2086,8 +2086,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 14',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands14',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands14',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl14, //.getInfo().coordinates,
@@ -2097,8 +2097,8 @@ Export.image.toAsset({
 
 Export.image.toAsset({
   image: Global_forest_step1,
-  description: 'MissingIslands 15',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands_Forest_indivs',
+  description: 'MissingIslands15',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_indivs/MissingIslands15',
   pyramidingPolicy:"mode",
   crs: 'EPSG:4326',
   region: isl15, //.getInfo().coordinates,
