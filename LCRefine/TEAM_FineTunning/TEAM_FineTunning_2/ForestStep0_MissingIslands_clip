@@ -1904,7 +1904,7 @@ var NorthAmerica =
 Export.image.toAsset({
   image: Global_forest_step1,
   description: 'MissingIslands',
-  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest/MissingIslands',
+  assetId: 'projects/hardy-tenure-383607/assets/MissingIslands_Forest_clip/MissingIslands',
   crs: 'EPSG:4326',
   //region: MissingIslands, //.getInfo().coordinates,
   scale: 10,
