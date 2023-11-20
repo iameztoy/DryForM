@@ -711,7 +711,6 @@ Global_forest_step1 = Global_forest_step1.where(cond,1);
 //Permanent water (inc. new permanent and seasonal to permanent)
 
 Global_forest_step1 = Global_forest_step1.where((gsw_transition.eq(1)).or(gsw_transition.eq(2)).or(gsw_transition.eq(7)),0);
-Global_forest_step1 = Global_forest_step1.clip(MissingIslands)
 
 Map.addLayer(Global_forest_step1.updateMask(Global_forest_step1),{min:1,max:1, palette:['gray']},'Removal of other land cover classes ',false);
 
