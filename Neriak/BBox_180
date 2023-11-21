@@ -84,7 +84,7 @@ print(zonesID)
 
 // !!!! set your target Image collection !!!!!
 
-var target = Edged3
+var target = Edged3 //Need to import an image
 
 var colFunc = function(feat) {
   var dis = feat.get("ID");
