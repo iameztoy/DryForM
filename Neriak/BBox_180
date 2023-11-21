@@ -2,20 +2,24 @@
 var test1 = /* color: #ff0000 */ee.Geometry.Point([177.0303432133869, 65.30513250677583]),
     test2 = /* color: #00ff00 */ee.Geometry.Point([-177.3446567866131, 66.1717902630677]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Create two separate Bounding Boxes
 var bbox_1 = ee.Geometry.BBox(-179.9999, -75, 0, 75);
 var bbox_2 = ee.Geometry.BBox(0, -75, 179.9999, 75);
 
+//Convert to Features
 var fc_1 = ee.Feature(bbox_1);
 var fc_2 = ee.Feature(bbox_2);
 
 Map.addLayer(fc_1, null, "bbox 1");
 Map.addLayer(fc_2, null, "bbox 2");
 
+//Create a Covering Grid over the two BBoxes
 var grid_1 = bbox_1.coveringGrid(bbox_1.projection(), 1300000);
+var grid_2 = bbox_2.coveringGrid(bbox_2.projection(), 1300000);
+
+//Intersect the BBox with the Grids to get read of the areas outside the Bbox
 var grid_1_cl = grid_1.map(function(feat) {
                       return fc_1.intersection(feat, 0.1)})
-                      
-var grid_2 = bbox_2.coveringGrid(bbox_2.projection(), 1300000);
 var grid_2_cl = grid_2.map(function(feat) {
                       return fc_2.intersection(feat, 0.1)})
 
@@ -25,9 +29,11 @@ print(grid_2)
 Map.addLayer(grid_1_cl, null, "Grid 1 Clipped");
 Map.addLayer(grid_2_cl, null, "Grid 2 Clipped");
 
+//Merge both grids from both Bboxes
 var grid = grid_1_cl.merge(grid_2_cl);
 Map.addLayer(grid, null, "Grids Merged");
 
+//For testing purposes
 var select_test1 = grid.filterBounds(test1);
 var select_test2 = grid.filterBounds(test2);
 
@@ -41,12 +47,13 @@ Map.addLayer(select_test2, null, "Selected 2 East - Test");
 print(select_test1); 
 print(select_test2);
 
+//For testing purposes
 var Zones = select_test1.merge(select_test2)
 print(Zones)
 Map.addLayer(Zones, null, "Zones")
 
 // CoveringGrid produces a strange ID so I make a new fc with proper
-// unique id so are parsed to the name while exporting.
+// unique id so we can parse tehm to the name while running the Export Loop.
 
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
