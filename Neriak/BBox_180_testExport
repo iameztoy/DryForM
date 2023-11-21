@@ -161,9 +161,9 @@ for (var f in featlist) {
   });
 }
 
-/*
-// Export to Drive
 
+// Export to Drive
+/*
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
@@ -180,7 +180,8 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
-/*
+*/
+
 
 
 
