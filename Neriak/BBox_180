@@ -19,6 +19,9 @@ var grid_2 = bbox_2.coveringGrid(bbox_2.projection(), 1300000);
 var grid_2_cl = grid_2.map(function(feat) {
                       return fc_2.intersection(feat, 0.1)})
 
+print(grid_1)
+print(grid_2)
+
 Map.addLayer(grid_1_cl, null, "Grid 1 Clipped");
 Map.addLayer(grid_2_cl, null, "Grid 2 Clipped");
 
@@ -38,9 +41,79 @@ Map.addLayer(select_test2, null, "Selected 2 East - Test");
 print(select_test1); 
 print(select_test2);
 
-var test_merged = select_test1.merge(select_test2)
-print(test_merged)
-Map.addLayer(test_merged, null, "Tests merged")
+var Zones = select_test1.merge(select_test2)
+print(Zones)
+Map.addLayer(Zones, null, "Zones")
+
+// CoveringGrid produces a strange ID so I make a new fc with proper
+// unique id so are parsed to the name while exporting.
+
+// make a list of length of features
+var idList = ee.List.sequence(0,Zones.size().subtract(1));
+// featureCollection to a List
+var list = Zones.toList(Zones.size());
+
+// set the system:index
+var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
+  var feat = ee.Feature(list.get(newSysIndex));
+  // format number to string (system:index must be a string)
+  var indexString = ee.Number(newSysIndex).format('%03d') //3 is until 999, increase if needed 
+                                                          //but big chance of client crash while exporting
+  return feat.set('system:index', indexString, 'ID', indexString);
+}));
+
+print(zonesID)
+
+// Exporting
+// We need to remove the .toString from the previous exporing option.
+// It would be like:
+
+////////////// EXPORTING ///////////////////////
+
+var colFunc = function(feat) {
+  var dis = feat.get("ID");
+  var clipped = Edged3.clip(feat).set("ID", dis);
+  return clipped;
+};
+
+//Export to Asset
+
+var featlist = zonesID.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toAsset({
+    image: Edged3,
+    description: name+disS, //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS.toString(),
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+
+// Export to Drive
+
+var featlist = zonesID.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toDrive({
+    image: Edged3,
+    description: name+disS, //.toString(),
+    folder: "Zones_test",
+    fileNamePrefix: name+disS, //.toString(), (only if integer ID)
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
 
 
 
