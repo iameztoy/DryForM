@@ -108,7 +108,7 @@ for (var f in featlist) {
   Export.image.toAsset({
     image: target,
     description: name+disS, //.toString(), Now the ID is already a string
-    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS, //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     region: feat.geometry().bounds(),
