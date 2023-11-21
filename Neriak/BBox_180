@@ -3,6 +3,8 @@ var test1 = /* color: #ff0000 */ee.Geometry.Point([177.0303432133869, 65.3051325
     test2 = /* color: #00ff00 */ee.Geometry.Point([-177.3446567866131, 66.1717902630677]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Create two separate Bounding Boxes
+// Longitude coordinates from GC script.
+
 var bbox_1 = ee.Geometry.BBox(-179.99999945312500005, -75, 0, 75);
 var bbox_2 = ee.Geometry.BBox(0, -75, 179.99999913007812500007, 75);
 
