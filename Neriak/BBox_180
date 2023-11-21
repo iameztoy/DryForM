@@ -26,9 +26,12 @@ var grid_2 = bbox_2.coveringGrid(bbox_2.projection(), 1300000);
 
 //Intersect the BBox with the Grids to get rid of the areas outside the Bbox
 var grid_1_cl = grid_1.map(function(feat) {
-                      return fc_1.intersection(feat, 0.1)})
+                      return fc_1.intersection(feat, 0.1)}) 
 var grid_2_cl = grid_2.map(function(feat) {
                       return fc_2.intersection(feat, 0.1)})
+                      
+//Caution with the number of coordinates generated. To be checked if it has any effect on the 
+//exported layers.
 
 print(grid_1)
 print(grid_2)
