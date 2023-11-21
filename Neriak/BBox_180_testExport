@@ -1,6 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var test1 = /* color: #ff0000 */ee.Geometry.Point([177.0303432133869, 65.30513250677583]),
-    test2 = /* color: #00ff00 */ee.Geometry.Point([-177.3446567866131, 66.1717902630677]);
+var test1 = /* color: #ff0000 */ee.Geometry.Point([178.97492329151194, -18.677046557229474]),
+    test2 = /* color: #00ff00 */ee.Geometry.Point([-179.17937358348806, -18.609382544926458]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 ////////////////////////////////////////////
@@ -49,7 +49,7 @@ Global_forest_step1 = Global_forest_step1.where(lossYearGFC2000_2020,0);
 Global_forest_step1 = Global_forest_step1.where(cropmask_UMD,0);
 Global_forest_step1 = Global_forest_step1.where(CH_GEDI.lt(5),0);
 
-
+Map.addLayer(Global_forest_step1)
 
 // Idea to create a grid that does not give problems while exporting an image to Asset or Drive
 // IAA 2023-11-21
