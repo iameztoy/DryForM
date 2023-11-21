@@ -31,7 +31,11 @@ var select_test2 = grid.filterBounds(test2);
 Map.addLayer(select_test1, null, "Selected 1 West - Test");
 Map.addLayer(select_test2, null, "Selected 2 East - Test");
 
-print(select_test1);
+// Just to see if the coordinates are correct
+// All long. coords should be negative in test 1
+// All long. coords should be positive in test 2
+
+print(select_test1); 
 print(select_test2);
 
 
