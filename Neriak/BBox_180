@@ -1,0 +1,17 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.Point([177.03757764476833, 63.81645046454951]),
+    geometry2 = /* color: #98ff00 */ee.Geometry.Point([-174.34914110523158, 63.03006756369972]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var bbox = ee.Geometry.BBox(-180, -75, 180, 75)
+var cgrid = bbox.coveringGrid("EPSG:4326", 1200000)
+
+var filter_w = cgrid.filterBounds(geometry)
+var filter_e = cgrid.filterBounds(geometry2)
+
+Map.addLayer(bbox, null, "bbox")
+Map.addLayer(cgrid, null, "Grid")
+Map.addLayer(filter_w, null, "Filtered W")
+Map.addLayer(filter_e, null, "Filtered E")
+
+print(filter_w)
+print(filter_e)
