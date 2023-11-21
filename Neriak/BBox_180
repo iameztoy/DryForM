@@ -22,7 +22,7 @@ Map.addLayer(fc_2, null, "bbox 2");
 var grid_1 = bbox_1.coveringGrid(bbox_1.projection(), 1300000);
 var grid_2 = bbox_2.coveringGrid(bbox_2.projection(), 1300000);
 
-//Intersect the BBox with the Grids to get read of the areas outside the Bbox
+//Intersect the BBox with the Grids to get rid of the areas outside the Bbox
 var grid_1_cl = grid_1.map(function(feat) {
                       return fc_1.intersection(feat, 0.1)})
 var grid_2_cl = grid_2.map(function(feat) {
@@ -58,7 +58,7 @@ print(Zones)
 Map.addLayer(Zones, null, "Zones")
 
 // CoveringGrid produces a strange ID so I make a new fc with proper
-// unique id so we can parse tehm to the name while running the Export Loop.
+// unique id so we can parse them to the name while running the Export Loop.
 
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
