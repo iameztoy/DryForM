@@ -70,9 +70,13 @@ print(zonesID)
 
 ////////////// EXPORTING ///////////////////////
 
+// !!!! set your target Image collection !!!!!
+
+var target = Edged3
+
 var colFunc = function(feat) {
   var dis = feat.get("ID");
-  var clipped = Edged3.clip(feat).set("ID", dis);
+  var clipped = targe.clip(feat).set("ID", dis);
   return clipped;
 };
 
@@ -85,7 +89,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toAsset({
-    image: Edged3,
+    image: target,
     description: name+disS, //.toString(), Now the ID is already a string
     assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
@@ -105,7 +109,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "chip";  
   Export.image.toDrive({
-    image: Edged3,
+    image: target,
     description: name+disS, //.toString(),
     folder: "Zones_test",
     fileNamePrefix: name+disS, //.toString(), (only if integer ID)
