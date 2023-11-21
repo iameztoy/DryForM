@@ -28,8 +28,8 @@ Map.addLayer(grid, null, "Grids Merged")
 var select_test1 = grid.filterBounds(test1)
 var select_test2 = grid.filterBounds(test2)
 
-Map.addLayer(select_test1, null, "Selected 1 West")
-Map.addLayer(select_test2, null, "Selected 2 East")
+Map.addLayer(select_test1, null, "Selected 1 West - Test")
+Map.addLayer(select_test2, null, "Selected 2 East - Test")
 
 print(select_test1)
 print(select_test2)
