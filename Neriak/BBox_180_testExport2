@@ -126,6 +126,8 @@ Map.addLayer(Zones, null, "Zones")
 // CoveringGrid produces a strange ID so I make a new fc with proper
 // unique id so we can parse them to the name while running the Export Loop.
 
+var Zones = grid
+
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
 // featureCollection to a List
@@ -150,16 +152,17 @@ print(zonesID)
 
 // !!!! set your target Image collection !!!!!
 
-var target = Global_forest_step1 //Need to import an image
+var target = final //Need to import an image
 
 var colFunc = function(feat) {
   var dis = feat.get("ID");
-  var clipped = targe.clip(feat).set("ID", dis);
+  var clipped = target.clip(feat).set("ID", dis);
   return clipped;
 };
 
 //Export to Asset
 
+/*
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
@@ -177,10 +180,10 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
-
+*/
 
 // Export to Drive
-/*
+
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
@@ -197,7 +200,7 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
-*/
+
 
 
 
