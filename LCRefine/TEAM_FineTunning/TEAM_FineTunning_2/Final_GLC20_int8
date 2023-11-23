@@ -63,7 +63,7 @@ var visualization = {
 Map.addLayer(final.updateMask(final), visualization, 'EC JRC Global forest cover 2020 - v1');
 print(final)
 
-/*
+
 ////EXPORT 
 // Loop to export
 var Zones=ee.FeatureCollection('users/bourgoinclement2/ForestReferenceMap/Grid10deg')
@@ -86,7 +86,7 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
-*/
+
 
 
 // var Zones=ee.FeatureCollection('users/bourgoinclement2/ForestReferenceMap/Grid10deg').filter(ee.Filter.inList('id', [8, 6, 3, 2, 1, 13, 12, 11, 10, 9]))
