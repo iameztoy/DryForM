@@ -1,0 +1,43 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Point([-126.86526810834862, 68.29576505874113]),
+    sent = ee.ImageCollection("COPERNICUS/S2_HARMONIZED"),
+    aoi = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-126.99316092678583, 68.3480151184747],
+          [-126.99316092678583, 68.23372139390723],
+          [-126.55508109280146, 68.23372139390723],
+          [-126.55508109280146, 68.3480151184747]]], null, false),
+    forest = ee.ImageCollection("projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj"),
+    vp_d = {"opacity":1,"bands":["cumulative_cost"],"palette":["000000","ff3110"]},
+    vp_dr = {"opacity":1,"bands":["cumulative_cost"],"palette":["000000","45ff53"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var s2 = sent.filterBounds(geometry).filterDate("2023-04-01", "2023-04-20")
+var prj = s2.first().select("B4").projection().crs()
+print(prj)
+
+forest = forest.mosaic().unmask().clip(aoi)
+var forest_v = forest.selfMask()
+var forest_cl = forest.clip(aoi)
+var forest_rep = forest_cl.reproject({
+		crs: prj,
+//	crsTransform:null,
+//	scale:null,
+})
+
+var d = forest.cumulativeCost({source: forest, maxDistance: 20}).clip(aoi);
+var dr = forest_rep.cumulativeCost({source: forest_rep, maxDistance: 20}).clip(aoi);
+
+Map.addLayer(forest_v)
+Map.addLayer(forest_rep, null, "forest reprojected")
+Map.addLayer(d, vp_d, "distance 1")
+Map.addLayer(dr, vp_dr, "distance 2")
