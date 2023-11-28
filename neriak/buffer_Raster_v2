@@ -34,7 +34,7 @@ var forest_rep = forest_cl.reproject({
 //  	scale:10,
 })
 
-forest_rep = forest_rep.selfMask()
+forest_rep = forest_rep.unmask()
 
 var d = forest.cumulativeCost({source: forest, maxDistance: 20}).clip(aoi);
 var dr = forest_rep.cumulativeCost({source: forest_rep, maxDistance: 20}).clip(aoi);
