@@ -1,0 +1,44 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-70.69580689342638, 69.81041792089285],
+          [-70.69580689342638, -51.72503741202014],
+          [-60.58838501842638, -51.72503741202014],
+          [-60.58838501842638, 69.81041792089285]]], null, false),
+    vp_geo = {"opacity":1,"bands":["cumulative_cost"],"palette":["4fff39"]},
+    vp_pl = {"opacity":1,"bands":["cumulative_cost"],"palette":["ffde3f"]},
+    vp_f = {"opacity":1,"bands":["Map"],"max":1,"palette":["2f9122"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic().unmask()
+forest = forest.clip(geometry)
+
+var f_unm = forest.selfMask()
+
+var geodetic = forest.cumulativeCost({
+		source:forest,
+		maxDistance:50,
+	geodeticDistance:true,
+})
+
+var planar = forest.cumulativeCost({
+		source:forest,
+		maxDistance:50,
+	geodeticDistance:false,
+})
+
+var nospec = forest.cumulativeCost({
+		source:forest,
+		maxDistance:50,
+	//geodeticDistance:false,
+})
+
+Map.addLayer(geodetic, vp_geo, "geodetic")
+Map.addLayer(planar,vp_pl, "planar")
+Map.addLayer(nospec, null, "no espec")
+Map.addLayer(f_unm,  vp_f, "Forest")
