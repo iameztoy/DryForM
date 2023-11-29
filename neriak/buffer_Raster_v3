@@ -98,3 +98,7 @@ Map.addLayer(Edged1.updateMask(Edged1),{},'Edged1',false)
 Map.addLayer(Edged2.updateMask(Edged2),{},'Edged2',false)
 Map.addLayer(Edged3.updateMask(Edged3),{},'Edged3',false)
 Map.addLayer(forest.updateMask(forest),{},'forest',false)
+
+Map.addLayer(buffer_200, null, "Buffer 200")
+Map.addLayer(buffer_500, null, "Buffer 500")
+Map.addLayer(buffer_1000, null, "Buffer 1000")
