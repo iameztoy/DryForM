@@ -69,10 +69,10 @@ var buffer_1000 = g.buffer(d5)
 
   Export.image.toDrive({
     image: final,
-    description: "test_buffer1",
+    description: "test_buffer1_3857",
     //assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS.toString(),
     //pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
-    crs: 'EPSG:4326',
+    crs: 'EPSG:3857',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
     region: geometry,
     scale: 10,
