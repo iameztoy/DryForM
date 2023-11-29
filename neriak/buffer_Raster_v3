@@ -18,6 +18,7 @@ var d2 = 500
 var d5 = 1000
 
 var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest2020_v1_post_MMUAreaProj').mosaic().unmask()
+var  GFC2020 = ee.ImageCollection('users/astridverhegghen/JRC_GFC2020_C1').mosaic()
 forest = forest.clip(geometry)
 
 var dist1 = forest.cumulativeCost({source: forest, maxDistance: d1});
