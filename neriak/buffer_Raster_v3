@@ -92,7 +92,7 @@ Map.addLayer(final.updateMask(final),{
 'palette': PALETTE},'final',false)
 
 
-Map.addLayer(WC2020, null, "false")
+Map.addLayer(WC2020, null, "WC2020", False)
 Map.addLayer(forest_v, null, "Reduce to vector")
 Map.addLayer(Edged1.updateMask(Edged1),{},'Edged1',false)
 Map.addLayer(Edged2.updateMask(Edged2),{},'Edged2',false)
