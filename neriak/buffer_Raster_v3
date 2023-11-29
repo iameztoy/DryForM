@@ -11,7 +11,11 @@ var geometry =
         [[[78.84118275135069, 71.91274454601421],
           [78.84118275135069, 71.73819455745976],
           [79.54911426990537, 71.73819455745976],
-          [79.54911426990537, 71.91274454601421]]], null, false);
+          [79.54911426990537, 71.91274454601421]]], null, false),
+    geometry2 = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Point([79.24669574580669, 71.88759067398378]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var d1 = 200
 var d2 = 500
@@ -50,11 +54,13 @@ var forest_v = forest.reduceToVectors({
 //	geometryInNativeProjection:false,
 });
 
-var forest_vf = ee.Feature(forest_v)
+var select = forest_v.filterBounds(geometry2)
 
-var buffer_200 = forest_vf.buffer(d1)
-var buffer_500 = forest_vf.buffer(d2)
-var buffer_1000 = forest_vf.buffer(d5)
+var g = select.geometry()
+
+var buffer_200 = g.buffer(d1)
+var buffer_500 = g.buffer(d2)
+var buffer_1000 = g.buffer(d5)
 
 
 //--------------------------------
@@ -92,7 +98,7 @@ Map.addLayer(final.updateMask(final),{
 'palette': PALETTE},'final',false)
 
 
-Map.addLayer(WC2020, null, "WC2020", False)
+Map.addLayer(WC2020, null, "WC2020", false)
 Map.addLayer(forest_v, null, "Reduce to vector")
 Map.addLayer(Edged1.updateMask(Edged1),{},'Edged1',false)
 Map.addLayer(Edged2.updateMask(Edged2),{},'Edged2',false)
