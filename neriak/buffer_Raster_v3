@@ -35,7 +35,7 @@ var forest_v = forest.reduceToVectors({
 //	geometryInNativeProjection:false,
 });
 
-Map.addLayer(forest_v)
+Map.addLayer(forest_v, null, "Reduce to vector")
 
 var dist1 = forest.cumulativeCost({source: forest, maxDistance: d1});
 var Edged1 = ee.Image.constant(0).where((dist1.lte(d1)).and(dist1.gt(0)),1);
