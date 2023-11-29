@@ -1,7 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -21,6 +20,23 @@ var forest = ee.ImageCollection('projects/hardy-tenure-383607/assets/EUFO_Forest
 var  GFC2020 = ee.ImageCollection('users/astridverhegghen/JRC_GFC2020_C1').mosaic()
 forest = forest.clip(geometry)
 
+var forest_v = forest.reduceToVectors({
+//	reducer:null,
+//	geometry:null,
+	scale:10,
+	geometryType:"polygon",
+//	eightConnected:true,
+//	labelProperty:"label",
+//	crs:null,
+//	crsTransform:null,
+//	bestEffort:false,
+	maxPixels:100000000,
+//	tileScale:true,
+//	geometryInNativeProjection:false,
+});
+
+Map.addLayer(forest_v)
+
 var dist1 = forest.cumulativeCost({source: forest, maxDistance: d1});
 var Edged1 = ee.Image.constant(0).where((dist1.lte(d1)).and(dist1.gt(0)),1);
 var dist2 = forest.cumulativeCost({source: forest, maxDistance: d2});
@@ -36,7 +52,7 @@ var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
 
 final = final.where(WC2020.eq(80),0)
 
-Map.addLayer(WC2020)
+Map.addLayer(WC2020, null, "false")
 
 var PALETTE = [rgb(65, 131, 0), rgb(229, 37, 71), rgb(229, 165, 0), rgb(253, 255, 0)]
 
