@@ -3402,6 +3402,10 @@ var roi =
             })]),
     srtm = ee.Image("USGS/SRTMGL1_003");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+//Source: https://www.youtube.com/watch?v=NFoZPyQqVRA
+
+
 // Cloud mask function
 function cloudMask(image){
   var qa = image.select('QA_PIXEL');
