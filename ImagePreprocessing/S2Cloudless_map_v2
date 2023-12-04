@@ -187,3 +187,103 @@ Map.addLayer(s2srMed_Dec, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-fre
 
 Map.addLayer(select, {'bands': bands, 'min': 0, 'max': 2500}, 'select', 0);
 Map.centerObject(AOI, 8);
+
+var projection = s2srMed_Jan.select('B2').projection().getInfo();
+
+// Export the image, specifying the CRS, transform, and region.
+Export.image.toDrive({
+  image: s2srMed_Jan,
+  description: 's2srMed_Jan',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+
+Export.image.toDrive({
+  image: s2srMed_Feb,
+  description: 's2srMed_Feb',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Mar,
+  description: 's2srMed_Mar',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Apr,
+  description: 's2srMed_Apr',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_May,
+  description: 's2srMed_May',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Jun,
+  description: 's2srMed_Jun',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Jul,
+  description: 's2srMed_Jul',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Aug,
+  description: 's2srMed_Aug',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Sep,
+  description: 's2srMed_Sep',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Oct,
+  description: 's2srMed_Oct',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Nov,
+  description: 's2srMed_Nov',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
+
+Export.image.toDrive({
+  image: s2srMed_Dec,
+  description: 's2srMed_Dec',
+  crs: projection.crs,
+  crsTransform: projection.transform,
+  region: AOI
+});
