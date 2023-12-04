@@ -206,7 +206,7 @@ print(projection);
 
 // Export the image, specifying the CRS, transform, and region.
 Export.image.toDrive({
-  image: s2srMed_Jan,
+  image: s2srMed_Jan.toFloat(),
   description: 's2srMed_Jan',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -217,7 +217,7 @@ Export.image.toDrive({
 
 
 Export.image.toDrive({
-  image: s2srMed_Feb,
+  image: s2srMed_Feb.toFloat(),
   description: 's2srMed_Feb',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -227,7 +227,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Mar,
+  image: s2srMed_Mar.toFloat(),
   description: 's2srMed_Mar',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -237,7 +237,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Apr,
+  image: s2srMed_Apr.toFloat(),
   description: 's2srMed_Apr',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -247,7 +247,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_May,
+  image: s2srMed_May.toFloat(),
   description: 's2srMed_May',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -257,7 +257,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Jun,
+  image: s2srMed_Jun.toFloat(),
   description: 's2srMed_Jun',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -267,7 +267,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Jul,
+  image: s2srMed_Jul.toFloat(),
   description: 's2srMed_Jul',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -277,7 +277,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Aug,
+  image: s2srMed_Aug.toFloat(),
   description: 's2srMed_Aug',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -287,7 +287,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Sep,
+  image: s2srMed_Sep.toFloat(),
   description: 's2srMed_Sep',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -297,7 +297,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Oct,
+  image: s2srMed_Oct.toFloat(),
   description: 's2srMed_Oct',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -307,7 +307,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Nov,
+  image: s2srMed_Nov.toFloat(),
   description: 's2srMed_Nov',
   crs: projection.crs,
   crsTransform: projection.transform,
@@ -317,7 +317,7 @@ Export.image.toDrive({
 });
 
 Export.image.toDrive({
-  image: s2srMed_Dec,
+  image: s2srMed_Dec.toFloat(),
   description: 's2srMed_Dec',
   crs: projection.crs,
   crsTransform: projection.transform,
