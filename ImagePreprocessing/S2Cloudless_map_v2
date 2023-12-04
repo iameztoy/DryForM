@@ -208,6 +208,7 @@ print(projection);
 Export.image.toDrive({
   image: s2srMed_Jan.toFloat(),
   description: 's2srMed_Jan',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -219,6 +220,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Feb.toFloat(),
   description: 's2srMed_Feb',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -229,6 +231,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Mar.toFloat(),
   description: 's2srMed_Mar',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -239,6 +242,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Apr.toFloat(),
   description: 's2srMed_Apr',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -249,6 +253,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_May.toFloat(),
   description: 's2srMed_May',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -259,6 +264,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Jun.toFloat(),
   description: 's2srMed_Jun',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -269,6 +275,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Jul.toFloat(),
   description: 's2srMed_Jul',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -279,6 +286,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Aug.toFloat(),
   description: 's2srMed_Aug',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -289,6 +297,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Sep.toFloat(),
   description: 's2srMed_Sep',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -299,6 +308,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Oct.toFloat(),
   description: 's2srMed_Oct',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -309,6 +319,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Nov.toFloat(),
   description: 's2srMed_Nov',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
@@ -319,6 +330,7 @@ Export.image.toDrive({
 Export.image.toDrive({
   image: s2srMed_Dec.toFloat(),
   description: 's2srMed_Dec',
+  folder: "S2_Chaco",
   crs: projection.crs,
   crsTransform: projection.transform,
   scale: 10,
