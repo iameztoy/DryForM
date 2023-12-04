@@ -197,7 +197,9 @@ Export.image.toDrive({
   description: 's2srMed_Jan',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 
@@ -206,7 +208,9 @@ Export.image.toDrive({
   description: 's2srMed_Feb',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -214,7 +218,9 @@ Export.image.toDrive({
   description: 's2srMed_Mar',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -222,7 +228,9 @@ Export.image.toDrive({
   description: 's2srMed_Apr',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -230,7 +238,9 @@ Export.image.toDrive({
   description: 's2srMed_May',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -238,7 +248,9 @@ Export.image.toDrive({
   description: 's2srMed_Jun',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -246,7 +258,9 @@ Export.image.toDrive({
   description: 's2srMed_Jul',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -254,7 +268,9 @@ Export.image.toDrive({
   description: 's2srMed_Aug',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -262,7 +278,9 @@ Export.image.toDrive({
   description: 's2srMed_Sep',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -270,7 +288,9 @@ Export.image.toDrive({
   description: 's2srMed_Oct',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -278,7 +298,9 @@ Export.image.toDrive({
   description: 's2srMed_Nov',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
 
 Export.image.toDrive({
@@ -286,5 +308,7 @@ Export.image.toDrive({
   description: 's2srMed_Dec',
   crs: projection.crs,
   crsTransform: projection.transform,
-  region: AOI
+  scale: 10,
+  region: AOI,
+  maxPixels: 1e13
 });
