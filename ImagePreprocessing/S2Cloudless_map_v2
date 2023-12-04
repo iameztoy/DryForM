@@ -199,7 +199,7 @@ Map.addLayer(s2srMed_Dec, {'bands': bands, 'min': 0, 'max': 2500}, 'S2 cloud-fre
 
 Map.addLayer(select, {'bands': bands, 'min': 0, 'max': 2500}, 'select', 0);
 Map.centerObject(AOI, 8);
-Map.addLayer(AOI)
+Map.addLayer(AOI);
 
 var projection = s2_sr_cld_col.first().select('B2').projection().getInfo();+
 print(projection);
