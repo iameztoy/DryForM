@@ -197,7 +197,7 @@ Export.image.toDrive({
 		image: s2_final,
 	description: "s2_median2020",
   folder:"GEE_Test",
-  fileNamePrefix: "JanApr",
+  fileNamePrefix: "s2_median2020_JanApr",
 //	dimensions:,
   region: AOI,
   scale:10,
