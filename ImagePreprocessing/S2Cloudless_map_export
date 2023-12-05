@@ -37,7 +37,7 @@ var harm_1c = ee.ImageCollection("COPERNICUS/S2_HARMONIZED"),
 var bufsize = 1; //Buffer size for samples if run within the code
 
 
-var START_DATE = '2020-09-01'; var END_DATE = "2020-11-01"; // Filter for S-2
+var START_DATE = '2020-09-01'; var END_DATE = "2021-01-01"; // Filter for S-2
 var CLOUD_FILTER = 80;  // 70 does not cover all for Cerrado, Chaco, Caatinga (otherwise need to individualize)
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
@@ -183,6 +183,15 @@ print(texture_cat)
 var s2_final = s2_median_sb.addBands(texture_cat);
 print(s2_final)
 
+//Only to retrieve projection info
+var s2_sr_col = (ee.ImageCollection('COPERNICUS/S2_SR') // S2_SR_HARMONIZED
+    .filterBounds(AOI)
+    .filterDate(START_DATE, END_DATE)
+    .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', CLOUD_FILTER)));
+var projection = s2_sr_col.first().select('B2').projection().getInfo();
+print(projection)
+print(projection.transform)
+
 
 Export.image.toDrive({
 		image: s2_final,
@@ -192,8 +201,8 @@ Export.image.toDrive({
 //	dimensions:,
   region: AOI,
   scale:10,
-//	crs:,
-//	crsTransform:,
+  crs: projection.crs,
+  crsTransform: projection.transform,
   maxPixels: 1e13,
 //	shardSize:,
 //	fileDimensions:,
