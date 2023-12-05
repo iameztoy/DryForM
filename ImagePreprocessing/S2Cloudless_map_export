@@ -5,6 +5,7 @@ var harm_1c = ee.ImageCollection("COPERNICUS/S2_HARMONIZED"),
     nh_2a = ee.ImageCollection("COPERNICUS/S2_SR"),
     AOI = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -156,41 +157,37 @@ var addIndex = function addindexes(img) {
 
 // Write a function to scale the bands (not implemented)
 var int16 = function(imgsc) {
-  return imgsc.int16()
-}
+  return imgsc.int16();
+};
 
 
 var s2_sr_cld_col = get_s2_sr_cld_col(AOI, START_DATE, END_DATE);
 var altogether = s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).map(addIndex);
-var altogether_int16 = altogether.map(int16)
+var altogether_int16 = altogether.map(int16);
 
-print(altogether_int16.first())
+var s2_median = altogether_int16.median().int16();
 
-var first = altogether_int16.first()
-var nbr = first.select("NBR")
-print(nbr)
+var s2_median_sb = s2_median.select(["B2", "B3", "B4", "B5", "B8", "NBR", "NDVI", "MSAVI"]);
+var s2_median_nir = s2_median_sb.select(["B8"]);
 
-//Map.addLayer(first)
+var nir_texture = s2_median_nir.glcmTexture({size: 5});
+print(nir_texture)
+var nir_texture_s = nir_texture.select("B8_ent") // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
 
+Map.addLayer(nir_texture_s, {min: 400, max: 40000}, "Texture")
 
-
-var median = altogether_int16.median().int16()
-Map.addLayer(median)
-
-
-print(median)
 
 Export.image.toDrive({
-		image: median,
-	  description: "median_test",
-  	folder:"GEE_Test",
+		image: s2_median_sb,
+	description: "median_test",
+  folder:"GEE_Test",
 //	fileNamePrefix:,
 //	dimensions:,
-  	region: AOI,
-  	scale:10,
+  region: AOI,
+  scale:10,
 //	crs:,
 //	crsTransform:,
-  	maxPixels: 1e13,
+  maxPixels: 1e13,
 //	shardSize:,
 //	fileDimensions:,
 //	skipEmptyTiles:,
