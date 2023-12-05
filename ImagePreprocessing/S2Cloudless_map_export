@@ -37,7 +37,7 @@ var harm_1c = ee.ImageCollection("COPERNICUS/S2_HARMONIZED"),
 var bufsize = 1; //Buffer size for samples if run within the code
 
 
-var START_DATE = '2020-09-01'; var END_DATE = "2021-01-01"; // Filter for S-2
+var START_DATE = '2020-01-01'; var END_DATE = "2020-05-01"; // Filter for S-2
 var CLOUD_FILTER = 80;  // 70 does not cover all for Cerrado, Chaco, Caatinga (otherwise need to individualize)
 var CLD_PRB_THRESH = 30;
 var NIR_DRK_THRESH = 0.15;
@@ -195,9 +195,9 @@ print(projection.transform)
 
 Export.image.toDrive({
 		image: s2_final,
-	description: "median_test",
+	description: "s2_median2020",
   folder:"GEE_Test",
-//	fileNamePrefix:,
+  fileNamePrefix: "JanApr",
 //	dimensions:,
   region: AOI,
   scale:10,
