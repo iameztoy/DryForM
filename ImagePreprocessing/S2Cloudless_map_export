@@ -74,7 +74,6 @@ function get_s2_sr_cld_col(AOI, start_date, end_date) {
 }
 
 
-
 function add_cloud_bands(img) {
     // # Get s2cloudless image, subset the probability band.
     var cld_prb = ee.Image(img.get('s2cloudless')).select('probability');
@@ -84,9 +83,7 @@ function add_cloud_bands(img) {
 
     // # Add the cloud probability layer and cloud mask as image bands.
     return img.addBands(ee.Image([cld_prb, is_cloud]));
-    
 }
-
 
 function add_shadow_bands(img) {
     // # Identify water pixels from the SCL band.
@@ -166,19 +163,29 @@ var altogether = s2_sr_cld_col.map(add_cld_shdw_mask).map(apply_cld_shdw_mask).m
 var altogether_int16 = altogether.map(int16);
 
 var s2_median = altogether_int16.median().int16();
-
 var s2_median_sb = s2_median.select(["B2", "B3", "B4", "B5", "B8", "NBR", "NDVI", "MSAVI"]);
+
+// Apply GLCM
+
 var s2_median_nir = s2_median_sb.select(["B8"]);
 
 var nir_texture = s2_median_nir.glcmTexture({size: 5});
-print(nir_texture)
-var nir_texture_s = nir_texture.select("B8_ent") // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
 
-Map.addLayer(nir_texture_s, {min: 400, max: 40000}, "Texture")
+// Selection of textures // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
+var nir_savg = nir_texture.select("B8_savg").int16();
+var nir_idm = nir_texture.select("B8_idm").int16();
+var nir_corr = nir_texture.select("B8_corr").int16(); 
+var nir_ent = nir_texture.select("B8_ent").int16();
+
+var texture_cat = ee.Image.cat(nir_savg, nir_idm, nir_corr, nir_ent)
+print(texture_cat)
+
+var s2_final = s2_median_sb.addBands(texture_cat);
+print(s2_final)
 
 
 Export.image.toDrive({
-		image: s2_median_sb,
+		image: s2_final,
 	description: "median_test",
   folder:"GEE_Test",
 //	fileNamePrefix:,
