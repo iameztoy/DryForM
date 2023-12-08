@@ -33,38 +33,29 @@ var CLEAR_THRESHOLD = 0.65;
 // Make a clear median composite.
 var composite = s2
     .filterBounds(ROI)
-    .filterDate('2020-01-01', '2020-04-01')
+    .filterDate('2019-11-01', '2020-03-01')
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
     })
     
 var intm = ee.Reducer.intervalMean({
-		minPercentile:25,
-		maxPercentile:75,
+		minPercentile:40,
+		maxPercentile:60,
 //	maxBuckets:null,
 //	minBucketWidth:null,
 //	maxRaw:null,
 })
 
 var s2_intm = composite.reduce(intm)
-print(s2_intm)
-
-var perc = ee.Reducer.percentile({
-		percentiles:[25, 50, 75],
-//	outputNames:null,
-//	maxBuckets:null,
-//	minBucketWidth:null,
-//  maxRaw:4,
-})
-
-var s2_intm_p = s2_intm.reduce(perc)
+var s2_median = composite.median()
 
 
-var perc_s2 = composite.reduce(perc);
-print(perc_s2)
+
+
 
 // Sentinel-2 visualization parameters.
-var s2Viz = {bands: ["B8_p50", "B4_p50", "B3_p50"], min: 0, max: 2500};
-
-Map.addLayer(perc_s2, s2Viz, 'median composite');
+var s2Viz = {bands: ["B8_mean", "B12_mean", "B4_mean"], min: 0, max: 2500};
+var s2Vizm = {bands: ["B8", "B12", "B4"], min: 0, max: 2500};
+Map.addLayer(s2_intm, s2Viz, 'Interval Mean composite');
+Map.addLayer(s2_median, s2Vizm, 'Median composite');
