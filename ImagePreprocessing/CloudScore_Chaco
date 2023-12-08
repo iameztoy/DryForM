@@ -51,11 +51,8 @@ var s2_intm = composite.reduce(intm)
 var s2_median = composite.median()
 
 
-
-
-
 // Sentinel-2 visualization parameters.
-var s2Viz = {bands: ["B8_mean", "B12_mean", "B4_mean"], min: 0, max: 2500};
-var s2Vizm = {bands: ["B8", "B12", "B4"], min: 0, max: 2500};
+var s2Viz = {bands: ["B8_mean", "B4_mean", "B3_mean"], min: 0, max: 2500};
+var s2Vizm = {bands: ["B8", "B4", "B3"], min: 0, max: 2500};
 Map.addLayer(s2_intm, s2Viz, 'Interval Mean composite');
 Map.addLayer(s2_median, s2Vizm, 'Median composite');
