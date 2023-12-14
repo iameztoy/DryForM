@@ -54,7 +54,7 @@ var area_WC2021_sqkm = ee.Number(area_WC2021.get('Map')).divide(1e6).round(); //
 var area_GFC20_sqkm = ee.Number(area_GFC20.get('Map')).divide(1e6).round(); //sqKm
 var area_WRI_sqkm = ee.Number(area_WRI.get('Trees')).divide(1e6).round(); //sqKm
 
-print(area_WC2021_sqkm.string());
+print(area_WC2021_sqkm);
 print(area_GFC20_sqkm);
 print(area_WRI_sqkm);
 
