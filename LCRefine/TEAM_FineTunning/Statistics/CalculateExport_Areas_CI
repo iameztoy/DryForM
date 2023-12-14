@@ -1,0 +1,70 @@
+
+
+////GFC20 v1
+var GFC20 = ee.ImageCollection('JRC/GFC2020/V1').mosaic();
+
+////WorldCover 2020 and 2021
+var WC2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
+var Zones = ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');//
+
+var SCo = Zones.filter(ee.Filter.eq('AFF_ISO', 'CI'));
+
+
+
+//2021 shows a greater extent of the Tree Cover class 10  and mangroves 95
+//We can select maximum extent of class 10 and 95 on 2020 and 2021
+
+var WC2021_f = (WC2021.eq(10)).or(WC2021.eq(95));
+var WC2021 = WC2021_f.updateMask(WC2021_f)
+
+
+var visualization = {
+  bands: ['Map'],
+  palette: ['4D9221']};
+
+Map.addLayer(WC2021,{min:1,max:1, palette:['red']},'WC2021',true);
+Map.addLayer(GFC20, visualization, 'EC JRC Global forest cover 2020 – V1');
+Map.addLayer(SCo, null, "Selected Country")
+Map.centerObject(SCo, 6);
+
+
+var LOOP_WC2021= function(feature) {
+  var vals = WC2021.multiply(ee.Image.pixelArea()).reduceRegion({
+    reducer: ee.Reducer.sum(), 
+    geometry: feature.geometry(),
+    scale: 10,
+    maxPixels: 5e9,
+  }); 
+  return ee.Feature(null, vals).copyProperties(feature, feature.propertyNames());
+};
+
+var LOOP_GFC20 = function(feature) {
+  var vals = GFC20.multiply(ee.Image.pixelArea()).reduceRegion({
+    reducer: ee.Reducer.sum(), 
+    geometry: feature.geometry(),
+    scale: 10,
+    maxPixels: 5e9,
+  }); 
+  return ee.Feature(null, vals).copyProperties(feature, feature.propertyNames());
+};
+
+var Area_wc2021 = SCo.map(LOOP_WC2021);
+var Area_GFC20 = SCo.map(LOOP_GFC20);
+
+Export.table.toDrive({
+	collection: Area_wc2021,
+	description: 'Area_WC21',
+	folder: '',
+	fileNamePrefix: 'Area_WC21',
+});
+
+Export.table.toDrive({
+	collection: Area_GFC20,
+	description: 'Area_GFC20',
+	folder: '',
+	fileNamePrefix: 'Area_GFC20',
+});
+
+
+
+
