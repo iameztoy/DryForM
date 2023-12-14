@@ -1,0 +1,67 @@
+////GFC20 v1
+var GFC20 = ee.ImageCollection('JRC/GFC2020/V1').mosaic();
+
+
+////WorldCover 2020 and 2021
+var WC2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
+var WC2021_s = (WC2021.eq(10)).or(WC2021.eq(95));
+var WC2021_m = WC2021_s.updateMask(WC2021_s)
+
+////WRI TC
+var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
+var TC_wri_map = TC_wri.gte(80).rename(['Trees']).selfMask();
+
+
+////Admin Boundaries
+var gaul = ee.FeatureCollection('FAO/GAUL_SIMPLIFIED_500m/2015/level0')
+var SCo = gaul.filter(ee.Filter.eq('ADM0_CODE', 66))
+
+//var SqKm = ee.Number(stateArea).divide(1e6).round()
+
+var WC2021_cl = WC2021_m.clip(SCo)
+var GFC20_cl = GFC20.clip(SCo)
+var WRI_cl = TC_wri_map.clip(SCo);
+
+var areaim_WC2021 = WC2021_cl.multiply(ee.Image.pixelArea())
+var areaim_GFC20 = GFC20_cl.multiply(ee.Image.pixelArea())
+var areaim_WRI = WRI_cl.multiply(ee.Image.pixelArea())
+
+//Define scale to compute reducer
+var scale = 10
+
+var area_WC2021 = areaim_WC2021.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: SCo.geometry(),
+  scale: scale,
+  maxPixels: 1e10
+  })
+  
+var area_GFC20 = areaim_GFC20.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: SCo.geometry(),
+  scale: scale,
+  maxPixels: 1e10
+  })
+  
+var area_WRI = areaim_WRI.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: SCo.geometry(),
+  scale: scale,
+  maxPixels: 1e10
+  })
+
+var area_WC2021_sqkm = ee.Number(area_WC2021.get('Map')).divide(1e6).round() //sqKm
+var area_GFC20_sqkm = ee.Number(area_GFC20.get('Map')).divide(1e6).round() //sqKm
+var area_WRI_sqkm = ee.Number(area_WRI.get('Map')).divide(1e6).round() //sqKm
+
+print(area_WC2021_sqkm)
+print(area_GFC20_sqkm)
+print(area_WRI_sqkm)
+
+var vp_wc2021 = {"opacity":1,"bands":["Map"],"palette":["ff0a0a"]};
+var vp_gfc2020 = {"opacity":1,"bands":["Map"],"max":1,"palette":["31b319"]};
+var vp_wri = {"opacity":1,"bands":["Trees"],"palette":["ffe66e"]};
+
+Map.addLayer(WRI_cl, vp_wri,'TC_wri_map');
+Map.addLayer(WC2021_cl, vp_wc2021, "WC 2021 TC" )
+Map.addLayer(GFC20_cl, vp_gfc2020, "GFC 2020" )
