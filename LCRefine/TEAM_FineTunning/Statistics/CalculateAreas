@@ -21,17 +21,20 @@ var GFC20_cl = GFC20.clip(SCo)
 var areaim_WC2021 = WC2021_cl.multiply(ee.Image.pixelArea())
 var areaim_GFC20 = GFC20_cl.multiply(ee.Image.pixelArea())
 
+//Define scale to compute reducer
+var scale = 10
+
 var area_WC2021 = areaim_WC2021.reduceRegion({
   reducer: ee.Reducer.sum(),
   geometry: SCo.geometry(),
-  scale: 500,
+  scale: scale,
   maxPixels: 1e10
   })
   
 var area_GFC20 = areaim_GFC20.reduceRegion({
   reducer: ee.Reducer.sum(),
   geometry: SCo.geometry(),
-  scale: 500,
+  scale: scale,
   maxPixels: 1e10
   })
 
