@@ -95,17 +95,20 @@ Map.addLayer(composite.clip(geometry), rgbVis, 'image');
 // Inference
 
 // Once the classifier export finishes, we can load our saved classifier.
-var classifierAssetId = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0_tr500";
+var classifierAssetId_v0 = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0";
+var classifierAssetId_tr500 = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0_tr500";
 var savedClassifier = ee.Classifier.load(classifierAssetId);
+var savedClassifier_tr500 = ee.Classifier.load(classifierAssetId_tr500);
 
 
 // // Classify the image.
 var classified = composite.classify(savedClassifier);
+var classified_tr500 = composite.classify(savedClassifier_tr500);
 // Choose a 4-color palette
 // Assign a color for each class in the following order
 // Urban, Bare, Water, Vegetation
 
-print(classified)
-Map.addLayer(classified.clip(geometry), vp_7cl, "Classified");
+Map.addLayer(classified.clip(geometry), vp_7cl, "Classified v0");
+Map.addLayer(classified_tr500.clip(geometry), vp_7cl, "Classified v0 tr500");
 
 
