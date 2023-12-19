@@ -1,0 +1,87 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Glance/glance_qg"),
+    geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-67.6482482915554, -11.203239603732037],
+          [-67.6482482915554, -32.21563239864376],
+          [-51.47637329155536, -32.21563239864376],
+          [-51.47637329155536, -11.203239603732037]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var samples = table.filterBounds(geometry)
+//Map.addLayer(samples)
+
+var water = samples.filter(ee.Filter.eq('Glance_C_1', 1));
+var isnow = samples.filter(ee.Filter.eq('Glance_C_1', 2));
+var developed = samples.filter(ee.Filter.eq('Glance_C_1', 3));
+var barren = samples.filter(ee.Filter.eq('Glance_C_1', 4)); //4, 5, 6
+var decid_v = samples.filter(ee.Filter.eq('Glance_Cla', 7));
+var everg_v = samples.filter(ee.Filter.eq('Glance_C_1', 8));
+var mixed = samples.filter(ee.Filter.eq('Glance_C_1', 9));
+var shrub = samples.filter(ee.Filter.eq('Glance_C_1', 10));
+var grass = samples.filter(ee.Filter.eq('Glance_C_1', 11));
+var agric = samples.filter(ee.Filter.eq('Glance_C_1', 12));
+var mos_li = samples.filter(ee.Filter.eq('Glance_C_1', 13));
+
+
+
+var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
+var filtered = s2
+.filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 30))
+  .filter(ee.Filter.date('2020-01-01', '2021-01-01'))
+  .filter(ee.Filter.bounds(geometry))
+  .select('B.*');
+
+var composite = filtered.median();
+var gcps = water.merge(isnow).merge(developed).merge(barren).merge(decid_v).merge(everg_v)
+.merge(mixed).merge(shrub).merge(grass).merge(agric).merge(mos_li);
+
+// Overlay the point on the image to get training data.
+var training = composite.sampleRegions({
+  collection: gcps, 
+  properties: ['landcover'], 
+  scale: 10
+});
+
+// Train a classifier.
+var classifier = ee.Classifier.smileRandomForest(50).train({
+  features: training,  
+  classProperty: 'landcover', 
+  inputProperties: composite.bandNames()
+});
+
+// Using the random forest classifier defined earlier, export the random 
+// forest classifier as an Earth Engine asset.
+ee.Export.classifier.toAsset(
+  classifier,
+  "RF + Glance and S2"
+);
+
+
+
+
+// Display the input composite.
+var rgbVis = {
+  min: 0.0,
+  max: 3000,
+  bands: ['B4', 'B3', 'B2'],
+};
+
+Map.addLayer(water, null, "Water", 0); 
+Map.addLayer(isnow, null, "Ice/Snow", 0); 
+Map.addLayer(developed, null, "Developed", 0); 
+Map.addLayer(barren, null, "Barren", 0); 
+Map.addLayer(decid_v, null, "Deciduous Vegetation", 0);
+Map.addLayer(everg_v, null, "Evergreen Vegetation", 0); 
+Map.addLayer(mixed, null, "Mixed", 0); 
+Map.addLayer(shrub, null, "Shrubs", 0); 
+Map.addLayer(grass, null, "Grass", 0);
+Map.addLayer(agric, null, "Agriculture", 0); 
+Map.addLayer(mos_li, null, "Lichen/Moss", 0);
+Map.addLayer(composite.clip(geometry), rgbVis, 'image');
+
