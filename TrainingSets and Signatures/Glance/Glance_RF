@@ -95,7 +95,7 @@ Map.addLayer(composite.clip(geometry), rgbVis, 'image');
 // Inference
 
 // Once the classifier export finishes, we can load our saved classifier.
-var classifierAssetId_v0 = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0";
+var classifierAssetId = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0";
 var classifierAssetId_tr500 = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0_tr500";
 var savedClassifier = ee.Classifier.load(classifierAssetId);
 var savedClassifier_tr500 = ee.Classifier.load(classifierAssetId_tr500);
