@@ -2,6 +2,7 @@
 var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Glance/glance_qg"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
@@ -38,8 +39,10 @@ var filtered = s2
   .select('B.*');
 
 var composite = filtered.median();
-var gcps = water.merge(isnow).merge(developed).merge(barren).merge(decid_v).merge(everg_v)
-.merge(mixed).merge(shrub).merge(grass).merge(agric).merge(mos_li);
+var gcps = water.merge(developed).merge(barren).merge(decid_v).merge(everg_v)
+.merge(mixed).merge(shrub).merge(grass).merge(agric);
+
+//.merge(mos_li)..merge(isnow);
 
 // Overlay the point on the image to get training data.
 var training = composite.sampleRegions({
@@ -70,7 +73,6 @@ var rgbVis = {
 };
 
 Map.addLayer(water, null, "Water", 0); 
-Map.addLayer(isnow, null, "Ice/Snow", 0); 
 Map.addLayer(developed, null, "Developed", 0); 
 Map.addLayer(barren, null, "Barren", 0); 
 Map.addLayer(decid_v, null, "Deciduous Vegetation", 0);
@@ -79,6 +81,9 @@ Map.addLayer(mixed, null, "Mixed", 0);
 Map.addLayer(shrub, null, "Shrubs", 0); 
 Map.addLayer(grass, null, "Grass", 0);
 Map.addLayer(agric, null, "Agriculture", 0); 
-Map.addLayer(mos_li, null, "Lichen/Moss", 0);
+
 Map.addLayer(composite.clip(geometry), rgbVis, 'image');
+//Map.addLayer(isnow, null, "Ice/Snow", 0); 
+//Map.addLayer(mos_li, null, "Lichen/Moss", 0);
+
 
