@@ -50,14 +50,14 @@ print(l)
 // Overlay the point on the image to get training data.
 var training = composite.sampleRegions({
   collection: gcps, 
-  properties: ['landcover'], 
+  properties: ['Glance_C_1'], 
   scale: 10
 });
 
 // Train a classifier.
 var classifier = ee.Classifier.smileRandomForest(50).train({
   features: training,  
-  classProperty: 'landcover', 
+  classProperty: 'Glance_C_1', 
   inputProperties: composite.bandNames()
 });
 
