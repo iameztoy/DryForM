@@ -12,7 +12,8 @@ var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Glance/gla
         [[[-67.6482482915554, -11.203239603732037],
           [-67.6482482915554, -32.21563239864376],
           [-51.47637329155536, -32.21563239864376],
-          [-51.47637329155536, -11.203239603732037]]], null, false);
+          [-51.47637329155536, -11.203239603732037]]], null, false),
+    vp_7cl = {"opacity":1,"bands":["classification"],"min":1,"max":11,"palette":["318dff","ff341f","d2ac74","d2ac74","d2ac74","88d830","88d830","88d830","ffba74","daff0e","fdff7c"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var samples = table.filterBounds(geometry)
 //Map.addLayer(samples)
@@ -55,7 +56,7 @@ var training = composite.sampleRegions({
 });
 
 // Train a classifier.
-var classifier = ee.Classifier.smileRandomForest(50).train({
+var classifier = ee.Classifier.smileRandomForest(500).train({
   features: training,  
   classProperty: 'Glance_C_1', 
   inputProperties: composite.bandNames()
@@ -65,7 +66,7 @@ var classifier = ee.Classifier.smileRandomForest(50).train({
 // forest classifier as an Earth Engine asset.
 Export.classifier.toAsset(
   classifier,
-  "RF_Glance_s2_2020_v0"
+  "RF_Glance_s2_2020_v0_tr500"
 );
 
 // Display the input composite.
@@ -87,7 +88,7 @@ Map.addLayer(shrub, null, "Shrubs", 0);
 Map.addLayer(grass, null, "Grass", 0);
 Map.addLayer(agric, null, "Agriculture", 0); 
 
-Map.addLayer(composite.clip(geometry), rgbVis, 'image');
+Map.addLayer(composite.clip(geometry), vp_7cl, 'image');
 //Map.addLayer(isnow, null, "Ice/Snow", 0); 
 //Map.addLayer(mos_li, null, "Lichen/Moss", 0);
 
