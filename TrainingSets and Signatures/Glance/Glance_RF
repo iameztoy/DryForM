@@ -57,7 +57,7 @@ var classifier = ee.Classifier.smileRandomForest(50).train({
 
 // Using the random forest classifier defined earlier, export the random 
 // forest classifier as an Earth Engine asset.
-ee.Export.classifier.toAsset(
+Export.classifier.toAsset(
   classifier,
   "RF + Glance and S2"
 );
