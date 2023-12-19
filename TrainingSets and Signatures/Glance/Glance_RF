@@ -39,7 +39,7 @@ var filtered = s2
   .select('B.*');
 
 var composite = filtered.median();
-var gcps = water.merge(developed).merge(soi).merge(rock).merge(beach).merge(decid_v).merge(everg_v)
+var gcps = water.merge(developed).merge(soil).merge(rock).merge(beach).merge(decid_v).merge(everg_v)
 .merge(mixed).merge(shrub).merge(grass).merge(agric);
 
 var l = gcps.limit(4)
