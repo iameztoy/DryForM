@@ -8,31 +8,36 @@ var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Glance/gla
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-43.82988891655538, -6.165728059377001],
-          [-43.82988891655538, -10.793428050283827],
-          [-36.53496704155538, -10.793428050283827],
-          [-36.53496704155538, -6.165728059377001]]], null, false);
+        [[[-97.1794982915554, 23.218079560279136],
+          [-97.1794982915554, -60.39380124860445],
+          [-22.472467041555365, -60.39380124860445],
+          [-22.472467041555365, 23.218079560279136]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var samples = table.filterBounds(geometry)
-print(samples)
+//Map.addLayer(samples)
 
-var water = samples.filter(ee.Filter.eq('Glance_Cla', 1));
-var isnow = samples.filter(ee.Filter.eq('Glance_Cla', 2));
-var developed = samples.filter(ee.Filter.eq('Glance_Cla', 3));
-var barren = samples.filter(ee.Filter.eq('Glance_Cla', 4)); //4, 5, 6
-var decid_v = samples.filter(ee.Filter.eq('Glance_C_1', 7));
-var everg_v = samples.filter(ee.Filter.eq('Glance_Cla', 8));
-var mixed = samples.filter(ee.Filter.eq('Glance_Cla', 9));
-var shrub = samples.filter(ee.Filter.eq('Glance_Cla', 10));
-var grass = samples.filter(ee.Filter.eq('Glance_Cla', 11));
-var agric = samples.filter(ee.Filter.eq('Glance_Cla', 12));
-var mos_li = samples.filter(ee.Filter.eq('Glance_Cla', 13));
+var water = samples.filter(ee.Filter.eq('Glance_C_1', 1));
+var isnow = samples.filter(ee.Filter.eq('Glance_C_1', 2));
+var developed = samples.filter(ee.Filter.eq('Glance_C_1', 3));
+var barren = samples.filter(ee.Filter.eq('Glance_C_1', 4)); //4, 5, 6
+var decid_v = samples.filter(ee.Filter.eq('Glance_Cla', 7));
+var everg_v = samples.filter(ee.Filter.eq('Glance_C_1', 8));
+var mixed = samples.filter(ee.Filter.eq('Glance_C_1', 9));
+var shrub = samples.filter(ee.Filter.eq('Glance_C_1', 10));
+var grass = samples.filter(ee.Filter.eq('Glance_C_1', 11));
+var agric = samples.filter(ee.Filter.eq('Glance_C_1', 12));
+var mos_li = samples.filter(ee.Filter.eq('Glance_C_1', 13));
 
 
-Map.addLayer(water, null, "Water"); Map.addLayer(isnow, null, "Ice/Snow"); 
-Map.addLayer(developed, null, "Developed"); Map.addLayer(barren, null, "Barren"); 
+Map.addLayer(water, null, "Water"); 
+Map.addLayer(isnow, null, "Ice/Snow"); 
+Map.addLayer(developed, null, "Developed"); 
+Map.addLayer(barren, null, "Barren"); 
 Map.addLayer(decid_v, null, "Deciduous Vegetation");
 Map.addLayer(everg_v, null, "Evergreen Vegetation"); 
-Map.addLayer(mixed, null, "Mixed"); Map.addLayer(shrub, null, "Shrubs"); 
-Map.addLayer(grass);
-Map.addLayer(agric, null, "Agriculture"); Map.addLayer(mos_li, null, "Lichen/Moss.")
+Map.addLayer(mixed, null, "Mixed"); 
+Map.addLayer(shrub, null, "Shrubs"); 
+Map.addLayer(grass, null, "Grass");
+Map.addLayer(agric, null, "Agriculture"); 
+Map.addLayer(mos_li, null, "Lichen/Moss");
+
