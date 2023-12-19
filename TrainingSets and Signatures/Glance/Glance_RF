@@ -93,33 +93,19 @@ Map.addLayer(composite.clip(geometry), rgbVis, 'image');
 
 // Inference
 
-/*
+// Once the classifier export finishes, we can load our saved classifier.
+var classifierAssetId = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0";
+var savedClassifier = ee.Classifier.load(classifierAssetId);
+
+
+
 // // Classify the image.
-var classified = composite.classify(classifier);
+var classified = composite.classify(savedClassifier);
 // Choose a 4-color palette
 // Assign a color for each class in the following order
 // Urban, Bare, Water, Vegetation
-var palette = ['#cc6d8f', '#ffc107', '#1e88e5', '#004d40' ];
 
-Map.addLayer(classified.clip(geometry), {min: 0, max: 3, palette: palette}, '2019');
-// Display the GCPs
-// We use the style() function to style the GCPs
-var palette = ee.List(palette);
-var landcover = ee.List([0, 1, 2, 3]);
 
-var gcpsStyled = ee.FeatureCollection(
-  landcover.map(function(lc){
-    var color = palette.get(landcover.indexOf(lc));
-    var markerStyle = { color: 'white', pointShape: 'diamond', 
-      pointSize: 4, width: 1, fillColor: color};
-    return gcps.filter(ee.Filter.eq('landcover', lc))
-                .map(function(point){
-                  return point.set('style', markerStyle)
-                })
-      })).flatten();
-      
-Map.addLayer(gcpsStyled.style({styleProperty:"style"}), {}, 'GCPs')
-Map.centerObject(gcpsStyled)
-*/
+Map.addLayer(classified.clip(geometry), null, "Classified");
 
 
