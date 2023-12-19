@@ -88,14 +88,14 @@ Map.addLayer(shrub, null, "Shrubs", 0);
 Map.addLayer(grass, null, "Grass", 0);
 Map.addLayer(agric, null, "Agriculture", 0); 
 
-Map.addLayer(composite.clip(geometry), vp_7cl, 'image');
+Map.addLayer(composite.clip(geometry), rgbVis, 'image');
 //Map.addLayer(isnow, null, "Ice/Snow", 0); 
 //Map.addLayer(mos_li, null, "Lichen/Moss", 0);
 
 // Inference
 
 // Once the classifier export finishes, we can load our saved classifier.
-var classifierAssetId = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0";
+var classifierAssetId = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0_tr500";
 var savedClassifier = ee.Classifier.load(classifierAssetId);
 
 
@@ -106,6 +106,6 @@ var classified = composite.classify(savedClassifier);
 // Urban, Bare, Water, Vegetation
 
 print(classified)
-Map.addLayer(classified.clip(geometry), null, "Classified");
+Map.addLayer(classified.clip(geometry), vp_7cl, "Classified");
 
 
