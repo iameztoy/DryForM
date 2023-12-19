@@ -98,14 +98,13 @@ var classifierAssetId = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v
 var savedClassifier = ee.Classifier.load(classifierAssetId);
 
 
-
 // // Classify the image.
 var classified = composite.classify(savedClassifier);
 // Choose a 4-color palette
 // Assign a color for each class in the following order
 // Urban, Bare, Water, Vegetation
 
-
+print(classified)
 Map.addLayer(classified.clip(geometry), null, "Classified");
 
 
