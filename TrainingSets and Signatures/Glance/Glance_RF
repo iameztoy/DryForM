@@ -42,10 +42,10 @@ var composite = filtered.median();
 var gcps = water.merge(developed).merge(soil).merge(rock).merge(beach).merge(decid_v).merge(everg_v)
 .merge(mixed).merge(shrub).merge(grass).merge(agric);
 
+//.merge(mos_li).merge(isnow);
+
 var l = gcps.limit(4)
 print(l)
-
-//.merge(mos_li)..merge(isnow);
 
 // Overlay the point on the image to get training data.
 var training = composite.sampleRegions({
