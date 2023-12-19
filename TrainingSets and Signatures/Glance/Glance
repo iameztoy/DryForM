@@ -8,10 +8,10 @@ var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Glance/gla
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-97.1794982915554, 23.218079560279136],
-          [-97.1794982915554, -60.39380124860445],
-          [-22.472467041555365, -60.39380124860445],
-          [-22.472467041555365, 23.218079560279136]]], null, false);
+        [[[-117.9216857915554, 29.206792239946825],
+          [-117.9216857915554, -60.39380124860445],
+          [-32.14043579155536, -60.39380124860445],
+          [-32.14043579155536, 29.206792239946825]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var samples = table.filterBounds(geometry)
 //Map.addLayer(samples)
