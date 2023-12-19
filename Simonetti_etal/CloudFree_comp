@@ -1,0 +1,495 @@
+// Sentinel2 cloud-free composite 
+// ******************************************************************************
+//  * Project:  JRC, European Commission 
+//  * Purpose:  cloud mask and composite 
+//  * Author:   Simonetti Dario
+//  * Email: dario.simonetti@ec.europa.eu, simodarigm@gmail.com
+
+// last update: 07/10/2021
+
+// THE CODE IS PROVIDED WITHOUT WARRANTY THAT THEY WILL BE ERROR FREE OR MEET YOUR REQUIREMENTS.
+// THERE IS NO WARRANTY OF ANY KIND AS TO THE RESULTS OBTAINED, OR THE ACCURACY OR RELIABILITY,
+// VALIDITY OR COMPLETENESS OF ANY INFORMATION OBTAINED. ANY EXECUTION IS AT YOUR OWN RISK,
+// AND YOU ARE SOLELY RESPONSIBLE FOR ANY DAMAGE DONE TO YOUR COMPUTER SYSTEM OR LOSS OF DATA 
+// WHICH MAY RESULT FROM SUCH CODE.
+
+// Please refer to Google Earth Engine Terms of Service at https://earthengine.google.org/terms
+//*********************************************************************************************
+
+// -------------------------------------
+//  ----------  Date OPTIONS 
+// -------------------------------------
+
+
+Map.style().set('cursor', 'hand');
+Map.setCenter(19,8,4);
+
+var panel = ui.Panel();
+panel.style().set({
+  width: '380px',
+  position: 'bottom-right',
+  border : '1px solid #000000',
+});
+
+
+var Header = ui.Label('Sentinel-2 Cloud-free Composite',{fontWeight: 'bold', fontSize: '20px', textAlign: 'center'});
+
+var Subheader1 = ui.Label('Analysis period:',{fontWeight: 'bold'});
+var label_Start_date_select = ui.Label('Start:');
+var Start_date_select = ui.Textbox({
+  value: '2020-01-01',
+  style: {width : '90px'},
+  onChange: function(text) {
+    var start_date = text
+  }
+});
+var label_End_date_select = ui.Label('End:');
+var End_date_select = ui.Textbox({
+  value: '2020-12-31',
+  style: {width : '90px', textAlign: 'right'},
+  onChange: function(text) {
+    var end_date = text
+  }
+});
+
+var label_countrynames_select = ui.Label('Country selection:',{fontWeight: 'bold'});
+var countrynames_select = ui.Select({
+  items: [
+    {label:'Abyei Area', value:'Abyei Area'},{label:'Algeria', value:'Algeria'},{label:'Angola', value:'Angola'},{label:'Argentina', value:'Argentina'},{label:'Belize', value:'Belize'},
+    {label:'Benin', value:'Benin'},{label:'Bir Tawil', value:'Bir Tawil'},{label:'Bolivia', value:'Bolivia'},{label:'Botswana', value:'Botswana'},{label:'Brazil', value:'Brazil'},
+    {label:'Burkina Faso', value:'Burkina Faso'},{label:'Burma', value:'Burma'},{label:'Burundi', value:'Burundi'},{label:'Cambodia', value:'Cambodia'},{label:'Cameroon', value:'Cameroon'},
+    {label:'Central African Rep', value:'Central African Rep'},{label:'Chad', value:'Chad'},{label:'Chile', value:'Chile'},{label:'Colombia', value:'Colombia'},{label:'Costa Rica', value:'Costa Rica'},
+    {label:"Cote d'Ivoire", value:"Cote d'Ivoire"},{label:'Cuba', value:'Cuba'},{label:'Dem Rep of the Congo', value:'Dem Rep of the Congo'},{label:'Djibouti', value:'Djibouti'},{label:'Dominican Republic', value:'Dominican Republic'},
+    {label:'Ecuador', value:'Ecuador'},{label:'Egypt', value:'Egypt'},{label:'El Salvador', value:'El Salvador'},{label:'Equatorial Guinea', value:'Equatorial Guinea'},{label:'Eritrea', value:'Eritrea'},
+    {label:'Ethiopia', value:'Ethiopia'},{label:'French Guiana', value:'French Guiana'},{label:'Gabon', value:'Gabon'},{label:'Gambia, The', value:'Gambia, The'},
+    {label:'Ghana', value:'Ghana'},{label:'Guatemala', value:'Guatemala'},{label:'Guinea', value:'Guinea'},{label:'Guinea-Bissau', value:'Guinea-Bissau'},
+    {label:'Guyana', value:'Guyana'},{label:'Haiti', value:'Haiti'},{label:'Halaib Triangle', value:'Halaib Triangle'},{label:'Honduras', value:'Honduras'},{label:'Indonesia', value:'Indonesia'},
+    {label:'Jamaica', value:'Jamaica'},{label:'Kenya', value:'Kenya'},{label:'Laos', value:'Laos'},{label:'Lesotho', value:'Lesotho'},{label:'Liberia', value:'Liberia'},
+    {label:'Libya', value:'Libya'},{label:'Madagascar', value:'Madagascar'},{label:'Malawi', value:'Malawi'},{label:'Malaysia', value:'Malaysia'},
+    {label:'Mali', value:'Mali'},{label:'Mauritania', value:'Mauritania'},{label:'Mexico', value:'Mexico'},{label:'Morocco', value:'Morocco'},
+    {label:'Mozambique', value:'Mozambique'},{label:'Namibia', value:'Namibia'},{label:'Nicaragua', value:'Nicaragua'},{label:'Niger', value:'Niger'},
+    {label:'Nigeria', value:'Nigeria'},{label:'Panama', value:'Panama'},{label:'Papua New Guinea', value:'Papua New Guinea'},{label:'Paraguay', value:'Paraguay'},{label:'Peru', value:'Peru'},
+    {label:'Philippines', value:'Philippines'},{label:'Puerto Rico', value:'Puerto Rico'},{label:'Rep of the Congo', value:'Rep of the Congo'},{label:'Rwanda', value:'Rwanda'},{label:'Senegal', value:'Senegal'},
+    {label:'Sierra Leone', value:'Sierra Leone'},{label:'Somalia', value:'Somalia'},{label:'South Africa', value:'South Africa'},{label:'South Sudan', value:'South Sudan'},{label:'Sudan', value:'Sudan'},
+    {label:'Suriname', value:'Suriname'},{label:'Swaziland', value:'Swaziland'},{label:'Tanzania', value:'Tanzania'},{label:'Thailand', value:'Thailand'},
+    {label:'Timor-Leste', value:'Timor-Leste'},{label:'Togo', value:'Togo'},{label:'Tunisia', value:'Tunisia'},{label:'Uganda', value:'Uganda'},
+    {label:'Uruguay', value:'Uruguay'},{label:'Venezuela', value:'Venezuela'},{label:'Vietnam', value:'Vietnam'},{label:'Western Sahara', value:'Western Sahara'},
+    {label:'Zambia', value:'Zambia'},{label:'Zimbabwe', value:'Zimbabwe'}],
+	value: 'Abyei Area',
+  onChange: function(value) {
+    var countryname = value
+  },
+  style: {width: '200px'}
+});
+
+var label_cloudcover_selection_1 = ui.Label('Cloud cover:',{fontWeight: 'bold'});
+var label_cloudcover_selection_2 = ui.Label('Select maximum cloud cover percentage (0 - 100%):');
+var cloudcover_selection = ui.Slider({
+  min: 0,
+  max: 100, 
+  value: 80, 
+  step: 1,
+  onChange: function(value) {
+    var max_cloud_percent = value
+  },
+  style: {width: '380px'}
+});
+
+var Label_cloud_buffer_selection = ui.Label('Cloud buffering (in meters):',{fontWeight: 'bold'});
+var cloud_buffer_select = ui.Slider({
+  min: 0,
+  max: 300, 
+  value: 0, 
+  step: 10,
+  onChange: function(value) {
+    var clouds_buffer_size = value
+  },
+  style: {width: '380px'}
+});
+
+var Label_filler_selection = ui.Label('Filling holes with best available pixels:',{fontWeight: 'bold'});
+var filler_selection  = ui.Checkbox({
+  label: 'Apply filling', 
+  value: false,
+  onChange: function(value) {
+    var apply_filler = value
+  }
+});
+
+
+var dummy1 = ui.Label('                                                    ')
+var label_band_selection_1 = ui.Label('Select Sentinel-2 bands for RGB visualization:',{fontWeight: 'bold'});
+var label_band_selection_2 = ui.Label('Red band:',{fontWeight: 'bold'});
+var band_selection_Red = ui.Select({
+  items: [
+    {label: 'B2 - Blue 490nm (10m)', value: 'B2'},{label: 'B3 - Green 560nm (10m)', value: 'B3'},{label: 'B4 - Red 665nm (10m)', value: 'B4'},
+    {label: 'B8 - NIR 842nm (10m)', value: 'B8'},{label: 'B8A - Vegetation red edge 865nm (20m)', value: 'B8A'},
+    {label: 'B11 - SWIR 1610nm (20m)', value: 'B11'},{label: 'B12 - SWIR 2190nm (20m)', value: 'B12'}],
+    value: 'B11',
+    onChange: function(value) {
+    var selection_Red = value
+  },
+  style: {width: '200px'}
+});
+var label_band_selection_3 = ui.Label('Green band:',{fontWeight: 'bold'});
+var band_selection_Green = ui.Select({
+  items: [
+    {label: 'B2 - Blue 490nm (10m)', value: 'B2'},{label: 'B3 - Green 560nm (10m)', value: 'B3'},{label: 'B4 - Red 665nm (10m)', value: 'B4'},
+    {label: 'B8 - NIR 842nm (10m)', value: 'B8'},{label: 'B8A - Vegetation red edge 865nm (20m)', value: 'B8A'},
+    {label: 'B11 - SWIR 1610nm (20m)', value: 'B11'},{label: 'B12 - SWIR 2190nm (20m)', value: 'B12'}],
+    value: 'B8',
+    onChange: function(value) {
+    var selection_Green = value
+  },
+  style: {width: '200px'}
+});
+var label_band_selection_4 = ui.Label('Blue band:',{fontWeight: 'bold'});
+var band_selection_Blue = ui.Select({
+  items: [
+    {label: 'B2 - Blue 490nm (10m)', value: 'B2'},{label: 'B3 - Green 560nm (10m)', value: 'B3'},{label: 'B4 - Red 665nm (10m)', value: 'B4'},
+    {label: 'B8 - NIR 842nm (10m)', value: 'B8'},{label: 'B8A - Vegetation red edge 865nm (20m)', value: 'B8A'},
+    {label: 'B11 - SWIR 1610nm (20m)', value: 'B11'},{label: 'B12 - SWIR 2190nm (20m)', value: 'B12'}],
+    value: 'B4',
+    onChange: function(value) {
+    var selection_Blue = value
+  },
+  style: {width: '200px'}
+});
+
+
+var dummy2 = ui.Label('                                                    ')
+var Label_algo_selection = ui.Label('Processing algorithm selection:',{fontWeight: 'bold'});
+var algo_selection  = ui.Select({
+  items: [
+    {label: 'ESA algorithm', value: 'ESA'},{label: 'Pino26 aggressive algorithm', value: 'HIGH'},
+    {label: 'Pino26 algorithm', value: 'LOW'}],
+  value: 'LOW',
+  onChange: function(value) {
+    var ALGO = value
+  },
+  style: {width: '200px'}
+});
+
+
+var dummy3 = ui.Label('                                                    ')
+var dummy4 = ui.Label('__________________________________________________________')
+
+var Label_exporting = ui.Label('Options for export:',{fontWeight: 'bold'});
+
+
+
+var dummy5 = ui.Label('                                                    ')
+var label_band_selection_export = ui.Label('Sentinel-2 bands for export:',{fontWeight: 'bold'});	
+var B2_selection_export = ui.Checkbox({
+  label: 'B2 - Blue 490nm (10m)',
+  value: false,
+  onChange: function(value) {
+    var B2_select_export = value
+    }
+  });	
+var B3_selection_export = ui.Checkbox({
+  label: 'B3 - Green 560nm (10m)',
+  value: false,
+  onChange: function(value) {
+    var B3_select_export = value
+    }
+  });	
+var B4_selection_export = ui.Checkbox({
+  label: 'B4 - Red 665nm (10m)',
+  value: true,
+  onChange: function(value) {
+    var B4_select_export = value
+    }
+  });
+var B8_selection_export = ui.Checkbox({
+  label: 'B8 - NIR 842nm (10m)',
+  value: true,
+  onChange: function(value) {
+    var B8_select_export = value
+    }
+  });
+var B8A_selection_export = ui.Checkbox({
+  label: 'B8A - Vegetation red edge 865nm (20m)',
+  value: false,
+  onChange: function(value) {
+    var B8A_select_export = value
+    }
+  });
+var B11_selection_export = ui.Checkbox({
+  label: 'B11 - SWIR 1610nm (20m)',
+  value: true,
+  onChange: function(value) {
+    var B11_select_export = value
+    }
+  });
+var B12_selection_export = ui.Checkbox({
+  label: 'B12 - SWIR 2190nm (20m)',
+  value: false,
+  onChange: function(value) {
+    var B12_select_export = value
+    }
+  });
+
+var dummy6 = ui.Label('                                                    ')
+
+var Label_export_resolution_selection = ui.Label('Resolution of export (in meters):',{fontWeight: 'bold'});
+var export_resolution_selection = ui.Slider({
+  min: 10,
+  max: 100, 
+  value: 10, 
+  step: 10,
+  onChange: function(value) {
+    var export_resolution = value
+  },
+  style: {width: '380px'}
+});
+
+var dummy7 = ui.Label('                                                    ')
+var Label_rescaling_options_selection = ui.Label('Selection of rescaling options:',{fontWeight: 'bold'});
+var rescaling_options_selection  = ui.Select({
+  items: [
+    {label: 'Optimized 0-255', value: 'Optimized 0-255'},{label: 'Regular 0-255', value: 'Regular 0-255'},
+    {label: 'Raw 0-10000', value: 'Raw 0-10000'}],
+  value: 'Optimized 0-255',
+  onChange: function(value) {
+    var rescaling_options = value
+  },
+  style: {width: '200px'}
+});
+
+var dummy8 = ui.Label('                                                    ')
+var Label_projection_selection = ui.Label('Selection of projection:',{fontWeight: 'bold'});
+var projection_selection = ui.Textbox({
+  placeholder: 'EPSG:4326',
+  value:'EPSG:4326',
+  onChange: function(text) {
+    var projection_select = text
+  },
+  style: {width: '200px'}
+});
+
+
+panel.add(Header);
+panel.add(Subheader1);
+panel.add(label_Start_date_select);
+panel.add(Start_date_select);
+panel.add(label_End_date_select);
+panel.add(End_date_select);
+panel.add(label_countrynames_select);
+panel.add(countrynames_select);
+
+panel.add(label_cloudcover_selection_1);
+panel.add(label_cloudcover_selection_2);
+panel.add(cloudcover_selection);
+
+panel.add(Label_cloud_buffer_selection);
+panel.add(cloud_buffer_select);
+
+panel.add(Label_filler_selection);
+panel.add(filler_selection);
+
+panel.add(dummy1);
+panel.add(label_band_selection_1);
+panel.add(label_band_selection_2);
+panel.add(band_selection_Red);
+panel.add(label_band_selection_3);
+panel.add(band_selection_Green);
+panel.add(label_band_selection_4);
+panel.add(band_selection_Blue);
+
+
+panel.add(dummy2);
+panel.add(Label_algo_selection);
+panel.add(algo_selection);
+
+panel.add(dummy3);
+panel.add(dummy4);
+
+panel.add(Label_exporting);
+
+
+
+panel.add(dummy5);
+panel.add(label_band_selection_export);
+panel.add(B2_selection_export);
+panel.add(B3_selection_export);
+panel.add(B4_selection_export);
+panel.add(B8_selection_export);
+panel.add(B8A_selection_export);
+panel.add(B11_selection_export);
+panel.add(B12_selection_export);
+panel.add(dummy6);
+
+panel.add(Label_rescaling_options_selection);
+panel.add(rescaling_options_selection);
+panel.add(dummy7);
+
+panel.add(Label_export_resolution_selection);
+panel.add(export_resolution_selection);
+panel.add(dummy8);
+
+panel.add(Label_projection_selection);
+panel.add(projection_selection);
+
+
+ui.root.add(panel);
+
+var AddButton = function(){
+      var button = ui.Button('Run S2 Composite');
+      button.style().set({
+        position: 'top-center',
+        border : '1px solid #000000',
+      });
+
+      button.onClick(function(){
+        return S2Composite()});
+      Map.add(button);
+}
+
+AddButton();
+
+var S2Composite = function(){
+    Map.clear();
+    AddButton();
+    var start_date = Start_date_select.getValue();
+    var end_date = End_date_select.getValue();
+    var countryname = countrynames_select.getValue();
+    var max_cloud_percent = cloudcover_selection.getValue();
+    var selection_Red = band_selection_Red.getValue();
+    var selection_Green = band_selection_Green.getValue();
+    var selection_Blue = band_selection_Blue.getValue();
+    var ALGO = algo_selection.getValue();
+    var clouds_buffer_size = cloud_buffer_select.getValue();
+    var apply_filler = filler_selection.getValue();
+    var B2_select_export = B2_selection_export.getValue();
+    var B3_select_export = B3_selection_export.getValue();
+    var B4_select_export = B4_selection_export.getValue();
+    var B8_select_export = B8_selection_export.getValue();
+    var B8A_select_export = B8A_selection_export.getValue();
+    var B11_select_export = B11_selection_export.getValue();
+    var B12_select_export = B12_selection_export.getValue();
+    var rescaling_options = rescaling_options_selection.getValue();
+    var projection_select = projection_selection.getValue();
+    
+    var export_resolution = export_resolution_selection.getValue();
+ 
+    var band_export =[];
+    if(B2_select_export){band_export.push('B2')}
+    if(B3_select_export){band_export.push('B3')}
+    if(B4_select_export){band_export.push('B4')}
+    if(B8_select_export){band_export.push('B8')}
+    if(B8A_select_export){band_export.push('B8A')}
+    if(B11_select_export){band_export.push('B11')}
+    if(B12_select_export){band_export.push('B12')}
+    
+  
+  var PINO26 = require("users/SimonettiDario/DiB_Sentinel2_composite:PINO26").PINO26;
+  var ORBITS_by_COUNTRY = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
+  Map.addLayer(ORBITS_by_COUNTRY,{},'ORBITS_by_COUNTRY',0);   
+  
+  // ------------------------------------
+  //  ----------  Country OPTIONS 
+  // -------------------------------------
+  
+  var countrynames = [countryname];  
+  var countrynamesExport = countryname.replace(/\s+/g, '_').replace(/'+/g, '_').replace(/,+/g, '_');
+  
+  // ------------------------------------
+  var band_selection = [selection_Red,selection_Green,selection_Blue];
+
+  
+
+  
+   print("Running classification");
+      //--------------------------------------------------------------------------------------
+ 
+        //////////////////////////////////////////////////////////////
+        //1st step select country
+        //////////////////////////////////////////////////////////////
+        var AOI = ORBITS_by_COUNTRY.filter(ee.Filter.inList('country_na', countrynames));//.union();
+       
+        var availableOrbits = AOI.aggregate_array('OrbitRelat').distinct();
+        
+        AOI = AOI.filter(ee.Filter.inList('OrbitRelat', availableOrbits));
+        //Map.addLayer(AOI,{},'Available Orbits',1);   
+        
+        availableOrbits = availableOrbits.getInfo();
+        
+         
+        availableOrbits.map(function(orbit){
+          var tmpAOI = AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
+          Map.addLayer(tmpAOI,{},'Orbits'+orbit,1);
+          
+          classifyCollection(tmpAOI, parseInt(orbit), countrynamesExport+'_'+orbit);
+        })
+               
+  
+
+  function classifyCollection(ROI, selected_orbit, outName){ 
+
+            var collectionS2_annual_median=ee.ImageCollection('COPERNICUS/S2').filterDate(start_date, end_date)  //
+                 .filterMetadata('CLOUDY_PIXEL_PERCENTAGE',"less_than",max_cloud_percent)
+                 .filterBounds(AOI);
+            
+            if(selected_orbit != ''){
+                    collectionS2_annual_median = collectionS2_annual_median.filterMetadata('SENSING_ORBIT_NUMBER',"equals",selected_orbit);
+            } 
+            
+            collectionS2_annual_median = collectionS2_annual_median.map(function(image){return image.clip(ROI)});
+            
+  
+            if (ALGO == 'ESA'){
+                    var PINO24coll = collectionS2_annual_median.map(QA60cloudMask);//.select("B1","B2","B3","B4","B5","B6","B7","B8","B8A","B9","B10","B11","B12");//.select(["B2","B3","B4","B8","B11","B12"]);
+            
+                    outName = outName+"_esa"
+            } else {
+                    var PINO24coll = collectionS2_annual_median.map(function(image){return PINO26(image, ALGO , clouds_buffer_size)})
+                    outName = outName+"_PINO26_"+ALGO
+            };
+            
+    
+  
+            // ----------  median or percentile options
+            
+            PINO24coll = PINO24coll.median();
+            
+            if (apply_filler){
+              PINO24coll = PINO24coll.unmask(65000, true).clip(AOI)
+              PINO24coll = PINO24coll.where(PINO24coll.eq(65000),collectionS2_annual_median.filterDate(start_date,end_date).map(QA60cloudMask).median())
+              PINO24coll = PINO24coll.where(PINO24coll.eq(65000),collectionS2_annual_median.filterDate(start_date,end_date).median())
+            }
+            
+            Map.addLayer(PINO24coll.multiply(0.051).byte(), {bands:band_selection, min:0, max:255}, outName,0)
+            
+            
+            //  ---------  add a rescaling options ------------------
+            //   0 - 255 
+            //   0 - 255 optimized 
+            //   raw 0 -10k
+            if (rescaling_options == 'Optimized 0-255'){
+                    PINO24coll = PINO24coll.multiply(0.051).byte()
+            }
+            if (rescaling_options == 'Regular 0-255'){
+                    PINO24coll = PINO24coll.multiply(0.0255).byte()
+            }
+            if (rescaling_options == 'Raw 0-10000'){
+                    PINO24coll = PINO24coll.int16()
+            }
+            
+
+          
+            
+            Export.image.toDrive(
+                           
+                            {'image':PINO24coll.select(band_export),    //'B2','B3','B4',
+                            'description': outName+'_1184',
+                            'folder': "", 
+                            'region':ROI,//JSON.stringify(AOItmp.coordinates().getInfo()),
+                            'scale':export_resolution, //10
+                            'crs':projection_select,
+                            'skipEmptyTiles':true,
+                            'maxPixels': 1e13
+                            });   
+    
+  }
+}
