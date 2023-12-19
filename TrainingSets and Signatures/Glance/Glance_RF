@@ -56,7 +56,7 @@ var training = composite.sampleRegions({
 });
 
 // Train a classifier.
-var classifier = ee.Classifier.smileRandomForest(500).train({
+var classifier = ee.Classifier.smileRandomForest(5000).train({
   features: training,  
   classProperty: 'Glance_C_1', 
   inputProperties: composite.bandNames()
