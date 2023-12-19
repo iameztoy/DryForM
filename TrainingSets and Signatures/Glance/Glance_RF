@@ -59,11 +59,8 @@ var classifier = ee.Classifier.smileRandomForest(50).train({
 // forest classifier as an Earth Engine asset.
 Export.classifier.toAsset(
   classifier,
-  "RF + Glance and S2"
+  "RF_Glance_s2_2020_v0"
 );
-
-
-
 
 // Display the input composite.
 var rgbVis = {
