@@ -2,17 +2,16 @@
 var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Glance/glance_qg"),
     geometry = 
     /* color: #d63000 */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-67.6482482915554, -11.203239603732037],
-          [-67.6482482915554, -32.21563239864376],
-          [-51.47637329155536, -32.21563239864376],
-          [-51.47637329155536, -11.203239603732037]]], null, false),
+        [[[-163.62481079155532, 77.22947814643592],
+          [-163.62481079155532, -61.919846275768116],
+          [164.38300170844454, -61.919846275768116],
+          [164.38300170844454, 77.22947814643592]]], null, false),
     vp_7cl = {"opacity":1,"bands":["classification"],"min":1,"max":11,"palette":["318dff","ff341f","d2ac74","d2ac74","d2ac74","88d830","88d830","88d830","ffba74","daff0e","fdff7c"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var samples = table.filterBounds(geometry)
@@ -56,19 +55,19 @@ var training = composite.sampleRegions({
 });
 
 // Train a classifier.
-var classifier = ee.Classifier.smileRandomForest(50).train({
+var classifier = ee.Classifier.smileRandomForest(100).train({
   features: training,  
   classProperty: 'Glance_C_1', 
   inputProperties: composite.bandNames()
 });
 
-print(classifier.explain())
+//print(classifier.explain())
 
 // Using the random forest classifier defined earlier, export the random 
 // forest classifier as an Earth Engine asset.
 Export.classifier.toAsset(
   classifier,
-  "RF_Glance_s2_2020_v0_tr5000"
+  "RF_Glance_s2_2020_v0_tr100Global"
 );
 
 // Display the input composite.
@@ -102,19 +101,16 @@ var classifierAssetId_tr500 = "projects/hardy-tenure-383607/assets/RF_Glance_s2_
 //var classifierAssetId_tr5000 = "projects/hardy-tenure-383607/assets/RF_Glance_s2_2020_v0_tr5000";
 var savedClassifier = ee.Classifier.load(classifierAssetId);
 var savedClassifier_tr500 = ee.Classifier.load(classifierAssetId_tr500);
-//var savedClassifier_tr5000 = ee.Classifier.load(classifierAssetId_tr5000);
 
 
 // // Classify the image.
 var classified = composite.classify(savedClassifier);
 var classified_tr500 = composite.classify(savedClassifier_tr500);
-var classified_tr5000 = composite.classify(savedClassifier_tr5000);
 // Choose a 4-color palette
 // Assign a color for each class in the following order
 // Urban, Bare, Water, Vegetation
 
 Map.addLayer(classified.clip(geometry), vp_7cl, "Classified v0");
 Map.addLayer(classified_tr500.clip(geometry), vp_7cl, "Classified v0 tr500");
-Map.addLayer(classified_tr5000.clip(geometry), vp_7cl, "Classified v0 tr5000");
 
 
