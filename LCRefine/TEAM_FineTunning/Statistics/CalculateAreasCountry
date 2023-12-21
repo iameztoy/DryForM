@@ -1,6 +1,6 @@
 ////Admin Boundaries
 var gaul = ee.FeatureCollection('FAO/GAUL_SIMPLIFIED_500m/2015/level0');
-var SCo = gaul.filter(ee.Filter.eq('ADM0_CODE', 66));
+var SCo = gaul.filter(ee.Filter.eq('ADM0_CODE', 116)); //Ivory Coast 66, Indonesia 116
 Map.addLayer(gaul, null, "Countries GAUL")
 
 // MMU applied over version 1 of GFC
