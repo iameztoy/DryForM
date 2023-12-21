@@ -1,6 +1,7 @@
 ////Admin Boundaries
 var gaul = ee.FeatureCollection('FAO/GAUL_SIMPLIFIED_500m/2015/level0');
 var SCo = gaul.filter(ee.Filter.eq('ADM0_CODE', 66));
+Map.addLayer(gaul, null, "Countries GAUL")
 
 // MMU applied over version 1 of GFC
 var forest_v01 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/v1/EUFO_Forest2020_v1'); //users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v01
