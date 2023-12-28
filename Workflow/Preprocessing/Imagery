@@ -122,9 +122,13 @@ var s2_q1_final = s2y20q1chis.addBands(texture_cat);
 
 // END OF SENTINEL-2 PROCESSING
 
+//---------------------------------------------------------------------------//
 // PROCESS SENTINEL-1
+//---------------------------------------------------------------------------//
 
+//Preprocess the S1 collection
 var s1_preprocces = wrapper.s1_preproc(parameter);
+
 var s1 = s1_preprocces[0]
 s1_preprocces = s1_preprocces[1]
 
@@ -156,55 +160,14 @@ else {
 }
 
 // CALCULATE COMPOSITE
-var median = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-print(median)
-
-Map.addLayer(median, visparam, "Median")
-
-median = median.rename(['vv_q1_chaco', 'vh_q1_chaco', 'ratio_q1_chaco']).toFloat();
-print(median)
-
-
-//---------------------------------------------------------------------------//
-// DO THE JOB
-//---------------------------------------------------------------------------//
-
-//Preprocess the S1 collection
-var s1_preprocces = wrapper.s1_preproc(parameter);
-
-var s1 = s1_preprocces[0]
-s1_preprocces = s1_preprocces[1]
+var s1q1m = s1_view.median().select(["VV", "VH"]).clip(aoi); //Optionally "VVVH_ratio"
+s1q1m = s1q1m.rename(['vv_q1_chaco', 'vh_q1_chaco']).toFloat();
 
 //---------------------------------------------------------------------------//
 // VISUALIZE
 //---------------------------------------------------------------------------//
 
-//Visulaization of the first image in the collection in RGB for VV, VH, images
-var visparam = {}
-if (parameter.POLARIZATION=='VVVH'){
-     if (parameter.FORMAT=='DB'){
-    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin).map(helper.lin_to_db2);
-    var s1_view = s1.map(helper.add_ratio_lin).map(helper.lin_to_db2);
-    visparam = {bands:['VV','VH','VVVH_ratio'],min: [-20, -25, 1],max: [0, -5, 15]}
-    }
-    else {
-    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin);
-    var s1_view = s1.map(helper.add_ratio_lin);
-    visparam = {bands:['VV','VH','VVVH_ratio'], min: [0.01, 0.0032, 1.25],max: [1, 0.31, 31.62]}
-    }
-}
-else {
-    if (parameter.FORMAT=='DB') {
-    s1_preprocces_view = s1_preprocces.map(helper.lin_to_db);
-    s1_view = s1.map(helper.lin_to_db);
-    visparam = {bands:[parameter.POLARIZATION],min: -25,max: 0}   
-    }
-    else {
-    s1_preprocces_view = s1_preprocces;
-    s1_view = s1;
-    visparam = {bands:[parameter.POLARIZATION],min: 0,max: 0.2}
-    }
-}
+
 
 
 //ADDED IAA
