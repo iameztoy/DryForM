@@ -200,15 +200,9 @@ Export.image.toAsset({
 });
 */
 
-
-
-
-
-
 //---------------------------------------------------------------------------//
 // DO THE JOB
 //---------------------------------------------------------------------------//
-      
 
 //Preprocess the S1 collection
 var s1_preprocces = wrapper.s1_preproc(parameter);
@@ -256,12 +250,8 @@ Map.addLayer(s1_preprocces_view.mosaic(), visparam, 'First image in the processe
 
 //ADDED IAA
 var median = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-print(median)
-
-Map.addLayer(median, visparam, "Median")
-
 median = median.rename(['vv_q1_chaco', 'vh_q1_chaco', 'ratio_q1_chaco']).toFloat();
-print(median)
+
 
 //---------------------------------------------------------------------------//
 // EXPORT
