@@ -7,6 +7,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 var aoi = chaco
 var str_q1 = "2020-01-01"
 var end_q1 = "2020-04-03"
+var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"]
 
 // Harmonized Sentinel-2 Level 2A collection.
 var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
@@ -31,7 +32,6 @@ var s2y20q1ch = s2
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
     })
 
-
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
   var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
@@ -45,7 +45,7 @@ var addIndex = function addindexes(img) {
 
 var s2y20q1chi = s2y20q1ch.map(addIndex);
 var s2y20q1chim = s2y20q1chi.median()
-var s2y20q1chims = s2y20q1chim.select(["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"]);
+var s2y20q1chims = s2y20q1chim.select(bands);
 print(s2y20q1chims)
 
 
