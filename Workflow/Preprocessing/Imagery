@@ -82,7 +82,7 @@ var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
 var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 
 
-// Make a clear median composite.
+// SELECT AND MASK CLOUD/SHADOWS
 var s2y20q1ch = s2
     .filterBounds(aoi)
     .filterDate(q1_str, q1_end)
@@ -125,16 +125,8 @@ var s2_q1_final = s2y20q1chis.addBands(texture_cat);
 // PROCESS SENTINEL-1
 
 var s1_preprocces = wrapper.s1_preproc(parameter);
-
 var s1 = s1_preprocces[0]
 s1_preprocces = s1_preprocces[1]
-
-
-
-
-//---------------------------------------------------------------------------//
-// VISUALIZE
-//---------------------------------------------------------------------------//
 
 //Visulaization of the first image in the collection in RGB for VV, VH, images
 var visparam = {}
@@ -162,6 +154,22 @@ else {
     visparam = {bands:[parameter.POLARIZATION],min: 0,max: 0.2}
     }
 }
+
+// CALCULATE COMPOSITE
+var median = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+print(median)
+
+Map.addLayer(median, visparam, "Median")
+
+median = median.rename(['vv_q1_chaco', 'vh_q1_chaco', 'ratio_q1_chaco']).toFloat();
+print(median)
+
+
+//---------------------------------------------------------------------------//
+// VISUALIZE
+//---------------------------------------------------------------------------//
+
+
 
 //---------------------------------------------------------------------------//
 // EXPORT
