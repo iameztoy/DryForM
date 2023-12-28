@@ -4,7 +4,17 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Add parameters
+
+//---------------------------------------------------------------------------//
+// REQUIRE
+//---------------------------------------------------------------------------//
+
+var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
+var helper = require('users/adugnagirma/gee_s1_ard:utilities');
+
+//---------------------------------------------------------------------------//
+// DEFINE GENERAL PARAMETERS
+//---------------------------------------------------------------------------//
 
 var aoi = chaco //caatinga, cerrado, tanzania
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
@@ -12,7 +22,9 @@ var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
 var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
 var q4_str = "2020-10-01"; var q4_end = "2021-01-01";
 
-
+//---------------------------------------------------------------------------//
+// DEFINE SENTINEL-2 PARAMETERS
+//---------------------------------------------------------------------------//
 
 var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"];
 var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
@@ -20,8 +32,47 @@ var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and
 // Higher values will remove thin clouds, haze & cirrus shadows.
 var glcm_size = 3
 
-// Process Sentinel-2
+//---------------------------------------------------------------------------//
+// DEFINE SENTINEL-1 PARAMETERS
+//---------------------------------------------------------------------------//
 
+
+var parameter = {//1. Data Selection
+              START_DATE: q1_str,
+              STOP_DATE: q1_end,
+              POLARIZATION:'VVVH',
+              ORBIT : 'DESCENDING',
+              GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
+              //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
+              //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
+              //2. Additional Border noise correction
+              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
+              //3.Speckle filter
+              APPLY_SPECKLE_FILTERING: true,
+              SPECKLE_FILTER_FRAMEWORK: 'MULTI',
+              SPECKLE_FILTER: 'LEE',
+              SPECKLE_FILTER_KERNEL_SIZE: 9,
+              SPECKLE_FILTER_NR_OF_IMAGES: 10,
+              //4. Radiometric terrain normalization
+              APPLY_TERRAIN_FLATTENING: true,
+              DEM: ee.Image('USGS/SRTMGL1_003'),
+              TERRAIN_FLATTENING_MODEL: 'VOLUME',
+              TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
+              //5. Output
+              FORMAT : 'DB',
+              CLIP_TO_ROI: false,
+              SAVE_ASSETS: false
+}
+
+//---------------------------------------------------------------------------//
+// ********** END OF PARAMETERS ************
+//---------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------//
+// PROCESSING
+//---------------------------------------------------------------------------//
+
+// Process Sentinel-2
 
 // Harmonized Sentinel-2 Level 2A collection.
 var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
@@ -59,7 +110,6 @@ var int16 = function(imgsc) {
 var s2y20q1chi = s2y20q1ch.map(addIndex).median().int16();
 var s2y20q1chis = s2y20q1chi.select(bands)
 var nir_texture = s2y20q1chis.select("B8").glcmTexture({size: glcm_size});
-print(nir_texture)
 
 // Selection of textures // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
 var nir_q1_savg = nir_texture.select("B8_savg");
@@ -70,11 +120,65 @@ var nir_q1_ent = nir_texture.select("B8_ent");
 var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent)
 var s2_q1_final = s2y20q1chis.addBands(texture_cat);
 
-print(s2_q1_final)
+// END OF SENTINEL-2 PROCESSING
+
+// PROCESS SENTINEL-1
+
+var s1_preprocces = wrapper.s1_preproc(parameter);
+
+var s1 = s1_preprocces[0]
+s1_preprocces = s1_preprocces[1]
 
 
-Map.addLayer(s2_q1_final.select("B8_savg"))
 
+
+//---------------------------------------------------------------------------//
+// VISUALIZE
+//---------------------------------------------------------------------------//
+
+//Visulaization of the first image in the collection in RGB for VV, VH, images
+var visparam = {}
+if (parameter.POLARIZATION=='VVVH'){
+     if (parameter.FORMAT=='DB'){
+    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin).map(helper.lin_to_db2);
+    var s1_view = s1.map(helper.add_ratio_lin).map(helper.lin_to_db2);
+    visparam = {bands:['VV','VH','VVVH_ratio'],min: [-20, -25, 1],max: [0, -5, 15]}
+    }
+    else {
+    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin);
+    var s1_view = s1.map(helper.add_ratio_lin);
+    visparam = {bands:['VV','VH','VVVH_ratio'], min: [0.01, 0.0032, 1.25],max: [1, 0.31, 31.62]}
+    }
+}
+else {
+    if (parameter.FORMAT=='DB') {
+    s1_preprocces_view = s1_preprocces.map(helper.lin_to_db);
+    s1_view = s1.map(helper.lin_to_db);
+    visparam = {bands:[parameter.POLARIZATION],min: -25,max: 0}   
+    }
+    else {
+    s1_preprocces_view = s1_preprocces;
+    s1_view = s1;
+    visparam = {bands:[parameter.POLARIZATION],min: 0,max: 0.2}
+    }
+}
+
+//---------------------------------------------------------------------------//
+// EXPORT
+//---------------------------------------------------------------------------//
+
+//Convert format for export
+if (parameter.FORMAT=='DB'){
+  s1_preprocces = s1_preprocces.map(helper.lin_to_db);
+}
+
+//Save processed collection to asset
+if(parameter.SAVE_ASSETS) {
+helper.Download.ImageCollection.toAsset(s1_preprocces, '', 
+               {scale: 10, 
+               region: s1_preprocces.geometry(),
+                type: 'float'})
+}
 
 /*
 Export.image.toAsset({
@@ -89,42 +193,9 @@ Export.image.toAsset({
 */
 
 
-// Process Sentinel-1
-
-var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
-var helper = require('users/adugnagirma/gee_s1_ard:utilities');
-
-//---------------------------------------------------------------------------//
-// DEFINE PARAMETERS
-//---------------------------------------------------------------------------//
 
 
-var parameter = {//1. Data Selection
-              START_DATE: q1_str,
-              STOP_DATE: q1_end,
-              POLARIZATION:'VVVH',
-              ORBIT : 'DESCENDING',
-              GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
-              //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
-              //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
-              //2. Additional Border noise correction
-              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
-              //3.Speckle filter
-              APPLY_SPECKLE_FILTERING: true,
-              SPECKLE_FILTER_FRAMEWORK: 'MULTI',
-              SPECKLE_FILTER: 'LEE',
-              SPECKLE_FILTER_KERNEL_SIZE: 9,
-              SPECKLE_FILTER_NR_OF_IMAGES: 10,
-              //4. Radiometric terrain normalization
-              APPLY_TERRAIN_FLATTENING: true,
-              DEM: ee.Image('USGS/SRTMGL1_003'),
-              TERRAIN_FLATTENING_MODEL: 'VOLUME',
-              TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
-              //5. Output
-              FORMAT : 'DB',
-              CLIP_TO_ROI: false,
-              SAVE_ASSETS: false
-}
+
 
 //---------------------------------------------------------------------------//
 // DO THE JOB
