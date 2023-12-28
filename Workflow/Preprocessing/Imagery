@@ -5,6 +5,8 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var aoi = chaco
+var str_q1 = "2020-01-01"
+var end_q1 = "2020-04-03"
 
 // Harmonized Sentinel-2 Level 2A collection.
 var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
@@ -12,9 +14,6 @@ var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
 // Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
 // Level 1C data and can be applied to either L1C or L2A collections.
 var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
-
-// Region of interest.
-
 
 // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
 var QA_BAND = 'cs_cdf';
@@ -26,7 +25,7 @@ var CLEAR_THRESHOLD = 0.80;
 // Make a clear median composite.
 var s2y20q1ch = s2
     .filterBounds(aoi)
-    .filterDate('2020-01-01', '2020-03-01')
+    .filterDate(str_q1, end_q1)
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
