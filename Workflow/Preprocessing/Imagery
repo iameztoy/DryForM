@@ -39,10 +39,17 @@ var addIndex = function addindexes(img) {
   return img.addBands(ee.Image.cat(nbr, ndvi, msavi2, bi));
 };
 
-var s2y20q1chi = s2y20q1ch.map(addIndex);
-var s2y20q1chim = s2y20q1chi.median()
-var s2y20q1chims = s2y20q1chim.select(bands);
-print(s2y20q1chims)
+var s2y20q1chi = s2y20q1ch.map(addIndex).median().select(bands).float();
+
+Export.image.toAsset({
+  image: s2y20q1chi,
+  description: 'Chaco_S2_Med_Q1',
+  assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/Chaco_S2_Med_Q1',  // <> modify these
+  region: aoi,
+  scale: 10,
+  crs: 'EPSG:4326',
+  maxPixels: 1e13
+});
 
 
 
