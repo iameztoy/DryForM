@@ -17,6 +17,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 //---------------------------------------------------------------------------//
 
 var aoi = chaco //caatinga, cerrado, tanzania
+var quarter = q1
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
 var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
@@ -109,7 +110,7 @@ var int16 = function(imgsc) {
 };
 
 var s2y20q1chi = s2y20q1ch.map(addIndex).median().int16();
-var s2y20q1chis = s2y20q1chi.select(bands)
+var s2y20q1chis = s2y20q1chi.select(bands);
 var nir_texture = s2y20q1chis.select(glcm_band).glcmTexture({size: glcm_size});
 
 // Selection of textures // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
@@ -118,7 +119,7 @@ var nir_q1_idm = nir_texture.select("B8_idm");
 var nir_q1_corr = nir_texture.select("B8_corr"); 
 var nir_q1_ent = nir_texture.select("B8_ent");
 
-var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent)
+var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent);
 var s2_q1_final = s2y20q1chis.addBands(texture_cat);
 
 // END OF SENTINEL-2 PROCESSING
@@ -130,8 +131,8 @@ var s2_q1_final = s2y20q1chis.addBands(texture_cat);
 //Preprocess the S1 collection
 var s1_preprocces = wrapper.s1_preproc(parameter);
 
-var s1 = s1_preprocces[0]
-s1_preprocces = s1_preprocces[1]
+var s1 = s1_preprocces[0];
+s1_preprocces = s1_preprocces[1];
 
 //Convert format for export
 if (parameter.FORMAT=='DB'){
@@ -146,9 +147,9 @@ s1_q1_final = s1_q1_final.rename(['vv_q1_chaco', 'vh_q1_chaco']);
 // MERGE S1 AND S2 COMPOSITES
 //---------------------------------------------------------------------------//
 
-var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final)
-s1s2_q1_chaco = s1s2_q1_chaco.clip(aoi)
-print(s1s2_q1_chaco)
+var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final);
+s1s2_q1_chaco = s1s2_q1_chaco.clip(aoi);
+print(s1s2_q1_chaco);
 
 //---------------------------------------------------------------------------//
 // EXPORT
