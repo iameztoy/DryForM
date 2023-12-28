@@ -39,8 +39,32 @@ var addIndex = function addindexes(img) {
   return img.addBands(ee.Image.cat(nbr, ndvi, msavi2, bi));
 };
 
-var s2y20q1chi = s2y20q1ch.map(addIndex).median().select(bands).float();
+// Write a function to scale the bands (not implemented)
+var int16 = function(imgsc) {
+  return imgsc.int16();
+};
 
+var s2y20q1chi = s2y20q1ch.map(addIndex).median().int16();
+var s2y20q1chis = s2y20q1chi.select(bands)
+var nir_texture = s2y20q1chis.select("B8").glcmTexture({size: 5});
+print(nir_texture)
+
+// Selection of textures // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
+var nir_q1_savg = nir_texture.select("B8_savg");
+var nir_q1_idm = nir_texture.select("B8_idm");
+var nir_q1_corr = nir_texture.select("B8_corr"); 
+var nir_q1_ent = nir_texture.select("B8_ent");
+
+var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent)
+var s2_q1_final = s2y20q1chis.addBands(texture_cat);
+
+print(s2_q1_final)
+
+
+Map.addLayer(s2_q1_final.select("B8_ent"))
+
+
+/*
 Export.image.toAsset({
   image: s2y20q1chi,
   description: 'Chaco_S2_Med_Q1',
@@ -50,6 +74,7 @@ Export.image.toAsset({
   crs: 'EPSG:4326',
   maxPixels: 1e13
 });
+*/
 
 
 
