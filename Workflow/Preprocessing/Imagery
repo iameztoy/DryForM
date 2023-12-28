@@ -1,0 +1,54 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var aoi = chaco
+
+// Harmonized Sentinel-2 Level 2A collection.
+var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
+
+// Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
+// Level 1C data and can be applied to either L1C or L2A collections.
+var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
+
+// Region of interest.
+
+
+// Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+var QA_BAND = 'cs_cdf';
+
+// The threshold for masking; values between 0.50 and 0.65 generally work well.
+// Higher values will remove thin clouds, haze & cirrus shadows.
+var CLEAR_THRESHOLD = 0.65;
+
+// Make a clear median composite.
+var s2_q1_20 = s2
+    .filterBounds(aoi)
+    .filterDate('2020-01-01', '2020-03-01')
+    .linkCollection(csPlus, [QA_BAND])
+    .map(function(img) {
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
+    })
+
+
+var addIndex = function addindexes(img) {
+  var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var msavi2 = img.select('B8').multiply(2).add(1)
+  .subtract(img.select('B8').multiply(2).add(1).pow(2)
+    .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
+  ).divide(2).rename("MSAVI");
+  var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
+  return img.addBands(ee.Image.cat(nbr, ndvi, msavi2, bi));
+};
+
+var s2_q1_20_i = s2_q1_20.map(addIndex);
+print(s2_q1_20_i.first())
+
+var s2q120im = s2_q1_20_i.median().clip(aoi);
+print(s2q120im)
+
+Map.addLayer(s2q120im.select("BI"))
+
