@@ -4,10 +4,12 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var aoi = chaco
-var str_q1 = "2020-01-01"
-var end_q1 = "2020-04-03"
-var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"]
+var aoi = chaco;
+var str_q1 = "2020-01-01"; var end_q1 = "2020-04-01";
+var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"];
+var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
+// Higher values will remove thin clouds, haze & cirrus shadows.
 
 // Harmonized Sentinel-2 Level 2A collection.
 var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
@@ -16,12 +18,10 @@ var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
 // Level 1C data and can be applied to either L1C or L2A collections.
 var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 
-// Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
-var QA_BAND = 'cs_cdf';
 
-// The threshold for masking; values between 0.50 and 0.65 generally work well.
-// Higher values will remove thin clouds, haze & cirrus shadows.
-var CLEAR_THRESHOLD = 0.80;
+
+
+
 
 // Make a clear median composite.
 var s2y20q1ch = s2
