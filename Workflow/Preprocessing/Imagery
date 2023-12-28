@@ -19,10 +19,6 @@ var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
 var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 
 
-
-
-
-
 // Make a clear median composite.
 var s2y20q1ch = s2
     .filterBounds(aoi)
