@@ -8,7 +8,7 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_S2
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 print(image)
 Map.addLayer(image.select("NDVI"), ndvi_vp, "NDVI")
-Map.addLayer(image.select("B3"), b3_vp, "B3")
 Map.addLayer(image.select("MSAVI"), msavi_vp, "MSAVI")
 Map.addLayer(image.select("BI"), bi_vp, "BI")
 Map.addLayer(image.select("NBR"), nbr_vp, "NBR")
+Map.addLayer(image.select("B3"), b3_vp, "B3")
