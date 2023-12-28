@@ -166,41 +166,6 @@ print(median)
 
 
 //---------------------------------------------------------------------------//
-// VISUALIZE
-//---------------------------------------------------------------------------//
-
-
-
-//---------------------------------------------------------------------------//
-// EXPORT
-//---------------------------------------------------------------------------//
-
-//Convert format for export
-if (parameter.FORMAT=='DB'){
-  s1_preprocces = s1_preprocces.map(helper.lin_to_db);
-}
-
-//Save processed collection to asset
-if(parameter.SAVE_ASSETS) {
-helper.Download.ImageCollection.toAsset(s1_preprocces, '', 
-               {scale: 10, 
-               region: s1_preprocces.geometry(),
-                type: 'float'})
-}
-
-/*
-Export.image.toAsset({
-  image: s2y20q1chi,
-  description: 'Chaco_S2_Med_Q1',
-  assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/Chaco_S2_Med_Q1',  // <> modify these
-  region: aoi,
-  scale: 10,
-  crs: 'EPSG:4326',
-  maxPixels: 1e13
-});
-*/
-
-//---------------------------------------------------------------------------//
 // DO THE JOB
 //---------------------------------------------------------------------------//
 
@@ -242,12 +207,6 @@ else {
 }
 
 
-
-Map.centerObject(parameter.GEOMETRY, 12);
-
-Map.addLayer(s1_view.mosaic(), visparam, 'First image in the input S1 collection', false);
-Map.addLayer(s1_preprocces_view.mosaic(), visparam, 'First image in the processed S1 collection', false);
-
 //ADDED IAA
 var median = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
 median = median.rename(['vv_q1_chaco', 'vh_q1_chaco', 'ratio_q1_chaco']).toFloat();
@@ -274,6 +233,16 @@ Export.image.toAsset({
   image: median,
   description: 'Chaco_S1_Med_Q1',
   assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/Chaco_S1_Med_Q1',  // <> modify these
+  region: aoi,
+  scale: 10,
+  crs: 'EPSG:4326',
+  maxPixels: 1e13
+});
+
+Export.image.toAsset({
+  image: s2y20q1chi,
+  description: 'Chaco_S2_Med_Q1',
+  assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/Chaco_S2_Med_Q1',  // <> modify these
   region: aoi,
   scale: 10,
   crs: 'EPSG:4326',
