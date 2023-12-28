@@ -139,7 +139,7 @@ if (parameter.FORMAT=='DB'){
 }
 
 // CALCULATE COMPOSITE
-var s1_q1_final = s1_preprocces.median().select(["VV", "VH"]).clip(aoi); //Optionally "VVVH_ratio"
+var s1_q1_final = s1_preprocces.median().select(["VV", "VH"]); //Optionally "VVVH_ratio"
 s1_q1_final = s1_q1_final.rename(['vv_q1_chaco', 'vh_q1_chaco']);
 
 //---------------------------------------------------------------------------//
@@ -147,6 +147,7 @@ s1_q1_final = s1_q1_final.rename(['vv_q1_chaco', 'vh_q1_chaco']);
 //---------------------------------------------------------------------------//
 
 var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final)
+s1s2_q1_chaco = s1s2_q1_chaco.clip(aoi)
 print(s1s2_q1_chaco)
 
 //---------------------------------------------------------------------------//
