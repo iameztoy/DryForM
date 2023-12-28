@@ -21,10 +21,10 @@ var QA_BAND = 'cs_cdf';
 
 // The threshold for masking; values between 0.50 and 0.65 generally work well.
 // Higher values will remove thin clouds, haze & cirrus shadows.
-var CLEAR_THRESHOLD = 0.65;
+var CLEAR_THRESHOLD = 0.80;
 
 // Make a clear median composite.
-var s2_q1_20 = s2
+var s2y20q1ch = s2
     .filterBounds(aoi)
     .filterDate('2020-01-01', '2020-03-01')
     .linkCollection(csPlus, [QA_BAND])
@@ -44,11 +44,11 @@ var addIndex = function addindexes(img) {
   return img.addBands(ee.Image.cat(nbr, ndvi, msavi2, bi));
 };
 
-var s2_q1_20_i = s2_q1_20.map(addIndex);
-print(s2_q1_20_i.first())
+var s2y20q1chi = s2y20q1ch.map(addIndex);
+var s2y20q1chim = s2y20q1chi.median()
+var s2y20q1chims = s2y20q1chim.select(["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"]);
+print(s2y20q1chims)
 
-var s2q120im = s2_q1_20_i.median().clip(aoi);
-print(s2q120im)
 
-Map.addLayer(s2q120im.select("BI"))
+
 
