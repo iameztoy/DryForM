@@ -163,17 +163,6 @@ else {
 var s1q1m = s1_view.median().select(["VV", "VH"]).clip(aoi); //Optionally "VVVH_ratio"
 s1q1m = s1q1m.rename(['vv_q1_chaco', 'vh_q1_chaco']).toFloat();
 
-//---------------------------------------------------------------------------//
-// VISUALIZE
-//---------------------------------------------------------------------------//
-
-
-
-
-//ADDED IAA
-var median = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-median = median.rename(['vv_q1_chaco', 'vh_q1_chaco', 'ratio_q1_chaco']).toFloat();
-
 
 //---------------------------------------------------------------------------//
 // EXPORT
