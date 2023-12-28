@@ -3,9 +3,12 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_S2
     msavi_vp = {"opacity":1,"bands":["MSAVI"],"min":0.1539332863688469,"max":0.8924784514307976,"gamma":1},
     b3_vp = {"opacity":1,"bands":["B3"],"min":504.89565612792967,"max":1478.2343182373047,"gamma":1},
     ndvi_vp = {"opacity":1,"bands":["NDVI"],"min":0.1674920952320099,"max":0.8179830276966095,"gamma":1},
-    bi_vp = {"opacity":1,"bands":["BI"],"min":498.00431884765624,"max":1895.3620141601561,"gamma":1};
+    bi_vp = {"opacity":1,"bands":["BI"],"min":498.00431884765624,"max":1895.3620141601561,"gamma":1},
+    nbr_vp = {"opacity":1,"bands":["NBR"],"min":-0.19157870709896088,"max":0.6731144100427627,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+print(image)
 Map.addLayer(image.select("NDVI"), ndvi_vp, "NDVI")
 Map.addLayer(image.select("B3"), b3_vp, "B3")
 Map.addLayer(image.select("MSAVI"), msavi_vp, "MSAVI")
 Map.addLayer(image.select("BI"), bi_vp, "BI")
+Map.addLayer(image.select("NBR"), nbr_vp, "NBR")
