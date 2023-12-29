@@ -1,6 +1,7 @@
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
-var myarea = chaco
-var myarea_n = "Chaco"
+var myarea = chaco;
+var myarea_n = "Chaco";
+var quarter = q1;
 var ORBITS_by_COUNTRY = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
 
 var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"];
@@ -111,7 +112,8 @@ var S2Composite = function(){
 
             // ----------  median or percentile options
             
-            PINO24coll = PINO24coll.median();
+            
+            PINO24coll = PINO24coll.median().select(["B4", "B3", "B2"]);
             print(PINO24coll)
             
             
@@ -155,6 +157,7 @@ var S2Composite = function(){
                             }); */  
     
   }
+  return classifyCollection
 }
 
 S2Composite()
