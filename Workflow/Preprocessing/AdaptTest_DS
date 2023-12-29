@@ -110,7 +110,7 @@ var S2Composite = function(){
                     PINO24coll = PINO24coll.multiply(0.0255).byte()
             }
             if (rescaling_options == 'Raw 0-10000'){
-                    PINO24coll = PINO24coll.int16()
+                    PINO24coll = PINO24coll.uint16() //original int16()
             }
             
               Export.image.toAsset({
