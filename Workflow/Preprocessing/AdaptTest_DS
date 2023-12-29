@@ -56,7 +56,7 @@ var S2Composite = function(){
   var countrynamesExport = "Chaco"
   
   // ------------------------------------
-  var band_selection = ["B3", "B4", "B5", "B8", "B11", "B12"];
+  var band_selection = bands;
 
    print("Running classification");
       //--------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ var S2Composite = function(){
                     outName = outName+"_esa"
             } else {
                     var PINO24coll = collectionS2_annual_median.map(function(img){return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
-                    outName = outName+"_PINO26_"+"cs"
+                    outName = outName+"_"+QA_BAND+"_"+CLEAR_THRESHOLD.toString()
             };
             
 
@@ -151,16 +151,7 @@ var S2Composite = function(){
   }
 }
 
-var AddButton = function(){
-      var button = ui.Button('Run S2 Composite');
-      button.style().set({
-        position: 'top-center',
-        border : '1px solid #000000',
-      });
+S2Composite()
 
-      button.onClick(function(){
-        return S2Composite()});
-      Map.add(button);
-}
 
-AddButton();
+
