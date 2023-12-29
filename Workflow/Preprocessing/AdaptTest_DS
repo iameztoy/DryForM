@@ -97,7 +97,6 @@ var S2Composite = function(){
             
             Map.addLayer(PINO24coll.multiply(0.051).byte(), {bands: ['B4', 'B3', 'B2'], min:0, max:255}, outName,0)
             
-            
             //  ---------  add a rescaling options ------------------
             //   0 - 255 
             //   0 - 255 optimized 
@@ -110,11 +109,11 @@ var S2Composite = function(){
                     PINO24coll = PINO24coll.multiply(0.0255).byte()
             }
             if (rescaling_options == 'Raw 0-10000'){
-                    PINO24coll = PINO24coll.int16() //original int16() | me: or uint16()
+                    PINO24coll = PINO24coll.int16()
             }
             
               Export.image.toAsset({
-                            image: PINO24coll.select(["B3", "B4", "B5", "B8", "B11", "B12"]),
+                            image: PINO24coll.select(["B3", "B4", "B5", "B8", "B11", "B12"]).clip(myarea),
                             description: outName,
                             assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/'+outName,  // <> modify these
                             region: myarea,
