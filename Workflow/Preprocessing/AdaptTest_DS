@@ -152,7 +152,7 @@ var S2Composite = function(){
               Export.image.toAsset({
                             image: PINO24coll.select(["B3", "B4", "B5", "B8", "B11", "B12"]),
                             description: outName,
-                            assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/outName',  // <> modify these
+                            assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/'+outName,  // <> modify these
                             region: myarea,
                             scale: export_resolution,
                             crs: 'EPSG:4326',
