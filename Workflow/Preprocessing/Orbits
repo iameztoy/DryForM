@@ -3,13 +3,14 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 
 var AOI = orbits.filterBounds(chaco); 
 print(AOI)
-var availableOrbits = AOI.aggregate_array('OrbitRelat').distinct();
 
+var availableOrbits = AOI.aggregate_array('OrbitRelat').distinct();
+AOI = AOI.filter(ee.Filter.inList('OrbitRelat', availableOrbits));
+availableOrbits = availableOrbits.getInfo();
 print(availableOrbits)
 
-availableOrbits = availableOrbits.getInfo();
 availableOrbits.map(function(orbit){
-  return AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
+  var tmpAOI = AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
   Map.addLayer(tmpAOI,{},'Orbits'+orbit,1)});
   
   
