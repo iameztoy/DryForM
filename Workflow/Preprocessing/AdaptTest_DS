@@ -95,6 +95,7 @@ var S2Composite = function(){
             
             collectionS2_annual_median = collectionS2_annual_median.map(function(image){return image.clip(ROI)});
             
+            
             var ALGO = ""
             if (ALGO == 'ESA'){
                     var PINO24coll = collectionS2_annual_median.map(QA60cloudMask);//.select("B1","B2","B3","B4","B5","B6","B7","B8","B8A","B9","B10","B11","B12");//.select(["B2","B3","B4","B8","B11","B12"]);
@@ -110,6 +111,7 @@ var S2Composite = function(){
             // ----------  median or percentile options
             
             PINO24coll = PINO24coll.median();
+            
             
             /*if (apply_filler){
               PINO24coll = PINO24coll.unmask(65000, true).clip(AOI)
@@ -149,7 +151,7 @@ var S2Composite = function(){
                             'skipEmptyTiles':true,
                             'maxPixels': 1e13
                             }); */  
-    print(PINO24coll)
+    
   }
 }
 
