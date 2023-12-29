@@ -61,8 +61,6 @@ var S2Composite = function(){
                  .filterBounds(AOI)
                  .linkCollection(csPlus, [QA_BAND]);
 
-                 
-            
             if(selected_orbit != ''){
                     collectionS2_annual_median = collectionS2_annual_median.filterMetadata('SENSING_ORBIT_NUMBER',"equals",selected_orbit);
             } 
