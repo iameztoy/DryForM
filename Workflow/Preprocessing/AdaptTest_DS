@@ -1,7 +1,7 @@
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var myarea = chaco;
 var myarea_n = "Chaco";
-var quarter = q1;
+var quarter = "q1";
 var ORBITS_by_COUNTRY = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
 
 var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"];
@@ -104,17 +104,18 @@ var S2Composite = function(){
                     outName = outName+"_esa"
             } else {
                     var PINO24coll = collectionS2_annual_median.map(function(img){return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
+      
                     outName = outName+"_"+QA_BAND+"_"+CLEAR_THRESHOLD.toString();
                     
             };
             
-
+            print(PINO24coll)
 
             // ----------  median or percentile options
             
             
             PINO24coll = PINO24coll.median().select(["B4", "B3", "B2"]);
-            print(PINO24coll)
+            //print(PINO24coll)
             
             
             /*if (apply_filler){
