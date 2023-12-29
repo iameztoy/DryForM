@@ -103,7 +103,8 @@ var S2Composite = function(){
                     outName = outName+"_esa"
             } else {
                     var PINO24coll = collectionS2_annual_median.map(function(img){return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
-                    outName = outName+"_"+QA_BAND+"_"+CLEAR_THRESHOLD.toString()
+                    outName = outName+"_"+QA_BAND+"_"+CLEAR_THRESHOLD.toString();
+                    
             };
             
 
@@ -111,6 +112,7 @@ var S2Composite = function(){
             // ----------  median or percentile options
             
             PINO24coll = PINO24coll.median();
+            print(PINO24coll)
             
             
             /*if (apply_filler){
