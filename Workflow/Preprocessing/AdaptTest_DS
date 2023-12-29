@@ -53,10 +53,10 @@ var S2Composite = function(){
   // -------------------------------------
   
   //var countrynames = [countryname];  
-  //var countrynamesExport = countryname.replace(/\s+/g, '_').replace(/'+/g, '_').replace(/,+/g, '_');
+  var countrynamesExport = "Chaco"
   
   // ------------------------------------
-  var band_selection = bands;
+  var band_selection = ["B3", "B4", "B5", "B8", "B11", "B12"];
 
    print("Running classification");
       //--------------------------------------------------------------------------------------
@@ -72,6 +72,8 @@ var S2Composite = function(){
         availableOrbits.map(function(orbit){
           var tmpAOI = AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
           Map.addLayer(tmpAOI,{},'Orbits'+orbit,1)
+          
+        classifyCollection(tmpAOI, parseInt(orbit), countrynamesExport+'_'+orbit);
         })
                
   
@@ -79,7 +81,7 @@ var S2Composite = function(){
   function classifyCollection(ROI, selected_orbit, outName){ 
             var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 
-            var collectionS2_annual_median=ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED').filterDate(q1_str, q1_end)  //
+            var collectionS2_annual_median=ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED').filterDate(q1_str, q1_end)
                  .filterBounds(AOI)
                  .linkCollection(csPlus, [QA_BAND])
 
@@ -91,7 +93,7 @@ var S2Composite = function(){
             
             collectionS2_annual_median = collectionS2_annual_median.map(function(image){return image.clip(ROI)});
             
-  
+            var ALGO = ""
             if (ALGO == 'ESA'){
                     var PINO24coll = collectionS2_annual_median.map(QA60cloudMask);//.select("B1","B2","B3","B4","B5","B6","B7","B8","B8A","B9","B10","B11","B12");//.select(["B2","B3","B4","B8","B11","B12"]);
             
@@ -101,8 +103,7 @@ var S2Composite = function(){
                     outName = outName+"_PINO26_"+"cs"
             };
             
-            var PINO24coll = collectionS2_annual_median.map(function(img){return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
-            outName = outName+"_PINO26_"+"cs"
+
 
             // ----------  median or percentile options
             
