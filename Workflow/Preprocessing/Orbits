@@ -1,0 +1,16 @@
+var orbits = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+
+var AOI = orbits.filterBounds(chaco); 
+print(AOI)
+var availableOrbits = AOI.aggregate_array('OrbitRelat').distinct();
+
+print(availableOrbits)
+
+availableOrbits = availableOrbits.getInfo();
+availableOrbits.map(function(orbit){
+  return AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
+  Map.addLayer(tmpAOI,{},'Orbits'+orbit,1)});
+  
+  
+
