@@ -52,15 +52,12 @@ var S2Composite = function(){
   //  ----------  Country OPTIONS 
   // -------------------------------------
   
-  var countrynames = [countryname];  
-  var countrynamesExport = countryname.replace(/\s+/g, '_').replace(/'+/g, '_').replace(/,+/g, '_');
+  //var countrynames = [countryname];  
+  //var countrynamesExport = countryname.replace(/\s+/g, '_').replace(/'+/g, '_').replace(/,+/g, '_');
   
   // ------------------------------------
   var band_selection = bands;
 
-  
-
-  
    print("Running classification");
       //--------------------------------------------------------------------------------------
  
@@ -71,13 +68,10 @@ var S2Composite = function(){
         var availableOrbits = AOI.aggregate_array('OrbitRelat').distinct();
         AOI = AOI.filter(ee.Filter.inList('OrbitRelat', availableOrbits));
         availableOrbits = availableOrbits.getInfo();
-        
-         
+
         availableOrbits.map(function(orbit){
           var tmpAOI = AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
-          Map.addLayer(tmpAOI,{},'Orbits'+orbit,1);
-          
-          classifyCollection(tmpAOI, parseInt(orbit), countrynamesExport+'_'+orbit);
+          Map.addLayer(tmpAOI,{},'Orbits'+orbit,1)
         })
                
   
@@ -88,6 +82,7 @@ var S2Composite = function(){
             var collectionS2_annual_median=ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED').filterDate(q1_str, q1_end)  //
                  .filterBounds(AOI)
                  .linkCollection(csPlus, [QA_BAND])
+
                  
             
             if(selected_orbit != ''){
@@ -97,16 +92,16 @@ var S2Composite = function(){
             collectionS2_annual_median = collectionS2_annual_median.map(function(image){return image.clip(ROI)});
             
   
-            /*if (ALGO == 'ESA'){
+            if (ALGO == 'ESA'){
                     var PINO24coll = collectionS2_annual_median.map(QA60cloudMask);//.select("B1","B2","B3","B4","B5","B6","B7","B8","B8A","B9","B10","B11","B12");//.select(["B2","B3","B4","B8","B11","B12"]);
             
                     outName = outName+"_esa"
             } else {
-                    var PINO24coll = collectionS2_annual_median.map(function(image){return PINO26(image, ALGO , clouds_buffer_size)})
-                    outName = outName+"_PINO26_"+ALGO
-            };*/
+                    var PINO24coll = collectionS2_annual_median.map(function(img){return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
+                    outName = outName+"_PINO26_"+"cs"
+            };
             
-            var PINO24coll = collectionS2_annual_median.map(function(img) {return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
+            var PINO24coll = collectionS2_annual_median.map(function(img){return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
             outName = outName+"_PINO26_"+"cs"
 
             // ----------  median or percentile options
@@ -119,9 +114,9 @@ var S2Composite = function(){
               PINO24coll = PINO24coll.where(PINO24coll.eq(65000),collectionS2_annual_median.filterDate(start_date,end_date).median())
             }*/
             
-            Map.addLayer(PINO24coll.multiply(0.051).byte(), {bands:band_selection, min:0, max:255}, outName,0)
+            Map.addLayer(PINO24coll.multiply(0.051).byte(), {bands: ['B4', 'B3', 'B2'], min:0, max:255}, outName,0)
             
-            
+            /*
             //  ---------  add a rescaling options ------------------
             //   0 - 255 
             //   0 - 255 optimized 
@@ -135,10 +130,11 @@ var S2Composite = function(){
             if (rescaling_options == 'Raw 0-10000'){
                     PINO24coll = PINO24coll.int16()
             }
+            /*
             
 
           
-            
+            /*
             Export.image.toDrive(
                            
                             {'image':PINO24coll.select(band_export),    //'B2','B3','B4',
@@ -149,8 +145,21 @@ var S2Composite = function(){
                             'crs':projection_select,
                             'skipEmptyTiles':true,
                             'maxPixels': 1e13
-                            });   
-    
+                            }); */  
+
   }
 }
 
+var AddButton = function(){
+      var button = ui.Button('Run S2 Composite');
+      button.style().set({
+        position: 'top-center',
+        border : '1px solid #000000',
+      });
+
+      button.onClick(function(){
+        return S2Composite()});
+      Map.add(button);
+}
+
+AddButton();
