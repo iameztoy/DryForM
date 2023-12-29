@@ -112,7 +112,7 @@ var S2Composite = function(){
                       
                     });
       
-                    outName = outName+"_"+QA_BAND+"_"+CLEAR_THRESHOLD.toString();
+                    outName = outName+"_"+QA_BAND;
                     
             };
             
@@ -149,27 +149,16 @@ var S2Composite = function(){
                     PINO24coll = PINO24coll.int16()
             }
             
-            Export.image.toDrive({
-                           
-                            'image':PINO24coll.select(band_export),    //'B2','B3','B4',
-                            'description': outName, //+'_1184',
-                            'folder': "", 
-                            'region':ROI,//JSON.stringify(AOItmp.coordinates().getInfo()),
-                            'scale':export_resolution, //10
-                            'crs':4326,
-                            'skipEmptyTiles':true,
-                            'maxPixels': 1e13
-                            });
-            /*Export.image.toAsset({
+              Export.image.toAsset({
                             image: PINO24coll.select(["B3", "B4", "B5", "B8", "B11", "B12"]),
-                            description: 'outName',
+                            description: outName,
                             assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/outName',  // <> modify these
                             region: myarea,
                             scale: export_resolution,
                             crs: 'EPSG:4326',
                             maxPixels: 1e13
                             });
-              Export.image.toDrive({
+              /*Export.image.toDrive({
                            
                             'image':PINO24coll.select(band_export),    //'B2','B3','B4',
                             'description': outName, //+'_1184',
