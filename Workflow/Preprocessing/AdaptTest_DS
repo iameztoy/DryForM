@@ -1,0 +1,156 @@
+var myarea = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var ORBITS_by_COUNTRY = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
+
+var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"];
+var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
+// Higher values will remove thin clouds, haze & cirrus shadows.
+var glcm_band = "B8"
+var glcm_size = 3
+
+var S2Composite = function(){
+ 
+    var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
+    var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
+    var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
+    var q4_str = "2020-10-01"; var q4_end = "2021-01-01";
+    //var countryname = countrynames_select.getValue();
+    //var max_cloud_percent = cloudcover_selection.getValue();
+    //var selection_Red = band_selection_Red.getValue();
+    //var selection_Green = band_selection_Green.getValue();
+    //var selection_Blue = band_selection_Blue.getValue();
+    //var ALGO = algo_selection.getValue();
+    //var clouds_buffer_size = cloud_buffer_select.getValue();
+    //var apply_filler = filler_selection.getValue();
+    //var B2_select_export = B2_selection_export.getValue();
+    //var B3_select_export = B3_selection_export.getValue();
+    //var B4_select_export = B4_selection_export.getValue();
+    //var B8_select_export = B8_selection_export.getValue();
+    //var B8A_select_export = B8A_selection_export.getValue();
+    //var B11_select_export = B11_selection_export.getValue();
+    //var B12_select_export = B12_selection_export.getValue();
+    //var rescaling_options = rescaling_options_selection.getValue();
+    //var projection_select = projection_selection.getValue();
+    
+    //var export_resolution = export_resolution_selection.getValue();
+ 
+    //var band_export =[];
+    //if(B2_select_export){band_export.push('B2')}
+    //if(B3_select_export){band_export.push('B3')}
+    //if(B4_select_export){band_export.push('B4')}
+    //if(B8_select_export){band_export.push('B8')}
+    //if(B8A_select_export){band_export.push('B8A')}
+    //if(B11_select_export){band_export.push('B11')}
+    //if(B12_select_export){band_export.push('B12')}
+    
+  
+  //var PINO26 = require("users/SimonettiDario/DiB_Sentinel2_composite:PINO26").PINO26;
+  var ORBITS_by_COUNTRY = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
+  Map.addLayer(ORBITS_by_COUNTRY,{},'ORBITS_by_COUNTRY',0);   
+  
+  // ------------------------------------
+  //  ----------  Country OPTIONS 
+  // -------------------------------------
+  
+  var countrynames = [countryname];  
+  var countrynamesExport = countryname.replace(/\s+/g, '_').replace(/'+/g, '_').replace(/,+/g, '_');
+  
+  // ------------------------------------
+  var band_selection = bands;
+
+  
+
+  
+   print("Running classification");
+      //--------------------------------------------------------------------------------------
+ 
+        //////////////////////////////////////////////////////////////
+        //1st step select country
+        //////////////////////////////////////////////////////////////
+        var AOI = ORBITS_by_COUNTRY.filterBounds(myarea)    
+        var availableOrbits = AOI.aggregate_array('OrbitRelat').distinct();
+        AOI = AOI.filter(ee.Filter.inList('OrbitRelat', availableOrbits));
+        availableOrbits = availableOrbits.getInfo();
+        
+         
+        availableOrbits.map(function(orbit){
+          var tmpAOI = AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
+          Map.addLayer(tmpAOI,{},'Orbits'+orbit,1);
+          
+          classifyCollection(tmpAOI, parseInt(orbit), countrynamesExport+'_'+orbit);
+        })
+               
+  
+
+  function classifyCollection(ROI, selected_orbit, outName){ 
+            var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
+
+            var collectionS2_annual_median=ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED').filterDate(q1_str, q1_end)  //
+                 .filterBounds(AOI)
+                 .linkCollection(csPlus, [QA_BAND])
+                 
+            
+            if(selected_orbit != ''){
+                    collectionS2_annual_median = collectionS2_annual_median.filterMetadata('SENSING_ORBIT_NUMBER',"equals",selected_orbit);
+            } 
+            
+            collectionS2_annual_median = collectionS2_annual_median.map(function(image){return image.clip(ROI)});
+            
+  
+            /*if (ALGO == 'ESA'){
+                    var PINO24coll = collectionS2_annual_median.map(QA60cloudMask);//.select("B1","B2","B3","B4","B5","B6","B7","B8","B8A","B9","B10","B11","B12");//.select(["B2","B3","B4","B8","B11","B12"]);
+            
+                    outName = outName+"_esa"
+            } else {
+                    var PINO24coll = collectionS2_annual_median.map(function(image){return PINO26(image, ALGO , clouds_buffer_size)})
+                    outName = outName+"_PINO26_"+ALGO
+            };*/
+            
+            var PINO24coll = collectionS2_annual_median.map(function(img) {return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))});
+            outName = outName+"_PINO26_"+"cs"
+
+            // ----------  median or percentile options
+            
+            PINO24coll = PINO24coll.median();
+            
+            /*if (apply_filler){
+              PINO24coll = PINO24coll.unmask(65000, true).clip(AOI)
+              PINO24coll = PINO24coll.where(PINO24coll.eq(65000),collectionS2_annual_median.filterDate(start_date,end_date).map(QA60cloudMask).median())
+              PINO24coll = PINO24coll.where(PINO24coll.eq(65000),collectionS2_annual_median.filterDate(start_date,end_date).median())
+            }*/
+            
+            Map.addLayer(PINO24coll.multiply(0.051).byte(), {bands:band_selection, min:0, max:255}, outName,0)
+            
+            
+            //  ---------  add a rescaling options ------------------
+            //   0 - 255 
+            //   0 - 255 optimized 
+            //   raw 0 -10k
+            if (rescaling_options == 'Optimized 0-255'){
+                    PINO24coll = PINO24coll.multiply(0.051).byte()
+            }
+            if (rescaling_options == 'Regular 0-255'){
+                    PINO24coll = PINO24coll.multiply(0.0255).byte()
+            }
+            if (rescaling_options == 'Raw 0-10000'){
+                    PINO24coll = PINO24coll.int16()
+            }
+            
+
+          
+            
+            Export.image.toDrive(
+                           
+                            {'image':PINO24coll.select(band_export),    //'B2','B3','B4',
+                            'description': outName+'_1184',
+                            'folder': "", 
+                            'region':ROI,//JSON.stringify(AOItmp.coordinates().getInfo()),
+                            'scale':export_resolution, //10
+                            'crs':projection_select,
+                            'skipEmptyTiles':true,
+                            'maxPixels': 1e13
+                            });   
+    
+  }
+}
+
