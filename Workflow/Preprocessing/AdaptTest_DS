@@ -20,36 +20,7 @@ var S2Composite = function(){
     var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
     var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
     var q4_str = "2020-10-01"; var q4_end = "2021-01-01";
-    //var countryname = countrynames_select.getValue();
-    //var max_cloud_percent = cloudcover_selection.getValue();
-    //var selection_Red = band_selection_Red.getValue();
-    //var selection_Green = band_selection_Green.getValue();
-    //var selection_Blue = band_selection_Blue.getValue();
-    //var ALGO = algo_selection.getValue();
-    //var clouds_buffer_size = cloud_buffer_select.getValue();
-    //var apply_filler = filler_selection.getValue();
-    //var B2_select_export = B2_selection_export.getValue();
-    //var B3_select_export = B3_selection_export.getValue();
-    //var B4_select_export = B4_selection_export.getValue();
-    //var B8_select_export = B8_selection_export.getValue();
-    //var B8A_select_export = B8A_selection_export.getValue();
-    //var B11_select_export = B11_selection_export.getValue();
-    //var B12_select_export = B12_selection_export.getValue();
-    //var rescaling_options = rescaling_options_selection.getValue();
-    //var projection_select = projection_selection.getValue();
-    
-    //var export_resolution = export_resolution_selection.getValue();
- 
-    //var band_export =[];
-    //if(B2_select_export){band_export.push('B2')}
-    //if(B3_select_export){band_export.push('B3')}
-    //if(B4_select_export){band_export.push('B4')}
-    //if(B8_select_export){band_export.push('B8')}
-    //if(B8A_select_export){band_export.push('B8A')}
-    //if(B11_select_export){band_export.push('B11')}
-    //if(B12_select_export){band_export.push('B12')}
-    
-  
+
   //var PINO26 = require("users/SimonettiDario/DiB_Sentinel2_composite:PINO26").PINO26;
   var ORBITS_by_COUNTRY = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
   Map.addLayer(ORBITS_by_COUNTRY,{},'ORBITS_by_COUNTRY',0);   
@@ -82,8 +53,6 @@ var S2Composite = function(){
         classifyCollection(tmpAOI, parseInt(orbit), countrynamesExport+'_'+orbit)
           
         });
-               
-  
 
   function classifyCollection(ROI, selected_orbit, outName){ 
             var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
@@ -115,16 +84,11 @@ var S2Composite = function(){
                     outName = outName+"_"+QA_BAND;
                     
             };
-            
-            
 
             // ----------  median or percentile options
-            
-            
+
             PINO24coll = PINO24coll.median();
-            
-            
-            
+
             /*if (apply_filler){
               PINO24coll = PINO24coll.unmask(65000, true).clip(AOI)
               PINO24coll = PINO24coll.where(PINO24coll.eq(65000),collectionS2_annual_median.filterDate(start_date,end_date).map(QA60cloudMask).median())
