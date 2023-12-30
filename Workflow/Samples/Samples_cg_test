@@ -13,12 +13,15 @@ print(ic)
 Map.addLayer(ic, vp, "S2")
 Map.addLayer(p, null, "3000 chaco")
 
+var cen = p.geometry().centroid()
+Map.addLayer(cen)
+
 var proj = "EPSG:4326"
 var cg = p.geometry().coveringGrid(proj, 10)
 var b = cg.geometry().buffer(1)
 var cgp = b.coveringGrid(proj, 10)
 var un = cgp.union()
-Map.addLayer(un)
+
 Export.table.toAsset({
 		collection: un,
 //	description:,
