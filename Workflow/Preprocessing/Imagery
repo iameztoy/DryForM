@@ -199,9 +199,16 @@ Export.image.toAsset({
       });
 
 //---------------------------------------------------------------------------//
-// Other functions
+// Other functions and utils
 //---------------------------------------------------------------------------//
 // Write a function to scale the bands
   function int16(imgsc) {
     return imgsc.int16();
   }
+  
+if (rescaling_options == 'Optimized 0-255'){
+  PINO24coll = PINO24coll.multiply(0.051).byte()}
+if (rescaling_options == 'Regular 0-255'){
+  PINO24coll = PINO24coll.multiply(0.0255).byte()}
+if (rescaling_options == 'Raw 0-10000'){
+  PINO24coll = PINO24coll.int16()}
