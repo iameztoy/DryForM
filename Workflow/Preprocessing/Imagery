@@ -154,7 +154,7 @@ var s1_q1_final = s1_preprocces.median().select(["VV", "VH"]); //Optionally "VVV
 var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final);
 s1s2_q1_chaco = int16(s1s2_q1_chaco)
 s1s2_q1_chaco = s1s2_q1_chaco.rename(rbands)
-print("Int16", s1s2_q1_chaco);
+
 
 Map.addLayer(s1s2_q1_chaco)
 
