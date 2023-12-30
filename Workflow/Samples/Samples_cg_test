@@ -32,10 +32,9 @@ Map.addLayer(p, null, "Glance Chaco")
 
 var proj = "EPSG:4326"
 var b = p.buffer(11)
-Map.addLayer(b)
 var cgp = b.coveringGrid(proj, 10)
 var un = cgp.union()
-Map.addLayer(un)
+Map.addLayer(un, null, "Covering Grid Chaco")
 
 Export.table.toAsset({
 		collection: un,
