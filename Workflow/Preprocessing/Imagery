@@ -42,6 +42,13 @@ if (quarter == "q2"){var str = q2_str; var end = q2_end}
 if (quarter == "q3"){var str = q3_str; var end = q3_end}
 if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
+//Bands S1/S2
+var bands_init = ["B.*"]
+var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
+var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
+              "gNDVI_q1chaco", "MSAVI_q1chaco", "BI_q1chaco", "B8_savg_q1chaco", 
+              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", "vv_q1chaco", "vh_q1chaco"] //, "vvvh_q1chaco"
+
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-2 PARAMETERS
 //---------------------------------------------------------------------------//
@@ -53,13 +60,6 @@ var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and
 // GLCM Texture parameters
 var glcm_band = "B8"
 var glcm_size = 9
-
-//Bands S1/S2
-var bands_init = ["B.*"]
-var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
-var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
-              "gNDVI_q1chaco", "MSAVI_q1chaco", "BI_q1chaco", "B8_savg_q1chaco", 
-              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", "vv_q1chaco", "vh_q1chaco"] //, "vvvh_q1chaco"
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
