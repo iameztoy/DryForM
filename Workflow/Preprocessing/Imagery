@@ -77,7 +77,7 @@ var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and
 
 // GLCM Texture parameters
 var glcm_band = "B8";
-var glcm_size = 9;
+var glcm_size = 5;
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
