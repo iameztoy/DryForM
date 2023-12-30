@@ -153,15 +153,13 @@ var s1 = s1_preprocces[0];
 s1_preprocces = s1_preprocces[1];
 
 //Convert format for export  
-//Note that this conditional has been moved upwards, before the visualize section, 
-//while it was afterwards in the original code
-//It is because of this that median_2 does not work
+
 if (parameter.FORMAT=='DB'){
-  s1_preprocces = s1_preprocces.map(helper.lin_to_db);
+  s1_preprocces_def = s1_preprocces.map(helper.lin_to_db);
 }
 
 // CALCULATE COMPOSITE
-var s1_q1_final = s1_preprocces.median().select(["VV", "VH"]); //Optionally "VVVH_ratio"
+var s1_q1_final = s1_preprocces_def.median().select(["VV", "VH"]); //Optionally "VVVH_ratio"
 
 //---------------------------------------------------------------------------//
 // MERGE S1 AND S2 COMPOSITES
