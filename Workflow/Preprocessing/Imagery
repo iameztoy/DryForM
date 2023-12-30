@@ -133,6 +133,7 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 var s2y20q1ch = s2
     .filterBounds(aoi)
     .filterDate(str, end)
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',60))
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
