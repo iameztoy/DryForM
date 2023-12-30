@@ -78,6 +78,7 @@ var parameter = {//1. Data Selection
 // Harmonized Sentinel-2 Level 2A collection.
 var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
 
+
 // Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
 // Level 1C data and can be applied to either L1C or L2A collections.
 var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
@@ -104,9 +105,9 @@ var addIndex = function addindexes(img) {
 };
 
 // Write a function to scale the bands (not implemented)
-var int16 = function(imgsc) {
-  return imgsc.int16();
-};
+  function int16(imgsc) {
+    return imgsc.int16();
+  }
 
 var s2y20q1chi = s2y20q1ch.map(addIndex).median();
 var s2y20q1chis = s2y20q1chi.select(bands).int16();
@@ -120,6 +121,8 @@ var nir_q1_ent = nir_texture.select("B8_ent");
 
 var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent);
 var s2_q1_final = s2y20q1chis.addBands(texture_cat);
+
+
 
 // END OF SENTINEL-2 PROCESSING
 
@@ -148,13 +151,44 @@ s1_q1_final = s1_q1_final.rename(['vv_q1_chaco', 'vh_q1_chaco']);
 
 var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final);
 s1s2_q1_chaco = s1s2_q1_chaco.clip(aoi);
-print(s1s2_q1_chaco);
+print("No Int16", s1s2_q1_chaco);
+
+s1s2_q1_chaco = int16(s1s2_q1_chaco)
+print("Int16", s1s2_q1_chaco);
 
 //---------------------------------------------------------------------------//
-// EXPORT
+// Normalize
 //---------------------------------------------------------------------------//
 
+function normalize(image){
+                var bandNames = image.bandNames();
+                // Compute min and max of the image
+                var minDict = image.reduceRegion({
+                  reducer: ee.Reducer.min(),
+                  geometry: aoi,
+                  scale: 10,
+                  maxPixels: 1e9,
+                  bestEffort: true,
+                  tileScale: 16
+                });
+               var maxDict = image.reduceRegion({
+                 reducer: ee.Reducer.max(),
+                  geometry: aoi,
+                  scale: 10,
+                  maxPixels: 1e9,
+                  bestEffort: true,
+                  tileScale: 16
+                });
+              var mins = ee.Image.constant(minDict.values(bandNames));
+              var maxs = ee.Image.constant(maxDict.values(bandNames));
 
+              var normalized = image.subtract(mins).divide(maxs.subtract(mins))
+              return normalized
+              }
 
+s1s2_q1_chaco = normalize(s1s2_q1_chaco);
 
+//---------------------------------------------------------------------------//
+// Export
+//---------------------------------------------------------------------------//
 
