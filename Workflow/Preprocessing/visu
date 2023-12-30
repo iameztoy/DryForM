@@ -15,7 +15,9 @@ var msavi_vp = {"opacity":1,"bands":["MSAVI"],"min":0.1539332863688469,"max":0.8
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var i = image.addBands(image2).addBands(image3).addBands(image4)
 var ii = image5.addBands(image6).addBands(image7).addBands(image8)
-print(image5)
+var iii = image9.addBands(image10).addBands(image11).addBands(image12)
+
+
 
 Map.addLayer(i.select("B4_q1chaco"), null, "b4")
 Map.addLayer(i.select("B5_q1chaco"), null, "b5")
@@ -49,3 +51,20 @@ Map.addLayer(ii.select("B8_ent_q1chaco"), null, "ent i")
 
 Map.addLayer(ii.select("vv_q1chaco"), null, "vv i")
 Map.addLayer(ii.select("vh_q1chaco"), null, "vh i")
+//
+Map.addLayer(iii.select("B4_q1chaco"), null, "b4 o")
+Map.addLayer(iii.select("B5_q1chaco"), null, "b5 o")
+Map.addLayer(iii.select("B8_q1chaco"), null, "b8 o")
+Map.addLayer(iii.select("B12_q1chaco"), null, "b12 o")
+Map.addLayer(iii.select("gNDVI_q1chaco"), null, "gndvi o")
+Map.addLayer(iii.select("MSAVI_q1chaco"), null, "msavi o")
+Map.addLayer(iii.select("MSAVIt_q1chaco"), null, "msavit o")
+Map.addLayer(iii.select("BI_q1chaco"), null, "bi o")
+
+Map.addLayer(iii.select("B8_savg_q1chaco"), null, "savg o")
+Map.addLayer(iii.select("B8_idm_q1chaco"), null, "idm o")
+Map.addLayer(iii.select("B8_corr_q1chaco"), null, "corr o")
+Map.addLayer(iii.select("B8_ent_q1chaco"), null, "ent o")
+
+Map.addLayer(iii.select("vv_q1chaco"), null, "vv o")
+Map.addLayer(iii.select("vh_q1chaco"), null, "vh o")
