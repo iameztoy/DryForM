@@ -47,7 +47,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 
-var quarter = "q2"; // "q2", "q3", "q4"
+var quarter = "q4"; // "q2", "q3", "q4"
 
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
@@ -144,11 +144,13 @@ var addIndex = function addindexes(img) {
   var gndvi = img.normalizedDifference(['B8', 'B3']).rename('gNDVI');
   var msavi2 = img.select('B8').multiply(2).add(1)
    .subtract(img.select('B8').multiply(2).add(1).pow(2)
-   .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
-  ).divide(2).rename("MSAVI");
+   .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt())
+   .divide(2).rename("MSAVI");
   //texture of 5x5 pixel window
   var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt');
   var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
+  //mtvi = 1.5 * (1.2 * (nir - green) - 2.5 * (red - green)) / 
+  //         sqrt( (2 * nir + 1)^2 - (6 * nir - 5 * sqrt(red) - 0.5) ) //https://gis.stackexchange.com/questions/308633/soil-adjusted-vegetation-index-values-msavi2-are-not-within-expected-range
   return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi));
 };
 
