@@ -47,7 +47,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 
-var quarter = "q4"; // "q2", "q3", "q4"
+var quarter = "q1"; // "q2", "q3", "q4"
 
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
