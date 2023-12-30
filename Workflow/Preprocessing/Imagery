@@ -107,8 +107,8 @@ var parameter = {//1. Data Selection
               TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
               //5. Output
               FORMAT : 'DB',
-              CLIP_TO_ROI: false,
-              SAVE_ASSETS: false
+              CLIP_TO_ROI: false, // I do it outside the s1 box
+              SAVE_ASSETS: false  //          ""           
 };
 
 //---------------------------------------------------------------------------//
