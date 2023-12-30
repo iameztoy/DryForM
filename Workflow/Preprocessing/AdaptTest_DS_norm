@@ -83,9 +83,24 @@ var S2Composite = function(){
                     
             };
 
+
+
             // ----------  median or percentile options
 
             PINO24coll = PINO24coll.median();
+            
+  function addindexes(image) {
+          var nbr = image.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+          var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+          var msavi2 = image.select('B8').multiply(2).add(1)
+                        .subtract(image.select('B8').multiply(2).add(1).pow(2)
+                        .subtract(image.select('B8').subtract(image.select('B4')).multiply(8)).sqrt())
+                        .divide(2).rename("MSAVI");
+          var bi = ((image.select("B4").pow(2).add(image.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
+          return image.addBands(ee.Image.cat(nbr, ndvi, msavi2, bi));
+            };
+              
+            PINO24coll = addindexes(PINO24coll);
 
   function normalize(image){
                 var bandNames = image.bandNames();
