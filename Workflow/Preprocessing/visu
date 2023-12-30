@@ -11,7 +11,11 @@ var msavi_vp = {"opacity":1,"bands":["MSAVI"],"min":0.1539332863688469,"max":0.8
     image5 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco_NormMultInt16"),
     image6 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q2_chaco_NormMultInt16"),
     image7 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q3_chaco_NormMultInt16"),
-    image8 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q4_chaco_NormMultInt16");
+    image8 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q4_chaco_NormMultInt16"),
+    image9 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco_orig"),
+    image10 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q2_chaco_orig"),
+    image11 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q3_chaco_orig"),
+    image12 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q4_chaco_orig");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var i = image.addBands(image2).addBands(image3).addBands(image4)
 var ii = image5.addBands(image6).addBands(image7).addBands(image8)
