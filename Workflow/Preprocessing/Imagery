@@ -2,7 +2,19 @@
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
+    geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.60939976088769, -21.60622433355665],
+          [-60.60939976088769, -21.903411437668456],
+          [-60.20496555678613, -21.903411437668456],
+          [-60.20496555678613, -21.60622433355665]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //---------------------------------------------------------------------------//
@@ -16,11 +28,19 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoi = chaco //caatinga, cerrado, tanzania
+var aoi = geometry //chaco //caatinga, cerrado, tanzania
+
+var quarter = "q1"
+
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
 var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
 var q4_str = "2020-10-01"; var q4_end = "2021-01-01";
+
+if (quarter == "q1"){var str = q1_str; var end = q1_end}
+if (quarter == "q2"){var str = q2_str; var end = q2_end}
+if (quarter == "q3"){var str = q3_str; var end = q3_end}
+if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-2 PARAMETERS
@@ -29,9 +49,12 @@ var q4_str = "2020-10-01"; var q4_end = "2021-01-01";
 var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
 var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
 // Higher values will remove thin clouds, haze & cirrus shadows.
+
+// GLCM Texture parameters
 var glcm_band = "B8"
 var glcm_size = 9
 
+//Bands S1/S2
 var bands_init = ["B.*"]
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
 var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
@@ -44,8 +67,8 @@ var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
 
 
 var parameter = {//1. Data Selection
-              START_DATE: q1_str,
-              STOP_DATE: q1_end,
+              START_DATE: str,
+              STOP_DATE: end,
               POLARIZATION:'VVVH',
               ORBIT : 'DESCENDING',
               GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
@@ -92,7 +115,7 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 // SELECT AND MASK CLOUD/SHADOWS
 var s2y20q1ch = s2
     .filterBounds(aoi)
-    .filterDate(q1_str, q1_end)
+    .filterDate(str, end)
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
