@@ -30,7 +30,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 
-var quarter = "q1"; // "q2", "q3", "q4"
+var quarter = "q2"; // "q2", "q3", "q4"
 
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
@@ -45,10 +45,10 @@ if (quarter == "q4"){var str = q4_str; var end = q4_end}
 //Bands S1/S2
 var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
-var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
-              "gNDVI_q1chaco", "MSAVI_q1chaco", "BI_q1chaco", "B8_savg_q1chaco", 
-              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", 
-              "vv_q1chaco", "vh_q1chaco"]; //, "vvvh_q1chaco"
+var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco", "B12_"+quarter+"chaco",
+              "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "BI_"+quarter+"chaco", "B8_savg_"+quarter+"chaco", 
+              "B8_idm_"+quarter+"chaco", "B8_corr_"+quarter+"chaco", "B8_ent_"+quarter+"chaco", 
+              "vv_"+quarter+"chaco", "vh_"+quarter+"chaco"]; //, "vvvh_"+quarter+"chaco"
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-2 PARAMETERS
@@ -218,7 +218,7 @@ s1s2_q1_chaco = normalize(s1s2_q1_chaco);
 Export.image.toAsset({
       image: s1s2_q1_chaco,
       description: "s1s2_q1_chaco",
-      assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco',  // <> modify these
+      assetId: "projects/hardy-tenure-383607/assets/Preprocessing/"+"s1s2_"+quarter+"_chaco",  // <> modify these
       region: aoi,
       scale: 10,
       crs: 'EPSG:4326',
