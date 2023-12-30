@@ -2,20 +2,7 @@
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
-    geometry = 
-    /* color: #98ff00 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-60.47308651642327, -21.6465531089094],
-          [-60.47308651642327, -21.684203250233526],
-          [-60.429827849431085, -21.684203250233526],
-          [-60.429827849431085, -21.6465531089094]]], null, false);
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //---------------------------------------------------------------------------//
@@ -29,7 +16,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoi = geometry//chaco //caatinga, cerrado, tanzania
+var aoi = chaco //caatinga, cerrado, tanzania
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
 var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
@@ -153,7 +140,9 @@ var s1 = s1_preprocces[0];
 s1_preprocces = s1_preprocces[1];
 
 //Convert format for export  
-
+// *changed from original so it does not provoque any conflit with the Visu section
+// *this conditional is run only AFTER the Visu section in the original code
+// *for export purposses
 if (parameter.FORMAT=='DB'){
   var s1_preprocces_def = s1_preprocces.map(helper.lin_to_db);
 }
