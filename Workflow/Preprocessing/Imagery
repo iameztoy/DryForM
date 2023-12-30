@@ -2,7 +2,20 @@
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
+    geometry = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.47308651642327, -21.6465531089094],
+          [-60.47308651642327, -21.684203250233526],
+          [-60.429827849431085, -21.684203250233526],
+          [-60.429827849431085, -21.6465531089094]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //---------------------------------------------------------------------------//
@@ -16,7 +29,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoi = chaco //caatinga, cerrado, tanzania
+var aoi = geometry//chaco //caatinga, cerrado, tanzania
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
 var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
@@ -231,10 +244,13 @@ else {
     }
 }
 
-//Map.addLayer(s1_view.mosaic(), visparam, 'First image in the input S1 collection', false);
-//Map.addLayer(s1_preprocces_view.mosaic(), visparam, 'First image in the processed S1 collection', false);
+Map.addLayer(s1_view.first(), visparam, 'First image in the input S1 collection', false);
+Map.addLayer(s1_preprocces_view.first(), visparam, 'First image in the processed S1 collection', false);
 var median_1 = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
 var median_2 = s1_preprocces_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+print(median_1)
+print(median_2)
+
 
 Map.addLayer(median_1, visparam, "S1 view - Median")
 Map.addLayer(median_2, visparam, "S1 Preprocess view - Median")
