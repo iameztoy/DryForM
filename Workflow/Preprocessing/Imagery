@@ -17,7 +17,6 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 //---------------------------------------------------------------------------//
 
 var aoi = chaco //caatinga, cerrado, tanzania
-var quarter = q1
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
 var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
