@@ -217,7 +217,7 @@ s1s2_q1_chaco = normalize(s1s2_q1_chaco);
 
 Export.image.toAsset({
       image: s1s2_q1_chaco,
-      description: "s1s2_q1_chaco",
+      description: "s1s2_"+quarter+"_chaco",
       assetId: "projects/hardy-tenure-383607/assets/Preprocessing/"+"s1s2_"+quarter+"_chaco",  // <> modify these
       region: aoi,
       scale: 10,
