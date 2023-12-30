@@ -106,8 +106,8 @@ var addIndex = function addindexes(img) {
 
 
 var s2y20q1chi = s2y20q1ch.map(addIndex).median();
-var s2y20q1chis = s2y20q1chi.select(bands).int16();
-var nir_texture = s2y20q1chis.select(glcm_band).glcmTexture({size: glcm_size});
+var s2y20q1chis = s2y20q1chi.select(bands);
+var nir_texture = s2y20q1chis.select(glcm_band).int16().glcmTexture({size: glcm_size});
 
 // Selection of textures // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
 var nir_q1_savg = nir_texture.select("B8_savg");
