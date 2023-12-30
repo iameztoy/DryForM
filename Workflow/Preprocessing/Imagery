@@ -97,7 +97,7 @@ var parameter = {//1. Data Selection
               //3.Speckle filter
               APPLY_SPECKLE_FILTERING: true,
               SPECKLE_FILTER_FRAMEWORK: 'MULTI',
-              SPECKLE_FILTER: 'LEE',
+              SPECKLE_FILTER: 'REFINED LEE',
               SPECKLE_FILTER_KERNEL_SIZE: 9,
               SPECKLE_FILTER_NR_OF_IMAGES: 10,
               //4. Radiometric terrain normalization
@@ -232,8 +232,8 @@ function normalize(image){
               return normalized;
               }
 
-s1s2_q1_chaco = normalize(s1s2_q1_chaco);
-s1s2_q1_chaco = s1s2_q1_chaco.multiply(10000).int16() //for testing purposes
+//s1s2_q1_chaco = normalize(s1s2_q1_chaco);
+//s1s2_q1_chaco = s1s2_q1_chaco.multiply(10000).int16() //for testing purposes
 
 //---------------------------------------------------------------------------//
 // Export
