@@ -36,7 +36,7 @@ var bands_init = ["B.*"]
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
 var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
               "gNDVI_q1chaco", "MSAVI_q1chaco", "BI_q1chaco", "B8_savg_q1chaco", 
-              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco"]
+              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", "vv_q1chaco", "vh_q1chaco"]
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
@@ -123,8 +123,8 @@ var nir_q1_ent = nir_texture.select("B8_ent");
 
 var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent);
 var s2_q1_final = s2y20q1chis.addBands(texture_cat);
-s2_q1_final = s2_q1_final//.rename(rbands);
-print(s2_q1_final)
+s2_q1_final = s2_q1_final
+
 
 
 // END OF SENTINEL-2 PROCESSING
@@ -153,10 +153,8 @@ s1_q1_final = s1_q1_final.rename(['vv_q1chaco', 'vh_q1chaco']);
 //---------------------------------------------------------------------------//
 
 var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final);
-s1s2_q1_chaco = s1s2_q1_chaco.clip(aoi);
-print("No Int16", s1s2_q1_chaco);
-
 s1s2_q1_chaco = int16(s1s2_q1_chaco)
+s1s2_q1_chaco = s1s2_q1_chaco.rename(rbands)
 print("Int16", s1s2_q1_chaco);
 
 //---------------------------------------------------------------------------//
