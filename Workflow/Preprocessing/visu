@@ -3,9 +3,13 @@ var msavi_vp = {"opacity":1,"bands":["MSAVI"],"min":0.1539332863688469,"max":0.8
     b3_vp = {"opacity":1,"bands":["B3"],"min":504.89565612792967,"max":1478.2343182373047,"gamma":1},
     ndvi_vp = {"opacity":1,"bands":["NDVI"],"min":0.1674920952320099,"max":0.8179830276966095,"gamma":1},
     bi_vp = {"opacity":1,"bands":["BI"],"min":498.00431884765624,"max":1895.3620141601561,"gamma":1},
-    nbr_vp = {"opacity":1,"bands":["NBR"],"min":-0.19157870709896088,"max":0.6731144100427627,"gamma":1};
+    nbr_vp = {"opacity":1,"bands":["NBR"],"min":-0.19157870709896088,"max":0.6731144100427627,"gamma":1},
+    image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco"),
+    image2 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q2_chaco"),
+    image3 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q3_chaco"),
+    image4 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q4_chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-print(i)
+var i = image.addBands(image2).addBands(image3).addBands(image4)
 
 Map.addLayer(i.select("B4_q1chaco"), null, "b4")
 Map.addLayer(i.select("B5_q1chaco"), null, "b5")
