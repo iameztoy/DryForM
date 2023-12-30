@@ -156,7 +156,7 @@ s1s2_q1_chaco = int16(s1s2_q1_chaco)
 s1s2_q1_chaco = s1s2_q1_chaco.rename(rbands)
 print("Int16", s1s2_q1_chaco);
 
-Map.addLayer(s1s2_q1_chaco.clip(geometry))
+Map.addLayer(s1s2_q1_chaco)
 
 //---------------------------------------------------------------------------//
 // Normalize
