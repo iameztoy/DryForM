@@ -12,11 +12,10 @@ var ic = ee.ImageCollection([ee.Image(image), ee.Image(image2), ee.Image(image3)
 ee.Image(image4), ee.Image(image5)]).mean()
 print(ic)
 Map.addLayer(ic, vp, "S2")
-Map.addLayer(p, null, "3000 chaco")
 
 p = p.filterBounds(chaco)
-p = p.centroid()
-
+p = p.geometry()
+Map.addLayer(p, null, "Glance Chaco")
 
 var proj = "EPSG:4326"
 var cg = p.coveringGrid(proj, 10)
