@@ -236,10 +236,11 @@ else {
 
 Map.addLayer(s1_view.mosaic(), visparam, 'First image in the input S1 collection', false);
 Map.addLayer(s1_preprocces_view.mosaic(), visparam, 'First image in the processed S1 collection', false);
-var median = s1_preprocces_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-Map.addLayer(median, visparam, "Median")
-print(median)
+var median_1 = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+var median_2 = s1_preprocces_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
 
+Map.addLayer(median_1, visparam, "S1 view - Median")
+Map.addLayer(median_2, visparam, "S1 Preprocess view - Median")
 
 //---------------------------------------------------------------------------//
 // Other functions and utils
