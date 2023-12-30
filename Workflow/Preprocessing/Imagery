@@ -234,7 +234,6 @@ function normalize(image){
 
 s1s2_q1_chaco = normalize(s1s2_q1_chaco);
 s1s2_q1_chaco = s1s2_q1_chaco.multiply(10000).int16() //for testing purposes
-print(s1s2_q1_chaco);
 
 //---------------------------------------------------------------------------//
 // Export
