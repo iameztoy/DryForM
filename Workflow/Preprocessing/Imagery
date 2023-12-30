@@ -193,7 +193,7 @@ Export.image.toAsset({
       description: "s1s2_q1_chaco",
       assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco',  // <> modify these
       region: aoi,
-      scale: export_resolution,
+      scale: 10,
       crs: 'EPSG:4326',
       maxPixels: 1e13
       });
