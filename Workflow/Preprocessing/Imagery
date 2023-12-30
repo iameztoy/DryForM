@@ -31,7 +31,7 @@ var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see
 var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
 // Higher values will remove thin clouds, haze & cirrus shadows.
 var glcm_band = "B8"
-var glcm_size = 3
+var glcm_size = 9
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
@@ -108,8 +108,8 @@ var int16 = function(imgsc) {
   return imgsc.int16();
 };
 
-var s2y20q1chi = s2y20q1ch.map(addIndex).median().int16();
-var s2y20q1chis = s2y20q1chi.select(bands);
+var s2y20q1chi = s2y20q1ch.map(addIndex).median();
+var s2y20q1chis = s2y20q1chi.select(bands).int16();
 var nir_texture = s2y20q1chis.select(glcm_band).glcmTexture({size: glcm_size});
 
 // Selection of textures // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
