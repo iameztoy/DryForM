@@ -234,19 +234,11 @@ else {
     }
 }
 
-Map.centerObject(parameter.GEOMETRY, 12);
-
 Map.addLayer(s1_view.mosaic(), visparam, 'First image in the input S1 collection', false);
 Map.addLayer(s1_preprocces_view.mosaic(), visparam, 'First image in the processed S1 collection', false);
-
-//ADDED IAA
 var median = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-print(median)
-
 Map.addLayer(median, visparam, "Median")
 
-median = median.rename(['vv_q1_chaco', 'vh_q1_chaco', 'ratio_q1_chaco']).toFloat();
-print(median)
 
 //---------------------------------------------------------------------------//
 // Other functions and utils
