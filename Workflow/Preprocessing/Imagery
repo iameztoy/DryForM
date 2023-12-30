@@ -16,6 +16,24 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
           [-60.20496555678613, -21.903411437668456],
           [-60.20496555678613, -21.60622433355665]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+// ******************************************************************************
+//  * Project:  DryForM | JRC, European Commission 
+//  * Purpose:  Imagery preprocessing
+//  * Author:   Iban Ameztoy
+//  * Email: iban.ameztoy@ec.europa.eu, iban.ameztoy@gmail.com
+
+// last update: 30/12/2023
+
+// THE CODE IS PROVIDED WITHOUT WARRANTY THAT THEY WILL BE ERROR FREE OR MEET YOUR REQUIREMENTS.
+// THERE IS NO WARRANTY OF ANY KIND AS TO THE RESULTS OBTAINED, OR THE ACCURACY OR RELIABILITY,
+// VALIDITY OR COMPLETENESS OF ANY INFORMATION OBTAINED. ANY EXECUTION IS AT YOUR OWN RISK,
+// AND YOU ARE SOLELY RESPONSIBLE FOR ANY DAMAGE DONE TO YOUR COMPUTER SYSTEM OR LOSS OF DATA 
+// WHICH MAY RESULT FROM SUCH CODE.
+
+// Please refer to Google Earth Engine Terms of Service at https://earthengine.google.org/terms
+//*********************************************************************************************
+
+
 
 //---------------------------------------------------------------------------//
 // REQUIRE
@@ -30,7 +48,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 
-var quarter = "q2"; // "q2", "q3", "q4"
+var quarter = "q4"; // "q2", "q3", "q4"
 
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
