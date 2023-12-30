@@ -61,7 +61,7 @@ if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
 //Bands S1/S2
 var bands_init = ["B.*"];
-var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
+var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
 var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco", "B12_"+quarter+"chaco",
               "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", "B8_savg_"+quarter+"chaco", 
               "B8_idm_"+quarter+"chaco", "B8_corr_"+quarter+"chaco", "B8_ent_"+quarter+"chaco", 
@@ -230,6 +230,7 @@ function normalize(image){
               }
 
 s1s2_q1_chaco = normalize(s1s2_q1_chaco);
+print(s1s2_q1_chaco);
 
 //---------------------------------------------------------------------------//
 // Export
@@ -280,8 +281,6 @@ Map.addLayer(s1_view.first(), visparam, 'First image in the input S1 collection'
 Map.addLayer(s1_preprocces_view.first(), visparam, 'First image in the processed S1 collection', false);
 var median_1 = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
 var median_2 = s1_preprocces_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-print(median_1);
-print(median_2);
 
 
 Map.addLayer(median_1, visparam, "S1 view - Median");
