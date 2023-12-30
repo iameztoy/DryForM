@@ -63,8 +63,8 @@ if (quarter == "q4"){var str = q4_str; var end = q4_end}
 var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
 var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco", "B12_"+quarter+"chaco",
-              "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", "B8_savg_"+quarter+"chaco", 
-              "B8_idm_"+quarter+"chaco", "B8_corr_"+quarter+"chaco", "B8_ent_"+quarter+"chaco", 
+              "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", 
+              "B8_savg_"+quarter+"chaco", "B8_idm_"+quarter+"chaco", "B8_corr_"+quarter+"chaco", "B8_ent_"+quarter+"chaco", 
               "vv_"+quarter+"chaco", "vh_"+quarter+"chaco"]; //, "vvvh_"+quarter+"chaco"
 
 //---------------------------------------------------------------------------//
@@ -147,11 +147,12 @@ var addIndex = function addindexes(img) {
    .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
   ).divide(2).rename("MSAVI");
   //texture of 5x5 pixel window
-  var msavi2t = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5),
-  }).rename('MSAVIt');
+  var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt');
   var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
-  return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, bi));
+  return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi));
 };
+
+
 
 
 var s2y20q1chi = s2y20q1ch.map(addIndex).median();
