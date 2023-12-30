@@ -3,9 +3,10 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_11
     image2 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_24_cs_cdf"),
     image3 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_53_cs_cdf"),
     vp = {"opacity":1,"bands":["B8","B4","B5"],"min":200,"max":7000,"gamma":1},
-    p = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Samples4stats/RandomP_Chaco_3000"),
     image4 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_67_cs_cdf"),
-    image5 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_10_cs_cdf");
+    image5 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_10_cs_cdf"),
+    p = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Glance/glance_qg"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var ic = ee.ImageCollection([ee.Image(image), ee.Image(image2), ee.Image(image3),
 ee.Image(image4), ee.Image(image5)]).mean()
@@ -13,11 +14,12 @@ print(ic)
 Map.addLayer(ic, vp, "S2")
 Map.addLayer(p, null, "3000 chaco")
 
-var cen = p.centroid()
-Map.addLayer(cen)
+p = p.filterBounds(chaco)
+p = p.centroid()
+
 
 var proj = "EPSG:4326"
-var cg = p.geometry().coveringGrid(proj, 10)
+var cg = p.coveringGrid(proj, 10)
 var b = cg.geometry().buffer(1)
 var cgp = b.coveringGrid(proj, 10)
 var un = cgp.union()
