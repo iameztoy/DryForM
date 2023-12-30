@@ -5,6 +5,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
