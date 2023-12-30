@@ -6,9 +6,20 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/Chaco_S2
     bi_vp = {"opacity":1,"bands":["BI"],"min":498.00431884765624,"max":1895.3620141601561,"gamma":1},
     nbr_vp = {"opacity":1,"bands":["NBR"],"min":-0.19157870709896088,"max":0.6731144100427627,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-print(image)
-Map.addLayer(image.select("NDVI"), ndvi_vp, "NDVI")
-Map.addLayer(image.select("MSAVI"), msavi_vp, "MSAVI")
-Map.addLayer(image.select("BI"), bi_vp, "BI")
-Map.addLayer(image.select("NBR"), nbr_vp, "NBR")
-Map.addLayer(image.select("B3"), b3_vp, "B3")
+print(i)
+
+Map.addLayer(i.select("B4_q1chaco"), null, "b4")
+Map.addLayer(i.select("B5_q1chaco"), null, "b5")
+Map.addLayer(i.select("B8_q1chaco"), null, "b8")
+Map.addLayer(i.select("B12_q1chaco"), null, "b12")
+Map.addLayer(i.select("gNDVI_q1chaco"), null, "gndvi")
+Map.addLayer(i.select("MSAVI_q1chaco"), null, "msavi")
+Map.addLayer(i.select("BI_q1chaco"), null, "bi")
+
+Map.addLayer(i.select("B8_savg_q1chaco"), null, "savg")
+Map.addLayer(i.select("B8_idm_q1chaco"), null, "idm")
+Map.addLayer(i.select("B8_corr_q1chaco"), null, "corr")
+Map.addLayer(i.select("B8_ent_q1chaco"), null, "ent")
+
+Map.addLayer(i.select("vv_q1chaco"), null, "vv")
+Map.addLayer(i.select("vh_q1chaco"), null, "vh")
