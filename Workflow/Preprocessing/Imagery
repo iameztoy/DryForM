@@ -155,9 +155,6 @@ var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final);
 s1s2_q1_chaco = int16(s1s2_q1_chaco)
 s1s2_q1_chaco = s1s2_q1_chaco.rename(rbands)
 
-
-Map.addLayer(s1s2_q1_chaco)
-
 //---------------------------------------------------------------------------//
 // Normalize
 //---------------------------------------------------------------------------//
