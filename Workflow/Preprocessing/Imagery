@@ -17,7 +17,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
           [-60.20496555678613, -21.60622433355665]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // ******************************************************************************
-//  * Project:  DryForM | JRC, European Commission 
+//  * Project:  DryForM Exploratory Research | JRC, European Commission 
 //  * Purpose:  Imagery preprocessing
 //  * Author:   Iban Ameztoy
 //  * Email: iban.ameztoy@ec.europa.eu, iban.ameztoy@gmail.com
