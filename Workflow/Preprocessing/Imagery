@@ -156,12 +156,12 @@ var s2y20q1chis = s2y20q1chi.select(bands);
 var nir_texture = s2y20q1chis.select(glcm_band).int16().glcmTexture({size: glcm_size});
 
 // Selection of textures // "B8_idm" "B8_corr" "B8_savg" "B8_ent"
-var nir_q1_savg = nir_texture.select("B8_savg");
-var nir_q1_idm = nir_texture.select("B8_idm");
-var nir_q1_corr = nir_texture.select("B8_corr"); 
-var nir_q1_ent = nir_texture.select("B8_ent");
+var nir_savg = nir_texture.select("B8_savg");
+var nir_idm = nir_texture.select("B8_idm");
+var nir_corr = nir_texture.select("B8_corr"); 
+var nir_ent = nir_texture.select("B8_ent");
 
-var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent);
+var texture_cat = ee.Image.cat(nir_savg, nir_idm, nir_corr, nir_ent);
 var s2_q1_final = s2y20q1chis.addBands(texture_cat);
 s2_q1_final = s2_q1_final;
 
@@ -193,7 +193,7 @@ var s1_q1_final = s1_preprocces_def.median().select(["VV", "VH"]); //Optionally 
 //---------------------------------------------------------------------------//
 
 var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final);
-s1s2_q1_chaco = int16(s1s2_q1_chaco);
+//s1s2_q1_chaco = int16(s1s2_q1_chaco);
 s1s2_q1_chaco = s1s2_q1_chaco.rename(rbands);
 
 //---------------------------------------------------------------------------//
