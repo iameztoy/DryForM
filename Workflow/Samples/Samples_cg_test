@@ -13,7 +13,7 @@ print(ic)
 Map.addLayer(ic, vp, "S2")
 Map.addLayer(p, null, "3000 chaco")
 
-var cen = p.geometry().centroid()
+var cen = p.centroid()
 Map.addLayer(cen)
 
 var proj = "EPSG:4326"
