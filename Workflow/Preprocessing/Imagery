@@ -26,7 +26,8 @@ var q4_str = "2020-10-01"; var q4_end = "2021-01-01";
 // DEFINE SENTINEL-2 PARAMETERS
 //---------------------------------------------------------------------------//
 
-var bands = ["B3", "B4", "B5", "B8", "B11", "B12", "NDVI", "NBR", "MSAVI", "BI"];
+var bands_init = ["B.*"]
+var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
 var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
 var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
 // Higher values will remove thin clouds, haze & cirrus shadows.
@@ -96,12 +97,13 @@ var s2y20q1ch = s2
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
   var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var gndvi = img.normalizedDifference(['B8', 'B3']).rename('gNDVI');
   var msavi2 = img.select('B8').multiply(2).add(1)
   .subtract(img.select('B8').multiply(2).add(1).pow(2)
     .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt()
   ).divide(2).rename("MSAVI");
   var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
-  return img.addBands(ee.Image.cat(nbr, ndvi, msavi2, bi));
+  return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, bi));
 };
 
 
