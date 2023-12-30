@@ -7,9 +7,15 @@ var msavi_vp = {"opacity":1,"bands":["MSAVI"],"min":0.1539332863688469,"max":0.8
     image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco"),
     image2 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q2_chaco"),
     image3 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q3_chaco"),
-    image4 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q4_chaco");
+    image4 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q4_chaco"),
+    image5 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco_NormMultInt16"),
+    image6 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q2_chaco_NormMultInt16"),
+    image7 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q3_chaco_NormMultInt16"),
+    image8 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q4_chaco_NormMultInt16");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var i = image.addBands(image2).addBands(image3).addBands(image4)
+var ii = image5.addBands(image6).addBands(image7).addBands(image8)
+print(image5)
 
 Map.addLayer(i.select("B4_q1chaco"), null, "b4")
 Map.addLayer(i.select("B5_q1chaco"), null, "b5")
@@ -26,3 +32,20 @@ Map.addLayer(i.select("B8_ent_q1chaco"), null, "ent")
 
 Map.addLayer(i.select("vv_q1chaco"), null, "vv")
 Map.addLayer(i.select("vh_q1chaco"), null, "vh")
+//
+Map.addLayer(ii.select("B4_q1chaco"), null, "b4 i")
+Map.addLayer(ii.select("B5_q1chaco"), null, "b5 i")
+Map.addLayer(ii.select("B8_q1chaco"), null, "b8 i")
+Map.addLayer(ii.select("B12_q1chaco"), null, "b12 i")
+Map.addLayer(ii.select("gNDVI_q1chaco"), null, "gndvi i")
+Map.addLayer(ii.select("MSAVI_q1chaco"), null, "msavi i")
+Map.addLayer(ii.select("MSAVIt_q1chaco"), null, "msavit i")
+Map.addLayer(ii.select("BI_q1chaco"), null, "bi i")
+
+Map.addLayer(ii.select("B8_savg_q1chaco"), null, "savg i")
+Map.addLayer(ii.select("B8_idm_q1chaco"), null, "idm i")
+Map.addLayer(ii.select("B8_corr_q1chaco"), null, "corr i")
+Map.addLayer(ii.select("B8_ent_q1chaco"), null, "ent i")
+
+Map.addLayer(ii.select("vv_q1chaco"), null, "vv i")
+Map.addLayer(ii.select("vh_q1chaco"), null, "vh i")
