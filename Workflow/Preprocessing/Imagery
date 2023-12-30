@@ -28,9 +28,9 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoi = geometry //chaco //caatinga, cerrado, tanzania
+var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 
-var quarter = "q1"
+var quarter = "q1"; // "q2", "q3", "q4"
 
 var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
 var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
@@ -43,11 +43,12 @@ if (quarter == "q3"){var str = q3_str; var end = q3_end}
 if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
 //Bands S1/S2
-var bands_init = ["B.*"]
+var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
 var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
               "gNDVI_q1chaco", "MSAVI_q1chaco", "BI_q1chaco", "B8_savg_q1chaco", 
-              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", "vv_q1chaco", "vh_q1chaco"] //, "vvvh_q1chaco"
+              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", 
+              "vv_q1chaco", "vh_q1chaco"]; //, "vvvh_q1chaco"
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-2 PARAMETERS
@@ -58,13 +59,12 @@ var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and
 // Higher values will remove thin clouds, haze & cirrus shadows.
 
 // GLCM Texture parameters
-var glcm_band = "B8"
-var glcm_size = 9
+var glcm_band = "B8";
+var glcm_size = 9;
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
 //---------------------------------------------------------------------------//
-
 
 var parameter = {//1. Data Selection
               START_DATE: str,
@@ -91,7 +91,7 @@ var parameter = {//1. Data Selection
               FORMAT : 'DB',
               CLIP_TO_ROI: false,
               SAVE_ASSETS: false
-}
+};
 
 //---------------------------------------------------------------------------//
 // ********** END OF PARAMETERS ************
@@ -119,7 +119,7 @@ var s2y20q1ch = s2
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
-    })
+    });
 
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
@@ -146,9 +146,7 @@ var nir_q1_ent = nir_texture.select("B8_ent");
 
 var texture_cat = ee.Image.cat(nir_q1_savg, nir_q1_idm, nir_q1_corr, nir_q1_ent);
 var s2_q1_final = s2y20q1chis.addBands(texture_cat);
-s2_q1_final = s2_q1_final
-
-
+s2_q1_final = s2_q1_final;
 
 // END OF SENTINEL-2 PROCESSING
 
@@ -178,8 +176,8 @@ var s1_q1_final = s1_preprocces_def.median().select(["VV", "VH"]); //Optionally 
 //---------------------------------------------------------------------------//
 
 var s1s2_q1_chaco = s2_q1_final.addBands(s1_q1_final);
-s1s2_q1_chaco = int16(s1s2_q1_chaco)
-s1s2_q1_chaco = s1s2_q1_chaco.rename(rbands)
+s1s2_q1_chaco = int16(s1s2_q1_chaco);
+s1s2_q1_chaco = s1s2_q1_chaco.rename(rbands);
 
 //---------------------------------------------------------------------------//
 // Normalize
@@ -207,8 +205,8 @@ function normalize(image){
               var mins = ee.Image.constant(minDict.values(bandNames));
               var maxs = ee.Image.constant(maxDict.values(bandNames));
 
-              var normalized = image.subtract(mins).divide(maxs.subtract(mins))
-              return normalized
+              var normalized = image.subtract(mins).divide(maxs.subtract(mins));
+              return normalized;
               }
 
 s1s2_q1_chaco = normalize(s1s2_q1_chaco);
@@ -231,29 +229,29 @@ Export.image.toAsset({
 //---------------------------------------------------------------------------//
 
 //Visulaization of the first image in the collection in RGB for VV, VH, images
-var visparam = {}
+var visparam = {};
 if (parameter.POLARIZATION=='VVVH'){
      if (parameter.FORMAT=='DB'){
     var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin).map(helper.lin_to_db2);
     var s1_view = s1.map(helper.add_ratio_lin).map(helper.lin_to_db2);
-    visparam = {bands:['VV','VH','VVVH_ratio'],min: [-20, -25, 1],max: [0, -5, 15]}
+    visparam = {bands:['VV','VH','VVVH_ratio'],min: [-20, -25, 1],max: [0, -5, 15]};
     }
     else {
     var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin);
     var s1_view = s1.map(helper.add_ratio_lin);
-    visparam = {bands:['VV','VH','VVVH_ratio'], min: [0.01, 0.0032, 1.25],max: [1, 0.31, 31.62]}
+    visparam = {bands:['VV','VH','VVVH_ratio'], min: [0.01, 0.0032, 1.25],max: [1, 0.31, 31.62]};
     }
 }
 else {
     if (parameter.FORMAT=='DB') {
     s1_preprocces_view = s1_preprocces.map(helper.lin_to_db);
     s1_view = s1.map(helper.lin_to_db);
-    visparam = {bands:[parameter.POLARIZATION],min: -25,max: 0}   
+    visparam = {bands:[parameter.POLARIZATION],min: -25,max: 0}; 
     }
     else {
     s1_preprocces_view = s1_preprocces;
     s1_view = s1;
-    visparam = {bands:[parameter.POLARIZATION],min: 0,max: 0.2}
+    visparam = {bands:[parameter.POLARIZATION],min: 0,max: 0.2};
     }
 }
 
@@ -261,12 +259,12 @@ Map.addLayer(s1_view.first(), visparam, 'First image in the input S1 collection'
 Map.addLayer(s1_preprocces_view.first(), visparam, 'First image in the processed S1 collection', false);
 var median_1 = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
 var median_2 = s1_preprocces_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-print(median_1)
-print(median_2)
+print(median_1);
+print(median_2);
 
 
-Map.addLayer(median_1, visparam, "S1 view - Median")
-Map.addLayer(median_2, visparam, "S1 Preprocess view - Median")
+Map.addLayer(median_1, visparam, "S1 view - Median");
+Map.addLayer(median_2, visparam, "S1 Preprocess view - Median");
 
 //---------------------------------------------------------------------------//
 // Other functions and utils
