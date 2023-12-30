@@ -155,7 +155,7 @@ s1_preprocces = s1_preprocces[1];
 //Convert format for export  
 
 if (parameter.FORMAT=='DB'){
-  s1_preprocces_def = s1_preprocces.map(helper.lin_to_db);
+  var s1_preprocces_def = s1_preprocces.map(helper.lin_to_db);
 }
 
 // CALCULATE COMPOSITE
