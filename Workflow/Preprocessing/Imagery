@@ -2,20 +2,7 @@
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
-    geometry = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-59.352302100518315, -19.551077892645612],
-          [-59.352302100518315, -21.567120945906915],
-          [-56.364020850518315, -21.567120945906915],
-          [-56.364020850518315, -19.551077892645612]]], null, false);
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //---------------------------------------------------------------------------//
@@ -216,6 +203,50 @@ Export.image.toAsset({
       crs: 'EPSG:4326',
       maxPixels: 1e13
       });
+//---------------------------------------------------------------------------//
+// VISUALIZE
+//---------------------------------------------------------------------------//
+
+//Visulaization of the first image in the collection in RGB for VV, VH, images
+var visparam = {}
+if (parameter.POLARIZATION=='VVVH'){
+     if (parameter.FORMAT=='DB'){
+    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin).map(helper.lin_to_db2);
+    var s1_view = s1.map(helper.add_ratio_lin).map(helper.lin_to_db2);
+    visparam = {bands:['VV','VH','VVVH_ratio'],min: [-20, -25, 1],max: [0, -5, 15]}
+    }
+    else {
+    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin);
+    var s1_view = s1.map(helper.add_ratio_lin);
+    visparam = {bands:['VV','VH','VVVH_ratio'], min: [0.01, 0.0032, 1.25],max: [1, 0.31, 31.62]}
+    }
+}
+else {
+    if (parameter.FORMAT=='DB') {
+    s1_preprocces_view = s1_preprocces.map(helper.lin_to_db);
+    s1_view = s1.map(helper.lin_to_db);
+    visparam = {bands:[parameter.POLARIZATION],min: -25,max: 0}   
+    }
+    else {
+    s1_preprocces_view = s1_preprocces;
+    s1_view = s1;
+    visparam = {bands:[parameter.POLARIZATION],min: 0,max: 0.2}
+    }
+}
+
+Map.centerObject(parameter.GEOMETRY, 12);
+
+Map.addLayer(s1_view.mosaic(), visparam, 'First image in the input S1 collection', false);
+Map.addLayer(s1_preprocces_view.mosaic(), visparam, 'First image in the processed S1 collection', false);
+
+//ADDED IAA
+var median = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+print(median)
+
+Map.addLayer(median, visparam, "Median")
+
+median = median.rename(['vv_q1_chaco', 'vh_q1_chaco', 'ratio_q1_chaco']).toFloat();
+print(median)
 
 //---------------------------------------------------------------------------//
 // Other functions and utils
