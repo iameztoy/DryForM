@@ -49,7 +49,7 @@ var bands_init = ["B.*"]
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "BI"];
 var rbands = ["B4_q1chaco", "B5_q1chaco", "B8_q1chaco", "B12_q1chaco",
               "gNDVI_q1chaco", "MSAVI_q1chaco", "BI_q1chaco", "B8_savg_q1chaco", 
-              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", "vv_q1chaco", "vh_q1chaco"]
+              "B8_idm_q1chaco", "B8_corr_q1chaco", "B8_ent_q1chaco", "vv_q1chaco", "vh_q1chaco", "vvvh_q1chaco"]
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
@@ -158,8 +158,8 @@ if (parameter.FORMAT=='DB'){
 }
 
 // CALCULATE COMPOSITE
-var s1_q1_final = s1_preprocces.median().select(["VV", "VH"]); //Optionally "VVVH_ratio"
-s1_q1_final = s1_q1_final.rename(['vv_q1chaco', 'vh_q1chaco']);
+var s1_q1_final = s1_preprocces.median().select(["VV", "VH", "VVVH_ratio"]); //Optionally "VVVH_ratio"
+
 
 //---------------------------------------------------------------------------//
 // MERGE S1 AND S2 COMPOSITES
