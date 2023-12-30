@@ -207,7 +207,8 @@ Export.image.toAsset({
   function int16(imgsc) {
     return imgsc.int16();
   }
-  
+
+/*  
 var rescaling_options = 'Raw 0-10000';
 if (rescaling_options == 'Optimized 0-255'){
   PINO24coll = PINO24coll.multiply(0.051).byte()}
@@ -215,3 +216,4 @@ if (rescaling_options == 'Regular 0-255'){
   PINO24coll = PINO24coll.multiply(0.0255).byte()}
 if (rescaling_options == 'Raw 0-10000'){
   PINO24coll = PINO24coll.int16()}
+*/
