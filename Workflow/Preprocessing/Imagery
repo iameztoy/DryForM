@@ -104,10 +104,6 @@ var addIndex = function addindexes(img) {
   return img.addBands(ee.Image.cat(nbr, ndvi, msavi2, bi));
 };
 
-// Write a function to scale the bands (not implemented)
-  function int16(imgsc) {
-    return imgsc.int16();
-  }
 
 var s2y20q1chi = s2y20q1ch.map(addIndex).median();
 var s2y20q1chis = s2y20q1chi.select(bands).int16();
@@ -192,3 +188,20 @@ s1s2_q1_chaco = normalize(s1s2_q1_chaco);
 // Export
 //---------------------------------------------------------------------------//
 
+Export.image.toAsset({
+      image: PINO24coll,
+      description: "s1s2_q1_chaco",
+      assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/s1s2_q1_chaco',  // <> modify these
+      region: aoi,
+      scale: export_resolution,
+      crs: 'EPSG:4326',
+      maxPixels: 1e13
+      });
+
+//---------------------------------------------------------------------------//
+// Other functions
+//---------------------------------------------------------------------------//
+// Write a function to scale the bands
+  function int16(imgsc) {
+    return imgsc.int16();
+  }
