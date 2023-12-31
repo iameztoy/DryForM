@@ -55,10 +55,10 @@ var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
 var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
 var q4_str = year+"-10-01"; var q4_end = year+"-01-01";
 
-if (quarter == "q1"){var str = q1_str; var end = q1_end};
-if (quarter == "q2"){var str = q2_str; var end = q2_end};
-if (quarter == "q3"){var str = q3_str; var end = q3_end};
-if (quarter == "q4"){var str = q4_str; var end = q4_end};
+if (quarter == "q1"){var str = q1_str; var end = q1_end}
+if (quarter == "q2"){var str = q2_str; var end = q2_end}
+if (quarter == "q3"){var str = q3_str; var end = q3_end}
+if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
 //Bands S1/S2
 var bands_init = ["B.*"];
