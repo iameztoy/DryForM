@@ -47,18 +47,18 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 //---------------------------------------------------------------------------//
 
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
+var quarter = "q1"; // "q2", "q3", "q4"
+var year='2020';
 
-var quarter = "q4"; // "q2", "q3", "q4"
+var q1_str = year+"-01-01"; var q1_end = year+"-04-01";
+var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
+var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
+var q4_str = year+"-10-01"; var q4_end = year+"-01-01";
 
-var q1_str = "2020-01-01"; var q1_end = "2020-04-01";
-var q2_str = "2020-04-01"; var q2_end = "2020-07-01";
-var q3_str = "2020-07-01"; var q3_end = "2020-10-01";
-var q4_str = "2020-10-01"; var q4_end = "2021-01-01";
-
-if (quarter == "q1"){var str = q1_str; var end = q1_end}
-if (quarter == "q2"){var str = q2_str; var end = q2_end}
-if (quarter == "q3"){var str = q3_str; var end = q3_end}
-if (quarter == "q4"){var str = q4_str; var end = q4_end}
+if (quarter == "q1"){var str = q1_str; var end = q1_end};
+if (quarter == "q2"){var str = q2_str; var end = q2_end};
+if (quarter == "q3"){var str = q3_str; var end = q3_end};
+if (quarter == "q4"){var str = q4_str; var end = q4_end};
 
 //Bands S1/S2
 var bands_init = ["B.*"];
@@ -83,6 +83,8 @@ var glcm_size = 5;
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
 //---------------------------------------------------------------------------//
+
+// See descriptions at the end of the code
 
 var parameter = {//1. Data Selection
               START_DATE: str,
@@ -155,7 +157,6 @@ var addIndex = function addindexes(img) {
   //         sqrt( (2 * nir + 1)^2 - (6 * nir - 5 * sqrt(red) - 0.5) ) //https://gis.stackexchange.com/questions/308633/soil-adjusted-vegetation-index-values-msavi2-are-not-within-expected-range
   return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi));
 };
-
 
 var s2y20q1chi = s2y20q1ch.map(addIndex).median();
 var s2y20q1chis = s2y20q1chi.select(bands);
