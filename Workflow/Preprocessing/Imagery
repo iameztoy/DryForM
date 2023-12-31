@@ -49,6 +49,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 var quarter = "q1"; // "q2", "q3", "q4"
 var year='2020';
+var collection = "2A";
 
 var q1_str = year+"-01-01"; var q1_end = year+"-04-01"; // Inclusive/exclusive
 var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
@@ -59,6 +60,10 @@ if (quarter == "q1"){var str = q1_str; var end = q1_end}
 if (quarter == "q2"){var str = q2_str; var end = q2_end}
 if (quarter == "q3"){var str = q3_str; var end = q3_end}
 if (quarter == "q4"){var str = q4_str; var end = q4_end}
+
+if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
+if (collection == "1C"){var col = '("COPERNICUS/S2_HARMONIZED")'}
+
 
 //Bands S1/S2
 var bands_init = ["B.*"];
@@ -125,7 +130,7 @@ var parameter = {//1. Data Selection
 // Process Sentinel-2
 
 // Harmonized Sentinel-2 Level 2A collection.
-var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED');
+var s2 = ee.ImageCollection(col);
 
 
 // Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
