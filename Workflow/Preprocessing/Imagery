@@ -50,7 +50,7 @@ var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 var quarter = "q1"; // "q2", "q3", "q4"
 var year='2020';
 
-var q1_str = year+"-01-01"; var q1_end = year+"-04-01";
+var q1_str = year+"-01-01"; var q1_end = year+"-04-01"; // Inclusive/exclusive
 var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
 var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
 var q4_str = year+"-10-01"; var q4_end = year+"-01-01";
@@ -72,6 +72,7 @@ var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco
 // DEFINE SENTINEL-2 PARAMETERS
 //---------------------------------------------------------------------------//
 
+var cloud_per = 0.60
 var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
 var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
 // Higher values will remove thin clouds, haze & cirrus shadows.
@@ -136,7 +137,7 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 var s2y20q1ch = s2
     .filterBounds(aoi)
     .filterDate(str, end)
-    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',60))
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
