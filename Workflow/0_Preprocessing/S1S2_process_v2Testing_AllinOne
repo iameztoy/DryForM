@@ -165,7 +165,7 @@ var s2f = s2
 //-- Testing purposes --
 
 // We create different composites for each season
-var createSeasonComposites = function(months) {
+var createSeasonComposites_s2 = function(months) {
   var startMonth = ee.List(months).get(0);
   var endMonth = ee.List(months).get(1);
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
@@ -174,8 +174,8 @@ var createSeasonComposites = function(months) {
   return composite.select(bands_init).clip(aoi);
 };
 
-var compositeList = t_int4.map(createSeasonComposites);
-var a = ee.ImageCollection.fromImages(compositeList);
+var compositeList = t_int4.map(createSeasonComposites_s2);
+var s2_comp = ee.ImageCollection.fromImages(compositeList);
 
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
@@ -193,34 +193,17 @@ var addIndex = function addindexes(img) {
   return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi));
 };
 
-var addGlcm = function addglmc(img) {
+var addglcm = function addglmc(img) {
   var glcm = img.select(glcm_band).int16().glcmTexture({size: glcm_size});
-  var savg = glcm.select("savg");
-  var idm = glcm.select("idm");
-  var corr = glcm.select("corr"); 
-  var ent = glcm.select("ent");  
-  var glcm_cat = ee.Image.cat(savg, idm, corr, ent);
-  return img.addBands(glcm_cat);
+  var savg = glcm.select("B8_savg");
+  var idm = glcm.select("B8_idm");
+  var corr = glcm.select("B8_corr"); 
+  var ent = glcm.select("B8_ent");  
+  return img.addBands(ee.Image.cat(savg, idm, corr));
 }
 
+var s2_final = s2_comp.map(addIndex).map(addglcm).toBands()
 
-var b = a.map(addIndex)
-var c = b.map(addGlcm)
-var d = c.toBands()
-
-
-var s2fm = s2f.map(addIndex).median();
-var s2fms = s2fm.select(bands);
-var glcm = s2fms.select(glcm_band).int16().glcmTexture({size: glcm_size});
-
-// Selection of textures // 
-var savg = glcm.select("savg");
-var idm = glcm.select("idm");
-var corr = glcm.select("corr"); 
-var ent = glcm.select("ent");
-
-var glcm_cat = ee.Image.cat(savg, idm, corr, ent);
-var s2_final = s2fms.addBands(glcm_cat);
 
 // END OF SENTINEL-2 PROCESSING
 
