@@ -105,8 +105,8 @@ var glcm_size = 5;
 // See descriptions at the end of the code
 
 var parameter = {//1. Data Selection
-              START_DATE: str,
-              STOP_DATE: end,
+              START_DATE: "2020-01-01",
+              STOP_DATE: "2021-01-01",
               POLARIZATION:'VVVH',
               ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
               GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
@@ -211,22 +211,22 @@ var s2_final = s2_comp.map(addIndex).map(addglcm).toBands()
 // PROCESS SENTINEL-1
 //---------------------------------------------------------------------------//
 
-var createSeasonComposites_s1 = function(months) {
-  var startMonth = ee.List(months).get(0);
-  var endMonth = ee.List(months).get(1);
-  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
-  var seasonFiltered = s1.filter(monthFilter);
-  var composite = seasonFiltered.mean();
-  return composite.clip(aoi);
-};
+
 
 //Preprocess the S1 collection
 var s1_preprocces = wrapper.s1_preproc(parameter);
 
 var s1 = s1_preprocces[0];
-print(s1)
 s1_preprocces = s1_preprocces[1];
-print(s1_preprocces);
+
+var createSeasonComposites_s1 = function(months) {
+  var startMonth = ee.List(months).get(0);
+  var endMonth = ee.List(months).get(1);
+  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+  var seasonFiltered = s1_preprocces.filter(monthFilter);
+  var composite = seasonFiltered.mean();
+  return composite.clip(aoi);
+};
 
 //Convert format for export  
 // *changed from original so it does not provoque any conflit with the Visu section
