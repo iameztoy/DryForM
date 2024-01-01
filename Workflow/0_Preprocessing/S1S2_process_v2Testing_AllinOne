@@ -153,30 +153,30 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 // SELECT AND MASK CLOUD/SHADOWS
 var s2f = s2
     .filterBounds(aoi)
-    .filterDate(str, end)
+    .filterDate("2020-01-01", "2021-01-01") //str, end
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
     });
 
+
 // ************************************
 //-- Testing purposes --
 
 // We create different composites for each season
 var createSeasonComposites = function(months) {
-  var startMonth = ee.List(months).get(0)
-  var endMonth = ee.List(months).get(1)
-  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month')
-  var seasonFiltered = s2f.filter(monthFilter)
-  var composite = seasonFiltered.median()
-  return composite.select('B.*').clip(aoi)
-}
+  var startMonth = ee.List(months).get(0);
+  var endMonth = ee.List(months).get(1);
+  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+  var seasonFiltered = s2f.filter(monthFilter);
+  var composite = seasonFiltered.median();
+  return composite.select(bands_init).clip(aoi);
+};
 
-var compositeList = t_int4.map(createSeasonComposites)
-
-print(compositeList)
-
+var compositeList = t_int4.map(createSeasonComposites);
+var a = ee.ImageCollection.fromImages(compositeList);
+print(a)
 
 
 var addIndex = function addindexes(img) {
@@ -194,6 +194,11 @@ var addIndex = function addindexes(img) {
   //         sqrt( (2 * nir + 1)^2 - (6 * nir - 5 * sqrt(red) - 0.5) ) //https://gis.stackexchange.com/questions/308633/soil-adjusted-vegetation-index-values-msavi2-are-not-within-expected-range
   return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi));
 };
+
+var b = a.map(addIndex)
+print(b)
+
+
 
 var s2fm = s2f.map(addIndex).median();
 var s2fms = s2fm.select(bands);
