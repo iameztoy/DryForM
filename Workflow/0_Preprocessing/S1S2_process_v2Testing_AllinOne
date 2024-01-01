@@ -176,8 +176,6 @@ var createSeasonComposites = function(months) {
 
 var compositeList = t_int4.map(createSeasonComposites);
 var a = ee.ImageCollection.fromImages(compositeList);
-print(a)
-
 
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
@@ -195,9 +193,20 @@ var addIndex = function addindexes(img) {
   return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi));
 };
 
-var b = a.map(addIndex)
-print(b)
+var addGlcm = function addglmc(img) {
+  var glcm = img.select(glcm_band).int16().glcmTexture({size: glcm_size});
+  var savg = glcm.select("savg");
+  var idm = glcm.select("idm");
+  var corr = glcm.select("corr"); 
+  var ent = glcm.select("ent");  
+  var glcm_cat = ee.Image.cat(savg, idm, corr, ent);
+  return img.addBands(glcm_cat);
+}
 
+
+var b = a.map(addIndex)
+var c = b.map(addGlcm)
+var d = c.toBands()
 
 
 var s2fm = s2f.map(addIndex).median();
