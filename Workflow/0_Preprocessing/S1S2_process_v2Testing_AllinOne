@@ -226,7 +226,7 @@ if (parameter.FORMAT=='DB'){
 }
 
 // CALCULATE COMPOSITE
-var s1_final = s1_preprocces_def.median().select(["VV", "VH"]); //Optionally "VVVH_ratio"
+var s1_final = s1_preprocces_def.mean().select(["VV", "VH"]); //Optionally "VVVH_ratio"
 
 
 //---------------------------------------------------------------------------//
