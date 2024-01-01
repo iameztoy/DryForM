@@ -62,10 +62,6 @@ var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
 // Bands S1/S2
 var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
-var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco", "B12_"+quarter+"chaco",
-              "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", 
-              "savg_"+quarter+"chaco", "idm_"+quarter+"chaco", "corr_"+quarter+"chaco", "ent_"+quarter+"chaco", 
-              "vv_"+quarter+"chaco", "vh_"+quarter+"chaco"]; //, "vvvh_"+quarter+"chaco"
 
 //---------------------------------------------------------------------------//
 // Conditionals and building composites
