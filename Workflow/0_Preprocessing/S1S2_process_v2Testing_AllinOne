@@ -1,0 +1,410 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.60939976088769, -21.60622433355665],
+          [-60.60939976088769, -21.903411437668456],
+          [-60.20496555678613, -21.903411437668456],
+          [-60.20496555678613, -21.60622433355665]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// ******************************************************************************
+//  * Project:  DryForM Exploratory Research | JRC, European Commission 
+//  * Purpose:  Imagery preprocessing
+//  * Author:   Iban Ameztoy
+//  * Email: iban.ameztoy@ec.europa.eu, iban.ameztoy@gmail.com
+
+// last update: 30/12/2023
+
+// THE CODE IS PROVIDED WITHOUT WARRANTY THAT THEY WILL BE ERROR FREE OR MEET YOUR REQUIREMENTS.
+// THERE IS NO WARRANTY OF ANY KIND AS TO THE RESULTS OBTAINED, OR THE ACCURACY OR RELIABILITY,
+// VALIDITY OR COMPLETENESS OF ANY INFORMATION OBTAINED. ANY EXECUTION IS AT YOUR OWN RISK,
+// AND YOU ARE SOLELY RESPONSIBLE FOR ANY DAMAGE DONE TO YOUR COMPUTER SYSTEM OR LOSS OF DATA 
+// WHICH MAY RESULT FROM SUCH CODE.
+
+// Please refer to Google Earth Engine Terms of Service at https://earthengine.google.org/terms
+//*********************************************************************************************
+
+
+//---------------------------------------------------------------------------//
+// REQUIRE
+//---------------------------------------------------------------------------//
+
+var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
+var helper = require('users/adugnagirma/gee_s1_ard:utilities');
+
+//---------------------------------------------------------------------------//
+// DEFINE GENERAL PARAMETERS
+//---------------------------------------------------------------------------//
+
+var aoi_name = "chaco";
+var aoi = geometry; //chaco, caatinga, cerrado, tanzania
+var quarter = "q1"; // "q2", "q3", "q4"
+
+var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]])
+var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]])
+
+var year='2020';
+var collection = "2A";
+var normalize = "False"; 
+var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
+
+
+// Bands S1/S2
+var bands_init = ["B.*"];
+var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
+var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco", "B12_"+quarter+"chaco",
+              "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", 
+              "savg_"+quarter+"chaco", "idm_"+quarter+"chaco", "corr_"+quarter+"chaco", "ent_"+quarter+"chaco", 
+              "vv_"+quarter+"chaco", "vh_"+quarter+"chaco"]; //, "vvvh_"+quarter+"chaco"
+
+//---------------------------------------------------------------------------//
+// Conditionals and building composites
+//---------------------------------------------------------------------------//
+
+var q1_str = year+"-01-01"; var q1_end = year+"-04-01"; // Inclusive/exclusive
+var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
+var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
+var q4_str = year+"-10-01"; var q4_end = year+"-01-01";
+
+if (quarter == "q1"){var str = q1_str; var end = q1_end}
+if (quarter == "q2"){var str = q2_str; var end = q2_end}
+if (quarter == "q3"){var str = q3_str; var end = q3_end}
+if (quarter == "q4"){var str = q4_str; var end = q4_end}
+
+if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
+if (collection == "1C"){var col = '"COPERNICUS/S2_HARMONIZED"'}
+
+
+//---------------------------------------------------------------------------//
+// DEFINE SENTINEL-2 PARAMETERS
+//---------------------------------------------------------------------------//
+
+var cloud_per = 0.60
+var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
+// Higher values will remove thin clouds, haze & cirrus shadows.
+
+// GLCM Texture parameters
+var glcm_band = "B8";
+var glcm_size = 5;
+
+//---------------------------------------------------------------------------//
+// DEFINE SENTINEL-1 PARAMETERS
+//---------------------------------------------------------------------------//
+
+// See descriptions at the end of the code
+
+var parameter = {//1. Data Selection
+              START_DATE: str,
+              STOP_DATE: end,
+              POLARIZATION:'VVVH',
+              ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
+              GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
+              //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
+              //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
+              //2. Additional Border noise correction
+              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
+              //3.Speckle filter
+              APPLY_SPECKLE_FILTERING: true,
+              SPECKLE_FILTER_FRAMEWORK: 'MULTI',
+              SPECKLE_FILTER: 'REFINED LEE',
+              SPECKLE_FILTER_KERNEL_SIZE: 9,
+              SPECKLE_FILTER_NR_OF_IMAGES: 16,
+              //4. Radiometric terrain normalization
+              APPLY_TERRAIN_FLATTENING: true,
+              DEM: ee.Image('USGS/SRTMGL1_003'),
+              TERRAIN_FLATTENING_MODEL: 'VOLUME',
+              TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
+              //5. Output
+              FORMAT : 'DB',
+              CLIP_TO_ROI: false, // I do it outside the s1 box
+              SAVE_ASSETS: false  //          ""           
+};
+
+//---------------------------------------------------------------------------//
+// ********** END OF PARAMETERS ************
+//---------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------//
+// PROCESSING
+//---------------------------------------------------------------------------//
+
+// Process Sentinel-2
+
+// Harmonized Sentinel-2 Level 2A collection.
+var s2 = ee.ImageCollection(col);
+
+
+// Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
+// Level 1C data and can be applied to either L1C or L2A collections.
+var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
+
+
+// SELECT AND MASK CLOUD/SHADOWS
+var s2f = s2
+    .filterBounds(aoi)
+    .filterDate(str, end)
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
+    .linkCollection(csPlus, [QA_BAND])
+    .map(function(img) {
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
+    });
+
+// ************************************
+//-- Testing purposes --
+
+// We create different composites for each season
+var createSeasonComposites = function(months) {
+  var startMonth = ee.List(months).get(0)
+  var endMonth = ee.List(months).get(1)
+  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month')
+  var seasonFiltered = s2f.filter(monthFilter)
+  var composite = seasonFiltered.median()
+  return composite.select('B.*').clip(aoi)
+}
+
+var compositeList = t_int4.map(createSeasonComposites)
+
+print(compositeList)
+
+
+
+var addIndex = function addindexes(img) {
+  var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+  var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var gndvi = img.normalizedDifference(['B8', 'B3']).rename('gNDVI');
+  var msavi2 = img.select('B8').multiply(2).add(1)
+   .subtract(img.select('B8').multiply(2).add(1).pow(2)
+   .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt())
+   .divide(2).rename("MSAVI");
+  //texture of 5x5 pixel window
+  var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt');
+  var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
+  //mtvi = 1.5 * (1.2 * (nir - green) - 2.5 * (red - green)) / 
+  //         sqrt( (2 * nir + 1)^2 - (6 * nir - 5 * sqrt(red) - 0.5) ) //https://gis.stackexchange.com/questions/308633/soil-adjusted-vegetation-index-values-msavi2-are-not-within-expected-range
+  return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi));
+};
+
+var s2fm = s2f.map(addIndex).median();
+var s2fms = s2fm.select(bands);
+var glcm = s2fms.select(glcm_band).int16().glcmTexture({size: glcm_size});
+
+// Selection of textures // 
+var savg = glcm.select("savg");
+var idm = glcm.select("idm");
+var corr = glcm.select("corr"); 
+var ent = glcm.select("ent");
+
+var glcm_cat = ee.Image.cat(savg, idm, corr, ent);
+var s2_final = s2fms.addBands(glcm_cat);
+
+// END OF SENTINEL-2 PROCESSING
+
+//---------------------------------------------------------------------------//
+// PROCESS SENTINEL-1
+//---------------------------------------------------------------------------//
+
+//Preprocess the S1 collection
+var s1_preprocces = wrapper.s1_preproc(parameter);
+
+var s1 = s1_preprocces[0];
+s1_preprocces = s1_preprocces[1];
+
+//Convert format for export  
+// *changed from original so it does not provoque any conflit with the Visu section
+// *this conditional is run only AFTER the Visu section in the original code
+// *for export purposses
+if (parameter.FORMAT=='DB'){
+  var s1_preprocces_def = s1_preprocces.map(helper.lin_to_db);
+}
+
+// CALCULATE COMPOSITE
+var s1_final = s1_preprocces_def.median().select(["VV", "VH"]); //Optionally "VVVH_ratio"
+
+
+//---------------------------------------------------------------------------//
+// Normalize
+//---------------------------------------------------------------------------//
+
+function normalize(image){
+                var bandNames = image.bandNames();
+                // Compute min and max of the image
+                var minDict = image.reduceRegion({
+                  reducer: ee.Reducer.min(),
+                  geometry: aoi,
+                  scale: 10,
+                  maxPixels: 1e9,
+                  bestEffort: true,
+                  tileScale: 16
+                });
+               var maxDict = image.reduceRegion({
+                 reducer: ee.Reducer.max(),
+                  geometry: aoi,
+                  scale: 10,
+                  maxPixels: 1e9,
+                  bestEffort: true,
+                  tileScale: 16
+                });
+              var mins = ee.Image.constant(minDict.values(bandNames));
+              var maxs = ee.Image.constant(maxDict.values(bandNames));
+
+              var normalized = image.subtract(mins).divide(maxs.subtract(mins));
+              return normalized;
+              }
+
+if (normalize == "False" ){s1s2_final = s1s2_final}
+if (normalize == "True" ){s1s2_final = normalize(s1s2)}
+
+//---------------------------------------------------------------------------//
+// RESCALE/CAST
+//---------------------------------------------------------------------------//
+
+//s1s2_final = s1s2.multiply(10000).int16() //for testing purposes
+// Write a function to scale the bands
+  function int16(imgsc) {
+    return imgsc.int16();
+  }
+/* 
+//Sentinel-2
+if (rescaling == 'Optimized 0-255'){s2_final = s2_final.multiply(0.051).byte()}
+if (rescaling == 'Regular 0-255'){s2_final = s2_final.multiply(0.0255).byte()}
+if (rescaling == 'Raw 0-10000'){s2_final = s2_final.int16()}
+*/
+
+//---------------------------------------------------------------------------//
+// MERGE S1 AND S2 COMPOSITES
+//---------------------------------------------------------------------------//
+
+var s1s2_final = s2_final.addBands(s1_final);
+//s1s2_q1_chaco = int16(s1s2_q1_chaco);
+s1s2_final = s1s2_final.rename(rbands);
+
+//---------------------------------------------------------------------------//
+// Export
+//---------------------------------------------------------------------------//
+
+Export.image.toAsset({
+      image: s1s2_final,
+      description: "s1s2_"+quarter+"_chaco",
+      assetId: "projects/hardy-tenure-383607/assets/Preprocessing/"+"s1s2_"+quarter+aoi_name,  // <> modify these
+      region: aoi,
+      scale: 10,
+      crs: 'EPSG:4326',
+      maxPixels: 1e13
+      });
+
+//---------------------------------------------------------------------------//
+// VISUALIZE
+//---------------------------------------------------------------------------//
+
+//Visulaization of the first image in the collection in RGB for VV, VH, images
+var visparam = {};
+if (parameter.POLARIZATION=='VVVH'){
+     if (parameter.FORMAT=='DB'){
+    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin).map(helper.lin_to_db2);
+    var s1_view = s1.map(helper.add_ratio_lin).map(helper.lin_to_db2);
+    visparam = {bands:['VV','VH','VVVH_ratio'],min: [-20, -25, 1],max: [0, -5, 15]};
+    }
+    else {
+    var s1_preprocces_view = s1_preprocces.map(helper.add_ratio_lin);
+    var s1_view = s1.map(helper.add_ratio_lin);
+    visparam = {bands:['VV','VH','VVVH_ratio'], min: [0.01, 0.0032, 1.25],max: [1, 0.31, 31.62]};
+    }
+}
+else {
+    if (parameter.FORMAT=='DB') {
+    s1_preprocces_view = s1_preprocces.map(helper.lin_to_db);
+    s1_view = s1.map(helper.lin_to_db);
+    visparam = {bands:[parameter.POLARIZATION],min: -25,max: 0}; 
+    }
+    else {
+    s1_preprocces_view = s1_preprocces;
+    s1_view = s1;
+    visparam = {bands:[parameter.POLARIZATION],min: 0,max: 0.2};
+    }
+}
+
+Map.addLayer(s1_view.first(), visparam, 'First image in the input S1 collection', false);
+Map.addLayer(s1_preprocces_view.first(), visparam, 'First image in the processed S1 collection', false);
+var median_1 = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+var median_2 = s1_preprocces_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+
+
+Map.addLayer(median_1, visparam, "S1 view - Median");
+Map.addLayer(median_2, visparam, "S1 Preprocess view - Median");
+
+
+//---------------------------------------------------------------------------//
+// Notes for Sentinel-1 processing section: Options
+//---------------------------------------------------------------------------//
+
+/* File: s1_ard.js
+Version: v1.2
+Date: 2021-03-10
+Authors: Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J.
+Description: This script creates an analysis ready S1 image collection.
+License: This code is distributed under the MIT License.
+    Parameter:
+        START_DATE: The earliest date to include images for (inclusive).
+        END_DATE: The latest date to include images for (exclusive).
+        POLARIZATION: The Sentinel-1 image polarization to select for processing.
+            'VV' - selects the VV polarization.
+            'VH' - selects the VH polarization.
+            "VVVH' - selects both the VV and VH polarization for processing.
+        ORBIT:  The orbits to include. (string: BOTH, ASCENDING or DESCENDING)
+        GEOMETRY: The region to include imagery within.
+                  The user can interactively draw a bounding box within the map window or define the edge coordinates.
+        APPLY_BORDER_NOISE_CORRECTION: (Optional) true or false options to apply additional Border noise correction:
+        APPLY_SPECKLE_FILTERING: (Optional) true or false options to apply speckle filter
+        SPECKLE_FILTER: Type of speckle filtering to apply (String). If the APPLY_SPECKLE_FILTERING parameter is true then the selected speckle filter type will be used.
+            'BOXCAR' - Applies a boxcar filter on each individual image in the collection
+            'LEE' - Applies a Lee filter on each individual image in the collection based on [1]
+            'GAMMA MAP' - Applies a Gamma maximum a-posterior speckle filter on each individual image in the collection based on [2] & [3]
+            'REFINED LEE' - Applies the Refined Lee speckle filter on each individual image in the collection
+                                  based on [4]
+            'LEE SIGMA' - Applies the improved Lee sigma speckle filter on each individual image in the collection
+                                  based on [5]
+        SPECKLE_FILTER_FRAMEWORK: is the framework where filtering is applied (String). It can be 'MONO' or 'MULTI'. In the MONO case
+                                  the filtering is applied to each image in the collection individually. Whereas, in the MULTI case,
+                                  the Multitemporal Speckle filter is applied based on  [6] with any of the above mentioned speckle filters.
+        SPECKLE_FILTER_KERNEL_SIZE: is the size of the filter spatial window applied in speckle filtering. It must be a positive odd integer.
+        SPECKLE_FILTER_NR_OF_IMAGES: is the number of images to use in the multi-temporal speckle filter framework. All images are selected before the date of image to be filtered.
+                                    However, if there are not enough images before it then images after the date are selected.
+        TERRAIN_FLATTENING : (Optional) true or false option to apply Terrain correction based on [7] & [8]. 
+        TERRAIN_FLATTENING_MODEL : model to use for radiometric terrain normalization (DIRECT, or VOLUME)
+        DEM : digital elevation model (DEM) to use (as EE asset)
+        TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER : additional buffer parameter for passive layover/shadow mask in meters
+        FORMAT : the output format for the processed collection. this can be 'LINEAR' or 'DB'.
+        CLIP_TO_ROI: (Optional) Clip the processed image to the region of interest.
+        SAVE_ASSETS : (Optional) Exports the processed collection to an asset.
+        
+    Returns:
+        An ee.ImageCollection with an analysis ready Sentinel 1 imagery with the specified polarization images and angle band.
+        
+References
+  [1]  J. S. Lee, “Digital image enhancement and noise filtering by use of local statistics,” 
+    IEEE Pattern Anal. Machine Intell., vol. PAMI-2, pp. 165–168, Mar. 1980. 
+  [2]  A. Lopes, R. Touzi, and E. Nezry, “Adaptative speckle filters and scene heterogeneity,
+    IEEE Trans. Geosci. Remote Sensing, vol. 28, pp. 992–1000, Nov. 1990 
+  [3]  Lopes, A.; Nezry, E.; Touzi, R.; Laur, H.  Maximum a posteriori speckle filtering and first204order texture models in SAR images.  
+    10th annual international symposium on geoscience205and remote sensing. Ieee, 1990, pp. 2409–2412.
+  [4] J.-S. Lee, M.R. Grunes, G. De Grandi. Polarimetric SAR speckle filtering and its implication for classification
+    IEEE Trans. Geosci. Remote Sens., 37 (5) (1999), pp. 2363-2373.
+  [5] Lee, J.-S.; Wen, J.-H.; Ainsworth, T.L.; Chen, K.-S.; Chen, A.J. Improved sigma filter for speckle filtering of SAR imagery. 
+    IEEE Trans. Geosci. Remote Sens. 2009, 47, 202–213.
+  [6] S. Quegan and J. J. Yu, “Filtering of multichannel SAR images, IEEE Trans Geosci. Remote Sensing, vol. 39, Nov. 2001.
+  [7] Vollrath, A., Mullissa, A., & Reiche, J. (2020). Angular-Based Radiometric Slope Correction for Sentinel-1 on Google Earth Engine. 
+    Remote Sensing, 12(11), [1867]. https://doi.org/10.3390/rs12111867
+  [8] Hoekman, D.H.;  Reiche, J.   Multi-model radiometric slope correction of SAR images of complex terrain using a two-stage semi-empirical approach.
+    Remote Sensing of Environment2222015,156, 1–10.
+**/
