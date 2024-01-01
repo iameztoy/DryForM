@@ -174,8 +174,8 @@ var createSeasonComposites_s2 = function(months) {
   return composite.select(bands_init).clip(aoi);
 };
 
-var compositeList = t_int4.map(createSeasonComposites_s2);
-var s2_comp = ee.ImageCollection.fromImages(compositeList);
+var compList_s2 = t_int4.map(createSeasonComposites_s2);
+var s2_comp = ee.ImageCollection.fromImages(compList_s2);
 
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
@@ -210,6 +210,15 @@ var s2_final = s2_comp.map(addIndex).map(addglcm).toBands()
 //---------------------------------------------------------------------------//
 // PROCESS SENTINEL-1
 //---------------------------------------------------------------------------//
+
+var createSeasonComposites_s1 = function(months) {
+  var startMonth = ee.List(months).get(0);
+  var endMonth = ee.List(months).get(1);
+  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+  var seasonFiltered = s1.filter(monthFilter);
+  var composite = seasonFiltered.mean();
+  return composite.clip(aoi);
+};
 
 //Preprocess the S1 collection
 var s1_preprocces = wrapper.s1_preproc(parameter);
