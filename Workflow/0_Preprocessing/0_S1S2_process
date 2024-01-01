@@ -52,6 +52,19 @@ var quarter = "q1"; // "q2", "q3", "q4"
 var year='2020';
 var collection = "2A";
 
+
+//Bands S1/S2
+var bands_init = ["B.*"];
+var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
+var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco", "B12_"+quarter+"chaco",
+              "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", 
+              "savg_"+quarter+"chaco", "idm_"+quarter+"chaco", "corr_"+quarter+"chaco", "ent_"+quarter+"chaco", 
+              "vv_"+quarter+"chaco", "vh_"+quarter+"chaco"]; //, "vvvh_"+quarter+"chaco"
+
+//---------------------------------------------------------------------------//
+// Conditionals
+//---------------------------------------------------------------------------//
+
 var q1_str = year+"-01-01"; var q1_end = year+"-04-01"; // Inclusive/exclusive
 var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
 var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
@@ -64,15 +77,6 @@ if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
 if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
 if (collection == "1C"){var col = '"COPERNICUS/S2_HARMONIZED"'}
-
-
-//Bands S1/S2
-var bands_init = ["B.*"];
-var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
-var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco", "B12_"+quarter+"chaco",
-              "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", 
-              "savg_"+quarter+"chaco", "idm_"+quarter+"chaco", "corr_"+quarter+"chaco", "ent_"+quarter+"chaco", 
-              "vv_"+quarter+"chaco", "vh_"+quarter+"chaco"]; //, "vvvh_"+quarter+"chaco"
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-2 PARAMETERS
