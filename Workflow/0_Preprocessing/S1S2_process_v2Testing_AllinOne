@@ -105,8 +105,8 @@ var glcm_size = 5;
 // See descriptions at the end of the code
 
 var parameter = {//1. Data Selection
-              START_DATE: "2020-01-01",
-              STOP_DATE: "2021-01-01",
+              START_DATE: "2020-01-01", //str
+              STOP_DATE: "2021-01-01", //end
               POLARIZATION:'VVVH',
               ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
               GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
@@ -174,8 +174,8 @@ var createSeasonComposites_s2 = function(months) {
   return composite.select(bands_init).clip(aoi);
 };
 
-var compList_s2 = t_int4.map(createSeasonComposites_s2);
-var s2_comp = ee.ImageCollection.fromImages(compList_s2);
+var compList_s1 = t_int4.map(createSeasonComposites_s2);
+var s2_comp = ee.ImageCollection.fromImages(compList_s1);
 
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
@@ -199,7 +199,7 @@ var addglcm = function addglmc(img) {
   var idm = glcm.select("B8_idm");
   var corr = glcm.select("B8_corr"); 
   var ent = glcm.select("B8_ent");  
-  return img.addBands(ee.Image.cat(savg, idm, corr));
+  return img.addBands(ee.Image.cat(savg, idm, corr, ent));
 }
 
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands()
@@ -211,37 +211,35 @@ var s2_final = s2_comp.map(addIndex).map(addglcm).toBands()
 // PROCESS SENTINEL-1
 //---------------------------------------------------------------------------//
 
-
-
 //Preprocess the S1 collection
 var s1_preprocces = wrapper.s1_preproc(parameter);
 
 var s1 = s1_preprocces[0];
 s1_preprocces = s1_preprocces[1];
 
+//Convert format for export  
+// *changed from original so it does not provoque any conflit with the Visu section
+// *this conditional is run only AFTER the Visu section in the original code
+// *for export purposses
+
+
 var createSeasonComposites_s1 = function(months) {
   var startMonth = ee.List(months).get(0);
   var endMonth = ee.List(months).get(1);
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
   var seasonFiltered = s1_preprocces.filter(monthFilter);
-  var composite = seasonFiltered.mean();
-  return composite.clip(aoi);
+  if (parameter.FORMAT=='DB'){var toDB = seasonFiltered.map(helper.lin_to_db)}
+  //var toDB = seasonFiltered.map(helper.lin_to_db);
+  var composite = toDB.mean();
+  return composite.select("VV", "VH").clip(aoi);
 };
 
 var compList_s1 = t_int4.map(createSeasonComposites_s1);
 print(compList_s1)
-//var s2_comp = ee.ImageCollection.fromImages(compList_s2);
-
-//Convert format for export  
-// *changed from original so it does not provoque any conflit with the Visu section
-// *this conditional is run only AFTER the Visu section in the original code
-// *for export purposses
-if (parameter.FORMAT=='DB'){
-  var s1_preprocces_def = s1_preprocces.map(helper.lin_to_db);
-}
-
-// CALCULATE COMPOSITE
-var s1_final = s1_preprocces_def.mean().select(["VV", "VH"]); //Optionally "VVVH_ratio"
+var s1_comp = ee.ImageCollection.fromImages(compList_s1);
+print(s1_comp)
+var s1_final = s1_comp.toBands()
+print(s1_final)
 
 
 //---------------------------------------------------------------------------//
@@ -348,8 +346,8 @@ else {
 
 Map.addLayer(s1_view.first(), visparam, 'First image in the input S1 collection', false);
 Map.addLayer(s1_preprocces_view.first(), visparam, 'First image in the processed S1 collection', false);
-var median_1 = s1_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-var median_2 = s1_preprocces_view.median().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+var median_1 = s1_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+var median_2 = s1_preprocces_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
 
 
 Map.addLayer(median_1, visparam, "S1 view - Median");
