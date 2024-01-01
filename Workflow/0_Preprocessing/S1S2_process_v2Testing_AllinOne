@@ -228,6 +228,10 @@ var createSeasonComposites_s1 = function(months) {
   return composite.clip(aoi);
 };
 
+var compList_s1 = t_int4.map(createSeasonComposites_s1);
+print(compList_s1)
+//var s2_comp = ee.ImageCollection.fromImages(compList_s2);
+
 //Convert format for export  
 // *changed from original so it does not provoque any conflit with the Visu section
 // *this conditional is run only AFTER the Visu section in the original code
