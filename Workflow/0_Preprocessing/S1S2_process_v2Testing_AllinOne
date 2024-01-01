@@ -48,12 +48,12 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 
 var aoi_name = "chaco";
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
-var quarter = "q1"; // "q2", "q3", "q4"
 
 var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]])
 var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]])
 
 var year='2020';
+var quarter = "q1"
 var collection = "2A";
 var normalize = "False"; 
 var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
@@ -66,23 +66,6 @@ var rbands = ["B4_"+quarter+"chaco", "B5_"+quarter+"chaco", "B8_"+quarter+"chaco
               "gNDVI_"+quarter+"chaco", "MSAVI_"+quarter+"chaco", "MSAVIt_"+quarter+"chaco", "BI_"+quarter+"chaco", 
               "savg_"+quarter+"chaco", "idm_"+quarter+"chaco", "corr_"+quarter+"chaco", "ent_"+quarter+"chaco", 
               "vv_"+quarter+"chaco", "vh_"+quarter+"chaco"]; //, "vvvh_"+quarter+"chaco"
-
-//---------------------------------------------------------------------------//
-// Conditionals and building composites
-//---------------------------------------------------------------------------//
-
-var q1_str = year+"-01-01"; var q1_end = year+"-04-01"; // Inclusive/exclusive
-var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
-var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
-var q4_str = year+"-10-01"; var q4_end = year+"-01-01";
-
-if (quarter == "q1"){var str = q1_str; var end = q1_end}
-if (quarter == "q2"){var str = q2_str; var end = q2_end}
-if (quarter == "q3"){var str = q3_str; var end = q3_end}
-if (quarter == "q4"){var str = q4_str; var end = q4_end}
-
-if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
-if (collection == "1C"){var col = '"COPERNICUS/S2_HARMONIZED"'}
 
 
 //---------------------------------------------------------------------------//
@@ -97,6 +80,9 @@ var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and
 // GLCM Texture parameters
 var glcm_band = "B8";
 var glcm_size = 5;
+
+if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
+if (collection == "1C"){var col = '"COPERNICUS/S2_HARMONIZED"'}
 
 //---------------------------------------------------------------------------//
 // DEFINE SENTINEL-1 PARAMETERS
@@ -130,6 +116,20 @@ var parameter = {//1. Data Selection
               CLIP_TO_ROI: false, // I do it outside the s1 box
               SAVE_ASSETS: false  //          ""           
 };
+
+//---------------------------------------------------------------------------//
+// Conditionals and building composites (ONLY for indiv. composites)
+//---------------------------------------------------------------------------//
+
+var q1_str = year+"-01-01"; var q1_end = year+"-04-01"; // Inclusive/exclusive
+var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
+var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
+var q4_str = year+"-10-01"; var q4_end = year+"-01-01";
+
+if (quarter == "q1"){var str = q1_str; var end = q1_end}
+if (quarter == "q2"){var str = q2_str; var end = q2_end}
+if (quarter == "q3"){var str = q3_str; var end = q3_end}
+if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
 //---------------------------------------------------------------------------//
 // ********** END OF PARAMETERS ************
@@ -204,7 +204,6 @@ var addglcm = function addglmc(img) {
 
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands()
 
-
 // END OF SENTINEL-2 PROCESSING
 
 //---------------------------------------------------------------------------//
@@ -235,11 +234,8 @@ var createSeasonComposites_s1 = function(months) {
 };
 
 var compList_s1 = t_int4.map(createSeasonComposites_s1);
-print(compList_s1)
 var s1_comp = ee.ImageCollection.fromImages(compList_s1);
-print(s1_comp)
 var s1_final = s1_comp.toBands()
-print(s1_final)
 
 
 //---------------------------------------------------------------------------//
@@ -297,7 +293,8 @@ if (rescaling == 'Raw 0-10000'){s2_final = s2_final.int16()}
 
 var s1s2_final = s2_final.addBands(s1_final);
 //s1s2_q1_chaco = int16(s1s2_q1_chaco);
-s1s2_final = s1s2_final.rename(rbands);
+
+print(s1s2_final.bandNames())
 
 //---------------------------------------------------------------------------//
 // Export
