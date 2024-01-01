@@ -62,7 +62,7 @@ if (quarter == "q3"){var str = q3_str; var end = q3_end}
 if (quarter == "q4"){var str = q4_str; var end = q4_end}
 
 if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
-if (collection == "1C"){var col = '("COPERNICUS/S2_HARMONIZED")'}
+if (collection == "1C"){var col = '"COPERNICUS/S2_HARMONIZED"'}
 
 
 //Bands S1/S2
