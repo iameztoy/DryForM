@@ -46,13 +46,13 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoi_name = "chaco"
+var aoi_name = "chaco";
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 var quarter = "q1"; // "q2", "q3", "q4"
 var year='2020';
 var collection = "2A";
-var normalize = "False" 
-VAR rescaling = 'Raw 0-10000' //'Optimized 0-255' 'Regular 0-255'
+var normalize = "False"; 
+var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
 
 
 // Bands S1/S2
