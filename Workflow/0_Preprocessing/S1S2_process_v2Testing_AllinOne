@@ -165,8 +165,8 @@ var createSeasonComposites_s2 = function(months) {
   return composite.select(bands_init).clip(aoi);
 };
 
-var compList_s1 = t_int4.map(createSeasonComposites_s2);
-var s2_comp = ee.ImageCollection.fromImages(compList_s1);
+var compList_s2 = t_int4.map(createSeasonComposites_s2);
+var s2_comp = ee.ImageCollection.fromImages(compList_s2);
 
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
