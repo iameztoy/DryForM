@@ -207,7 +207,6 @@ var addglcm = function addglmc(img) {
 };
 
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
-print(s2_final)
 
 // END OF SENTINEL-2 PROCESSING
 
@@ -298,13 +297,14 @@ if (rescaling == 'Raw 0-10000'){s2_final = s2_final.int16()}
 
 var s1s2_final = s2_final.addBands(s1_final);
 
-//Rename bands
+//Rename bands (necessary to replace first numberic character to export as asset)
 
 var blist = s1s2_final.bandNames();
 var cat = function(ele){return ee.String("t").cat(ele)};
 var ren = blist.map(cat);
 
 var s1s2final = s1s2_final.select(blist).rename(ren);
+print(s1s2final)
 
 //---------------------------------------------------------------------------//
 // Export
