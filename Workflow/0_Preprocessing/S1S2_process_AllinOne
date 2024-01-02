@@ -64,8 +64,7 @@ var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
 var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
 
-var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
-print(str); print(end)
+var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01";
 
 
 //---------------------------------------------------------------------------//
