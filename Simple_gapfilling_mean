@@ -1,0 +1,82 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var roi = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Point([-112.338671875, 41.23213080790693]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// https://gis.stackexchange.com/questions/323728/smoothing-interpolating-across-images-in-an-imagecollection-to-remove-missing-da
+
+var imageCollection = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR').filterBounds(roi);
+var monthCount = ee.List.sequence(0, 11);
+
+// Function to cloud mask from the pixel_qa band of Landsat 8 SR data.
+function maskL8sr(image) {
+  // Bits 3 and 5 are cloud shadow and cloud, respectively.
+  var cloudShadowBitMask = 1 << 3;
+  var cloudsBitMask = 1 << 5;
+
+  // Get the pixel QA band.
+  var qa = image.select('pixel_qa');
+
+  // Both flags should be set to zero, indicating clear conditions.
+  var mask = qa.bitwiseAnd(cloudShadowBitMask).eq(0)
+      .and(qa.bitwiseAnd(cloudsBitMask).eq(0));
+
+  // Return the masked image, scaled to reflectance, without the QA bands.
+  return image.updateMask(mask).divide(10000)
+      .select("B[0-9]*")
+      .copyProperties(image, ["system:time_start"]);
+}
+
+// run through the image collection and generate monthly NDVI median images
+var composites = ee.ImageCollection.fromImages(monthCount.map(function(m) {
+  var startMonth = 1; // thinking that I should always start from Jan so the series are similar
+  var startYear = ee.Number(2017-1); // number is one year before the current one
+  
+  var month = ee.Date.fromYMD(startYear, startMonth, 1).advance(m,'month').get('month');
+  var year = ee.Date.fromYMD(startYear, startMonth, 1).advance(m,'month').get('year')
+  
+  // filter by year and then filter by month to get monthly mosaics
+  var filtered = imageCollection.filter(ee.Filter.calendarRange({
+    start: year.subtract(1), // we want an average of the last two years
+    end: year,
+    field: 'year'
+  })).filter(ee.Filter.calendarRange({
+    start: month,
+    field: 'month'
+  }));
+  // mask for clouds and then take the median
+  var composite = filtered.map(maskL8sr).median();
+  return composite.normalizedDifference(['B5', 'B4']).rename('NDVI')
+      .set('month', ee.Date.fromYMD(startYear, startMonth, 1).advance(m,'month'))
+      .set('system:time_start', ee.Date.fromYMD(startYear, startMonth, 1).advance(m,'month').millis());
+}));
+print(composites);
+
+Map.addLayer(composites, {min: 0, max: 1}, 'check'); 
+
+// Replace masked pixels by the mean of the previous and next months 
+var replacedVals = composites.map(function(image){
+  var currentDate = ee.Date(image.get('system:time_start'));
+  var meanImage = composites.filterDate(
+                currentDate.advance(-2, 'month'), currentDate.advance(2, 'month')).mean();
+  // replace all masked values:
+  return meanImage.where(image, image);
+});
+
+// stack the ImageCollection into a multi-band raster for downloading
+var stackCollection = function(collection) {
+  // Create an initial image.
+  var first = ee.Image(collection.first()).select([]);
+
+  // Write a function that appends a band to an image.
+  var appendBands = function(image, previous) {
+    return ee.Image(previous).addBands(image);
+  };
+  return ee.Image(collection.iterate(appendBands, first));
+};
+var stacked = stackCollection(replacedVals);
+print('stacked image', stacked);
+
+// Display the first band of the stacked image.
+Map.addLayer(stacked.select(0), {min:0, max:1}, 'stacked');
