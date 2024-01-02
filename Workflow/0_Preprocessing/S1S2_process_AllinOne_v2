@@ -159,6 +159,16 @@ var s2f = s2
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
     });
 
+//Visualize collection    
+/*
+var list = s2f.toList(s2f.size().getInfo())
+for (var i = 0; i < list.length().getInfo(); i++) {
+  var img = ee.Image(list.get(i))
+  Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 3000})
+  print (i, img)
+}
+*/
+
 // Different composites for each time interval
 var createSeasonComposites_s2 = function(months) {
   var startMonth = ee.List(months).get(0);
@@ -208,6 +218,25 @@ var addglcm = function addglmc(img) {
 };
 
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
+
+var listBands = s2_final.bandNames();
+print(listBands)
+var len = listBands.size();
+print(len)
+
+len.evaluate(function(l) {
+  for (var i=0; i < l; i++) {
+    var img = ee.Image(listBands.get(i));
+    Map.addLayer(img, null, 'Img-'+i.toString());
+  } 
+});
+
+
+
+
+
+
+
 
 // END OF SENTINEL-2 PROCESSING
 
