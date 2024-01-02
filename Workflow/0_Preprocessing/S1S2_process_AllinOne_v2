@@ -220,16 +220,16 @@ var addglcm = function addglmc(img) {
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
 
 var listBands = s2_final.bandNames();
-print(listBands)
+print(listBands);
 var len = listBands.size();
-print(len)
+print(len);
 
-len.evaluate(function(l) {
-  for (var i=0; i < l; i++) {
-    var img = ee.Image(listBands.get(i));
-    Map.addLayer(img, null, 'Img-'+i.toString());
-  } 
-});
+
+
+for (var i = 0; i < listBands.length().getInfo(); i++) {
+  var img = ee.Image(listBands.get(i))
+  Map.addLayer(img)
+}
 
 
 
