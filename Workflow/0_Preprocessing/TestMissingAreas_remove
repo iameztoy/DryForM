@@ -1,0 +1,72 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry2 = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-64.16656039288897, -27.71532937909031],
+          [-64.16656039288897, -28.42540848565734],
+          [-63.34258578351397, -28.42540848565734],
+          [-63.34258578351397, -27.71532937909031]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var geometry = 
+    ee.Geometry.Polygon(
+        [[[-64.12252730008457, -28.058524083784537],
+          [-64.12252730008457, -28.212323139220324],
+          [-63.92477339383456, -28.212323139220324],
+          [-63.92477339383456, -28.058524083784537]]], null, false);
+          
+Map.addLayer(geometry)
+
+var aoi = geometry
+
+var cloud_per = 0.90
+var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+var CLEAR_THRESHOLD = 0.65;
+
+// Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
+// Level 1C data and can be applied to either L1C or L2A collections.
+var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
+
+
+// SELECT AND MASK CLOUD/SHADOWS
+var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+    .filterBounds(aoi)
+    .filterDate("2020-01-01", "2020-03-01") //str, end //"2020-01-01", "2021-01-01"
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',90)) 
+    .linkCollection(csPlus, [QA_BAND])
+    .map(function(img) {
+      return img.updateMask(img.select(QA_BAND).gte(0.65));
+    });
+
+
+var addIndex = function addindexes(img) {
+  var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  return img.addBands(ee.Image.cat(ndvi));
+};
+
+     
+var s2i = s2.map(addIndex)
+var s2im = s2i.median().select("NDVI").clip(geometry)
+print(s2im)
+
+Map.addLayer(s2im)
+
+var minMax = s2im.reduceRegion({
+  reducer: ee.Reducer.minMax(),
+  geometry: aoi,
+  scale: 10,
+  maxPixels: 10e13,
+});
+
+print(minMax)
+
+
+
+
+
+
