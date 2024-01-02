@@ -219,6 +219,7 @@ var addglcm = function addglmc(img) {
 
 //Visualize collection 
 var s2_final_vis = s2_comp.map(addIndex).map(addglcm);
+s2_final_vis = s2_final_vis
 var list = s2_final_vis.toList(s2_final_vis.size().getInfo());
 for (var i = 0; i < list.length().getInfo(); i++) {
   var img = ee.Image(list.get(i))
