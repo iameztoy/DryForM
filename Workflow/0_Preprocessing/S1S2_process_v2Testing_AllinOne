@@ -155,7 +155,7 @@ var s2f = s2
     });
 
 
-// different composites for each season
+// Different composites for each time interval
 var createSeasonComposites_s2 = function(months) {
   var startMonth = ee.List(months).get(0);
   var endMonth = ee.List(months).get(1);
