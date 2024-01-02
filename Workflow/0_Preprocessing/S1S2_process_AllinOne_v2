@@ -222,8 +222,8 @@ var s2_final_vis = s2_comp.map(addIndex).map(addglcm);
 var list = s2_final_vis.toList(s2_final_vis.size().getInfo());
 for (var i = 0; i < list.length().getInfo(); i++) {
   var img = ee.Image(list.get(i))
-  Map.addLayer(img, {'bands': ['NDVI'], 'min': -1, 'max': 1});
-  Map.addLayer(img, {'bands': ['MSAVI'], 'min': -1, 'max': 1});
+  Map.addLayer(img, {'bands': ['NDVI'], 'min': -1, 'max': 1}, "NDVI_"+i);
+  Map.addLayer(img, {'bands': ['MSAVI'], 'min': -1, 'max': 1},"MSAVI_"+i);
 }
 
 // All Bands in a single Image
@@ -374,12 +374,12 @@ else {
 
 Map.addLayer(s1_view.first(), visparam, 'First image in the input S1 collection', false);
 Map.addLayer(s1_preprocces_view.first(), visparam, 'First image in the processed S1 collection', false);
-var median_1 = s1_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
-var median_2 = s1_preprocces_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+var mean_1 = s1_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
+var mean_2 = s1_preprocces_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
 
 
-Map.addLayer(median_1, visparam, "S1 view - Mean");
-Map.addLayer(median_2, visparam, "S1 Preprocess view - Mean");
+Map.addLayer(mean_1, visparam, "S1 view - Mean", false);
+Map.addLayer(mean_2, visparam, "S1 Preprocess view - Mean", false);
 
 
 //---------------------------------------------------------------------------//
