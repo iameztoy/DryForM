@@ -65,6 +65,7 @@ var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
 
 var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
+print(str); print(end)
 
 
 //---------------------------------------------------------------------------//
@@ -125,10 +126,10 @@ var q2_str = year+"-04-01"; var q2_end = year+"-07-01";
 var q3_str = year+"-07-01"; var q3_end = year+"-10-01";
 var q4_str = year+"-10-01"; var q4_end = year+"-01-01";
 
-if (quarter == "q1"){var str = q1_str; var end = q1_end}
-if (quarter == "q2"){var str = q2_str; var end = q2_end}
-if (quarter == "q3"){var str = q3_str; var end = q3_end}
-if (quarter == "q4"){var str = q4_str; var end = q4_end}
+if (quarter == "q1"){var str_q1 = q1_str; var end_q1 = q1_end}
+if (quarter == "q2"){var str_q2 = q2_str; var end_q2 = q2_end}
+if (quarter == "q3"){var str_q3 = q3_str; var end_q3 = q3_end}
+if (quarter == "q4"){var str_q4 = q4_str; var end_q4 = q4_end}
 
 //---------------------------------------------------------------------------//
 // ********** END OF PARAMETERS ************
@@ -151,13 +152,13 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 // SELECT AND MASK CLOUD/SHADOWS
 var s2f = s2
     .filterBounds(aoi)
-    .filterDate(str, end) //str, end
+    .filterDate(str, end) //str, end //"2020-01-01", "2021-01-01"
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
     });
-
+print(s2f)
 
 // Different composites for each time interval
 var createSeasonComposites_s2 = function(months) {
@@ -170,7 +171,10 @@ var createSeasonComposites_s2 = function(months) {
 };
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
+print(compList_s2)
 var s2_comp = ee.ImageCollection.fromImages(compList_s2);
+
+
 
 var addIndex = function addindexes(img) {
   var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
