@@ -300,8 +300,8 @@ var blist = s1s2_final.bandNames();
 var cat = function(ele){return ee.String("t").cat(ele)}
 var ren = blist.map(cat)
 
-var s1s2final_ = s1s2_final.select(blist).rename(ren);
-print(s1s2final_)
+var s1s2final = s1s2_final.select(blist).rename(ren);
+print(s1s2final)
 
 
 //---------------------------------------------------------------------------//
@@ -309,7 +309,7 @@ print(s1s2final_)
 //---------------------------------------------------------------------------//
 
 Export.image.toAsset({
-      image: s1s2_final_,
+      image: s1s2final,
       description: "s1s2_"+quarter+"_chaco",
       assetId: "projects/hardy-tenure-383607/assets/Preprocessing/"+"s1s2_"+quarter+aoi_name,  // <> modify these
       region: aoi,
