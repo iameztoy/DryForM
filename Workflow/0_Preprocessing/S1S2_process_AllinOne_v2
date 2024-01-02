@@ -379,7 +379,6 @@ var s1s2final_s = ee.ImageCollection.fromImages(
 })).toBands().rename(s1s2final_s.bandNames());
 
 
-
 Export.image.toAsset({
       image: s1s2final_s,
       description: "s1s2_ndvi"+aoi_name+year,
