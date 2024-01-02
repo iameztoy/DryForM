@@ -1,29 +1,8 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry2 = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-64.16656039288897, -27.71532937909031],
-          [-64.16656039288897, -28.42540848565734],
-          [-63.34258578351397, -28.42540848565734],
-          [-63.34258578351397, -27.71532937909031]]], null, false),
-    image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_NDVItest_MinMaxTailor_byte_chaco");
+var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_NDVItest_MinMaxTailor_byte_chaco"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var geometry = 
-    ee.Geometry.Polygon(
-        [[[-64.12252730008457, -28.058524083784537],
-          [-64.12252730008457, -28.212323139220324],
-          [-63.92477339383456, -28.212323139220324],
-          [-63.92477339383456, -28.058524083784537]]], null, false);
-          
-Map.addLayer(geometry)
-
-var aoi = geometry
+var aoi = chaco
 
 var cloud_per = 0.90
 var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
@@ -52,10 +31,10 @@ var addIndex = function addindexes(img) {
 
      
 var s2i = s2.map(addIndex)
-var s2im = s2i.median().select("NDVI").clip(geometry)
+var s2im = s2i.median().select("NDVI").clip(aoi)
 print(s2im)
 
-Map.addLayer(s2im)
+Map.addLayer(s2im, null, "On the fly")
 
 var minMax = s2im.reduceRegion({
   reducer: ee.Reducer.minMax(),
