@@ -217,26 +217,17 @@ var addglcm = function addglmc(img) {
   return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
 };
 
-var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
-
-var listBands = s2_final.bandNames();
-print(listBands);
-var len = listBands.size();
-print(len);
-
-
-
-for (var i = 0; i < listBands.length().getInfo(); i++) {
-  var img = ee.Image(listBands.get(i))
-  Map.addLayer(img)
+//Visualize collection 
+var s2_final_vis = s2_comp.map(addIndex).map(addglcm);
+var list = s2_final_vis.toList(s2_final_vis.size().getInfo());
+for (var i = 0; i < list.length().getInfo(); i++) {
+  var img = ee.Image(list.get(i))
+  Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 0.3})
+  print (i, img)
 }
 
-
-
-
-
-
-
+// All Bands in a single Image
+var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
 
 // END OF SENTINEL-2 PROCESSING
 
