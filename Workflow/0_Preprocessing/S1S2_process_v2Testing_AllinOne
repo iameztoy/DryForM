@@ -288,10 +288,11 @@ if (rescaling == 'Raw 0-10000'){s2_final = s2_final.int16()}
 */
 
 //---------------------------------------------------------------------------//
-// MERGE S1 AND S2 COMPOSITES
+// MERGE S1 AND S2 COMPOSITES | Rename for export as asset
 //---------------------------------------------------------------------------//
 
 var s1s2_final = s2_final.addBands(s1_final);
+print(s1s2final)
 
 //Rename bands
 
