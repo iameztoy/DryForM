@@ -50,14 +50,14 @@ var aoi_name = "chaco";
 var aoi = geometry; //chaco, caatinga, cerrado, tanzania
 
 //Time intervals for composites
+var year='2020';
 var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]])
 var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]])
+var quarter = "q1" //q1, q2, q3, q4
 
-var year='2020';
 var collection = "2A";
 var normalize = "False"; 
 var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
-
 
 // Bands S1/S2
 var bands_init = ["B.*"];
@@ -139,7 +139,6 @@ if (quarter == "q4"){var str = q4_str; var end = q4_end}
 // Harmonized Sentinel-2 Level 2A collection.
 var s2 = ee.ImageCollection(col);
 
-
 // Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
 // Level 1C data and can be applied to either L1C or L2A collections.
 var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
@@ -156,7 +155,7 @@ var s2f = s2
     });
 
 
-// We create different composites for each season
+// different composites for each season
 var createSeasonComposites_s2 = function(months) {
   var startMonth = ee.List(months).get(0);
   var endMonth = ee.List(months).get(1);
