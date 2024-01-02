@@ -284,16 +284,15 @@ if (rescaling == 'Raw 0-10000'){s2_final = s2_final.int16()}
 //---------------------------------------------------------------------------//
 
 var s1s2_final = s2_final.addBands(s1_final);
-print(s1s2final)
 
 //Rename bands
 
 var blist = s1s2_final.bandNames();
-var cat = function(ele){return ee.String("t").cat(ele)}
-var ren = blist.map(cat)
+var cat = function(ele){return ee.String("t").cat(ele)};
+var ren = blist.map(cat);
 
 var s1s2final = s1s2_final.select(blist).rename(ren);
-print(s1s2final)
+
 
 
 //---------------------------------------------------------------------------//
@@ -302,7 +301,7 @@ print(s1s2final)
 
 Export.image.toAsset({
       image: s1s2final,
-      description: "s1s2_"+quarter+"_chaco",
+      description: "s1s2_"+aoi_name+year,
       assetId: "projects/hardy-tenure-383607/assets/Preprocessing/"+"s1s2_"+aoi_name+year,  // <> modify these
       region: aoi,
       scale: 10,
