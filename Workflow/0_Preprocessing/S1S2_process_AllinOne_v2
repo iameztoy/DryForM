@@ -3,7 +3,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
-    geometry = 
+    geometry2 = 
     /* color: #d63000 */
     /* shown: false */
     /* displayProperties: [
@@ -45,13 +45,21 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 //---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
+var geometry = 
+    ee.Geometry.Polygon(
+        [[[-64.5352712553919, -27.685082711867956],
+          [-64.5352712553919, -28.47581780993069],
+          [-63.835107414144346, -28.47581780993069],
+          [-63.835107414144346, -27.685082711867956]]], null, false);
 
-var aoi_name = "chaco";
+var aoi_name = "geometry";
 //var aoi = chaco.merge(cerrado).merge(caatinga); //chaco, caatinga, cerrado, tanzania
 //aoi = aoi.union()
 //Map.addLayer(aoi, null, "Union South America")
 
-var aoi = chaco; //geometry for testing purposes
+
+
+var aoi = geometry; //geometry for testing purposes
 
 //Time intervals for composites
 var year = 2020;
