@@ -198,6 +198,7 @@ var addglcm = function addglmc(img) {
 }
 
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands()
+print(s2_final)
 
 // END OF SENTINEL-2 PROCESSING
 
