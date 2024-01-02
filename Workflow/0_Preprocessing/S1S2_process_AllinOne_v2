@@ -220,6 +220,7 @@ var addglcm = function addglmc(img) {
 };
 
 //Visualize collection 
+/*
 var s2_final_vis = s2_comp.map(addIndex).map(addglcm);
 var list = s2_final_vis.toList(s2_final_vis.size().getInfo());
 for (var i = 0; i < list.length().getInfo(); i++) {
@@ -227,6 +228,7 @@ for (var i = 0; i < list.length().getInfo(); i++) {
   Map.addLayer(img, {'bands': ['NDVI'], 'min': -1, 'max': 1}, "NDVI_"+i, 0);
   Map.addLayer(img, {'bands': ['MSAVI'], 'min': -1, 'max': 1},"MSAVI_"+i, 0);
 }
+*/
 
 // All Bands in a single Image
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
@@ -342,15 +344,17 @@ var cat = function(ele){return ee.String("t").cat(ele)};
 var ren = blist.map(cat);
 
 var s1s2final = s1s2_final.select(blist).rename(ren);
-print(s1s2final)
 
 //---------------------------------------------------------------------------//
 // Export
 //---------------------------------------------------------------------------//
 
+var s1s2final_s = s1s2final.select(["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"])
+s1s2final_s = s1s2final_s.multiply(0.0255).byte()
+
 Export.image.toAsset({
-      image: s1s2final,
-      description: "s1s2_"+aoi_name+year,
+      image: s1s2final_s,
+      description: "s1s2_ndvi"+aoi_name+year,
       assetId: "projects/hardy-tenure-383607/assets/Preprocessing/"+"s1s2_"+aoi_name+year,  // <> modify these
       region: aoi,
       scale: 10,
