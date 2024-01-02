@@ -378,6 +378,7 @@ var s1s2final_s = ee.ImageCollection.fromImages(
     return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), ee.Number(minMax.get(name.cat('_max')))).multiply(255).byte()
 })).toBands().rename(s1s2final_s.bandNames());
 
+print(s1s2final_s)
 
 Export.image.toAsset({
       image: s1s2final_s,
