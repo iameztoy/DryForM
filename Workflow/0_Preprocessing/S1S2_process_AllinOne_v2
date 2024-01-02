@@ -357,7 +357,7 @@ var s1s2final = s1s2_final.select(blist).rename(ren);
 //---------------------------------------------------------------------------//
 
 var s1s2final_s = s1s2final.select(["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"])
-s1s2final_s = s1s2final_s.unitScale(-3, 3).multiply(0.0255).byte()
+s1s2final_s = s1s2final_s.unitScale(-1, 1).multiply(0.0255).byte()
 
 Export.image.toAsset({
       image: s1s2final_s,
