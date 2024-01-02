@@ -60,6 +60,8 @@ var aoi_name = "geometry";
 
 
 var aoi = geometry; //geometry for testing purposes
+Map.addLayer(aoi)
+Map.centerObject(aoi)
 
 //Time intervals for composites
 var year = 2020;
@@ -172,14 +174,16 @@ var s2f = s2
     });
 
 //Visualize collection    
+
 /*
-var list = s2f.toList(s2f.size().getInfo())
+var list = s2f.toList(s2f.size().getInfo());
 for (var i = 0; i < list.length().getInfo(); i++) {
-  var img = ee.Image(list.get(i))
-  Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 3000})
-  print (i, img)
+  var img = ee.Image(list.get(i));
+  Map.addLayer(img, {'bands': ['B4', 'B3', 'B2'], 'min': 0, 'max': 3000});
+  print (i, img);
 }
 */
+
 
 // Different composites for each time interval
 var createSeasonComposites_s2 = function(months) {
