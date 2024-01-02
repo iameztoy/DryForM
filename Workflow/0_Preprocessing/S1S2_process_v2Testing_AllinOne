@@ -292,15 +292,15 @@ if (rescaling == 'Raw 0-10000'){s2_final = s2_final.int16()}
 //---------------------------------------------------------------------------//
 
 var s1s2_final = s2_final.addBands(s1_final);
-//s1s2_q1_chaco = int16(s1s2_q1_chaco);
+
+//Rename bands
 
 var blist = s1s2_final.bandNames();
-var s = "s"
-var forRename = blist.map(function(ele){
-    return ele});
-    
-print(forRename)
-var s1s2final = s1s2_final.select(blist).rename(forRename);
+var cat = function(ele){return ee.String("t").cat(ele)}
+var ren = blist.map(cat)
+
+var s1s2final = s1s2_final.select(blist).rename(ren);
+print(s1s2final)
 
 
 //---------------------------------------------------------------------------//
