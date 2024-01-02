@@ -47,9 +47,11 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 //---------------------------------------------------------------------------//
 
 var aoi_name = "chaco";
-var aoi = chaco.merge(cerrado).merge(caatinga); //chaco, caatinga, cerrado, tanzania
-aoi = aoi.union()
-Map.addLayer(aoi, null, "Union South America")
+//var aoi = chaco.merge(cerrado).merge(caatinga); //chaco, caatinga, cerrado, tanzania
+//aoi = aoi.union()
+//Map.addLayer(aoi, null, "Union South America")
+
+var aoi = geometry; //for testing purposes
 
 //Time intervals for composites
 var year = 2020;
@@ -316,7 +318,7 @@ var final_bands = ee.ImageCollection.fromImages(
     var band = final_bands.select(name);
     return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), ee.Number(minMax.get(name.cat('_max'))))
 })).toBands().rename(final_bands.bandNames());
-}
+
 */
 
 if (normalize == "False" ){s1s2_final = s1s2_final}
@@ -357,7 +359,26 @@ var s1s2final = s1s2_final.select(blist).rename(ren);
 //---------------------------------------------------------------------------//
 
 var s1s2final_s = s1s2final.select(["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"])
-s1s2final_s = s1s2final_s.unitScale(-1, 1).multiply(255).byte() //0.0255
+//s1s2final_s = s1s2final_s.unitScale(-1, 1).multiply(255).byte() //0.0255
+
+var minMax = s1s2final_s.reduceRegion({
+  reducer: ee.Reducer.minMax(),
+  geometry: aoi,
+  scale: 10,
+  maxPixels: 10e13,
+});
+
+print(s1s2final_s.bandNames())
+print(minMax)
+
+var s1s2final_s = ee.ImageCollection.fromImages(
+  s1s2final_s.bandNames().map(function(name){
+    name = ee.String(name);
+    var band = s1s2final_s.select(name);
+    return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), ee.Number(minMax.get(name.cat('_max')))).multiply(255).byte()
+})).toBands().rename(s1s2final_s.bandNames());
+
+
 
 Export.image.toAsset({
       image: s1s2final_s,
