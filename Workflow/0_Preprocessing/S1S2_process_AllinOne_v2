@@ -46,7 +46,7 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-//var aoi_name = "geometry";
+var aoi_name = "chaco";
 var aoi = chaco //chaco.merge(cerrado).merge(caatinga); //chaco, caatinga, cerrado, tanzania
 //aoi = aoi.union()
 //Map.addLayer(aoi, null, "Union South America")
