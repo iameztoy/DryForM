@@ -63,7 +63,7 @@ var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
 // Bands S1/S2
 var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
-var glcm_bands = ["asm","contrast","corr","ent","var","idm","savg"]
+var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"]
 
 var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
 print(str); print(end)
