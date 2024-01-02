@@ -3,7 +3,6 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_NDV
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     geometry = 
     /* color: #ffc82d */
-    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
