@@ -303,12 +303,19 @@ function normalize(image){
 /*
 // use unit scale to normalize the pixel values
 // From: https://code.earthengine.google.com/8bdfc19ba7a231f983223d64514d71e1?accept_repo=users%2Fmvizzari%2FTassi_Vizzari_RS2020
-var dataset = ee.ImageCollection.fromImages(
-  image.bandNames().map(function(name){
+
+var minMax = final_bands.reduceRegion({
+  reducer: ee.Reducer.minMax(),
+  geometry: roi,
+  scale: 10,
+  maxPixels: 10e9,
+});
+var final_bands = ee.ImageCollection.fromImages(
+  final_bands.bandNames().map(function(name){
     name = ee.String(name);
-    var band = image.select(name);
+    var band = final_bands.select(name);
     return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), ee.Number(minMax.get(name.cat('_max'))))
-})).toBands().rename(image.bandNames());
+})).toBands().rename(final_bands.bandNames());
 }
 */
 
@@ -350,7 +357,7 @@ var s1s2final = s1s2_final.select(blist).rename(ren);
 //---------------------------------------------------------------------------//
 
 var s1s2final_s = s1s2final.select(["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"])
-s1s2final_s = s1s2final_s.multiply(0.0255).byte()
+s1s2final_s = s1s2final_s.unitScale(-3, 3).multiply(0.0255).byte()
 
 Export.image.toAsset({
       image: s1s2final_s,
