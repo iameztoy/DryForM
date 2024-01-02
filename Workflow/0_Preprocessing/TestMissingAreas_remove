@@ -1,7 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_NDVItest_MinMaxTailor_byte_chaco"),
-    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    geometry = 
+var geometry = 
     /* color: #ffc82d */
     /* displayProperties: [
       {
@@ -12,7 +10,8 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_NDV
         [[[-64.5352712553919, -27.685082711867956],
           [-64.5352712553919, -28.47581780993069],
           [-63.835107414144346, -28.47581780993069],
-          [-63.835107414144346, -27.685082711867956]]], null, false);
+          [-63.835107414144346, -27.685082711867956]]], null, false),
+    image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_NDVItest_MinMaxTailor_byte_chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var aoi = geometry
 
