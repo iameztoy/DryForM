@@ -55,7 +55,7 @@ var s2imf = ee.ImageCollection.fromImages(
 
 print(s2imf)
 
-Map.addLayer(s2imf, null, "Calculated chaco On the fly")
+Map.addLayer(s2imf, null, "Calculated chaco On the fly Byte")
 Map.addLayer(image, null, "Calculated chaco Asset")
 
 
