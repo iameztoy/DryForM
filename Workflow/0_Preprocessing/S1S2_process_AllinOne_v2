@@ -74,7 +74,7 @@ var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
 // DEFINE SENTINEL-2 PARAMETERS
 //---------------------------------------------------------------------------//
 
-var cloud_per = 0.95
+var cloud_per = 0.90
 var QA_BAND = 'cs_cdf'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
 var CLEAR_THRESHOLD = 0.80;// The threshold for masking; values between 0.50 and 0.65 generally work well.
 // Higher values will remove thin clouds, haze & cirrus shadows.
