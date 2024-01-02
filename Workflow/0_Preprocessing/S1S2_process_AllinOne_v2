@@ -51,7 +51,7 @@ var aoi_name = "chaco";
 //aoi = aoi.union()
 //Map.addLayer(aoi, null, "Union South America")
 
-var aoi = geometry; //for testing purposes
+var aoi = chaco; //for testing purposes
 
 //Time intervals for composites
 var year = 2020;
@@ -266,7 +266,7 @@ var createSeasonComposites_s1 = function(months) {
 
 var compList_s1 = t_int.map(createSeasonComposites_s1);
 var s1_comp = ee.ImageCollection.fromImages(compList_s1);
-var s1_final = s1_comp.toBands()
+var s1_final = s1_comp.toBands();
 
 
 //---------------------------------------------------------------------------//
@@ -358,7 +358,7 @@ var s1s2final = s1s2_final.select(blist).rename(ren);
 // Export
 //---------------------------------------------------------------------------//
 
-var s1s2final_s = s1s2final.select(["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"])
+var s1s2final_s = s1s2final.select(["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"]);
 //s1s2final_s = s1s2final_s.unitScale(-1, 1).multiply(255).byte() //0.0255
 
 var minMax = s1s2final_s.reduceRegion({
@@ -368,17 +368,18 @@ var minMax = s1s2final_s.reduceRegion({
   maxPixels: 10e13,
 });
 
-print(s1s2final_s.bandNames())
-print(minMax)
+//print(s1s2final_s.bandNames());
+//print(minMax);
 
 var s1s2final_s = ee.ImageCollection.fromImages(
   s1s2final_s.bandNames().map(function(name){
     name = ee.String(name);
     var band = s1s2final_s.select(name);
-    return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), ee.Number(minMax.get(name.cat('_max')))).multiply(255).byte()
+    return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), 
+    ee.Number(minMax.get(name.cat('_max')))).multiply(255).byte();
 })).toBands().rename(s1s2final_s.bandNames());
 
-print(s1s2final_s)
+//print(s1s2final_s)
 
 Export.image.toAsset({
       image: s1s2final_s,
