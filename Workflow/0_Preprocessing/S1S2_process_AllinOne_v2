@@ -63,7 +63,7 @@ var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
 // Bands S1/S2
 var bands_init = ["B.*"];
 var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
-var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"]
+var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"];
 
 var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
 
@@ -196,7 +196,14 @@ var addIndex = function addindexes(img) {
 var addglcm = function addglmc(img) {
   //var glcm = img.select(glcm_band).int16().glcmTexture({size: glcm_size}); //My original
   var glcm = img.select(glcm_band).unitScale(0, 0.30).multiply(100).toInt().glcmTexture({size: glcm_size});
-  return glcm.select(glcm_bands);
+    var asm = glcm.select("gray_asm");
+    var contrast = glcm.select("gray_contrast");
+    var corr = glcm.select("gray_corr"); 
+    var ent = glcm.select("gray_ent");
+    var vari = glcm.select("gray_var");
+    var idm = glcm.select("gray_idm");
+    var savg = glcm.select("gray_savg");
+  return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
 };
 
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
