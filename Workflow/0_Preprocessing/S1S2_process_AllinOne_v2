@@ -47,7 +47,9 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 //---------------------------------------------------------------------------//
 
 var aoi_name = "chaco";
-var aoi = geometry; //chaco, caatinga, cerrado, tanzania
+var aoi = chaco.merge(cerrado).merge(caatinga); //chaco, caatinga, cerrado, tanzania
+aoi = aoi.union()
+Map.addLayer(aoi, null, "Union South America")
 
 //Time intervals for composites
 var year = 2020;
@@ -267,6 +269,7 @@ var s1_final = s1_comp.toBands()
 // Normalize
 //---------------------------------------------------------------------------//
 
+// Option 1
 function normalize(image){
                 var bandNames = image.bandNames();
                 // Compute min and max of the image
@@ -292,6 +295,20 @@ function normalize(image){
               var normalized = image.subtract(mins).divide(maxs.subtract(mins));
               return normalized;
               }
+              
+//Option 2
+
+/*
+// use unit scale to normalize the pixel values
+// From: https://code.earthengine.google.com/8bdfc19ba7a231f983223d64514d71e1?accept_repo=users%2Fmvizzari%2FTassi_Vizzari_RS2020
+var dataset = ee.ImageCollection.fromImages(
+  image.bandNames().map(function(name){
+    name = ee.String(name);
+    var band = image.select(name);
+    return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), ee.Number(minMax.get(name.cat('_max'))))
+})).toBands().rename(image.bandNames());
+}
+*/
 
 if (normalize == "False" ){s1s2_final = s1s2_final}
 if (normalize == "True" ){s1s2_final = normalize(s1s2)}
