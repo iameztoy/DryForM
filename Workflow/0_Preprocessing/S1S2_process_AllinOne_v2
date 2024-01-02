@@ -66,7 +66,6 @@ var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
 var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"]
 
 var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
-print(str); print(end)
 
 
 //---------------------------------------------------------------------------//
@@ -157,7 +156,7 @@ var s2f = s2
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
-      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)).divide(10000);
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
     });
 
 // Different composites for each time interval
@@ -166,7 +165,7 @@ var createSeasonComposites_s2 = function(months) {
   var endMonth = ee.List(months).get(1);
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
   var seasonFiltered = s2f.filter(monthFilter);
-  var composite = seasonFiltered.median();
+  var composite = seasonFiltered.median().divide(10000);
   return composite.select(bands_init).clip(aoi);
 };
 
@@ -181,15 +180,10 @@ var addIndex = function addindexes(img) {
       .subtract(img.select('B8').multiply(2).add(1).pow(2)
       .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt())
       .divide(2).rename("MSAVI");
-  //texture of 5x5 pixel window
-  var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt');
+  var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt'); //texture of 5x5 pixel window
   var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
-  var gray = img.expression(
-      '(0.3 * NIR) + (0.59 * R) + (0.11 * G)', {
-      'NIR': img.select('B8'),
-      'R': img.select('B4'),
-      'G': img.select('B3')
-      }).rename('gray');
+  var gray = img.select("B8").multiply(0.3).add(img.select("B4").multiply(0.59)).add(img.select("B3").multiply(0.11)).rename('gray');
+      //'(0.3 * NIR) + (0.59 * R) + (0.11 * G)'
   //mtvi = 1.5 * (1.2 * (nir - green) - 2.5 * (red - green)) / 
   //         sqrt( (2 * nir + 1)^2 - (6 * nir - 5 * sqrt(red) - 0.5) ) //https://gis.stackexchange.com/questions/308633/soil-adjusted-vegetation-index-values-msavi2-are-not-within-expected-range
   return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi, gray));
@@ -202,7 +196,7 @@ var addIndex = function addindexes(img) {
 var addglcm = function addglmc(img) {
   //var glcm = img.select(glcm_band).int16().glcmTexture({size: glcm_size}); //My original
   var glcm = img.select(glcm_band).unitScale(0, 0.30).multiply(100).toInt().glcmTexture({size: glcm_size});
-  return img.select(glcm_bands);
+  return glcm.select(glcm_bands);
 };
 
 var s2_final = s2_comp.map(addIndex).map(addglcm).toBands();
