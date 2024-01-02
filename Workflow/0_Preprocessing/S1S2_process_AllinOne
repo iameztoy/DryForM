@@ -157,7 +157,7 @@ var s2f = s2
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
     });
-print(s2f)
+
 
 // Different composites for each time interval
 var createSeasonComposites_s2 = function(months) {
