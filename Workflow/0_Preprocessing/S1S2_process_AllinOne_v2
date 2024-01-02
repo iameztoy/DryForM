@@ -51,7 +51,7 @@ var aoi_name = "chaco";
 //aoi = aoi.union()
 //Map.addLayer(aoi, null, "Union South America")
 
-var aoi = chaco; //for testing purposes
+var aoi = chaco; //geometry for testing purposes
 
 //Time intervals for composites
 var year = 2020;
