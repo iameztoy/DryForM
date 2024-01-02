@@ -11,7 +11,8 @@ var geometry2 =
         [[[-64.16656039288897, -27.71532937909031],
           [-64.16656039288897, -28.42540848565734],
           [-63.34258578351397, -28.42540848565734],
-          [-63.34258578351397, -27.71532937909031]]], null, false);
+          [-63.34258578351397, -27.71532937909031]]], null, false),
+    image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_NDVItest_MinMaxTailor_byte_chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var geometry = 
     ee.Geometry.Polygon(
@@ -65,6 +66,18 @@ var minMax = s2im.reduceRegion({
 
 print(minMax)
 
+var s2imf = ee.ImageCollection.fromImages(
+  s2im.bandNames().map(function(name){
+    name = ee.String(name);
+    var band = s2im.select(name);
+    return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), 
+    ee.Number(minMax.get(name.cat('_max')))).multiply(255).byte();
+})).toBands().rename(s2im.bandNames());
+
+print(s2imf)
+
+Map.addLayer(s2imf)
+Map.addLayer(image, null, "Calculated chaco")
 
 
 
