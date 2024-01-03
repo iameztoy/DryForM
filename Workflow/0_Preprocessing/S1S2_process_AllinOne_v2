@@ -134,6 +134,40 @@ if (quarter == "q2"){var str_q2 = q2_str; var end_q2 = q2_end}
 if (quarter == "q3"){var str_q3 = q3_str; var end_q3 = q3_end}
 if (quarter == "q4"){var str_q4 = q4_str; var end_q4 = q4_end}
 
+/*
+//For monthly series (example)
+//From https://courses.spatialthoughts.com/gee-water-resources-management.html#introduction
+
+//var startYear = 2010
+//var endYear = 2020
+
+// Create NDVI composite for every month
+var years = ee.List.sequence(startYear,endYear);
+var months = ee.List.sequence(1, 12);
+
+// Map over the years and create a monthly average collection
+var monthlyImages = years.map(function(year) {
+  return months.map(function(month) {
+    var filtered = ndviScaled
+      .filter(ee.Filter.calendarRange(year, year, 'year'))
+      .filter(ee.Filter.calendarRange(month, month, 'month'))
+    var monthly = filtered.mean()
+    return monthly.set({'month': month, 'year': year})
+  })
+}).flatten()
+
+// We now have 1 image per month for entire duratioon
+var monthlyCol = ee.ImageCollection.fromImages(monthlyImages)
+
+// We can compute Minimum NDVI for each month across all years
+// i.e. Minimum NDVI for all May months in the collection
+var monthlyMinImages = months.map(function(month) {
+    var filtered = monthlyCol.filter(ee.Filter.eq('month', month))
+    var monthlyMin = filtered.min()
+    return monthlyMin.set('month', month)
+})
+*/
+
 //---------------------------------------------------------------------------//
 // ********** END OF PARAMETERS ************
 //---------------------------------------------------------------------------//
