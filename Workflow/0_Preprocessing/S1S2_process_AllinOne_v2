@@ -36,11 +36,14 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 
 
 //---------------------------------------------------------------------------//
-// REQUIRE
+// REQUIRE + Datasets
 //---------------------------------------------------------------------------//
 
 var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
 var helper = require('users/adugnagirma/gee_s1_ard:utilities');
+var ecoregions = ee.FeatureCollection('RESOLVE/ECOREGIONS/2017');
+//ECO_NAME: "Dry Chaco" "Cerrado" "Caatinga"
+
 
 //---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
