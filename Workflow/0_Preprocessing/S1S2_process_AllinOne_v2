@@ -42,18 +42,20 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
 var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 var ecoregions = ee.FeatureCollection('RESOLVE/ECOREGIONS/2017');
-//ECO_NAME: "Dry Chaco" "Cerrado" "Caatinga"
+
+var aoi_list = ee.List(["Dry Chaco"]); //"Cerrado", "Caatinga", 
+
+//Either use this or imported assets (FAO ecozones)
+var aoi = ecoregions.filter(ee.Filter.inList("ECO_NAME", list));
 
 
 //---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoi_name = "chaco";
-var aoi = chaco //chaco.merge(cerrado).merge(caatinga); //chaco, caatinga, cerrado, tanzania
+var aoi_name = aoi_list;
+var aoi = ecoregions.filter(ee.Filter.inList("ECO_NAME", list));
 //aoi = aoi.union()
-//Map.addLayer(aoi, null, "Union South America")
-
 
 //Time intervals for composites
 var year = 2020;
