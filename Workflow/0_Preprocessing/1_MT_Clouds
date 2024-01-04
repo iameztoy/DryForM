@@ -42,7 +42,7 @@ Map.addLayer(t0, null, "t0")
 Map.addLayer(t2, null, "t2")
 Map.addLayer(t1, null, "t1")
 //Interpolate
-var a = (t0.unmask().add(t2.unmask())).divide(2)
+var a = (t0.add(t2)).divide(2)
 print("a", a)
 Map.addLayer(a, null, "mean")
 var b = a.updateMask(t1c).unmask()
