@@ -31,7 +31,7 @@ Map.addLayer(t1c, null, "t1c",0)
 var a = (t0.add(t2)).divide(2); //calculate mean between t1 (t0 and t2). Avoid calculating mean if any of t is cloudy -> do not unmask
 var b = a.updateMask(t1c); //mask with clouds in t1
 var c = t1.unmask(); //unmask t1
-var d = c.add(b.unmask()); //add mean values to t1
+var d = c.add(b.unmask()); //add mean values (t0 - t2) to t1
 var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes to 510, unitScale and convert.
 
 var ec = e.unmask().clip(aoi).eq(0) // areas that have not been interpolated
