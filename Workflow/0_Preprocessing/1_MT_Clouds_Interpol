@@ -40,7 +40,7 @@ print("d", d)
 Map.addLayer(d, null, "interpolated")
 var e = d.unitScale(0, 255).multiply(255).toByte();
 print("e", e)
-Map.addLayer(d, null, "to byte",0)
+Map.addLayer(e, null, "to byte",0)
 
 //var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
 //Map.addLayer(test, null, "Test")
