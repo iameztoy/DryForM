@@ -41,21 +41,6 @@ var no_cloudsMT = sum.eq(0);
 Map.addLayer(t0, null, "t0")
 Map.addLayer(t2, null, "t2")
 Map.addLayer(t1, null, "t1")
-//Interpolate
-var a = (t0.add(t2)).divide(2)
-print("a", a)
-Map.addLayer(a, null, "mean")
-var b = a.updateMask(t1c).unmask()
-print("b", b)
-Map.addLayer(b, null, "mean masked")
-var c = t1.unmask().add(b)
-print("c", c)
-Map.addLayer(c, null, "gap-fill")
-
-var d = c.unitScale(0, 255).multiply(255).toByte()
-Map.addLayer(d, null, "to byte")
-
-
 
 
 //Mask the original bands with non-cloudy pixels
