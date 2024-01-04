@@ -37,6 +37,7 @@ var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes t
 var ec = e.unmask().clip(aoi).eq(0) // areas that have not been interpolated
 
 
+
 //var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
 //Map.addLayer(test, null, "Test")
 
