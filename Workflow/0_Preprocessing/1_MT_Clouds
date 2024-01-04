@@ -25,13 +25,13 @@ var t3c = ndvi_2020.select("t3_NDVI").unmask().clip(aoi).eq(0);
 // We sum the all and create an overall MT cloud Mask
 var sum = t0c.add(t1c).add(t2c).add(t3c);
 var clouds = sum.gte(1).and(sum.lte(4));
-var no_clouds = sum.eq(0);
+var no_cloudsMT = sum.eq(0);
 Map.addLayer(no_clouds, null, "No clouds overall",0)
 
-var t0m = t0.updateMask(no_clouds);
-var t1m = t1.updateMask(no_clouds);
-var t2m = t2.updateMask(no_clouds);
-var t3m = t3.updateMask(no_clouds);
+var t0m = t0.updateMask(no_cloudsMT);
+var t1m = t1.updateMask(no_cloudsMT);
+var t2m = t2.updateMask(no_cloudsMT);
+var t3m = t3.updateMask(no_cloudsMT);
 
 var blist = [t1m, t2m, t3m]
 
