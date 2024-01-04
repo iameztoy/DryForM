@@ -36,7 +36,27 @@ var sum = t0c.add(t1c).add(t2c).add(t3c);
 var clouds = sum.gte(1).and(sum.lte(4));
 //Non cloudy MT pixels equal 0 | Outcome is 1
 var no_cloudsMT = sum.eq(0);
-Map.addLayer(no_cloudsMT, null, "No clouds overall",0);
+//Map.addLayer(no_cloudsMT, null, "No clouds overall",0);
+
+Map.addLayer(t0, null, "t0")
+Map.addLayer(t2, null, "t2")
+Map.addLayer(t1, null, "t1")
+//Interpolate
+var a = (t0.unmask().add(t2.unmask())).divide(2)
+print("a", a)
+Map.addLayer(a, null, "mean")
+var b = a.updateMask(t1c).unmask()
+print("b", b)
+Map.addLayer(b, null, "mean masked")
+var c = t1.unmask().add(b)
+print("c", c)
+Map.addLayer(c, null, "gap-fill")
+
+var d = c.unitScale(0, 255).multiply(255).toByte()
+Map.addLayer(d, null, "to byte")
+
+
+
 
 //Mask the original bands with non-cloudy pixels
 var t0m = t0.updateMask(no_cloudsMT);
@@ -49,6 +69,7 @@ var blist = [t1m, t2m, t3m];
 //Merge back the masked bands
 var col2020 = t0m.addBands(blist);
 
+/*
 //Visu
 Map.addLayer(t1m, null, "NDVI t0 Masked");
 Map.addLayer(t1m, null, "NDVI t1 Masked");
@@ -73,3 +94,4 @@ var geometry =
           
 Map.addLayer(geometry)
 Map.centerObject(geometry)
+*/
