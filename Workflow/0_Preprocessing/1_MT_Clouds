@@ -9,8 +9,8 @@ var ndvi_2020 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2
 var aoi = chaco.merge(cerrado).merge(caatinga);
 aoi = aoi.union();
 
-// Where are the clouds in the multitemporal domain?
-// First we unmask e.g. the NDVI. Zero values = cloudy pixels
+// Where are the clouds in the multitemporal (MT) domain?
+// First we unmask e.g. the NDVI. Zero values = cloudy pixels in MT
 // Any other set of bands could be used (e.g. B8)
 // We need to make sure that training samples do not fall within this mask
 //  in order to avoid inputing noisy data -> All MT bands shall share the same
@@ -48,7 +48,6 @@ var blist = [t1m, t2m, t3m];
 
 //Merge back the masked bands
 var col2020 = t0m.addBands(blist);
-print(col2020);
 
 //Visu
 Map.addLayer(t1m, null, "NDVI t0 Masked");
