@@ -26,26 +26,24 @@ Map.addLayer(t2, null, "t2",0)
 Map.addLayer(t1c, null, "t1c",0)
 
 //Interpolate
-var a = (t0.add(t2)).divide(2)
-print("a", a)
-Map.addLayer(a, null, "mean",0)
-var b = a.updateMask(t1c)
-print("b", b)
-Map.addLayer(b, null, "mean masked",0)
-var c = t1.unmask()
-print("c", c)
-Map.addLayer(c, null, "t1 unmask",0)
-var d = c.add(b.unmask())
-print("d", d)
-Map.addLayer(d, null, "interpolated", 0)
+var a = (t0.add(t2)).divide(2);
+var b = a.updateMask(t1c);
+var c = t1.unmask();
+var d = c.add(b.unmask());
 var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask();
-print("e", e)
-Map.addLayer(e, null, "to byte",1)
 
 //var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
 //Map.addLayer(test, null, "Test")
 
+print("a", a); print("b", b); print("c", c)
+print("d", d); print("e", e)
 
+
+Map.addLayer(a, null, "mean",0)
+Map.addLayer(b, null, "mean masked",0)
+Map.addLayer(c, null, "t1 unmask",0)
+Map.addLayer(d, null, "interpolated", 0)
+Map.addLayer(e, null, "to byte",1)
 
 
 
