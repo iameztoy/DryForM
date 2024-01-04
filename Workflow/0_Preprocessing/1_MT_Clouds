@@ -63,3 +63,13 @@ Map.addLayer(t1, null, "t1",0);
 Map.addLayer(t2, null, "t2",0);
 Map.addLayer(t3, null, "t3",0);
 Map.addLayer(aoi, null, "AOI", 0);
+
+var geometry = 
+    ee.Geometry.Polygon(
+        [[[-40.322814419027104, -3.2075560469356326],
+          [-40.322814419027104, -3.496824345711495],
+          [-39.99459786629273, -3.496824345711495],
+          [-39.99459786629273, -3.2075560469356326]]], null, false);
+          
+Map.addLayer(geometry)
+Map.centerObject(geometry)
