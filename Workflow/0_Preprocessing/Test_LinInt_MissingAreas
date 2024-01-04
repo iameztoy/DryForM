@@ -1,0 +1,28 @@
+var geometry = 
+    ee.Geometry.Polygon(
+        [[[-60.69688904268286, -11.847357071760559],
+          [-60.69688904268286, -13.054226571456592],
+          [-59.29063904268286, -13.054226571456592],
+          [-59.29063904268286, -11.847357071760559]]], null, false);
+
+var aoi_name = "chaco";
+var aoi = chaco.merge(cerrado).merge(caatinga)
+aoi = aoi.union()
+
+//Time intervals for composites
+var year = 2020;
+var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]]);
+var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]);
+var t_int = t_int4;
+var quarter = ("q1");
+
+var collection = "2A";
+var normalize = "False"; 
+var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
+
+// Bands S1/S2
+var bands_init = ["B.*"];
+var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
+var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"];
+
+var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
