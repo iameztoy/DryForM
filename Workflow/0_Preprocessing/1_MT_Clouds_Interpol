@@ -32,12 +32,15 @@ Map.addLayer(a, null, "mean",0)
 var b = a.updateMask(t1c)
 print("b", b)
 Map.addLayer(b, null, "mean masked",0)
-var c = t1.unmask().add(b)
+var c = (t1.unmask()).add(b)
 print("c", c)
 Map.addLayer(c, null, "gap-fill",0)
 
 var d = c.unitScale(0, 255).multiply(255).toByte()
 Map.addLayer(d, null, "to byte",0)
+
+//var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
+//Map.addLayer(test, null, "Test")
 
 
 
