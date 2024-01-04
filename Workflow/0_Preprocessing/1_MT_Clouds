@@ -10,8 +10,13 @@ var aoi = chaco.merge(cerrado).merge(caatinga);
 aoi = aoi.union();
 
 // Where are the clouds in the multitemporal domain?
-// First we unmask the NDVI. Zero values = cloudy pixels
+// First we unmask e.g. the NDVI. Zero values = cloudy pixels
+// Any other set of bands could be used (e.g. B8)
 // We need to make sure that training samples do not fall within this mask
+//  in order to avoid inputing noisy data -> All MT bands shall share the same
+//  cloud mask.
+// Sampling shoud be applied on any of the output bands which contain valid pixels
+//   in the multi-temporal domain
 var t0 = ndvi_2020.select("t0_NDVI");
 var t1 = ndvi_2020.select("t1_NDVI");
 var t2 = ndvi_2020.select("t2_NDVI");
@@ -26,17 +31,17 @@ var t3c = ndvi_2020.select("t3_NDVI").unmask().clip(aoi).eq(0);
 var sum = t0c.add(t1c).add(t2c).add(t3c);
 var clouds = sum.gte(1).and(sum.lte(4));
 var no_cloudsMT = sum.eq(0);
-Map.addLayer(no_clouds, null, "No clouds overall",0)
+Map.addLayer(no_cloudsMT, null, "No clouds overall",0);
 
 var t0m = t0.updateMask(no_cloudsMT);
 var t1m = t1.updateMask(no_cloudsMT);
 var t2m = t2.updateMask(no_cloudsMT);
 var t3m = t3.updateMask(no_cloudsMT);
 
-var blist = [t1m, t2m, t3m]
+var blist = [t1m, t2m, t3m];
 
-var col2020 = t0m.addBands(blist)
-print(col2020)
+var col2020 = t0m.addBands(blist);
+print(col2020);
 
 Map.addLayer(t1m, null, "NDVI t0 Masked");
 Map.addLayer(t1m, null, "NDVI t1 Masked");
@@ -46,8 +51,8 @@ Map.addLayer(t3m, null, "NDVI t3 Masked");
 Map.addLayer(clouds, null, "Overall cloud mask",0);
 Map.addLayer(sum, cloudsum_vp, "Sum Clouds",0);
 
-Map.addLayer(t0, null, "t0",0)
-Map.addLayer(t1, null, "t1",0)
-Map.addLayer(t2, null, "t2",0)
-Map.addLayer(t3, null, "t3",0)
-Map.addLayer(aoi, null, "AOI", 0)
+Map.addLayer(t0, null, "t0",0);
+Map.addLayer(t1, null, "t1",0);
+Map.addLayer(t2, null, "t2",0);
+Map.addLayer(t3, null, "t3",0);
+Map.addLayer(aoi, null, "AOI", 0);
