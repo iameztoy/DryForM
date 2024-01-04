@@ -233,3 +233,4 @@ replaced by interpolated values from closest cloud-free pixels.
 // map() the function to interpolate all images in the collection
 var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
 print(interpolatedCol.first())
+
