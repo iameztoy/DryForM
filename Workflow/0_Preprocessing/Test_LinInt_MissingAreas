@@ -70,12 +70,13 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 // SELECT AND MASK CLOUD/SHADOWS
 var filtered = s2
     .filterBounds(aoi)
-    .filterDate("2020-01-01", "2021-01-01") //str, end //"2020-01-01", "2021-01-01"
+    .filterDate("2019-11-01", "2020-05-01") //str, end //"2020-01-01", "2021-01-01"
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)).divide(10000)
         .select("B.*")
+        .clip(geometry)
         .copyProperties(img, ["system:time_start"]);
     });
  
@@ -232,5 +233,6 @@ replaced by interpolated values from closest cloud-free pixels.
 
 // map() the function to interpolate all images in the collection
 var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
-print(interpolatedCol.first())
+var s = interpolatedCol.select(0)
+var s1 = interpolatedCol.select(1)
 
