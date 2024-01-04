@@ -28,11 +28,14 @@ Map.addLayer(t2, null, "t2",0)
 Map.addLayer(t1c, null, "t1c",0)
 
 //Interpolate
-var a = (t0.add(t2)).divide(2);
-var b = a.updateMask(t1c);
-var c = t1.unmask();
-var d = c.add(b.unmask());
-var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask();
+var a = (t0.add(t2)).divide(2); //calculate mean between t1 (t0 and t2)
+var b = a.updateMask(t1c); //mask with clouds in t1
+var c = t1.unmask(); //unmask t1
+var d = c.add(b.unmask()); //add mean values to t1
+var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes to 510, unitScale and convert.
+
+var ec = e.unmask().clip(aoi).eq(0)
+
 
 //var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
 //Map.addLayer(test, null, "Test")
@@ -44,8 +47,10 @@ print("d", d); print("e", e)
 Map.addLayer(a, null, "mean",0)
 Map.addLayer(b, null, "mean masked",0)
 Map.addLayer(c, null, "t1 unmask",0)
-Map.addLayer(d, null, "interpolated", 0)
-Map.addLayer(e, null, "to byte",1)
+Map.addLayer(d, null, "t1 interpolated", 0)
+Map.addLayer(e, null, "t1 interpolated to byte",1)
+
+
 
 
 
