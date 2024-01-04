@@ -473,6 +473,7 @@ else {
     }
 }
 
+/*
 Map.addLayer(s1_view.first(), visparam, 'First image in the input S1 collection', false);
 Map.addLayer(s1_preprocces_view.first(), visparam, 'First image in the processed S1 collection', false);
 var mean_1 = s1_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(aoi);
@@ -481,6 +482,7 @@ var mean_2 = s1_preprocces_view.mean().select(["VV", "VH", "VVVH_ratio"]).clip(a
 
 Map.addLayer(mean_1, visparam, "S1 view - Mean", false);
 Map.addLayer(mean_2, visparam, "S1 Preprocess view - Mean", false);
+*/
 
 
 //---------------------------------------------------------------------------//
