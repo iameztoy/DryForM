@@ -33,6 +33,11 @@ var t1m = t1.updateMask(no_clouds);
 var t2m = t2.updateMask(no_clouds);
 var t3m = t3.updateMask(no_clouds);
 
+var blist = [t1m, t2m, t3m]
+
+var col2020 = t0m.addBands(blist)
+print(col2020)
+
 Map.addLayer(t1m, null, "NDVI t0 Masked");
 Map.addLayer(t1m, null, "NDVI t1 Masked");
 Map.addLayer(t2m, null, "NDVI t2 Masked");
