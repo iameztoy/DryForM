@@ -408,6 +408,7 @@ var s1s2final = s1s2_final.select(blist).rename(ren);
 //---------------------------------------------------------------------------//
 
 var s1s2final_s = s1s2final.select(["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"]);
+//["t0_NDVI", "t1_NDVI", "t2_NDVI", "t3_NDVI"]
 //s1s2final_s = s1s2final_s.unitScale(-1, 1).multiply(255).byte() //0.0255
 
 var minMax = s1s2final_s.reduceRegion({
