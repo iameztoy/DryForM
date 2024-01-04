@@ -34,9 +34,15 @@ var c = t1.unmask(); //unmask t1
 var d = c.add(b.unmask()); //add mean values (t0 - t2) to t1
 var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes to 510, unitScale and convert.
 
-var ec = e.unmask().clip(aoi).eq(0) // areas that have not been interpolated
-
-
+//add a second iteration with values from t0 - 1 (median from Oct-Nov 2019)
+// areas that have not been interpolated. Still cloudy:
+// either t0, t2 or both do not contain data (cloudy)
+var ec = e.unmask().clip(aoi).eq(0) 
+var f = (t3_2019.add(t2)).divide(2) //I maintain t2 because it is less cloudy
+var g = f.updateMask(ec) //mask with clouds in t1 that were not interpolated
+var h = e.unmask() //unmask the target t1 that have already been interpolated
+var i = h.add(g.unmask()) //add mean values (t3_2019 - t2).
+var j = (i.unitScale(0, 255).multiply.toByte()).selfMask()
 
 //var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
 //Map.addLayer(test, null, "Test")
