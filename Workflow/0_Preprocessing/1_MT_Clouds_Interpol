@@ -5,18 +5,8 @@ var ndvi_2020 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     cloudsum_vp = {"opacity":1,"bands":["t0_NDVI"],"palette":["000000","fff949","ffc74b","ff9f9f","ff483f"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-
-var aoi = chaco.merge(cerrado).merge(caatinga);
-aoi = aoi.union();
-
-// Where are the clouds in the multitemporal (MT) domain?
-// First we unmask e.g. the NDVI. Zero values = cloudy pixels in MT
-// Any other set of bands could be used (e.g. B8)
-// We need to make sure that training samples do not fall within this mask
-//  in order to avoid inputing noisy data -> All MT bands shall share the same
-//  cloud mask.
-// Sampling shoud be applied on any of the output bands which contain valid pixels
-//   in the multi-temporal domain
+var aoi = caatinga.merge(cerrado).merge(chaco)
+aoi = aoi.union()
 
 // Assets derived from step 0
 var t0 = ndvi_2020.select("t0_NDVI"); 
@@ -30,48 +20,25 @@ var t1c = ndvi_2020.select("t1_NDVI").unmask().clip(aoi).eq(0);
 var t2c = ndvi_2020.select("t2_NDVI").unmask().clip(aoi).eq(0);
 var t3c = ndvi_2020.select("t3_NDVI").unmask().clip(aoi).eq(0);
 
-// We sum the all and create an overall MT cloud Mask
-var sum = t0c.add(t1c).add(t2c).add(t3c);
-//Cloudy MT pixels are between 1 and 4
-var clouds = sum.gte(1).and(sum.lte(4));
-//Non cloudy MT pixels equal 0 | Outcome is 1
-var no_cloudsMT = sum.eq(0);
-Map.addLayer(no_cloudsMT, null, "No clouds overall",0);
+Map.addLayer(t0, null, "t0")
+Map.addLayer(t1, null, "t1")
+Map.addLayer(t2, null, "t2")
 
-//Mask the original bands with non-cloudy pixels
-var t0m = t0.updateMask(no_cloudsMT);
-var t1m = t1.updateMask(no_cloudsMT);
-var t2m = t2.updateMask(no_cloudsMT);
-var t3m = t3.updateMask(no_cloudsMT);
+//Interpolate
+var a = (t0.add(t2)).divide(2)
+print("a", a)
+Map.addLayer(a, null, "mean")
+var b = a.updateMask(t1c)
+print("b", b)
+Map.addLayer(b, null, "mean masked")
+var c = t1.unmask().add(b)
+print("c", c)
+Map.addLayer(c, null, "gap-fill")
 
-var blist = [t1m, t2m, t3m];
+var d = c.unitScale(0, 255).multiply(255).toByte()
+Map.addLayer(d, null, "to byte")
 
-//Merge back the masked bands
-var col2020 = t0m.addBands(blist);
 
-//Visu
-Map.addLayer(t1m, null, "NDVI t0 Masked");
-Map.addLayer(t1m, null, "NDVI t1 Masked");
-Map.addLayer(t2m, null, "NDVI t2 Masked");
-Map.addLayer(t3m, null, "NDVI t3 Masked");
 
-Map.addLayer(clouds, null, "Overall cloud mask",0);
-Map.addLayer(sum, cloudsum_vp, "Sum Clouds",0);
-
-Map.addLayer(t0, null, "t0",0);
-Map.addLayer(t1, null, "t1",0);
-Map.addLayer(t2, null, "t2",0);
-Map.addLayer(t3, null, "t3",0);
-Map.addLayer(aoi, null, "AOI", 0);
-
-var geometry = 
-    ee.Geometry.Polygon(
-        [[[-40.322814419027104, -3.2075560469356326],
-          [-40.322814419027104, -3.496824345711495],
-          [-39.99459786629273, -3.496824345711495],
-          [-39.99459786629273, -3.2075560469356326]]], null, false);
-          
-Map.addLayer(geometry)
-Map.centerObject(geometry)
 
 
