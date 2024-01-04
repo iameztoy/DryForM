@@ -1,0 +1,27 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var ndvi_2020 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_UnionSA_NDVItest_MinMaxTailor_byte_2020_CC065"),
+    caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    cloudsum_vp = {"opacity":1,"bands":["t0_NDVI"],"palette":["000000","fff949","ffc74b","ff9f9f","ff483f"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+var aoi = chaco.merge(cerrado).merge(caatinga);
+aoi = aoi.union();
+
+var t0 = ndvi_2020.select("t0_NDVI").unmask().clip(aoi).eq(0);
+var t1 = ndvi_2020.select("t1_NDVI").unmask().clip(aoi).eq(0);
+var t2 = ndvi_2020.select("t2_NDVI").unmask().clip(aoi).eq(0);
+var t3 = ndvi_2020.select("t3_NDVI").unmask().clip(aoi).eq(0);
+
+var sum = t0.add(t1).add(t2).add(t3);
+var clouds = sum.gte(1).and(sum.lte(4));
+
+Map.addLayer(clouds, null, "Overall cloud mask");
+Map.addLayer(sum, cloudsum_vp, "Sum Clouds");
+
+Map.addLayer(t0, null, "t0")
+Map.addLayer(t1, null, "t1")
+Map.addLayer(t2, null, "t2")
+Map.addLayer(t3, null, "t3")
+Map.addLayer(aoi, null, "AOI")
