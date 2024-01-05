@@ -201,3 +201,7 @@ var list = ([t1_B4i, t1_B5i, t1_B8i, t1_B11i, t1_B12i])
 var a = t1_B3i.addBands(list)
 Map.addLayer(a, null, "interpolated") 
 Map.addLayer(s2final, null, "not interpolated")
+
+// ****************************
+// T2
+// ----------------------------
