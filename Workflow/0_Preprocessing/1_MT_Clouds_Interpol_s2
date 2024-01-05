@@ -11,7 +11,8 @@ var aoi =
         [[[-51.915807579891734, 0.04304879511694219],
           [-51.915807579891734, -18.43877514386948],
           [-34.249791954891734, -18.43877514386948],
-          [-34.249791954891734, 0.04304879511694219]]], null, false);
+          [-34.249791954891734, 0.04304879511694219]]], null, false),
+    gaps_vp = {"opacity":1,"bands":["t1_B8"],"palette":["ff4812"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
@@ -84,5 +85,5 @@ var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
 Map.addLayer(t1_int, null, "interpolated")
 
 var fcl_t1 = t1_int.unmask().eq(0).clip(aoi).selfMask()
-Map.addLayer(fcl_t1, null, "Gaps after Interpol in t1")
+Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1")
 
