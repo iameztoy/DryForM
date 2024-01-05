@@ -64,6 +64,12 @@ print(s2final)
 var test = s2final.select("t1_B8").clip(aoi)
 
 var mt = s2final;
+
+var tar = "1"
+var band = "B8"
+var t = "t"+tar+"_"+band
+print(t)
+
 var target = "t1_B8";
 var t0 = "t0_B8";
 var t1 = "t1_B8";
