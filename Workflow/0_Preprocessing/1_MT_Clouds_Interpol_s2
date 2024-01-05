@@ -65,12 +65,12 @@ var test = s2final.select("t1_B8").clip(aoi)
 
 var mt = s2final;
 
-var tar = "1"
-var band = "B8"
-var t = "t"+tar+"_"+band
-print(t)
+var period = "1" //Target period
+var band = "B8" //Target band
+var target = "t"+period+"_"+band
+print(target)
 
-var target = "t1_B8";
+
 var t0 = "t0_B8";
 var t1 = "t1_B8";
 var t2 = "t2_B8";
