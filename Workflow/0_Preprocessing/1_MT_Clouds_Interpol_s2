@@ -81,11 +81,11 @@ var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
          
 
 
-Map.addLayer(t1_int, null, "interpolated")
+Map.addLayer(t1_int, {min: 1000, max: 4000}, "interpolated")
 
 var fcl_t1 = t1_int.unmask().eq(0).clip(aoi).selfMask()
 
-Map.addLayer(aoi, 0)   
+Map.addLayer(aoi, null, "aoi", 0)   
 Map.centerObject(aoi)
 Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1")
 
