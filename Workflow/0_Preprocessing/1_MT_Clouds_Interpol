@@ -96,6 +96,7 @@ var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
 
 
 // Same as test 4 but replacing t1c (calculating it inside)
+// Test 5
 
 var mt = ndvi_2020
 var target = "t1_NDVI"
@@ -104,20 +105,20 @@ var t1 = "t1_NDVI"
 var t2 = "t2_NDVI"
 var tm1 = "t3_NDVI" //this is used as it would be for 2019 | It simplifies the workflow without affecting much the outcome
 
-var test5 = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(tm1)).add(mt.select(t2))).divide(2)
             .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 255).multiply(255).toByte().selfMask();
             
-var fcl_t1 = test5.unmask().eq(0).clip(aoi).selfMask() //Final gaps in t1
+var fcl_t1 = t1_int.unmask().eq(0).clip(aoi).selfMask() //Final gaps in t1
 
 Map.addLayer(test, null, "test all in one step 1 byte",0)
 Map.addLayer(test2, null, "test all in one step 2 byte",0)
 Map.addLayer(test3, null, "test all in one test3 byte",0)
 Map.addLayer(test4, null, "test all in one test4 byte",1) //Removing 2x unitSace
-Map.addLayer(test5, null, "test all in one test 5 byte",1)
+Map.addLayer(t1_int, null, "test all in one test 5 byte",1)
 Map.addLayer(fcl_t1, {color: "red"}, "Gaps after Interpol in t1")
 
 
