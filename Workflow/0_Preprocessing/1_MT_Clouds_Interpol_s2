@@ -61,7 +61,7 @@ var ren = blist.map(cat);
 var s2final = compList_s2.select(blist).rename(ren);
 print(s2final)
 
-var test = s2final.select("t1_B8").clip(aoi)
+var test = s2final.select("t1_B2").clip(aoi)
 
 var mt = s2final;
 
