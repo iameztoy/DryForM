@@ -65,16 +65,23 @@ var test = s2final.select("t1_B8").clip(aoi)
 
 var mt = s2final;
 
+/*
 var period = ee.Number(1); //Target period (periods 0, 1, 2, 3)
 var band = "B2"; //Target band
 var target = "t"+period+"_"+band;
 
-var t0 = "t"+ee.String(period.subtract(1)).getInfo()+"_"+band;
-var t1 = "t"+ee.String(period.subtract(0)).getInfo()+"_"+band;
-var t2 = "t"+ee.String(period.add(1)).getInfo()+"_"+band;
-var t3 = "t"+ee.String(period.add(2)).getInfo()+"_"+band;
 
-print(t0); print(t1); print(t2); print(t3)
+var t0 = "t"+ee.String(period.subtract(1)).getInfo()+"_"+band; //"t0_B2"
+var t1 = "t"+ee.String(period.subtract(0)).getInfo()+"_"+band; //"t1_B2"
+var t2 = "t"+ee.String(period.add(1)).getInfo()+"_"+band; //"t2_B2"
+var t3 = "t"+ee.String(period.add(2)).getInfo()+"_"+band;//"t3_B2)
+*/
+
+var target = "t1_B2";
+var t0 = "t0_B2";
+var t1 = "t1_B2";
+var t2 = "t2_B2";
+var t3 = "t3_B2";
 
 var t1_B8i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
@@ -83,12 +90,13 @@ var t1_B8i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 1).multiply(10000).toUint16().selfMask().clip(aoi);
-         
-var fcl_t1 = t1_B8i.unmask().eq(0).clip(aoi).selfMask().clip(aoi);
+  
+//Calculate final gaps that need to be applied in Sentinel-1     
+//var fcl_t1 = t1_B8i.unmask().eq(0).clip(aoi).selfMask().clip(aoi);
 
 Map.addLayer(test, {min: 0.1, max: 0.4}, "not interpolated");
 Map.addLayer(aoi, null, "aoi", 0);
 Map.centerObject(aoi);
 Map.addLayer(t1_B8i, {min: 1000, max: 4000}, "interpolated");
-Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1");
+//Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1");
 
