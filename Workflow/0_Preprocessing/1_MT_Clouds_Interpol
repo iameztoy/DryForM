@@ -103,14 +103,15 @@ var target = "t1_NDVI"
 var t0 = "t0_NDVI"
 var t1 = "t1_NDVI"
 var t2 = "t2_NDVI"
-var tm1 = "t3_NDVI" //this is used as it would be for 2019 | It simplifies the workflow without affecting much the outcome
+var t3 = "t3_NDVI" //this is used as it would be for 2019 | It simplifies the workflow without affecting much the outcome
 
 var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
-            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(tm1)).add(mt.select(t2))).divide(2)
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3)).add(mt.select(t2))).divide(2)
             .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 255).multiply(255).toByte().selfMask();
+            
             
 var fcl_t1 = t1_int.unmask().eq(0).clip(aoi).selfMask() //Final gaps in t1
 
