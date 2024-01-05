@@ -323,7 +323,7 @@ var createSeasonComposites_s1 = function(months) {
   var seasonFiltered = s1_preprocces.filter(monthFilter);
   if (parameter.FORMAT=='DB'){var toDB = seasonFiltered.map(helper.lin_to_db)}
   //var toDB = seasonFiltered.map(helper.lin_to_db);
-  var composite = toDB.mean();
+  var composite = toDB.mean(); //Better than median for S1
   return composite.select("VV", "VH").clip(aoi);
 };
 
