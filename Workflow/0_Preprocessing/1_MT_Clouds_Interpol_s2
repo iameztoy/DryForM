@@ -77,11 +77,86 @@ var t2 = "t"+ee.String(period.add(1)).getInfo()+"_"+band; //"t2_B2"
 var t3 = "t"+ee.String(period.add(2)).getInfo()+"_"+band;//"t3_B2)
 */
 
-var target = "t1_B2";
-var t0 = "t0_B2";
-var t1 = "t1_B2";
-var t2 = "t2_B2";
-var t3 = "t3_B2";
+// ****************************
+// T1
+// ----------------------------
+var band = "B2"
+var target = "t1_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
+
+var t1_B2i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
+            .add(mt.select(t2))).divide(2)
+            .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .toUint16().selfMask().clip(aoi);
+
+/* 
+//Calculate final gaps that need to be applied in Sentinel-1     
+//var fcl_t1 = t1_B8i.unmask().eq(0).clip(aoi).selfMask().clip(aoi);
+Map.addLayer(test, {min: 300, max: 1100}, "not interpolated");
+Map.addLayer(aoi, null, "aoi", 0);
+Map.centerObject(aoi, 9);
+Map.addLayer(t1_B8i, {min: 300, max: 1100}, "interpolated");
+//Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1");
+*/
+
+
+var band = "B3"
+var target = "t1_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
+
+var t1_B3i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
+            .add(mt.select(t2))).divide(2)
+            .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .toUint16().selfMask().clip(aoi);
+
+var band = "B4"
+var target = "t1_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
+
+var t1_B4i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
+            .add(mt.select(t2))).divide(2)
+            .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .toUint16().selfMask().clip(aoi);
+            
+var band = "B5"
+var target = "t1_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
+
+var t1_B5i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
+            .add(mt.select(t2))).divide(2)
+            .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .toUint16().selfMask().clip(aoi);
+            
+var band = "B8"
+var target = "t1_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
 
 var t1_B8i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
@@ -90,13 +165,39 @@ var t1_B8i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
             .toUint16().selfMask().clip(aoi);
-  
-//Calculate final gaps that need to be applied in Sentinel-1     
-//var fcl_t1 = t1_B8i.unmask().eq(0).clip(aoi).selfMask().clip(aoi);
 
-Map.addLayer(test, {min: 300, max: 1100}, "not interpolated");
-Map.addLayer(aoi, null, "aoi", 0);
-Map.centerObject(aoi, 9);
-Map.addLayer(t1_B8i, {min: 300, max: 1100}, "interpolated");
-//Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1");
+var band = "B11"
+var target = "t1_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
 
+var t1_B11i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
+            .add(mt.select(t2))).divide(2)
+            .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .toUint16().selfMask().clip(aoi);
+            
+var band = "B12"
+var target = "t1_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
+
+var t1_B12i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
+            .add(mt.select(t2))).divide(2)
+            .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .toUint16().selfMask().clip(aoi);
+            
+
+var list = ([t1_B4i, t1_B5i, t1_B8i, t1_B11i, t1_B12i])
+var a = t1_B3i.addBands(list)
+Map.addLayer(a, null, "interpolated") 
+Map.addLayer(s2final, null, "not interpolated")
