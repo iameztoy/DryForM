@@ -89,14 +89,14 @@ var t1_B8i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
             .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
-            //.unitScale(0, 1).multiply(10000).toUint16().selfMask().clip(aoi);
+            .multiply(10000).toUint16().selfMask().clip(aoi);
   
 //Calculate final gaps that need to be applied in Sentinel-1     
 //var fcl_t1 = t1_B8i.unmask().eq(0).clip(aoi).selfMask().clip(aoi);
 
-Map.addLayer(test, {min: 0.1, max: 0.4}, "not interpolated");
+Map.addLayer(test, {min: 0.03, max: 0.1}, "not interpolated");
 Map.addLayer(aoi, null, "aoi", 0);
 Map.centerObject(aoi, 9);
-Map.addLayer(t1_B8i, {min: 0.1, max: 0.4}, "interpolated");
+Map.addLayer(t1_B8i, {min: 300, max: 1100}, "interpolated");
 //Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1");
 
