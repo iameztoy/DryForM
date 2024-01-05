@@ -60,8 +60,7 @@ var cat = function(ele){return ee.String("t").cat(ele)};
 var ren = blist.map(cat);
 var s2final = compList_s2.select(blist).rename(ren);
 print(s2final)
-Map.addLayer(aoi)   
-Map.centerObject(aoi)
+
 
 
 var target = "t1_B8"
@@ -78,12 +77,15 @@ var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
             .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
-            .unitScale(0, 1).multiply(10000).toUint16().selfMask();
+            .unitScale(0, 1).multiply(10000).toUint16().selfMask().clip(aoi);
          
 
 
 Map.addLayer(t1_int, null, "interpolated")
 
 var fcl_t1 = t1_int.unmask().eq(0).clip(aoi).selfMask()
+
+Map.addLayer(aoi, 0)   
+Map.centerObject(aoi)
 Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1")
 
