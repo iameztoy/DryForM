@@ -3,7 +3,8 @@ var ndvi_2020 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2
     caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    cloudsum_vp = {"opacity":1,"bands":["t0_NDVI"],"palette":["000000","fff949","ffc74b","ff9f9f","ff483f"]};
+    cloudsum_vp = {"opacity":1,"bands":["t0_NDVI"],"palette":["000000","fff949","ffc74b","ff9f9f","ff483f"]},
+    t3_2019 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_UnionSA_NDVItest_MinMaxTailor_byte_t3");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Interpolate in this order t1, t0, t2, t3
 
@@ -40,14 +41,14 @@ var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes t
 //add a second iteration with values from t0 - 1 (median from Oct-Nov 2019)
 // areas that have not been interpolated. Still cloudy:
 // either t0, t2 or both do not contain data (cloudy)
-/*
+
 var ec = e.unmask().clip(aoi).eq(0) 
 var f = (t3_2019.add(t2)).divide(2) //I maintain t2 because it is less cloudy
 var g = f.updateMask(ec) //mask with clouds in t1 that were not interpolated
 var h = e.unmask() //unmask the target t1 that have already been interpolated
 var i = h.add(g.unmask()) //add mean values (t3_2019 - t2).
-var j = (i.unitScale(0, 255).multiply.toByte()).selfMask()
-*/
+//var j = (i.unitScale(0, 255).multiply.toByte()).selfMask()
+
 
 //var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
 //Map.addLayer(test, null, "Test")
@@ -61,6 +62,7 @@ Map.addLayer(b, null, "mean masked",0)
 Map.addLayer(c, null, "t1 unmask",0)
 Map.addLayer(d, null, "t1 interpolated", 0)
 Map.addLayer(e, null, "t1 interpolated to byte",1)
+Map.addLayer(i, null, "t1 Interpolated 2nd", 1)
 
 
 
