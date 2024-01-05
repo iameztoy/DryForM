@@ -63,9 +63,8 @@ print(s2final)
 
 var test = s2final.select("t1_B8").clip(aoi)
 
-var target = "t1_B8"
-
-var mt = s2final
+var mt = s2final;
+var target = "t1_B8";
 var t0 = "t0_B8";
 var t1 = "t1_B8";
 var t2 = "t2_B8";
