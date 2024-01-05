@@ -218,8 +218,8 @@ var t1_B12i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.selec
             .toUint16().selfMask().clip(geometry);
             
 
-var list = ([t1_B3i, t1_B4i, t1_B5i, t1_B8i, t1_B11i, t1_B12i])
-var t1i = t1_B2i.addBands(list)
+var list_t1 = ([t1_B3i, t1_B4i, t1_B5i, t1_B8i, t1_B11i, t1_B12i])
+var t1i = t1_B2i.addBands(list_t1)
 Map.addLayer(t1i, null, "interpolated") 
 Map.addLayer(s2final, null, "not interpolated")
 
