@@ -61,7 +61,7 @@ var ren = blist.map(cat);
 var s2final = compList_s2.select(blist).rename(ren);
 print(s2final)
 
-
+var test = s2final.select("t1_B8")
 
 var target = "t1_B8"
 
@@ -79,13 +79,11 @@ var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 1).multiply(10000).toUint16().selfMask().clip(aoi);
          
-
-
-Map.addLayer(t1_int, {min: 1000, max: 4000}, "interpolated")
-
 var fcl_t1 = t1_int.unmask().eq(0).clip(aoi).selfMask()
 
+Map.addLayer(test, {min: 0.1, max: 0.4}, "not interpolated")
 Map.addLayer(aoi, null, "aoi", 0)   
 Map.centerObject(aoi)
+Map.addLayer(t1_int, {min: 1000, max: 4000}, "interpolated")
 Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1")
 
