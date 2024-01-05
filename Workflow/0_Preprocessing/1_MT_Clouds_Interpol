@@ -34,6 +34,9 @@ var c = t1.unmask(); //unmask t1
 var d = c.add(b.unmask()); //add mean values (t0 - t2) to t1
 var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes to 510, unitScale and convert.
 
+// Replace the masked pixels in the current image with the average value
+//  var result = image.unmask(interpolated)
+
 //add a second iteration with values from t0 - 1 (median from Oct-Nov 2019)
 // areas that have not been interpolated. Still cloudy:
 // either t0, t2 or both do not contain data (cloudy)
