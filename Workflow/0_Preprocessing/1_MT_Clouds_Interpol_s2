@@ -2,6 +2,7 @@
 var gaps_vp = {"opacity":1,"bands":["t1_B8"],"palette":["ff4812"]},
     aoi = 
     /* color: #98ff00 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
