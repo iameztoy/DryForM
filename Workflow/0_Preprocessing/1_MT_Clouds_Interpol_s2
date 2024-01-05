@@ -79,6 +79,26 @@ var t3 = "t"+ee.String(period.add(2)).getInfo()+"_"+band;//"t3_B2)
 */
 
 // ****************************
+// T0
+// ----------------------------
+
+var band = "B2"
+var target = "t0_"+band;
+var t0 = "t0_"+band;
+var t1 = "t1_"+band;
+var t2 = "t2_"+band;
+var t3 = "t3_"+band;
+
+//Change Formula
+var t0_B2i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(geometry).eq(0))).unmask())).add(((mt.select(t3))
+            .add(mt.select(t2))).divide(2)
+            .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
+            .updateMask((mt.select(target).unmask().clip(geometry).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .toUint16().selfMask().clip(geometry);
+
+// ****************************
 // T1
 // ----------------------------
 var band = "B2"
@@ -203,9 +223,6 @@ var t1i = t1_B2i.addBands(list)
 Map.addLayer(t1i, null, "interpolated") 
 Map.addLayer(s2final, null, "not interpolated")
 
-// ****************************
-// T0
-// ----------------------------
 
 // ****************************
 // EXPORT
