@@ -101,6 +101,8 @@ var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
 var mt = ndvi_2020
 var target = "t1_NDVI"
 
+// For t1 -> t0 = t1-1, t2 = t1+1, t3 = t1+2
+
 var t0 = "t0_NDVI"
 var t1 = "t1_NDVI"
 var t2 = "t2_NDVI"
