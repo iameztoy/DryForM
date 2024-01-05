@@ -98,10 +98,14 @@ var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
 // Same as test 4 but replacing t1c (calculating it inside)
 
 var target = "t1_NDVI"
-var test5 = ((t1.unmask().add(((t0.add(t2)).divide(2))
-            .updateMask((ndvi_2020.select(target).unmask().clip(aoi).eq(0))).unmask())).add((tm1.add(t2)).divide(2)
-            .updateMask((t1.unmask().add(((t0.add(t2)).divide(2))
-            .updateMask((ndvi_2020.select("t1_NDVI").unmask().clip(aoi).eq(0))).unmask())
+var t0 = "t0_NDVI"
+var t1 = "t1_NDVI"
+var tm1 = "t3_NDVI" //this is used as it would be for 2019 | It simplifies the workflow without affecting much the outcome
+
+var test5 = (((ndvi_2020.select(target)).unmask().add((((ndvi_2020.select(t0)).add((ndvi_2020.select(t2)))).divide(2))
+            .updateMask((ndvi_2020.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((ndvi_2020.select(tm1)).add(ndvi_2020.select(t2))).divide(2)
+            .updateMask(((ndvi_2020.select(t1)).unmask().add((((ndvi_2020.select(t0)).add(ndvi_2020.select(t2))).divide(2))
+            .updateMask((ndvi_2020.select(target).unmask().clip(aoi).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 255).multiply(255).toByte().selfMask();
 
