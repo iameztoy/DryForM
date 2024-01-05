@@ -100,6 +100,7 @@ var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
 var target = "t1_NDVI"
 var t0 = "t0_NDVI"
 var t1 = "t1_NDVI"
+var t2 = "t2_NDVI"
 var tm1 = "t3_NDVI" //this is used as it would be for 2019 | It simplifies the workflow without affecting much the outcome
 
 var test5 = (((ndvi_2020.select(target)).unmask().add((((ndvi_2020.select(t0)).add((ndvi_2020.select(t2)))).divide(2))
