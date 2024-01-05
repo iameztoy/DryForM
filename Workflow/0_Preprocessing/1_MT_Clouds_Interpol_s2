@@ -203,5 +203,5 @@ Map.addLayer(a, null, "interpolated")
 Map.addLayer(s2final, null, "not interpolated")
 
 // ****************************
-// T2
+// T0
 // ----------------------------
