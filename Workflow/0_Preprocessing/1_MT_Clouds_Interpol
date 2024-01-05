@@ -82,11 +82,17 @@ var test3 = (((t1.unmask().add(((t0.add(t2)).divide(2))
             .unitScale(0, 255)).multiply(255).toByte().selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 255).multiply(255).toByte().selfMask();
             
-print(test3)
+var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
+            .updateMask(t1c).unmask())).add((tm1.add(t2)).divide(2)
+            .updateMask((t1.unmask().add(((t0.add(t2)).divide(2))
+            .updateMask(t1c).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .unitScale(0, 255).multiply(255).toByte().selfMask();
 
 Map.addLayer(test, null, "test all in one step 1 byte")
 Map.addLayer(test2, null, "test all in one step 2 byte")
 Map.addLayer(test3, null, "test all in one test3 byte")
+Map.addLayer(test4, null, "test all in one test4 byte") //Removing 2x unitSace
 
 
 
