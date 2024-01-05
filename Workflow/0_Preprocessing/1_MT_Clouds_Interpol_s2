@@ -76,7 +76,7 @@ var t1 = "t1_B8";
 var t2 = "t2_B8";
 var t3 = "t3_B8"; 
 
-var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
+var t1_B8i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select(t2)))).divide(2))
             .updateMask((mt.select(target).unmask().clip(aoi).eq(0))).unmask())).add(((mt.select(t3))
             .add(mt.select(t2))).divide(2)
             .updateMask(((mt.select(t1)).unmask().add((((mt.select(t0)).add(mt.select(t2))).divide(2))
@@ -84,11 +84,11 @@ var t1_int = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 1).multiply(10000).toUint16().selfMask().clip(aoi);
          
-var fcl_t1 = t1_int.unmask().eq(0).clip(aoi).selfMask().clip(aoi)
+var fcl_t1 = t1_B8i.unmask().eq(0).clip(aoi).selfMask().clip(aoi)
 
 Map.addLayer(test, {min: 0.1, max: 0.4}, "not interpolated")
 Map.addLayer(aoi, null, "aoi", 0)   
 Map.centerObject(aoi)
-Map.addLayer(t1_int, {min: 1000, max: 4000}, "interpolated")
+Map.addLayer(t1_B8i, {min: 1000, max: 4000}, "interpolated")
 Map.addLayer(fcl_t1, gaps_vp, "Gaps after Interpol in t1")
 
