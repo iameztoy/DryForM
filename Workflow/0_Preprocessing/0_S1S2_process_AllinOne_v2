@@ -34,6 +34,12 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 // Please refer to Google Earth Engine Terms of Service at https://earthengine.google.org/terms
 //*********************************************************************************************
 
+// Notes: Implement .divide(10000) while filtering the collection. Not in the composite function
+// Test if it works 2019 and 2020 together by changin str and end:
+//       to calculate t0-1 and t3+1
+//       year = 2019
+//       year.toString()+"-10-01"; var end = (year+2).toString()+"-04-01"
+
 
 //---------------------------------------------------------------------------//
 // REQUIRE + Datasets
