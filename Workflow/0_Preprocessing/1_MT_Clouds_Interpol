@@ -4,7 +4,7 @@ var ndvi_2020 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     cloudsum_vp = {"opacity":1,"bands":["t0_NDVI"],"palette":["000000","fff949","ffc74b","ff9f9f","ff483f"]},
-    t3_2019 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_UnionSA_NDVItest_MinMaxTailor_byte_t3");
+    ndvi_2019 = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_UnionSA_NDVItest_MinMaxTailor_byte_t3");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //Interpolate in this order t1, t0, t2, t3
 
@@ -12,6 +12,7 @@ var aoi = caatinga.merge(cerrado).merge(chaco)
 aoi = aoi.union()
 
 // Assets derived from step 0
+var tm1 = ndvi_2019.select("t3_NDVI");
 var t0 = ndvi_2020.select("t0_NDVI"); 
 var t1 = ndvi_2020.select("t1_NDVI");
 var t2 = ndvi_2020.select("t2_NDVI");
@@ -43,7 +44,7 @@ var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes t
 // either t0, t2 or both do not contain data (cloudy)
 
 var ec = e.unmask().clip(aoi).eq(0) 
-var f = (t3_2019.add(t2)).divide(2) //I maintain t2 because it is less cloudy
+var f = (ndvi_2019.add(t2)).divide(2) //I maintain t2 because it is less cloudy
 var g = f.updateMask(ec) //mask with clouds in t1 that were not interpolated
 var h = e.unmask(); //unmask the target t1 that have already been interpolated
 var i = h.add(g.unmask()) //add mean values (t3_2019 - t2).
