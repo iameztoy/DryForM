@@ -93,10 +93,23 @@ var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 255).multiply(255).toByte().selfMask();
 
+
+
+// Same as test 4 but replacing t1c (calculating it inside)
+
+var target = "t1_NDVI"
+var test5 = ((t1.unmask().add(((t0.add(t2)).divide(2))
+            .updateMask((ndvi_2020.select(target).unmask().clip(aoi).eq(0))).unmask())).add((tm1.add(t2)).divide(2)
+            .updateMask((t1.unmask().add(((t0.add(t2)).divide(2))
+            .updateMask((ndvi_2020.select("t1_NDVI").unmask().clip(aoi).eq(0))).unmask())
+            .selfMask()).unmask().eq(0)).unmask()))
+            .unitScale(0, 255).multiply(255).toByte().selfMask();
+
 Map.addLayer(test, null, "test all in one step 1 byte",0)
 Map.addLayer(test2, null, "test all in one step 2 byte",0)
 Map.addLayer(test3, null, "test all in one test3 byte",0)
 Map.addLayer(test4, null, "test all in one test4 byte",1) //Removing 2x unitSace
+Map.addLayer(test5, null, "test all in one test 5 byte",1)
 
 
 
