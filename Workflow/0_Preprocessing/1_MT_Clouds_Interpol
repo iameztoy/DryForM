@@ -48,7 +48,7 @@ var g = f.updateMask(ec) //mask with clouds in t1 that were not interpolated
 var h = e.unmask(); //unmask the target t1 that have already been interpolated
 var i = h.add(g.unmask()) //add mean values (t3_2019 - t2).
 print("i", i)
-var j = (i.unitScale(0, 255).multiply(255).toByte()).selfMask(); 
+var j = (i.unitScale(0, 255).multiply(255).toByte()).selfMask().clip(aoi); 
 print("j", j)
 
 //var test = (t1.unmask().add((t0.add(t2)).divide(2)).updateMask(t1c)).unitScale(0,255).multiply(255).toByte()
@@ -64,6 +64,7 @@ Map.addLayer(c, null, "t1 unmask",0)
 Map.addLayer(d, null, "t1 interpolated", 0)
 Map.addLayer(e, null, "t1 interpolated to byte",1)
 Map.addLayer(i, null, "t1 Interpolated 2nd", 1)
+Map.addLayer(j, null, "t1 Interpolated 2nd byte", 1)
 
 
 
