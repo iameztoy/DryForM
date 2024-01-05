@@ -97,6 +97,12 @@ var t0_B2i = (((mt.select(target)).unmask().add((((mt.select(t0)).add((mt.select
             .updateMask((mt.select(target).unmask().clip(geometry).eq(0))).unmask())
             .selfMask()).unmask().eq(0)).unmask()))
             .toUint16().selfMask().clip(geometry);
+            
+            
+// .................
+
+var list_t2 = ([t2_B3i, t2_B4i, t2_B5i, t2_B8i, t2_B11i, t2_B12i])
+var t2i = t2_B2i.addBands(list_t2)
 
 // ****************************
 // T1
