@@ -60,8 +60,8 @@ Map.addLayer(a, null, "mean",0)
 Map.addLayer(b, null, "mean masked",0)
 Map.addLayer(c, null, "t1 unmask",0)
 Map.addLayer(d, null, "t1 interpolated", 0)
-Map.addLayer(e, null, "t1 interpolated to byte",1)
-Map.addLayer(i, null, "t1 Interpolated 2nd", 1)
+Map.addLayer(e, null, "t1 interpolated to byte",0)
+Map.addLayer(i, null, "t1 Interpolated 2nd", 0)
 Map.addLayer(j, null, "t1 Interpolated 2nd byte", 1)
 
 //test | process separating both interpolations
@@ -93,10 +93,10 @@ var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
             .selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 255).multiply(255).toByte().selfMask();
 
-Map.addLayer(test, null, "test all in one step 1 byte")
-Map.addLayer(test2, null, "test all in one step 2 byte")
-Map.addLayer(test3, null, "test all in one test3 byte")
-Map.addLayer(test4, null, "test all in one test4 byte") //Removing 2x unitSace
+Map.addLayer(test, null, "test all in one step 1 byte",0)
+Map.addLayer(test2, null, "test all in one step 2 byte",0)
+Map.addLayer(test3, null, "test all in one test3 byte",0)
+Map.addLayer(test4, null, "test all in one test4 byte",1) //Removing 2x unitSace
 
 
 
