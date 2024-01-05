@@ -204,7 +204,10 @@ var s2f = s2
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
-      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD));
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)).divide(10000)
+        .select("B.*")
+        .clip(aoi)
+        .copyProperties(img, ["system:time_start"]);
     });
 
 //Visualize collection    
@@ -225,7 +228,7 @@ var createSeasonComposites_s2 = function(months) {
   var endMonth = ee.List(months).get(1);
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
   var seasonFiltered = s2f.filter(monthFilter);
-  var composite = seasonFiltered.median().divide(10000);
+  var composite = seasonFiltered.median();
   return composite.select(bands_init).clip(aoi);
 };
 
