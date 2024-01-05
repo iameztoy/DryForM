@@ -83,7 +83,8 @@ var test3 = (((t1.unmask().add(((t0.add(t2)).divide(2))
             .unitScale(0, 255)).multiply(255).toByte().selfMask()).unmask().eq(0)).unmask()))
             .unitScale(0, 255).multiply(255).toByte().selfMask();
 
-// test merging interpolations but removing UnitSacle x2           
+// test merging interpolations but removing UnitSacle x2     
+// j and test4 shold be the same
 var test4 = ((t1.unmask().add(((t0.add(t2)).divide(2))
             .updateMask(t1c).unmask())).add((tm1.add(t2)).divide(2)
             .updateMask((t1.unmask().add(((t0.add(t2)).divide(2))
