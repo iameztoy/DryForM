@@ -68,8 +68,6 @@ var mt = s2final;
 var period = "1" //Target period
 var band = "B8" //Target band
 var target = "t"+period+"_"+band
-print(target)
-
 
 var t0 = "t0_B8";
 var t1 = "t1_B8";
