@@ -43,7 +43,7 @@ var e = (d.unitScale(0, 255).multiply(255).toByte()).selfMask(); //add changes t
 // areas that have not been interpolated. Still cloudy:
 // either t0, t2 or both do not contain data (cloudy)
 
-var ec = e.unmask().clip(aoi).eq(0) 
+var ec = e.unmask().clip(aoi).eq(0) //clouds in interpolated image
 var f = (ndvi_2019.add(t2)).divide(2) //I maintain t2 because it is less cloudy
 var g = f.updateMask(ec) //mask with clouds in t1 that were not interpolated
 var h = e.unmask(); //unmask the target t1 that have already been interpolated
@@ -64,8 +64,24 @@ Map.addLayer(e, null, "t1 interpolated to byte",1)
 Map.addLayer(i, null, "t1 Interpolated 2nd", 1)
 Map.addLayer(j, null, "t1 Interpolated 2nd byte", 1)
 
-var test = (t1.unmask().add(((t0.add(t2)).divide(2)).updateMask(t1c).unmask()).unitScale(0, 255)).multiply(255).toByte().selfMask()
-Map.addLayer(test, null, "Test")
+var test = (t1.unmask().add(((t0.add(t2)).divide(2))
+            .updateMask(t1c).unmask())
+            .unitScale(0, 255)).multiply(255).toByte().selfMask();
+            
+var test2 = (test.unmask().add((tm1.add(t2)).divide(2)
+            .updateMask(test.unmask().eq(0)).unmask()))
+            .unitScale(0, 255).multiply(255).toByte().selfMask();
+
+Map.addLayer(test, null, "test all in one step 1 byte")
+Map.addLayer(test2, null, "test all in one step 2 byte")
+
+
+
+            
+
+
+
+
 
 
 
