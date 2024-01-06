@@ -104,7 +104,7 @@ an unmasked pixel in the time-series. The filters in subsequent
 steps need the time difference in milliseconds, so we convert days to milliseconds.
 */
 
-var days = 130 //original 30
+var days = 130 // How many days go backward/forward? Original 30
 var millis = ee.Number(days).multiply(1000*60*60*24)
 
 /*
@@ -237,7 +237,7 @@ replaced by interpolated values from closest cloud-free pixels.
 
 // map() the function to interpolate all images in the collection
 var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
-interpolatedCol = interpolatedCol.filterDate(str, end);
+interpolatedCol = interpolatedCol.filterDate(str, end); //Need to filter again to the target year
 
 var createSeasonComposites_s2 = function(months) {
   var startMonth = ee.List(months).get(0);
