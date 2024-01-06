@@ -102,7 +102,7 @@ an unmasked pixel in the time-series. The filters in subsequent
 steps need the time difference in milliseconds, so we convert days to milliseconds.
 */
 
-var days = 90 //original 30
+var days = 130 //original 30
 var millis = ee.Number(days).multiply(1000*60*60*24)
 
 /*
