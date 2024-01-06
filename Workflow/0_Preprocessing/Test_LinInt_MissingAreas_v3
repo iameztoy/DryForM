@@ -298,6 +298,9 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
+
+print(zonesID)
+
 //Map.addLayer(s2final)
 Map.centerObject(aoi, 10)
 
@@ -310,7 +313,7 @@ for (var f in featlist) {
   Export.image.toAsset({
     image: s2final,
     description: name+disS, //.toString(),
-    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/S2inter_Caatinga/' + name+disS //.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/S2inter_Caatinga/' + name+disS, //.toString(),
     pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
