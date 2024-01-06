@@ -35,11 +35,13 @@ var col = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
     .filterDate("219-10-01", "2021-04-01") //leave enough space for interpolation
 
     
-var seq = ee.List.sequence(1, zonesID.size())
+var seq = ee.List.sequence(001, zonesID.size())
 print("zonesID", zonesID)
 print("zonesID sequence", seq)
 
-var test = zonesID.filter(ee.Filter.eq('ID', '5')) 
+var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
+//var test2 = zonesID.filter("ID == '5'")
+print(test)
 
 print(test)
 
@@ -49,12 +51,11 @@ Export.table.toAsset({
   //fileFormat: 'KML'
 });
 
-/*
+
 var split = seq.map(function(x){
-  var fil = zonesID.filterMetadata("ID", "equals", x)
+  var fil = zonesID.filter(ee.Filter.eq('ID', x)) 
   var sCol = col.clip(fil)
   return sCol.set("zonesID", x)
 });
 
 var final_col = ee.ImageCollection.fromImages(split)
-*/
