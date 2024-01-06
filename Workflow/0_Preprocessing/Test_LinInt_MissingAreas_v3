@@ -308,8 +308,8 @@ for (var f in featlist) {
   Export.image.toAsset({
     image: s2final,
     description: name+disS.toString(),
-    assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/JRC_GFC2020_C1/' + name+disS.toString(),
-    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/S2inter_Caatinga' + name+disS.toString(),
+    pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
     region: feat.geometry().bounds(),
