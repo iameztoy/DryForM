@@ -281,7 +281,7 @@ var Zones = aoi.coveringGrid({
   	              //         Took 19 minutes to process
   	              // Test 1: 200000 - 40 tiles
   	              // Test 2: 100000 - 122 tiles
-  	              // Test 3: 50000 - 
+  	              // Test 3: 50000 - 422 tiles
 });
 
 // CoveringGrid produces a strange ID so I make a new fc with proper
