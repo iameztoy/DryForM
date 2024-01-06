@@ -31,7 +31,7 @@ var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
 
 // Bands S1/S2
 var bands_init = ["B.*"];
-var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
+var bands = ["B2", "B3","B4", "B5", "B8", "B11", "B12"]; //, "gNDVI", "MSAVI", "MSAVIt", "BI"
 var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"];
 
 var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
@@ -78,7 +78,7 @@ var filtered = s2
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
-        .select("B.*")
+        .select(bands)
         .clip(aoi)
         .copyProperties(img, ["system:time_start"]);
     });
@@ -245,7 +245,7 @@ var createSeasonComposites_s2 = function(months) {
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
   var seasonFiltered = interpolatedCol.filter(monthFilter);
   var composite = seasonFiltered.median();
-  return composite.select(bands_init).clip(aoi);
+  return composite.clip(aoi); //clip not necessary here if it is applied while filtering the collection
 };
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
