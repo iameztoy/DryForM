@@ -302,7 +302,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 print(zonesID)
 
 //Map.addLayer(s2final)
-Map.centerObject(aoi, 10)
+Map.centerObject(aoi)
 
 var featlist = ee.FeatureCollection(Zones).getInfo()["features"];
 for (var f in featlist) {
