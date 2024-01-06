@@ -253,17 +253,11 @@ var compList_s2 = t_int.map(createSeasonComposites_s2);
 var s2_comp = ee.ImageCollection.fromImages(compList_s2);
 var s2_final = s2_comp.toBands();
 
-
 var blist = s2_final.bandNames();
 var cat = function(ele){return ee.String("t").cat(ele)};
 var ren = blist.map(cat);
 
 var s2final = s2_final.select(blist).rename(ren);
-print(s2final)
-
-//Map.addLayer(s2final)
-Map.centerObject(aoi, 10)
-
 
 Export.image.toAsset({
       image: s2final,
