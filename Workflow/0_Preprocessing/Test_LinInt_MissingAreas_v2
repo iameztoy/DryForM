@@ -104,7 +104,7 @@ an unmasked pixel in the time-series. The filters in subsequent
 steps need the time difference in milliseconds, so we convert days to milliseconds.
 */
 
-var days = 130 // How many days go backward/forward? Original 30
+var days = 180 // How many days go backward/forward? Original 30
 var millis = ee.Number(days).multiply(1000*60*60*24)
 
 /*
