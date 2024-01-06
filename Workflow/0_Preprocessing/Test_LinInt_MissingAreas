@@ -1,3 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 //from https://spatialthoughts.com/2021/11/08/temporal-interpolation-gee/
 // Temporal Gap-Filling
 
@@ -8,8 +11,8 @@ var geometry =
           [-39.99459786629273, -3.496824345711495],
           [-39.99459786629273, -3.2075560469356326]]], null, false);
 
-var aoi_name = "testArea";
-var aoi = geometry
+//var aoi_name = "testArea";
+//var aoi = geometry
 
 //---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
@@ -266,7 +269,7 @@ Map.centerObject(aoi, 10)
 
 
 Export.image.toAsset({
-      image: t1i,
+      image: s2final,
       description: "s2_2020final_inter",
       assetId: "projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter",  // <> modify these
       region: geometry,
