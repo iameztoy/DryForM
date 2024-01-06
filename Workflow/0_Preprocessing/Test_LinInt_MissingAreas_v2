@@ -73,7 +73,7 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 // SELECT AND MASK CLOUD/SHADOWS
 var filtered = s2
     .filterBounds(aoi2)
-    .filterDate("219-06-01", "2021-06-01") //leave enough space for interpolation
+    .filterDate("219-10-01", "2021-04-01") //leave enough space for interpolation
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
@@ -245,7 +245,7 @@ var createSeasonComposites_s2 = function(months) {
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
   var seasonFiltered = interpolatedCol.filter(monthFilter);
   var composite = seasonFiltered.median();
-  return composite.select(bands_init).clip(aoi2);
+  return composite.select(bands_init).clip(aoi);
 };
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
