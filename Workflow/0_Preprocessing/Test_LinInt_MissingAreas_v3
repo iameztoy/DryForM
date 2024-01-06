@@ -279,7 +279,7 @@ var Zones = aoi.coveringGrid({
   	              // Test 0: 35000 tile is similar to a geometry that worked (see 2024-01-06)
   	              //         print(Zones.size() = 804 tiles
   	              //         Took 19 minutes to process
-  	              // Test 1: 200000
+  	              // Test 1: 200000 - 39 tiles
 });
 
 // CoveringGrid produces a strange ID so I make a new fc with proper
@@ -299,7 +299,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
-print(zonesID)
+print(zonesID.size())
 
 // print('list system:index OLD', Zones.aggregate_array('system:index'));
 // print('list system:index NEW', zonesID.aggregate_array('system:index'));
