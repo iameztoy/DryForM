@@ -33,8 +33,31 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 // print('list system:index OLD', Zones.aggregate_array('system:index'));
 // print('list system:index NEW', zonesID.aggregate_array('system:index'));
  
- /*
+
 ////////////// EXPORTING ///////////////////////
+
+var featlist = ee.FeatureCollection(Zones).getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]); 
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "tile";  
+  Export.image.toAsset({
+    image: final,
+    description: name+disS.toString(),
+    assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/JRC_GFC2020_C1/' + name+disS.toString(),
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+
+/*
+// To Drive
+
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
