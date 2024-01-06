@@ -77,13 +77,12 @@ var filtered = s2
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
-      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)).divide(10000)
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)) //.divide(10000)
         .select("B.*")
-        .clip(geometry)
+        .clip(aoi)
         .copyProperties(img, ["system:time_start"]);
     });
  
-print(filtered.first())
  
 /*
 Add a band containing timestamp to each image. 
@@ -252,10 +251,8 @@ var createSeasonComposites_s2 = function(months) {
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
 var s2_comp = ee.ImageCollection.fromImages(compList_s2);
-print(s2_comp.first())
-
 var s2_final = s2_comp.toBands();
-print(s2_final)
+
 
 var blist = s2_final.bandNames();
 var cat = function(ele){return ee.String("t").cat(ele)};
