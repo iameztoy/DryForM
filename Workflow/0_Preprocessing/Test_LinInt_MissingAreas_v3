@@ -271,20 +271,19 @@ function removeBand(img) {
 s2final = s2final(image)
 */
 
-aoi = aoi.geometry()
+// Create a covering GRID
+var aoi = aoi.geometry();
 var Zones = aoi.coveringGrid({
-      proj: "EPSG:4326", //EPSG:32720
-      scale: 200000 // equals to around 1MB for 1 byte integer | for e.g. SumTC_4cl_rK
+  	proj: "EPSG:4326", //EPSG:32720
+  	scale: 200000 // equals to around 1MB for 1 byte integer | for e.g. SumTC_4cl_rK
 });
-
-Map.addLayer(Zones)
 
 // CoveringGrid produces a strange ID so I make a new fc with proper
 // unique id so are parsed to the name while exporting.
 // with earth engine plugin for Chrome we can use "Run All" option to 
 // run all at once (note that client may crash if there are many features,
 // although if we wait, it may still work; just push wait)
- 
+
 // make a list of length of features
 var idList = ee.List.sequence(0,Zones.size().subtract(1));
 // featureCollection to a List
@@ -298,46 +297,24 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
+// print('list system:index OLD', Zones.aggregate_array('system:index'));
+// print('list system:index NEW', zonesID.aggregate_array('system:index'));
 
-print(zonesID)
-
-//Map.addLayer(s2final)
-Map.centerObject(aoi)
-
-var featlist = ee.FeatureCollection(Zones).getInfo()["features"];
+////////////// EXPORTING ///////////////////////
+var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
-  var feat = ee.Feature(featlist[f]); 
-  var dis = feat.get("id");
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
   var disS = dis.getInfo();
   var name = "tile";  
-  Export.image.toAsset({
+  Export.image.toDrive({
     image: s2final,
     description: name+disS, //.toString(),
-    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/S2inter_Caatinga/' + name+disS, //.toString(),
-    pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
-    crs: 'EPSG:4326',
-    //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
+    folder: "Zones_test",
+    fileNamePrefix: name+disS, //.toString(), (only if integer ID)
     region: feat.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
   });
 }
-
-/*
-// All in one go
-Export.image.toAsset({
-      image: s2final,
-      description: "s2_2020final_inter",
-      assetId: "projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter",  // <> modify these
-      region: aoi,
-      scale: 10,
-      crs: 'EPSG:4326',
-      maxPixels: 1e13
-      });
-*/
-
-
-
-
-
 
