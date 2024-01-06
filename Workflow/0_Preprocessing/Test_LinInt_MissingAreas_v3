@@ -309,20 +309,17 @@ print(zonesID)
 
 var featlist = zonesID.getInfo()["features"];
 print(featlist)
-//var featlist2 = ee.FeatureCollection(zonesID).getInfo()["features"];
-
 for (var f in featlist) {
-  var feat = ee.Feature(featlist[f]); 
-  var dis = feat.get("id");
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
   var disS = dis.getInfo();
-  var name = "tile";  
+  var name = "chip";  
   Export.image.toAsset({
     image: s2final,
-    description: name+disS, //.toString(),
-    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/S2inter_Caatinga/' + name+disS, //.toString(),
-    pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
+    description: name+disS, //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS, //.toString(),
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
-    //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
     region: feat.geometry().bounds(),
     scale: 10,
     maxPixels: 1e13
