@@ -47,12 +47,10 @@ print("zonesID", zonesID)
 print("zonesID sequence", seq)
 
 
-
-
 var split = seq.map(function(x){
   var fil = zonesID.filterMetadata("ID", "equals", x)
   var sCol = col.clip(fil)
-  return SCol.set("Zones", x)
+  return sCol.set("zonesID", x)
 });
 
 var final_col = ee.ImageCollection.fromImages(split)
