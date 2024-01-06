@@ -17,6 +17,7 @@ var Zones = aoi.coveringGrid({
 var idList = ee.List.sequence(0,Zones.size().subtract(1)); 
 // featureCollection to a List
 var list = Zones.toList(Zones.size());
+print(list)
 
 // set the system:index
 var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
