@@ -261,7 +261,7 @@ var s2final = s2_final.select(blist).rename(ren);
 
 /*
 //remove timestamp band
-// from https://gis.stackexchange.com/questions/345252/removing-a-specific-band-from-an-image-composite-with-hundreds-of-bands-in-googl
+// see https://developers.google.com/earth-engine/apidocs/ee-list-filter
 function removeBand(img) {
   return img.select(
     img.bandNames().filter(
