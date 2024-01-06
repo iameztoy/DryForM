@@ -70,7 +70,7 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 // SELECT AND MASK CLOUD/SHADOWS
 var filtered = s2
     .filterBounds(aoi)
-    .filterDate("219-10-01", "2021-04-01") //str, end //"2020-01-01", "2021-01-01"
+    .filterDate("219-06-01", "2021-06-01") //str, end //"2020-01-01", "2021-01-01"
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
@@ -235,15 +235,11 @@ replaced by interpolated values from closest cloud-free pixels.
 
 // map() the function to interpolate all images in the collection
 var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
+print("Collection", interpolatedCol.limit(5))
 var median = interpolatedCol.median()
-print(median)
 
-var median0 = filtered.median()
-median0 = median0.select("B8")
 
-Map.addLayer(geometry)
-var s = median.select("B8")
-Map.addLayer(median0, null, "Before")
-Map.addLayer(s, null, "After")
+
+
 
 
