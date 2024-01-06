@@ -1,16 +1,17 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var aoi2 = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //from https://spatialthoughts.com/2021/11/08/temporal-interpolation-gee/
 // Temporal Gap-Filling
 
-var aoi = 
+//var aoi = 
+    /*
     ee.Geometry.Polygon(
         [[[-40.322814419027104, -3.2075560469356326],
           [-40.322814419027104, -3.496824345711495],
           [-39.99459786629273, -3.496824345711495],
           [-39.99459786629273, -3.2075560469356326]]], null, false);
-
+*/
 //var aoi_name = "testArea";
 //var aoi = geometry
 
