@@ -283,15 +283,13 @@ var Zones = aoi.coveringGrid({
 });
 
 // CoveringGrid produces a strange ID so I make a new fc with proper
-// unique id so are parsed to the name while exporting.
-// with earth engine plugin for Chrome we can use "Run All" option to 
-// run all at once (note that client may crash if there are many features,
-// although if we wait, it may still work; just push wait)
+// unique id so we can parse them to the name while running the Export Loop.
 
 // make a list of length of features
-var idList = ee.List.sequence(0,Zones.size().subtract(1));
+var idList = ee.List.sequence(0,Zones.size().subtract(1)); 
 // featureCollection to a List
 var list = Zones.toList(Zones.size());
+
 // set the system:index
 var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   var feat = ee.Feature(list.get(newSysIndex));
@@ -300,6 +298,8 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
                                                           //but big chance of client crash while exporting
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
+
+print(zonesID)
 
 // print('list system:index OLD', Zones.aggregate_array('system:index'));
 // print('list system:index NEW', zonesID.aggregate_array('system:index'));
@@ -317,7 +317,7 @@ for (var f in featlist) {
   Export.image.toAsset({
     image: s2final,
     description: name+disS, //.toString(), Now the ID is already a string
-    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS, //.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/S2inter_Caatinga/' + name+disS, //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     region: feat.geometry().bounds(),
