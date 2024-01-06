@@ -35,7 +35,7 @@ var col = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
     .filterDate("219-10-01", "2021-04-01") //leave enough space for interpolation
 
     
-var seq = ee.List.sequence(001, zonesID.size())
+var seq = ee.List.sequence(1, zonesID.size())
 print("zonesID", zonesID)
 print("zonesID sequence", seq)
 
