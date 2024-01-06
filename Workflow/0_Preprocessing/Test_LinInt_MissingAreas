@@ -265,6 +265,16 @@ Map.addLayer(s2final)
 Map.centerObject(aoi, 10)
 
 
+Export.image.toAsset({
+      image: t1i,
+      description: "s2_2020final_inter",
+      assetId: "projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter",  // <> modify these
+      region: geometry,
+      scale: 10,
+      crs: 'EPSG:4326',
+      maxPixels: 1e13
+      });
+
 
 
 
