@@ -27,26 +27,29 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
-
 Map.addLayer(Zones)
-
-
-// Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
-// Level 1C data and can be applied to either L1C or L2A collections.
-var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
-
 
 // SELECT AND MASK CLOUD/SHADOWS
 var col = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
     .filterBounds(aoi)
     .filterDate("219-10-01", "2021-04-01") //leave enough space for interpolation
-    
+
     
 var seq = ee.List.sequence(1, zonesID.size())
 print("zonesID", zonesID)
 print("zonesID sequence", seq)
 
+var test = zonesID.filter(ee.Filter.eq('ID', '5')) 
 
+print(test)
+
+Export.table.toAsset({
+  collection: zonesID,
+  description:'vectorsToDriveExample',
+  //fileFormat: 'KML'
+});
+
+/*
 var split = seq.map(function(x){
   var fil = zonesID.filterMetadata("ID", "equals", x)
   var sCol = col.clip(fil)
@@ -54,4 +57,4 @@ var split = seq.map(function(x){
 });
 
 var final_col = ee.ImageCollection.fromImages(split)
-
+*/
