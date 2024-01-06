@@ -1,6 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var test1 = /* color: #ff0000 */ee.Geometry.Point([179.10675922901194, -18.93184445264328]),
-    test2 = /* color: #00ff00 */ee.Geometry.Point([-178.86077006786311, -18.99418495304188]);
+    test2 = /* color: #00ff00 */ee.Geometry.Point([-178.86077006786311, -18.99418495304188]),
+    Edged3 = ee.ImageCollection("projects/hardy-tenure-383607/assets/MissingIslands_Buf1000");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Idea to create a grid that does not give problems while exporting an image to Asset or Drive
 // Also to avoid problems while running a calculation on a geometry that falls on both sides
