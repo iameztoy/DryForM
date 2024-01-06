@@ -1,10 +1,10 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var aoi2 = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //from https://spatialthoughts.com/2021/11/08/temporal-interpolation-gee/
 // Temporal Gap-Filling
 
-var geometry = 
+var aoi = 
     ee.Geometry.Polygon(
         [[[-40.322814419027104, -3.2075560469356326],
           [-40.322814419027104, -3.496824345711495],
@@ -72,14 +72,14 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 
 // SELECT AND MASK CLOUD/SHADOWS
 var filtered = s2
-    .filterBounds(aoi)
+    .filterBounds(aoi2)
     .filterDate("219-06-01", "2021-06-01") //str, end //"2020-01-01", "2021-01-01"
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)).divide(10000)
         .select("B.*")
-        .clip(geometry)
+        .clip(aoi)
         .copyProperties(img, ["system:time_start"]);
     });
 
@@ -245,7 +245,7 @@ var createSeasonComposites_s2 = function(months) {
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
   var seasonFiltered = interpolatedCol.filter(monthFilter);
   var composite = seasonFiltered.median();
-  return composite.select(bands_init).clip(aoi);
+  return composite.select(bands_init).clip(aoi2);
 };
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
