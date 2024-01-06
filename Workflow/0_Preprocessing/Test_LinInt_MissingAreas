@@ -83,7 +83,7 @@ var filtered = s2
         .copyProperties(img, ["system:time_start"]);
     });
  
-print(filtered)
+print(filtered.first())
  
 /*
 Add a band containing timestamp to each image. 
@@ -252,7 +252,7 @@ var createSeasonComposites_s2 = function(months) {
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
 var s2_comp = ee.ImageCollection.fromImages(compList_s2);
-print(s2_comp)
+print(s2_comp.first())
 
 var s2_final = s2_comp.toBands();
 print(s2_final)
@@ -264,7 +264,7 @@ var ren = blist.map(cat);
 var s2final = s2_final.select(blist).rename(ren);
 print(s2final)
 
-Map.addLayer(s2final)
+//Map.addLayer(s2final)
 Map.centerObject(aoi, 10)
 
 
