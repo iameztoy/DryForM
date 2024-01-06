@@ -261,6 +261,9 @@ var ren = blist.map(cat);
 var s2final = s2_final.select(blist).rename(ren);
 print(s2final)
 
+Map.addLayer(s2final)
+Map.centerObject(aoi, 10)
+
 
 
 
