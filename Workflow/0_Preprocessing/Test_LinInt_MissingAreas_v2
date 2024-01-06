@@ -1,0 +1,287 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//from https://spatialthoughts.com/2021/11/08/temporal-interpolation-gee/
+// Temporal Gap-Filling
+
+var geometry = 
+    ee.Geometry.Polygon(
+        [[[-40.322814419027104, -3.2075560469356326],
+          [-40.322814419027104, -3.496824345711495],
+          [-39.99459786629273, -3.496824345711495],
+          [-39.99459786629273, -3.2075560469356326]]], null, false);
+
+//var aoi_name = "testArea";
+//var aoi = geometry
+
+//---------------------------------------------------------------------------//
+// DEFINE GENERAL PARAMETERS
+//---------------------------------------------------------------------------//
+
+//Time intervals for composites
+var year = 2020;
+var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]]);
+var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]);
+var t_int = t_int4;
+var quarter = ("q1");
+
+var collection = "2A";
+var normalize = "False"; 
+var rescaling = 'Raw 0-10000'; //'Optimized 0-255' 'Regular 0-255'
+
+// Bands S1/S2
+var bands_init = ["B.*"];
+var bands = ["B4", "B5", "B8", "B12", "gNDVI", "MSAVI", "MSAVIt", "BI"];
+var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"];
+
+var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
+
+//---------------------------------------------------------------------------//
+// DEFINE SENTINEL-2 PARAMETERS
+//---------------------------------------------------------------------------//
+
+var cloud_per = 65;
+var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+var CLEAR_THRESHOLD = 0.65;// The threshold for masking; values between 0.50 and 0.65 generally work well.
+// Higher values will remove thin clouds, haze & cirrus shadows.
+
+// GLCM Texture parameters
+var glcm_band = "gray";
+var glcm_size = 5;
+
+if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
+if (collection == "1C"){var col = '"COPERNICUS/S2_HARMONIZED"'}
+
+//---------------------------------------------------------------------------//
+// ********** END OF PARAMETERS ************
+//---------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------//
+// PROCESSING
+//---------------------------------------------------------------------------//
+
+// Process Sentinel-2
+
+// Harmonized Sentinel-2 Level 2A collection.
+var s2 = ee.ImageCollection(col);
+
+// Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
+// Level 1C data and can be applied to either L1C or L2A collections.
+var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
+
+
+// SELECT AND MASK CLOUD/SHADOWS
+var filtered = s2
+    .filterBounds(aoi)
+    .filterDate("219-06-01", "2021-06-01") //str, end //"2020-01-01", "2021-01-01"
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
+    .linkCollection(csPlus, [QA_BAND])
+    .map(function(img) {
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)).divide(10000)
+        .select("B.*")
+        .clip(geometry)
+        .copyProperties(img, ["system:time_start"]);
+    });
+
+ 
+/*
+Add a band containing timestamp to each image. 
+This will be used to do pixel-wise interpolation later. 
+The key here is to mask the timestamp band with the same mask as the image. 
+If your image has more than 1-band, the code below will use the mask from the first band.
+*/
+   
+var filtered = filtered.map(function(image) {
+  var timeImage = image.metadata('system:time_start').rename('timestamp')
+  var timeImageMasked = timeImage.updateMask(image.mask().select(0))
+  return image.addBands(timeImageMasked)
+})
+
+/*
+Next we specify the time-window. 
+This will determine how much backward and forward are we willing to look for 
+an unmasked pixel in the time-series. The filters in subsequent 
+steps need the time difference in milliseconds, so we convert days to milliseconds.
+*/
+
+var days = 130 //original 30
+var millis = ee.Number(days).multiply(1000*60*60*24)
+
+/*
+For each image in the collection, we need to find all images before and after the specified time-window. 
+This is accomplished using Joins. We need to do 2 joins
+
+Join 1: Join the collection with itself to find all images before each image
+Join 2: Join the collection with itself to find all images after each image
+We first define the filters needed for the join. Define a maxDifference filter to find 
+all images within the specified days.
+*/
+
+var maxDiffFilter = ee.Filter.maxDifference({
+  difference: millis,
+  leftField: 'system:time_start',
+  rightField: 'system:time_start'
+})
+
+/*
+We need 2 more filters.
+
+A lessThanOrEquals filter to find all images after a given image. 
+    This will compare the given image’s timestamp against other images’ timestamps
+A greaterThanOrEquals filter to find all images before a given image. 
+    This will compare the given image’s timestamp against other images’ timestamps
+*/
+
+var lessEqFilter = ee.Filter.lessThanOrEquals({
+  leftField: 'system:time_start',
+  rightField: 'system:time_start'
+})
+var greaterEqFilter = ee.Filter.greaterThanOrEquals({
+  leftField: 'system:time_start',
+  rightField: 'system:time_start'
+})
+
+/*
+Now we apply the joins.
+We join the image collection with itself and match before/after images for each image 
+in the collection that meet our criteria.
+
+Join1 is to find all images after each image that are winthin the time-window. 
+We have 2 filters already defined for these two conditions. 
+We combine them and apply the join. This join will find all images after, 
+sorted in descending order. This will gives us resulting images such that closest image is last.
+*/
+
+var filter1 = ee.Filter.and(maxDiffFilter, lessEqFilter)
+ 
+var join1 = ee.Join.saveAll({
+  matchesKey: 'after',
+  ordering: 'system:time_start',
+  ascending: false})
+   
+var join1Result = join1.apply({
+  primary: filtered,
+  secondary: filtered,
+  condition: filter1
+})
+
+/*
+Do the Join2 now to match all images within the time-window that come before each image.
+This join will find all images before, sorted in ascending order. 
+This will gives us images so that closest is last.
+*/
+
+var filter2 = ee.Filter.and(maxDiffFilter, greaterEqFilter)
+ 
+var join2 = ee.Join.saveAll({
+  matchesKey: 'before',
+  ordering: 'system:time_start',
+  ascending: true})
+   
+var join2Result = join2.apply({
+  primary: join1Result,
+  secondary: join1Result,
+  condition: filter2
+})
+
+/*
+The collection is now ready for interpolation. 
+We write a function that will be used to interpolate all images. 
+This function takes an image and replaces the masked pixels with the interpolated value 
+from before and after images.
+
+Interpolation Formula
+y = y1 + (y2-y1)*((t – t1) / (t2 – t1))
+y = interpolated image
+y1 = before image
+y2 = after image
+t = interpolation timestamp
+t1 = before image timestamp
+t2 = after image timestamp
+
+If you wanted a simple average of before and after images, you can set the value of timeRatio to 0.5.
+
+*/
+
+var interpolateImages = function(image) {
+  var image = ee.Image(image)
+  // We get the list of before and after images from the image property
+  // Mosaic the images so we a before and after image with the closest unmasked pixel
+  var beforeImages = ee.List(image.get('before'))
+  var beforeMosaic = ee.ImageCollection.fromImages(beforeImages).mosaic()
+  var afterImages = ee.List(image.get('after'))
+  var afterMosaic = ee.ImageCollection.fromImages(afterImages).mosaic()
+  // Get image with before and after times
+  var t1 = beforeMosaic.select('timestamp').rename('t1')
+  var t2 = afterMosaic.select('timestamp').rename('t2')
+  var t = image.metadata('system:time_start').rename('t')
+  var timeImage = ee.Image.cat([t1, t2, t])
+  var timeRatio = timeImage.expression('(t - t1) / (t2 - t1)', {
+    't': timeImage.select('t'),
+    't1': timeImage.select('t1'),
+    't2': timeImage.select('t2'),
+  })
+  // Compute an image with the interpolated image y
+  var interpolated = beforeMosaic
+    .add((afterMosaic.subtract(beforeMosaic).multiply(timeRatio)))
+  // Replace the masked pixels in the current image with the average value
+  var result = image.unmask(interpolated)
+  return result.copyProperties(image, ['system:time_start'])
+}
+
+/*
+Now map() the function to interpolate all images in the collection. 
+The interpolatedCol is a continuous time-series with cloudy pixels 
+replaced by interpolated values from closest cloud-free pixels.
+*/
+
+// map() the function to interpolate all images in the collection
+var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
+var median = interpolatedCol.median()
+
+var createSeasonComposites_s2 = function(months) {
+  var startMonth = ee.List(months).get(0);
+  var endMonth = ee.List(months).get(1);
+  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+  var seasonFiltered = interpolatedCol.filter(monthFilter);
+  var composite = seasonFiltered.median();
+  return composite.select(bands_init).clip(aoi);
+};
+
+var compList_s2 = t_int.map(createSeasonComposites_s2);
+var s2_comp = ee.ImageCollection.fromImages(compList_s2);
+
+//need to filter only those for year 2020
+var s2_final = s2_comp.filterDate("2020-01-01", "2021-01-01");
+print(s2_final)
+
+
+/*
+var a = s2_final.toBands()
+print(a)
+
+var blist = s2_final.bandNames();
+var cat = function(ele){return ee.String("t").cat(ele)};
+var ren = blist.map(cat);
+
+var s2final = s2_final.select(blist).rename(ren);
+
+
+//Map.addLayer(s2final)
+Map.centerObject(aoi, 10)
+
+
+Export.image.toAsset({
+      image: s2final,
+      description: "s2_2020final_inter",
+      assetId: "projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter",  // <> modify these
+      region: geometry,
+      scale: 10,
+      crs: 'EPSG:4326',
+      maxPixels: 1e13
+      });
+
+*/
+
+
+
