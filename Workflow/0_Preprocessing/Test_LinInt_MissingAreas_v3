@@ -303,7 +303,7 @@ print(zonesID)
 
 // print('list system:index OLD', Zones.aggregate_array('system:index'));
 // print('list system:index NEW', zonesID.aggregate_array('system:index'));
-print(zonesID)
+
 
 ////////////// EXPORTING ///////////////////////
 
