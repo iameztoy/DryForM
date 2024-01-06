@@ -238,6 +238,19 @@ var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
 print("Collection", interpolatedCol.limit(5))
 var median = interpolatedCol.median()
 
+var createSeasonComposites_s2 = function(months) {
+  var startMonth = ee.List(months).get(0);
+  var endMonth = ee.List(months).get(1);
+  var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+  var seasonFiltered = interpolatedCol.filter(monthFilter);
+  var composite = seasonFiltered.median();
+  return composite.select(bands_init).clip(aoi);
+};
+
+var compList_s2 = t_int.map(createSeasonComposites_s2);
+var s2_comp = ee.ImageCollection.fromImages(compList_s2);
+print(s2_comp)
+
 
 
 
