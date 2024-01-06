@@ -77,7 +77,7 @@ var filtered = s2
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
-      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD)).divide(10000)
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
         .select("B.*")
         .clip(aoi)
         .copyProperties(img, ["system:time_start"]);
