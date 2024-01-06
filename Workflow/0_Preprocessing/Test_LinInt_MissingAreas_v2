@@ -237,7 +237,7 @@ replaced by interpolated values from closest cloud-free pixels.
 
 // map() the function to interpolate all images in the collection
 var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
-var median = interpolatedCol.median()
+interpolatedCol = interpolatedCol.filterDate(str, end);
 
 var createSeasonComposites_s2 = function(months) {
   var startMonth = ee.List(months).get(0);
@@ -250,15 +250,7 @@ var createSeasonComposites_s2 = function(months) {
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
 var s2_comp = ee.ImageCollection.fromImages(compList_s2);
-
-//need to filter only those for year 2020
-var s2_final = s2_comp.filterDate("2020-01-01", "2021-01-01");
-print(s2_final)
-
-
-/*
-var a = s2_final.toBands()
-print(a)
+var s2_final = s2_comp.toBands();
 
 var blist = s2_final.bandNames();
 var cat = function(ele){return ee.String("t").cat(ele)};
@@ -275,13 +267,13 @@ Export.image.toAsset({
       image: s2final,
       description: "s2_2020final_inter",
       assetId: "projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter",  // <> modify these
-      region: geometry,
+      region: aoi,
       scale: 10,
       crs: 'EPSG:4326',
       maxPixels: 1e13
       });
 
-*/
+
 
 
 
