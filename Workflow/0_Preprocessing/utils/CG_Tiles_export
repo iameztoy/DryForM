@@ -46,7 +46,7 @@ for (var f in featlist) {
     image: final,
     description: name+disS.toString(),
     assetId: 'users/bourgoinclement2/ForestReferenceMap/v1/JRC_GFC2020_C1/' + name+disS.toString(),
-    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
     region: feat.geometry().bounds(),
