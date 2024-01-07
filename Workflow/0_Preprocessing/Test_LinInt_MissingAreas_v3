@@ -51,7 +51,7 @@ var glcm_band = "gray";
 var glcm_size = 5;
 
 if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
-if (collection == "1C"){var col = '"COPERNICUS/S2_HARMONIZED"'}
+if (collection == "1C"){var col = 'COPERNICUS/S2_HARMONIZED'}
 
 //---------------------------------------------------------------------------//
 // ********** END OF PARAMETERS ************
