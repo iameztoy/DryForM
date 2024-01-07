@@ -14,4 +14,6 @@ Export.table.toDrive({
 })
 
 print(s2.aggregate_array('MGRS_TILE'));
+var a = s2.aggregate_array('MGRS_TILE')
+print(a)
 
