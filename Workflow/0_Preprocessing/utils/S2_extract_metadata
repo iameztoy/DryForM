@@ -1,0 +1,15 @@
+var tiles = ['32UQC', '32UPU', '32UPV', '32UQU', '32UQV', '33UUP', '33UUQ']
+var s2 = ee.ImageCollection("COPERNICUS/S2_SR")
+  .filter(ee.Filter.inList('MGRS_TILE', tiles))
+  .filterDate('2018-03-01', '2018-03-31')
+  .filter(ee.Filter.lte('CLOUDY_PIXEL_PERCENTAGE', 50));
+
+var a = s2.first().getString('MGRS_TILE')
+
+Export.table.toDrive({
+    collection: s2, 
+    description: "ImageMetadata", 
+    fileFormat: "csv", 
+    selectors: ['MGRS_TILE']
+})
+
