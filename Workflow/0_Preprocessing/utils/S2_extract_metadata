@@ -13,3 +13,5 @@ Export.table.toDrive({
     selectors: ['MGRS_TILE']
 })
 
+print(s2.aggregate_array('MGRS_TILE'));
+
