@@ -314,15 +314,18 @@ var processTiles = function(tile){
     });
 */  
 
-var featlist = tilelist
+
+var featlist = interm_aoi.getInfo()["features"]
 
 for (var f in featlist) {
-
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
+  var disS = dis.getInfo();
   var name = "tile";  
   Export.image.toAsset({
     image: s2final,
     description: name+f, //.toString(), Now the ID is already a string
-    assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/' + name+f, //.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/' + name+tilelist, //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     region: interm_aoi,
@@ -336,4 +339,5 @@ for (var f in featlist) {
 };
 
 var results = tilelist.map(processTiles);
+
 
