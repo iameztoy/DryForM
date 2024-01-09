@@ -11,8 +11,8 @@ var t_int = t_int4;
 var collection = "2A";
 var cg_scale = 120000 //Scale parameter for Covering Grid calculation
 
-var str0 = "2019-10-01"; var end0 = "2021-03-01"
-var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
+var str0 = "2019-10-01"; var end0 = "2021-03-01" // Initial Image Collection dates to allow extended imagery search for interpolation
+var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01" // Second Image Collection dates to calculate medians within the months of interest (see t_int parameter)
 
 
 // Create a covering GRID
