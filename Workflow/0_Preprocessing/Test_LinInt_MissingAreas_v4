@@ -76,7 +76,8 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 
 print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 
-//var tilelist = zonesID.aggregate_array("ID"); //final tile list over which the functino should be applied. String values while idList is numeric
+var tl = zonesID.aggregate_array("ID"); 
+print("Tile list", tl)
 var tilelist = ['000', '001', '002', '003', '004', '005', '006'];
 print("tile list", tilelist)
 
