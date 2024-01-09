@@ -96,7 +96,7 @@ tilelist = tilelist.filter(ee.Filter.lte('item', ns));
 print("Manual tile list", tilelist)
 
 var nsc = tilelist.getInfo()
-print("NSC", nsc)
+//print("NSC", nsc)
 
 Map.addLayer(image, image_vp, "Worked interpolation")
 Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString())
@@ -143,7 +143,7 @@ var processTiles = function(tile){
         .copyProperties(img, ["system:time_start"]);
     });
   
-  print("Filtered s2", filtered)  
+  //print("Filtered s2", filtered)  
   
   /*
   Add a band containing timestamp to each image.
@@ -326,7 +326,7 @@ var processTiles = function(tile){
   }
 
   s2final = removeBand(s2final)
-  print("S2 final quarterly", s2final)
+  //print("S2 final quarterly", s2final)
 
 
   ////////////// EXPORT ///////////////////////
