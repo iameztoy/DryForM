@@ -9,7 +9,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 
 //Time intervals for composites
 var year = 2020;
-var str0 = "2019-10-01"; var end0 = "2021-03-01" // Initial Image Collection dates to allow extended imagery search for interpolation
+var str0 = "2019-10-01"; var end0 = "2021-02-01" // Initial Image Collection dates to allow extended imagery search for interpolation
 var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01" // Second Image Collection dates to calculate medians within the months of interest (see year and t_int parameter)
 
 var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]]);
@@ -21,7 +21,7 @@ var bands = ["B2", "B3","B4", "B5", "B8", "B11", "B12"];
 var cg_scale = 80000 //Scale parameter for Covering Grid calculation
                      //Test 0: 50000 -> processed: Yes | 422 Tiles
                      //Test 1: 80000 -> processed: Yes | 185 Tiles
-                     //Test 2: 100000-> processed:     | 122 Tiles
+                     //Test 2: 100000-> processed:     | 122 Tiles | Tile 001 -> 802 images
                      //Test 3: 120000-> processed:     |  88 Tiles
 
 var cloud_per = 65;
