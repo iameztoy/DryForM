@@ -320,7 +320,7 @@ var processTiles = function(tile){
     image: s2final,
     description: "test", //.toString(), Now the ID is already a string
     assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/test', //.toString(),
-    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     region: interm_aoi,
     scale: 10,
