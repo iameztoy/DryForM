@@ -300,6 +300,15 @@ var processTiles = function(tile){
   var ren = blist.map(cat);
 
   var s2final = s2_final.select(blist).rename(ren);
+  
+  function removeBand(img) {
+    return img.select(
+      img.bandNames().filter(
+        ee.Filter.stringEndsWith('item', '_timestamp').not()));
+  }
+
+  s2final = removeBand(s2final)
+  print(s2final)
 
 
   ////////////// EXPORTING ///////////////////////
