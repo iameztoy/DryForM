@@ -118,7 +118,7 @@ var processTiles = function(tile){
   // SELECT AND MASK CLOUD/SHADOWS
   var filtered = s2
     .filterBounds(interm_aoi) //aoi
-    .filterDate("219-10-01", "2021-04-01") //leave enough space for interpolation
+    .filterDate(str0, end0) //leave enough space for interpolation
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
