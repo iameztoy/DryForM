@@ -87,14 +87,10 @@ Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
 // PROCESSING
 //---------------------------------------------------------------------------//
 
-
-
-
-
   // In order to avoid memory errors we create a function with the entire process within a single function.
   // This should be run along with the list of input tiles. 
 
-  var processTiles = function(tile){
+var processTiles = function(tile){
   
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])))
@@ -107,7 +103,6 @@ Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
   // Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
   // Level 1C data and can be applied to either L1C or L2A collections.
   var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
-
 
   // SELECT AND MASK CLOUD/SHADOWS
   var filtered = s2
