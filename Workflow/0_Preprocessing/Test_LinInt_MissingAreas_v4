@@ -23,7 +23,7 @@ var cloud_per = 65;
 var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
 var CLEAR_THRESHOLD = 0.65;// The threshold for masking; values between 0.50 and 0.65 generally work well.
 
-var days = 180 // How many days go backward/forward in the interpolation process? Original 30
+var days = 180 // How many days go backward/forward in the interpolation process? Original 30. 
 // Higher values will remove thin clouds, haze & cirrus shadows.
 
 if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
@@ -73,6 +73,8 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
                                                           //but big chance of client crash while exporting
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
+
+print("Zones ID", zonesID) //This contain the list over which the function should be applied.
 
 
 // Process Sentinel-2. First filtering step and shadow masking.
