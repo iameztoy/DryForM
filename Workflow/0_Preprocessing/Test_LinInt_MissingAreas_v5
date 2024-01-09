@@ -79,10 +79,10 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
-print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
+//print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 print("Number of Tiles in AOI for", zonesID.size());
-var tl = zonesID.aggregate_array("ID"); 
-print("Array Tile list", tl)
+//var tl = zonesID.aggregate_array("ID"); 
+//print("Array Tile list", tl)
 
 //Build the final tiles to apply the func. afterwards
 var n = Zones.size().getInfo()-1
