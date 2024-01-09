@@ -18,6 +18,7 @@ var t_int = t_int4;
 var collection = "2A";
 var bands = ["B2", "B3","B4", "B5", "B8", "B11", "B12"];
 var cg_scale = 50000 //Scale parameter for Covering Grid calculation
+                     //Test 0: 50000 -> processed: Yes 
 
 var cloud_per = 65;
 var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
