@@ -113,7 +113,7 @@ var filtered = s2
 };
 
 var results = tilelist.map(processTiles);
-print(results.size())
+print("Results", results)
 
 
 
