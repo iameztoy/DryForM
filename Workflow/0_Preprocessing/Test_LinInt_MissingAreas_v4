@@ -326,8 +326,6 @@ var processTiles = function(tile){
     maxPixels: 1e13
     });
   
-    
-
   return s2final
 
 };
