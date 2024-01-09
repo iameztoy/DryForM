@@ -294,24 +294,16 @@ var processTiles = function(tile){
 
   ////////////// EXPORTING ///////////////////////
 
-  var featlist = zonesID.getInfo()["features"];
-  //print(featlist)
-  for (var f in featlist) {
-    var feat = ee.Feature(featlist[f]);
-    var dis = feat.get("ID");
-    var disS = dis.getInfo();
-    var name = "tile";  
-    Export.image.toAsset({
-      image: s2final,
-      description: name+disS, //.toString(), Now the ID is already a string
-      assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/' + name+disS, //.toString(),
-      pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
-      crs: 'EPSG:4326',
-      region: feat.geometry().bounds(),
-      scale: 10,
-      maxPixels: 1e13
+  Export.image.toAsset({
+    image: s2final,
+    description: "test", //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/', //.toString(),
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    region: zonesID,
+    scale: 10,
+    maxPixels: 1e13
     });
-  }
 
   return s2final
 
