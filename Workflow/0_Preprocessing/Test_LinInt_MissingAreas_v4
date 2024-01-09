@@ -301,7 +301,7 @@ var processTiles = function(tile){
 
 
   ////////////// EXPORTING ///////////////////////
-
+/*
   Export.image.toAsset({
     image: s2final,
     description: "test", //.toString(), Now the ID is already a string
@@ -312,8 +312,24 @@ var processTiles = function(tile){
     scale: 10,
     maxPixels: 1e13
     });
-  
-    
+*/  
+
+var featlist = tilelist
+
+for (var f in featlist) {
+
+  var name = "tile";  
+  Export.image.toAsset({
+    image: s2final,
+    description: name+f, //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/' + name+f, //.toString(),
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    region: interm_aoi,
+    scale: 10,
+    maxPixels: 1e13
+  });
+}    
 
   return s2final
 
