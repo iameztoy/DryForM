@@ -300,7 +300,7 @@ var processTiles = function(tile){
     assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/test', //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
-    region: zonesID,
+    region: interm_aoi,
     scale: 10,
     maxPixels: 1e13
     });
