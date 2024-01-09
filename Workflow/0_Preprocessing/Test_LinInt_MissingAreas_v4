@@ -102,6 +102,8 @@ var processTiles = function(tile){
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
+  print(interm_aoi)
+  Map.addLayer(interm_aoi)
 
   // Process Sentinel-2
   
