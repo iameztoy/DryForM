@@ -98,9 +98,6 @@ print("Manual tile list", tilelist)
 var nsc = tilelist.getInfo()
 print("NSC", nsc)
 
-
-
-
 Map.addLayer(image, image_vp, "Worked interpolation")
 Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString())
 
