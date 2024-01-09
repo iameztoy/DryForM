@@ -311,7 +311,7 @@ var processTiles = function(tile){
   print(s2final)
 
 
-  ////////////// EXPORTING ///////////////////////
+  ////////////// EXPORT ///////////////////////
 
   Export.image.toAsset({
     image: s2final,
