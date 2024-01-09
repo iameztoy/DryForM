@@ -318,5 +318,4 @@ var processTiles = function(tile){
 };
 
 var results = tilelist.map(processTiles);
-print("interm aoi", interm_aoi)
 
