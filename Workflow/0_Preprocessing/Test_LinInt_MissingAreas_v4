@@ -83,7 +83,7 @@ print("Manual tile list", tilelist)
 
 print("Number of Tiles in AOI:", zonesID.size());
 Map.addLayer(image, image_vp, "Worked interpolation")
-Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
+Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString())
 
 //var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
 //Map.addLayer(test, null, "Test tile")
