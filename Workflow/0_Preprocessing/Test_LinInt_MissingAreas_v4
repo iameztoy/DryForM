@@ -96,7 +96,8 @@ Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
 var processTiles = function(tile){
   
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
-  var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
+  //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
+  var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
 
   // Process Sentinel-2
   
