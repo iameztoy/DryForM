@@ -11,6 +11,9 @@ var t_int = t_int4;
 var collection = "2A";
 var cg_scale = 120000 //Scale parameter for Covering Grid calculation
 
+var str0 = "2019-10-01"; var end0 = "2021-03-01"
+var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"
+
 
 // Create a covering GRID
 var aoi = caatinga.geometry();
