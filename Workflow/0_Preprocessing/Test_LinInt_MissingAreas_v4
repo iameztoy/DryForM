@@ -74,7 +74,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
-print("Zones ID", zonesID) //This contain the list over which the function should be applied.
+print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 
 
 // Process Sentinel-2. First filtering step and shadow masking.
