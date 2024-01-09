@@ -109,7 +109,7 @@ var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
 
 // SELECT AND MASK CLOUD/SHADOWS
 var filtered = s2
-    .filterBounds(aoi)
+    .filterBounds(interm_aoi) //aoi
     .filterDate("219-10-01", "2021-04-01") //leave enough space for interpolation
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
