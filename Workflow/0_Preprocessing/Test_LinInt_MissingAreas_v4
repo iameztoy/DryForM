@@ -77,36 +77,27 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 
 var tilelist = zonesID.aggregate_array("ID"); //final tile list over which the functino should be applied. String values while idList is numeric
+print("tile list", tilelist)
 
-// Process Sentinel-2. First filtering step and shadow masking.
-// Harmonized Sentinel-2 Level 2A collection.
-var s2 = ee.ImageCollection(col);
-// Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
-// Level 1C data and can be applied to either L1C or L2A collections.
-var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
-// SELECT AND MASK CLOUD/SHADOWS
-var filtered = s2
-    .filterBounds(aoi)
-    .filterDate(str0, end0) //leave enough space for interpolation
-    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
-    .linkCollection(csPlus, [QA_BAND])
-    .map(function(img) {
-      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
-        .select(bands) //bands
-        //.clip(targettile)
-        .copyProperties(img, ["system:time_start"]);
-     });
+print("Number of Tiles in AOI:", zonesID.size());
+Map.addLayer(image, image_vp, "Worked interpolation")
+Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
+
+ //---------------------------------------------------------------------------//
+// PROCESSING
+//---------------------------------------------------------------------------//
+
+// Process Sentinel-2
+
+
 
 // In order to avoid memory errors we create a function with the entire process within a single function.
 // This should be run along with the list of input tiles. 
 
 var processTiles = function(tile){
   
- //---------------------------------------------------------------------------//
-// PROCESSING
-//---------------------------------------------------------------------------//
-
-// Process Sentinel-2
+  //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
+  var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])))
 
 // Harmonized Sentinel-2 Level 2A collection.
 var s2 = ee.ImageCollection(col);
@@ -125,11 +116,10 @@ var filtered = s2
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
         .select(bands)
-        .clip(aoi)
+        .clip(interm_aoi)
         .copyProperties(img, ["system:time_start"]);
     });
-
- 
+  
 /*
 Add a band containing timestamp to each image. 
 This will be used to do pixel-wise interpolation later. 
@@ -291,7 +281,7 @@ var createSeasonComposites_s2 = function(months) {
   var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
   var seasonFiltered = interpolatedCol.filter(monthFilter);
   var composite = seasonFiltered.median();
-  return composite.clip(aoi); //clip not necessary here if it is applied while filtering the collection
+  return composite //.clip(aoi); //clip not necessary here if it is applied while filtering the collection
 };
 
 var compList_s2 = t_int.map(createSeasonComposites_s2);
@@ -332,23 +322,4 @@ for (var f in featlist) {
  };
 
 var results = tilelist.map(processTiles);
-
-
-
-
-
-
-
-
-
-  
-  
-
-
-
-
-
-print("Number of Tiles in AOI:", zonesID.size());
-Map.addLayer(image, image_vp, "Worked interpolation")
-Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
 
