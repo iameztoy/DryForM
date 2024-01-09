@@ -79,10 +79,10 @@ print("Zones ID", zonesID) //This contain the tile list over which the function 
 var tl = zonesID.aggregate_array("ID"); 
 print("Array Tile list", tl)
 
-var tilelist = (['001']); // '000', '001', '002', '003', '004', '005', '006'
+var tilelist = (['000', '001']); // '000', '001', '002', '003', '004', '005', '006'
 print("Manual tile list", tilelist)
 
-print("Number of Tiles in AOI:", zonesID.size());
+print("Number of Tiles in AOI for", zonesID.size());
 Map.addLayer(image, image_vp, "Worked interpolation")
 Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString())
 
@@ -103,7 +103,7 @@ var processTiles = function(tile){
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
-  print(interm_aoi)
+  print("interm aoi fx", interm_aoi)
   Map.addLayer(interm_aoi)
 
   // Process Sentinel-2
@@ -316,16 +316,25 @@ var processTiles = function(tile){
 
   ////////////// EXPORT ///////////////////////
 
+  //No need for loop here. Need to optimize
+  var featlist = interm_aoi.getInfo()["features"];
+  for (var f in featlist) {
+    var feat = ee.Feature(featlist[f]);
+    var dis = feat.get("ID");
+    var disS = dis.getInfo();
+    var name = "tile"; 
+
   Export.image.toAsset({
     image: s2final,
-    description: "test", //.toString(), Now the ID is already a string
-    assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/test', //.toString(),
+    description: name+disS, //"test", //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/' + name+disS, //.toString(),
     pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     region: interm_aoi,
     scale: 10,
     maxPixels: 1e13
     });
+  }
   
   return s2final
 
