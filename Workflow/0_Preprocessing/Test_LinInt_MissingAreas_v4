@@ -42,8 +42,9 @@ if (collection == "1C"){var col = 'COPERNICUS/S2_HARMONIZED'}
 //    to test quickly the process for different tile sizes by just modifying this parameter. 
 
 // Create a covering GRID. This is created considering the initial Area of Interest.
-
-var aoi = caatinga.geometry();
+var aoi = caatinga
+var aoin = aoi.toString()
+var aoi = aoi.geometry();
 var Zones = aoi.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
   	scale: cg_scale // Need to find the right balance here (Test case: Caatinga)
@@ -303,7 +304,7 @@ for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
   var dis = feat.get("ID");
   var disS = dis.getInfo();
-  var name = "tile";  
+  var name = aoin+"tile";  
   Export.image.toAsset({
     image: s2final,
     description: name+disS, //.toString(), Now the ID is already a string
