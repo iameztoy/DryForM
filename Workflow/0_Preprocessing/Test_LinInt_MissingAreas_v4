@@ -77,13 +77,16 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 
 var tl = zonesID.aggregate_array("ID"); 
-print("Tile list", tl)
+print("Tile list array", tl)
 var tilelist = ['000', '001', '002', '003', '004', '005', '006'];
 print("tile list", tilelist)
 
 print("Number of Tiles in AOI:", zonesID.size());
 Map.addLayer(image, image_vp, "Worked interpolation")
 Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
+
+var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
+Map.addLayer(test, null, "Test tile")
 
 
 
