@@ -1,14 +1,16 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
-    image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter_workedbutbigger1");
+    image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter_workedbutbigger1"),
+    image_vp = {"opacity":1,"bands":["t0_B4","t0_B3","t0_B2"],"min":158.085185497878,"max":2191.483480016384,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(image, null, "Worked interpolation")
+Map.addLayer(image, image_vp, "Worked interpolation")
 
+var cg_scale = 120000
 // Create a covering GRID
 var aoi = caatinga.geometry();
 var Zones = aoi.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
-  	scale: 35000 // Need to find the right balance here (Test case: Caatinga)
+  	scale: cg_scale // Need to find the right balance here (Test case: Caatinga)
   	              // Test 0: 35000 tile is similar to a geometry that worked (see 2024-01-06)
   	              //         print(Zones.size() = 804 tiles
   	              //         Took 19 minutes to process
@@ -16,6 +18,8 @@ var Zones = aoi.coveringGrid({
   	              // Test 2: 100000 - 122 tiles
   	              // Test 3: 50000 - 422 tiles
   	              // Test 4: 35000 - more than 800 tiles
+  	              // Test 5: 120000 - 88 tiles. Worked to a similar tile size set manually and run on a single tile. See imported image as an example
 });
 
-Map.addLayer(Zones)
+print(Zones.size())
+Map.addLayer(Zones, null, "Covering grid: "+cg_scale.toString())
