@@ -295,8 +295,6 @@ var ren = blist.map(cat);
 var s2final = s2_final.select(blist).rename(ren);
 
 
-
-
 ////////////// EXPORTING ///////////////////////
 
 var featlist = zonesID.getInfo()["features"];
@@ -318,6 +316,7 @@ for (var f in featlist) {
   });
 }
 
+return s2final
 
  };
 
