@@ -78,7 +78,7 @@ print("Zones ID", zonesID) //This contain the tile list over which the function 
 
 var tl = zonesID.aggregate_array("ID"); 
 print("Array Tile list", tl)
-var tilelist = (['000', '001', '002', '003', '004', '005', '006']);
+var tilelist = (['000', '001']); //, '002', '003', '004', '005', '006'
 print("Manual tile list", tilelist)
 
 print("Number of Tiles in AOI:", zonesID.size());
@@ -310,7 +310,7 @@ var processTiles = function(tile){
   }
 
   s2final = removeBand(s2final)
-  print("S2 final quarterly",s2final)
+  print("S2 final quarterly", s2final)
 
 
   ////////////// EXPORT ///////////////////////
