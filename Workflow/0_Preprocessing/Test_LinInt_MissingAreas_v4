@@ -321,4 +321,5 @@ return s2final
  };
 
 var results = tilelist.map(processTiles);
+print("interm aoi", interm_aoi)
 
