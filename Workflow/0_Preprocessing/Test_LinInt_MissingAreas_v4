@@ -17,7 +17,7 @@ var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]);
 var t_int = t_int4;
 var collection = "2A";
 var bands = ["B2", "B3","B4", "B5", "B8", "B11", "B12"];
-var cg_scale = 120000 //Scale parameter for Covering Grid calculation
+var cg_scale = 50000 //Scale parameter for Covering Grid calculation
 
 var cloud_per = 65;
 var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
@@ -77,7 +77,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 
 var tl = zonesID.aggregate_array("ID"); 
-print("Tile list", tl)
+print("Array Tile list", tl)
 var tilelist = ['000', '001', '002', '003', '004', '005', '006'];
 print("tile list", tilelist)
 
