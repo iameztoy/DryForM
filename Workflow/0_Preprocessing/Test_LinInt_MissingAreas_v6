@@ -18,8 +18,8 @@ var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8]
 var t_int = t_int4;
 var collection = "2A";
 var bands = ["B3","B4", "B8", "B11", "B12"]; // bands to filter the S2 collection
-var fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"]; //final bands to export
-var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"];
+var fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
+var glcm_bands = ["gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"];
 var cg_scale = 80000; //Scale parameter for Covering Grid calculation
                       //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 261  images
                       //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 516  images
@@ -334,20 +334,20 @@ var processTiles = function(tile){
   };
   
   var interpolatedCol_i = s2_comp.map(addIndex);
-  //print("Interpol median index", interpolatedCol_i);
+  print("Interpol median index", interpolatedCol_i);
   
   // Add glcm function
   
   var addglcm = function addglmc(img) {
   //var glcm = img.select(glcm_band).int16().glcmTexture({size: glcm_size}); //My original
     var glcm = img.select(glcm_band).unitScale(0, 0.30).multiply(100).toInt().glcmTexture({size: glcm_size});
-    var asm = glcm.select("gray_asm");
-    var contrast = glcm.select("gray_contrast");
-    var corr = glcm.select("gray_corr"); 
-    var ent = glcm.select("gray_ent");
-    var vari = glcm.select("gray_var");
-    var idm = glcm.select("gray_idm");
-    var savg = glcm.select("gray_savg");
+    var asm = glcm.select("gray_asm").rename("gray_asm_glcm");
+    var contrast = glcm.select("gray_contrast").rename("gray_contrast_glcm");
+    var corr = glcm.select("gray_corr").rename("gray_corr_glcm"); 
+    var ent = glcm.select("gray_ent").rename("gray_ent_glcm");
+    var vari = glcm.select("gray_var").rename("gray_var_glcm");
+    var idm = glcm.select("gray_idm").rename("gray_idm_glcm");
+    var savg = glcm.select("gray_savg").rename("gray_savg_glcm");
   return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
   };
   
