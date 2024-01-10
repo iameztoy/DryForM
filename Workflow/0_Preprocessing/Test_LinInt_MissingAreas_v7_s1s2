@@ -176,7 +176,7 @@ var processTiles = function(tile){
         .copyProperties(img, ["system:time_start"]);
     });
   
-  print("Filtered s2", filtered)  
+  print('Number of images in S2 collection: ', filtered.size())  
   
   /*
   Add a band containing timestamp to each image.
