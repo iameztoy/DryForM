@@ -7,6 +7,11 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(s2grid, null, "S2 Grid System")
 
+
+var s2grid_f = s2grid.filter(ee.Filter.eq('Name', "23LPE"));
+Map.addLayer(s2grid_f, null, "S2 grid select")
+
+
 //---------------------------------------------------------------------------//
 // REQUIRE
 //---------------------------------------------------------------------------//
@@ -19,7 +24,7 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoisel = tanzania;
+var aoisel = caatinga;
 var aoi = aoisel.geometry();
 
 //Time intervals for composites
@@ -32,7 +37,7 @@ var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]);
 var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8], [9,9], [10, 10], [11, 11], [12, 12]]);
 var t_int = t_int4;
 
-var cg_scale = 120000; //Scale parameter for Covering Grid calculation. We can play with this parameter so to avoid memory limitations. (Tests for Caatinga)
+var cg_scale = 100000; //Scale parameter for Covering Grid calculation. We can play with this parameter so to avoid memory limitations. (Tests for Caatinga)
                       //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 132  (s2), 121 (S1) *YES: preliminary test were done without indexes, glcm and S1
                       //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 264  (s2), 60  (S1)
                       //Test 2: 100000-> processed: Yes | 122 Tiles | Tile 001 -> 408  (s2), 121 (S1)
@@ -112,12 +117,14 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
+
+
 //print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 print("Number of Tiles in AOI for", zonesID.size());
 //var tl = zonesID.aggregate_array("ID"); 
 //print("Array Tile list", tl)
 
-var tilelist = (['001']); // '000', '001', '002', '003', '004', '005', '006'
+var tilelist = (['011']); // '000', '001', '002', '003', '004', '005', '006'
 /*
 //Build the final tiles to apply the func. afterwards
 var n = Zones.size().getInfo()-1; //Get the tile size to the list afterwards
@@ -133,7 +140,7 @@ var tilelist = tilelist.getInfo();
 //print("NSC", nsc)
 */
 
-Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString());
+Map.addLayer(zonesID, null, "Covering grid: " + cg_scale.toString());
 
 //var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
 //Map.addLayer(test, null, "Test tile")
@@ -167,14 +174,14 @@ var processTiles = function(tile){
 
   // SELECT AND MASK CLOUD/SHADOWS
   var filtered = s2
-    .filterBounds(interm_aoi) //aoi
+    .filterBounds(interm_aoi) // s2grid_f interm_aoi
     .filterDate(str0, end0) //leave enough space for interpolation
     .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
     .linkCollection(csPlus, [QA_BAND])
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
         .select(bands)
-        .clip(interm_aoi)
+        .clip(interm_aoi) // s2grid_f interm_aoi
         .copyProperties(img, ["system:time_start"]);
     });
   
