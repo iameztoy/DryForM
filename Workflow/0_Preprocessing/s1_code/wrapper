@@ -84,7 +84,7 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
       .filter(ee.Filter.eq('resolution_meters', 10))
       .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))
       .filterDate(params.START_DATE, params.STOP_DATE)
-      .filterBounds(interm_aoi); //(params.GEOMETRY); // IAA: I have changed the wrapper to apply the tiles. 
+      .filterBounds(params.GEOMETRY); 
   
   //select orbit
   if (params.ORBIT !== 'BOTH'){s1 = s1.filter(ee.Filter.eq('orbitProperties_pass', params.ORBIT))}
