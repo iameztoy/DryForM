@@ -3,7 +3,20 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
-    s2grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid");
+    s2grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-44.27473276330921, -13.274539624840754],
+          [-44.27473276330921, -14.567475338986826],
+          [-40.93488901330921, -14.567475338986826],
+          [-40.93488901330921, -13.274539624840754]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //For testing purposes
@@ -13,6 +26,43 @@ Map.addLayer(s2grid_f, null, "S2 grid select")
 
 var orbits = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
 Map.addLayer(orbits, {color: 'green'}, "Orbits")
+
+/**
+ * Function to mask clouds using the Sentinel-2 QA band
+ * @param {ee.Image} image Sentinel-2 image
+ * @return {ee.Image} cloud masked Sentinel-2 image
+ */
+function maskS2clouds(image) {
+  var qa = image.select('QA60');
+
+  // Bits 10 and 11 are clouds and cirrus, respectively.
+  var cloudBitMask = 1 << 10;
+  var cirrusBitMask = 1 << 11;
+
+  // Both flags should be set to zero, indicating clear conditions.
+  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
+      .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
+
+  return image.updateMask(mask).divide(10000);
+}
+
+var dataset = ee.ImageCollection('COPERNICUS/S2_SR')
+                  .filterDate('2020-01-01', '2020-03-30')
+                  .filterBounds(geometry)
+                  // Pre-filter to get less cloudy granules.
+                  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                  .map(maskS2clouds);
+
+var visualization = {
+  min: 0.0,
+  max: 0.3,
+  bands: ['B4', 'B3', 'B2'],
+};
+
+
+Map.addLayer(dataset.mean(), visualization, 'RGB');
+
+
 //end testing
 
 //---------------------------------------------------------------------------//
@@ -514,6 +564,5 @@ var processTiles = function(tile){
 };
 
 var results = tilelist.map(processTiles);
-
 
 
