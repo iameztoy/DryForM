@@ -60,39 +60,14 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
 
     if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
     if (collection == "1C"){var col = 'COPERNICUS/S2_HARMONIZED'}
-    
+   
     //---------------------------------------------------------------------------//
     // DEFINE SENTINEL-1 PARAMETERS
-    //---------------------------------------------------------------------------//
+    //---------------------------------------------------------------------------// 
+    
+    // ****!!*** Take a look within the function
+    // I have moved the parameters section to the function so the tiles "aoi_interm" can be iterated.
 
-  // See descriptions at the end of the code
-
-    var parameter = {//1. Data Selection
-              START_DATE: str, 
-              STOP_DATE: end, 
-              POLARIZATION:'VVVH',
-              ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
-              GEOMETRY: interm_aoi, //uncomment if interactively selecting a region of interest
-              //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
-              //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
-              //2. Additional Border noise correction
-              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
-              //3.Speckle filter
-              APPLY_SPECKLE_FILTERING: true,
-              SPECKLE_FILTER_FRAMEWORK: 'MULTI',
-              SPECKLE_FILTER: 'REFINED LEE',
-              SPECKLE_FILTER_KERNEL_SIZE: 9,
-              SPECKLE_FILTER_NR_OF_IMAGES: 12,
-              //4. Radiometric terrain normalization
-              APPLY_TERRAIN_FLATTENING: true,
-              DEM: ee.Image('USGS/SRTMGL1_003'),
-              TERRAIN_FLATTENING_MODEL: 'VOLUME',
-              TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
-              //5. Output
-              FORMAT : 'DB',
-              CLIP_TO_ROI: false, // I do it outside the s1 box
-              SAVE_ASSETS: false  //          ""           
-};
 
 //---------------------------------------------------------------------------//
 // ********** END OF PARAMETERS ************
@@ -107,7 +82,6 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
 //    to test quickly the process for different tile sizes by just modifying this parameter. 
 
 // Create a covering GRID. This is created considering the initial Area of Interest.
-
 
 var Zones = aoi.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
@@ -420,9 +394,43 @@ var processTiles = function(tile){
   var s2final_i = removeBand(s2_final);
   print("S2 final quarterly", s2_final);
   
+    //---------------------------------------------------------------------------//
+    // DEFINE SENTINEL-1 PARAMETERS
+    //---------------------------------------------------------------------------//
+
+  // See descriptions at the end of the code
+
+    var parameter = {//1. Data Selection
+              START_DATE: str, 
+              STOP_DATE: end, 
+              POLARIZATION:'VVVH',
+              ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
+              GEOMETRY: interm_aoi, //uncomment if interactively selecting a region of interest
+              //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
+              //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
+              //2. Additional Border noise correction
+              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
+              //3.Speckle filter
+              APPLY_SPECKLE_FILTERING: true,
+              SPECKLE_FILTER_FRAMEWORK: 'MULTI',
+              SPECKLE_FILTER: 'REFINED LEE',
+              SPECKLE_FILTER_KERNEL_SIZE: 9,
+              SPECKLE_FILTER_NR_OF_IMAGES: 12,
+              //4. Radiometric terrain normalization
+              APPLY_TERRAIN_FLATTENING: true,
+              DEM: ee.Image('USGS/SRTMGL1_003'),
+              TERRAIN_FLATTENING_MODEL: 'VOLUME',
+              TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
+              //5. Output
+              FORMAT : 'DB',
+              CLIP_TO_ROI: false, // I do it outside the s1 box
+              SAVE_ASSETS: false  //          ""           
+};
+  
   //---------------------------------------------------------------------------//
   // PROCESS Sentinel-1
   //---------------------------------------------------------------------------//
+
 
   //Preprocess the S1 collection
   var s1_preprocces = wrapper.s1_preproc(parameter);
