@@ -72,7 +72,7 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
               STOP_DATE: end, 
               POLARIZATION:'VVVH',
               ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
-              //GEOMETRY: aoi, //IAA: I have changed the wrapper so it takes directly the tile within the function //uncomment if interactively selecting a region of interest
+              GEOMETRY: interm_aoi, //uncomment if interactively selecting a region of interest
               //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
               //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
               //2. Additional Border noise correction
