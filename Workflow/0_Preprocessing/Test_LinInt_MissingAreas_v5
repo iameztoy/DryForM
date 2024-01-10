@@ -360,7 +360,7 @@ var processTiles = function(tile){
   }
 
   var s2final_i = removeBand(s2final)
-  //print("S2 final quarterly", s2final)
+  print("S2 final quarterly", s2final)
 
   ////////////// EXPORT ///////////////////////
 
