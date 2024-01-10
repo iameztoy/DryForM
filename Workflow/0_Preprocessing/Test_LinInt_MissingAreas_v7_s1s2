@@ -27,9 +27,9 @@ var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]);
 var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8], [9,9], [10, 10], [11, 11], [12, 12]]);
 var t_int = t_int4;
 
-var cg_scale = 80000; //Scale parameter for Covering Grid calculation
+var cg_scale = 50000; //Scale parameter for Covering Grid calculation
                       //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 261  (s2)
-                      //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 516  (s2)
+                      //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 264  (s2), 60 (S1)
                       //Test 2: 100000-> processed: Yes | 122 Tiles | Tile 001 -> 804  (s2)
                       //Test 3: 120000-> processed: YES |  88 Tiles | Tile 001 -> 813  (s2)
                       //Test 4: 160000-> processed:     |  59 Tiles | Tile 001 -> 1469 (s2)
