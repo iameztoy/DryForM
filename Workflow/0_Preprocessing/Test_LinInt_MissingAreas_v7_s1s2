@@ -10,6 +10,9 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 Map.addLayer(s2grid, null, "S2 Grid System")
 var s2grid_f = s2grid.filter(ee.Filter.eq('Name', "23LPE"));
 Map.addLayer(s2grid_f, null, "S2 grid select")
+
+var orbits = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
+Map.addLayer(orbits, {color: 'green'}, "Orbits")
 //end testing
 
 //---------------------------------------------------------------------------//
@@ -185,7 +188,8 @@ var processTiles = function(tile){
         .copyProperties(img, ["system:time_start"]);
     });
   
-  print('Number of images in S2 collection: ', filtered.size())  
+  print("Filtered s2 limit(1)", filtered.limit(1));
+  print('Number of images in S2 collection: ', filtered.size());
   
   /*
   Add a band containing timestamp to each image.
