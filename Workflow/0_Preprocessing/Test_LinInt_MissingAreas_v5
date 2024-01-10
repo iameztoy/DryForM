@@ -22,7 +22,7 @@ var cg_scale = 80000; //Scale parameter for Covering Grid calculation
                       //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 261 images
                       //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 516 images
                       //Test 2: 100000-> processed: Yes | 122 Tiles | Tile 001 -> 804 images
-                      //Test 3: 120000-> processed:     |  88 Tiles | Tile 001 -> 813 images
+                      //Test 3: 120000-> processed: YES |  88 Tiles | Tile 001 -> 813 images
 
 var cloud_per = 65;
 var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
