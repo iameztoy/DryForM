@@ -68,7 +68,7 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
     // ****!!*** Take a look within the function  ****!!***
     //
     // I have moved the parameters section to the function so the tiles "aoi_interm" can be iterated.
-    // The other option is to bring here the wrapper but it makes the code very long.
+    // Alternatively bring the wrapper here but it makes the code very long.
 
 
 //---------------------------------------------------------------------------//
