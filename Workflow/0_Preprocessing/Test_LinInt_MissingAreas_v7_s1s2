@@ -132,7 +132,6 @@ var tilelist = tilelist.getInfo();
 //print("NSC", nsc)
 */
 
-Map.addLayer(image, image_vp, "Worked interpolation");
 Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString());
 
 //var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
