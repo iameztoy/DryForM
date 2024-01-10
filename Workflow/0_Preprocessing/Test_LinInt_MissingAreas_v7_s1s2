@@ -2,8 +2,11 @@
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
+    s2grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(s2grid, null, "S2 Grid System")
+
 //---------------------------------------------------------------------------//
 // REQUIRE
 //---------------------------------------------------------------------------//
@@ -16,7 +19,7 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoisel = tanzania
+var aoisel = tanzania;
 var aoi = aoisel.geometry();
 
 //Time intervals for composites
@@ -114,8 +117,6 @@ print("Number of Tiles in AOI for", zonesID.size());
 //var tl = zonesID.aggregate_array("ID"); 
 //print("Array Tile list", tl)
 
-
-
 var tilelist = (['001']); // '000', '001', '002', '003', '004', '005', '006'
 /*
 //Build the final tiles to apply the func. afterwards
@@ -151,7 +152,7 @@ var processTiles = function(tile){
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
   //print("interm aoi fx", interm_aoi)
-  //Map.addLayer(interm_aoi)
+  Map.addLayer(interm_aoi, {color: 'red'}, "Intermediate AOI/tile")
 
   //---------------------------------------------------------------------------//
   // PROCESS Sentinel-2
