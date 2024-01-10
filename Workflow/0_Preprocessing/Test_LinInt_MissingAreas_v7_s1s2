@@ -400,8 +400,7 @@ var processTiles = function(tile){
     // DEFINE SENTINEL-1 PARAMETERS
     //---------------------------------------------------------------------------//
 
-  // See descriptions at the end of the code
-
+  
     var parameter = {//1. Data Selection
               START_DATE: str, 
               STOP_DATE: end, 
@@ -425,7 +424,7 @@ var processTiles = function(tile){
               TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
               //5. Output
               FORMAT : 'DB',
-              CLIP_TO_ROI: false, // I do it outside the s1 box
+              CLIP_TO_ROI: false, // I do it outside the s1 box while creating the composites: See createSeasonComposites_s1
               SAVE_ASSETS: false  //          ""           
 };
   
