@@ -5,12 +5,12 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     s2grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+//For testing purposes
 Map.addLayer(s2grid, null, "S2 Grid System")
-
-
 var s2grid_f = s2grid.filter(ee.Filter.eq('Name', "23LPE"));
 Map.addLayer(s2grid_f, null, "S2 grid select")
-
+//end testing
 
 //---------------------------------------------------------------------------//
 // REQUIRE
