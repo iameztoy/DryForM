@@ -91,7 +91,7 @@ var tilelist = ee.List(['000','001','002','003','004','005','006','007','008','0
 tilelist = tilelist.filter(ee.Filter.lte('item', ns));
 //print("Manual tile list", tilelist)
 
-var nsc = tilelist.getInfo();
+var tilelist = tilelist.getInfo();
 //print("NSC", nsc)
 */
 
@@ -381,11 +381,11 @@ var processTiles = function(tile){
     });
   }
   
-  return s2final
+  return s2final;
 
 };
 
-var results = nsc.map(processTiles);
+var results = tilelist.map(processTiles);
 
 
 
