@@ -305,20 +305,20 @@ var processTiles = function(tile){
   
   // Add Indexes function
   var addIndex = function addindexes(img) {
-    var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
-    var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+    //var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']);
+    //var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
     var gndvi = img.normalizedDifference(['B8', 'B3']).rename('gNDVI');
     var msavi2 = img.select('B8').multiply(2).add(1)
       .subtract(img.select('B8').multiply(2).add(1).pow(2)
       .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt())
       .divide(2).rename("MSAVI");
-    var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt'); //texture of 5x5 pixel window
+    //var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt'); //texture of 5x5 pixel window
     var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
     var gray = img.select("B8").multiply(0.3).add(img.select("B4").multiply(0.59)).add(img.select("B3").multiply(0.11)).rename('gray');
       //'(0.3 * NIR) + (0.59 * R) + (0.11 * G)'
   //mtvi = 1.5 * (1.2 * (nir - green) - 2.5 * (red - green)) / 
   //         sqrt( (2 * nir + 1)^2 - (6 * nir - 5 * sqrt(red) - 0.5) ) //https://gis.stackexchange.com/questions/308633/soil-adjusted-vegetation-index-values-msavi2-are-not-within-expected-range
-  return img.addBands(ee.Image.cat(nbr, ndvi, gndvi, msavi2, msavit, bi, gray));
+  return img.addBands(ee.Image.cat(gndvi, msavi2, bi, gray));
   };
   
   // Add glcm function
