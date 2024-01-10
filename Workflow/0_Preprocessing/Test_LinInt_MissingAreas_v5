@@ -17,8 +17,8 @@ var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]);
 var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8], [9,9], [10, 10], [11, 11], [12, 12]]);
 var t_int = t_int4;
 var collection = "2A";
-var bands = ["B2", "B3","B4", "B5", "B8", "B11", "B12"]; // bands to filter the S2 collection
-var fbands = ["B3", "B4", "B8", "B12", "gNDVI", "MSAVI", "BI", "gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"]; //final bands to export
+var bands = ["B3","B4", "B8", "B11", "B12"]; // bands to filter the S2 collection
+var fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"]; //final bands to export
 var glcm_bands = ["gray_asm","gray_contrast","gray_corr","gray_ent","gray_var","gray_idm","gray_savg"];
 var cg_scale = 80000; //Scale parameter for Covering Grid calculation
                       //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 261  images
