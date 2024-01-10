@@ -5,18 +5,11 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     s2grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid"),
     geometry = 
-    /* color: #d63000 */
+    /* color: #98ff00 */
     /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-44.27473276330921, -13.274539624840754],
-          [-44.27473276330921, -14.567475338986826],
-          [-40.93488901330921, -14.567475338986826],
-          [-40.93488901330921, -13.274539624840754]]], null, false);
+    ee.Geometry.MultiPoint(
+        [[-43.638429775663745, -13.929773533661459],
+         [-42.852907314726245, -13.948433444190474]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //For testing purposes
