@@ -14,6 +14,8 @@ var helper = require('users/adugnagirma/gee_s1_ard:utilities');
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
+var aoi = caatinga.geometry();
+
 //Time intervals for composites
 var year = 2020;
 var str0 = "2019-11-15"; var end0 = "2021-02-16"; // Initial Image Collection dates to allow extended imagery search for interpolation
@@ -42,8 +44,6 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
     var glcm_bands = ["gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"];
     var s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
     
-
-
     var cloud_per = 65;
     var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
     var CLEAR_THRESHOLD = 0.65; // The threshold for masking; values between 0.50 and 0.65 generally work well.
@@ -67,8 +67,8 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
   // See descriptions at the end of the code
 
     var parameter = {//1. Data Selection
-              START_DATE: str, //str
-              STOP_DATE: end, //end
+              START_DATE: str, 
+              STOP_DATE: end, 
               POLARIZATION:'VVVH',
               ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
               GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
@@ -98,7 +98,7 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
 //---------------------------------------------------------------------------//
 
 //---------------------------------------------------------------------------//
-// PROCESSING
+// DEFINITION OF TILES FOR EXPORTING
 //---------------------------------------------------------------------------//
 
 // We need first to create a grid framework or grid system over which the interpolation will be carried out.
@@ -107,7 +107,7 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
 
 // Create a covering GRID. This is created considering the initial Area of Interest.
 
-var aoi = caatinga.geometry();
+
 var Zones = aoi.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
   	scale: cg_scale 
@@ -158,6 +158,7 @@ Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString());
 
 //var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
 //Map.addLayer(test, null, "Test tile")
+
 
 //---------------------------------------------------------------------------//
 // PROCESSING
@@ -415,8 +416,8 @@ var processTiles = function(tile){
         ee.Filter.stringEndsWith('item', '_timestamp').not()));
   }
 
-  var s2final_i = removeBand(s2final);
-  print("S2 final quarterly", s2final);
+  var s2final_i = removeBand(s2_final);
+  print("S2 final quarterly", s2_final);
   
   //---------------------------------------------------------------------------//
   // PROCESS Sentinel-1
