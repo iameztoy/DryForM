@@ -101,9 +101,7 @@ Map.addLayer(Zones, null, "Covering grid: " + cg_scale.toString());
 //var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
 //Map.addLayer(test, null, "Test tile")
 
-
-
- //---------------------------------------------------------------------------//
+//---------------------------------------------------------------------------//
 // PROCESSING
 //---------------------------------------------------------------------------//
 
@@ -386,7 +384,6 @@ var processTiles = function(tile){
   return s2final
 
 };
-
 
 var results = nsc.map(processTiles);
 
