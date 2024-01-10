@@ -294,34 +294,6 @@ var processTiles = function(tile){
   // map() the function to interpolate all images in the collection
   var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages))
   interpolatedCol = interpolatedCol.filterDate(str, end); //Need to filter again to the target year
-
-  var createSeasonComposites_s2 = function(months) {
-    var startMonth = ee.List(months).get(0);
-    var endMonth = ee.List(months).get(1);
-    var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
-    var seasonFiltered = interpolatedCol.filter(monthFilter);
-    var composite = seasonFiltered.median();
-    return composite //.clip(aoi); //clip not necessary here if it is applied while filtering the collection
-  };
-
-  var compList_s2 = t_int.map(createSeasonComposites_s2);
-  var s2_comp = ee.ImageCollection.fromImages(compList_s2);
-  var s2_final = s2_comp.toBands();
-
-  var blist = s2_final.bandNames();
-  var cat = function(ele){return ee.String("t").cat(ele)};
-  var ren = blist.map(cat);
-
-  var s2final = s2_final.select(blist).rename(ren);
-  
-  function removeBand(img) {
-    return img.select(
-      img.bandNames().filter(
-        ee.Filter.stringEndsWith('item', '_timestamp').not()));
-  }
-
-  s2final = removeBand(s2final)
-  //print("S2 final quarterly", s2final)
   
   // Add Indexes function
   var addIndex = function addindexes(img) {
@@ -345,7 +317,7 @@ var processTiles = function(tile){
   
   var addglcm = function addglmc(img) {
   //var glcm = img.select(glcm_band).int16().glcmTexture({size: glcm_size}); //My original
-  var glcm = img.select(glcm_band).unitScale(0, 0.30).multiply(100).toInt().glcmTexture({size: glcm_size});
+    var glcm = img.select(glcm_band).unitScale(0, 0.30).multiply(100).toInt().glcmTexture({size: glcm_size});
     var asm = glcm.select("gray_asm");
     var contrast = glcm.select("gray_contrast");
     var corr = glcm.select("gray_corr"); 
@@ -356,7 +328,36 @@ var processTiles = function(tile){
   return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
   };
   
-  var s2final_i = s2final.map(addIndex).map(addglcm).toBands();
+  var interpolatedCol_i = interpolatedCol.map(addIndex).map(addglcm).toBands();
+
+  var createSeasonComposites_s2 = function(months) {
+    var startMonth = ee.List(months).get(0);
+    var endMonth = ee.List(months).get(1);
+    var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+    var seasonFiltered = interpolatedCol_i.filter(monthFilter);
+    var composite = seasonFiltered.median();
+    return composite //.clip(aoi); //clip not necessary here if it is applied while filtering the collection
+  };
+
+  var compList_s2 = t_int.map(createSeasonComposites_s2);
+  var s2_comp = ee.ImageCollection.fromImages(compList_s2);
+  var s2_final = s2_comp.toBands();
+
+  var blist = s2_final.bandNames();
+  var cat = function(ele){return ee.String("t").cat(ele)};
+  var ren = blist.map(cat);
+
+  var s2final = s2_final.select(blist).rename(ren);
+  
+  function removeBand(img) {
+    return img.select(
+      img.bandNames().filter(
+        ee.Filter.stringEndsWith('item', '_timestamp').not()));
+  }
+
+  s2final_i = removeBand(s2final)
+  //print("S2 final quarterly", s2final)
+  
 
 
   ////////////// EXPORT ///////////////////////
