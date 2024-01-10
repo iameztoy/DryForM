@@ -124,7 +124,7 @@ print("Number of Tiles in AOI for", zonesID.size());
 //var tl = zonesID.aggregate_array("ID"); 
 //print("Array Tile list", tl)
 
-var tilelist = (['011']); // '000', '001', '002', '003', '004', '005', '006'
+var tilelist = (['009', '010', '011']); // '000', '001', '002', '003', '004', '005', '006'
 /*
 //Build the final tiles to apply the func. afterwards
 var n = Zones.size().getInfo()-1; //Get the tile size to the list afterwards
