@@ -28,11 +28,11 @@ var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8]
 var t_int = t_int4;
 
 var cg_scale = 80000; //Scale parameter for Covering Grid calculation
-                      //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 261  images
-                      //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 516  images
-                      //Test 2: 100000-> processed: Yes | 122 Tiles | Tile 001 -> 804  images
-                      //Test 3: 120000-> processed: YES |  88 Tiles | Tile 001 -> 813  images
-                      //Test 4: 160000-> processed:     |  59 Tiles | Tile 001 -> 1469 images
+                      //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 261  (s2)
+                      //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 516  (s2)
+                      //Test 2: 100000-> processed: Yes | 122 Tiles | Tile 001 -> 804  (s2)
+                      //Test 3: 120000-> processed: YES |  88 Tiles | Tile 001 -> 813  (s2)
+                      //Test 4: 160000-> processed:     |  59 Tiles | Tile 001 -> 1469 (s2)
                       
 var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
 
@@ -114,7 +114,7 @@ print("Number of Tiles in AOI for", zonesID.size());
 
 
 
-var tilelist = (['000', '001']); // '000', '001', '002', '003', '004', '005', '006'
+var tilelist = (['001']); // '000', '001', '002', '003', '004', '005', '006'
 /*
 //Build the final tiles to apply the func. afterwards
 var n = Zones.size().getInfo()-1; //Get the tile size to the list afterwards
