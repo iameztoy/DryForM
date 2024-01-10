@@ -359,10 +359,8 @@ var processTiles = function(tile){
         ee.Filter.stringEndsWith('item', '_timestamp').not()));
   }
 
-  s2final_i = removeBand(s2final)
+  var s2final_i = removeBand(s2final)
   //print("S2 final quarterly", s2final)
-  
-
 
   ////////////// EXPORT ///////////////////////
 
