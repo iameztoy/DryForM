@@ -4,6 +4,13 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     image_vp = {"opacity":1,"bands":["t0_B4","t0_B3","t0_B2"],"min":158.085185497878,"max":2191.483480016384,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //---------------------------------------------------------------------------//
+// REQUIRE
+//---------------------------------------------------------------------------//
+
+var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
+var helper = require('users/adugnagirma/gee_s1_ard:utilities');
+
+//---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
@@ -16,32 +23,75 @@ var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]]);
 var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]);
 var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8], [9,9], [10, 10], [11, 11], [12, 12]]);
 var t_int = t_int4;
-var collection = "2A";
-var bands = ["B3","B4", "B8", "B11", "B12"]; // bands to filter the S2 collection
-var fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
-var glcm_bands = ["gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"];
+
 var cg_scale = 80000; //Scale parameter for Covering Grid calculation
                       //Test 0: 50000 -> processed: Yes | 422 Tiles | Tile 001 -> 261  images
                       //Test 1: 80000 -> processed: Yes | 185 Tiles | Tile 001 -> 516  images
                       //Test 2: 100000-> processed: Yes | 122 Tiles | Tile 001 -> 804  images
                       //Test 3: 120000-> processed: YES |  88 Tiles | Tile 001 -> 813  images
                       //Test 4: 160000-> processed:     |  59 Tiles | Tile 001 -> 1469 images
+                      
+var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
 
-var cloud_per = 65;
-var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
-var CLEAR_THRESHOLD = 0.65; // The threshold for masking; values between 0.50 and 0.65 generally work well.
+    //---------------------------------------------------------------------------//
+    // DEFINE SENTINEL-2 PARAMETERS
+    //---------------------------------------------------------------------------//
+
+    var collection = "2A";
+    var bands = ["B3","B4", "B8", "B11", "B12"]; // bands to filter the S2 collection
+    var glcm_bands = ["gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"];
+    var s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
+    
+
+
+    var cloud_per = 65;
+    var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+    var CLEAR_THRESHOLD = 0.65; // The threshold for masking; values between 0.50 and 0.65 generally work well.
                             // Higher values will remove thin clouds, haze & cirrus shadows.
 
-// GLCM Texture parameters
-var glcm_band = "gray";
-var glcm_size = 2;
+    // GLCM Texture parameters
+    var glcm_band = "gray";
+    var glcm_size = 2;
 
-var days = 140; // How many days go backward/forward in the interpolation process? Original 30. For quarters: From Nov 15 2019 to March 31 2020: 140.
+    var days = 140; // How many days go backward/forward in the interpolation process? Original 30. For quarters: From Nov 15 2019 to March 31 2020: 140.
                                                                                                             //From Nov 15 2020 to Feb 15 2021: 140
 
 
-if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
-if (collection == "1C"){var col = 'COPERNICUS/S2_HARMONIZED'}
+    if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
+    if (collection == "1C"){var col = 'COPERNICUS/S2_HARMONIZED'}
+    
+    //---------------------------------------------------------------------------//
+    // DEFINE SENTINEL-1 PARAMETERS
+    //---------------------------------------------------------------------------//
+
+  // See descriptions at the end of the code
+
+    var parameter = {//1. Data Selection
+              START_DATE: str, //str
+              STOP_DATE: end, //end
+              POLARIZATION:'VVVH',
+              ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
+              GEOMETRY: aoi, //uncomment if interactively selecting a region of interest
+              //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
+              //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
+              //2. Additional Border noise correction
+              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
+              //3.Speckle filter
+              APPLY_SPECKLE_FILTERING: true,
+              SPECKLE_FILTER_FRAMEWORK: 'MULTI',
+              SPECKLE_FILTER: 'REFINED LEE',
+              SPECKLE_FILTER_KERNEL_SIZE: 9,
+              SPECKLE_FILTER_NR_OF_IMAGES: 12,
+              //4. Radiometric terrain normalization
+              APPLY_TERRAIN_FLATTENING: true,
+              DEM: ee.Image('USGS/SRTMGL1_003'),
+              TERRAIN_FLATTENING_MODEL: 'VOLUME',
+              TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
+              //5. Output
+              FORMAT : 'DB',
+              CLIP_TO_ROI: false, // I do it outside the s1 box
+              SAVE_ASSETS: false  //          ""           
+};
 
 //---------------------------------------------------------------------------//
 // ********** END OF PARAMETERS ************
@@ -124,7 +174,9 @@ var processTiles = function(tile){
   //print("interm aoi fx", interm_aoi)
   //Map.addLayer(interm_aoi)
 
-  // Process Sentinel-2
+  //---------------------------------------------------------------------------//
+  // PROCESS Sentinel-2
+  //---------------------------------------------------------------------------//
   
   // Harmonized Sentinel-2 Level 2A collection.
   var s2 = ee.ImageCollection(col);
@@ -352,16 +404,11 @@ var processTiles = function(tile){
   };
   
   var interpolatedCol_i_glcm = interpolatedCol_i.map(addglcm);
-  interpolatedCol_i_glcm = interpolatedCol_i_glcm.select(fbands);
+  interpolatedCol_i_glcm = interpolatedCol_i_glcm.select(s2_fbands);
   
   var s2_final = interpolatedCol_i_glcm.toBands();
 
-  var blist = s2_final.bandNames();
-  var cat = function(ele){return ee.String("t").cat(ele)};
-  var ren = blist.map(cat);
 
-  var s2final = s2_final.select(blist).rename(ren);
-  
   function removeBand(img) {
     return img.select(
       img.bandNames().filter(
@@ -370,6 +417,49 @@ var processTiles = function(tile){
 
   var s2final_i = removeBand(s2final);
   print("S2 final quarterly", s2final);
+  
+  //---------------------------------------------------------------------------//
+  // PROCESS Sentinel-1
+  //---------------------------------------------------------------------------//
+
+  //Preprocess the S1 collection
+  var s1_preprocces = wrapper.s1_preproc(parameter);
+
+  var s1 = s1_preprocces[0];
+  s1_preprocces = s1_preprocces[1];
+
+  //Convert format for export  
+  // *changed from original so it does not provoque any conflit with the Visu section
+  // *this conditional is run only AFTER the Visu section in the original code
+  // *for export purposses
+
+
+  var createSeasonComposites_s1 = function(months) {
+    var startMonth = ee.List(months).get(0);
+    var endMonth = ee.List(months).get(1);
+    var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+    var seasonFiltered = s1_preprocces.filter(monthFilter);
+    if (parameter.FORMAT=='DB'){var toDB = seasonFiltered.map(helper.lin_to_db)}
+    //var toDB = seasonFiltered.map(helper.lin_to_db);
+    var composite = toDB.mean();
+    return composite.select("VV", "VH").clip(interm_aoi);
+  };
+
+  var compList_s1 = t_int.map(createSeasonComposites_s1);
+  var s1_comp = ee.ImageCollection.fromImages(compList_s1);
+  var s1_final = s1_comp.toBands();
+  
+  //---------------------------------------------------------------------------//
+  // MERGE S1 AND S2 COMPOSITES | Rename for export as asset
+  //---------------------------------------------------------------------------//
+  
+  var s1s2_final = s2final_i.addBands(s1_final);
+  
+  var blist = s1s2_final.bandNames();
+  var cat = function(ele){return ee.String("t").cat(ele)};
+  var ren = blist.map(cat);
+
+  var s1s2final = s1s2_final.select(blist).rename(ren);
 
   ////////////// EXPORT ///////////////////////
 
@@ -382,7 +472,7 @@ var processTiles = function(tile){
     var name = "tile"; 
 
   Export.image.toAsset({
-    image: s2final_i,
+    image: s1s2final,
     description: name+disS, //"test", //.toString(), Now the ID is already a string
     assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/' + name+disS, //.toString(),
     pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
@@ -393,7 +483,7 @@ var processTiles = function(tile){
     });
   }
   
-  return  s2final_i;
+  return  s1s2final;
 
 };
 
