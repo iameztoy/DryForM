@@ -2,7 +2,7 @@
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
     cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //---------------------------------------------------------------------------//
 // REQUIRE
@@ -16,7 +16,7 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoisel = caatinga
+var aoisel = tanzania
 var aoi = aoisel.geometry();
 
 //Time intervals for composites
