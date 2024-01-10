@@ -386,7 +386,7 @@ var processTiles = function(tile){
     });
   }
   
-  return s2final;
+  return  s2final_i;
 
 };
 
