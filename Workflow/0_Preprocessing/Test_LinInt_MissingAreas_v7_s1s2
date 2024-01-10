@@ -1,7 +1,8 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
-    image = ee.Image("projects/hardy-tenure-383607/assets/Preprocessing/s2_2020final_inter_workedbutbigger1"),
-    image_vp = {"opacity":1,"bands":["t0_B4","t0_B3","t0_B2"],"min":158.085185497878,"max":2191.483480016384,"gamma":1};
+    cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    Tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 //---------------------------------------------------------------------------//
 // REQUIRE
@@ -15,7 +16,8 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoi = caatinga.geometry();
+var aoisel = caatinga
+var aoi = aoisel.geometry();
 
 //Time intervals for composites
 var year = 2020;
