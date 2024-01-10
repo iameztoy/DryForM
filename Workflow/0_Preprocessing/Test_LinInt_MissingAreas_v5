@@ -335,7 +335,8 @@ var processTiles = function(tile){
   };
   
   var interpolatedCol_i = interpolatedCol.map(addIndex).map(addglcm);
-
+  interpolatedCol_i = interpolatedCol_i.select(fbands)
+  
   var createSeasonComposites_s2 = function(months) {
     var startMonth = ee.List(months).get(0);
     var endMonth = ee.List(months).get(1);
