@@ -332,7 +332,7 @@ var processTiles = function(tile){
   return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
   };
   
-  var interpolatedCol_i = interpolatedCol.map(addIndex).map(addglcm).toBands();
+  var interpolatedCol_i = interpolatedCol.map(addIndex).map(addglcm);
 
   var createSeasonComposites_s2 = function(months) {
     var startMonth = ee.List(months).get(0);
