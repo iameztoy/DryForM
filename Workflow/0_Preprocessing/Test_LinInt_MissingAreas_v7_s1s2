@@ -102,7 +102,7 @@ var list = Zones.toList(Zones.size());
 var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   var feat = ee.Feature(list.get(newSysIndex));
   // format number to string (system:index must be a string)
-  var indexString = ee.Number(newSysIndex).format('%03d') //3 is until 999, increase if needed 
+  var indexString = ee.Number(newSysIndex).format('%03d'); //3 is until 999, increase if needed 
                                                           //but big chance of client crash while exporting
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
