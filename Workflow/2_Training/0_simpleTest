@@ -53,7 +53,7 @@ var trainingSample = sample.filter('random <= 0.8');
 var validationSample = sample.filter('random > 0.8');
 
 // Train a 10-tree random forest classifier from the training sample.
-var trainedClassifier = ee.Classifier.smileRandomForest(10).train({
+var trainedClassifier = ee.Classifier.smileRandomForest(50).train({
   features: trainingSample,
   classProperty: label,
   inputProperties: img.bandNames()
