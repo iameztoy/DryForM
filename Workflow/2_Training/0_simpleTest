@@ -87,7 +87,6 @@ var classVis = {
 };
 Map.centerObject(roi);
 Map.addLayer(img, {bands: ['t0_B8', 't0_B4', 't0_B3'], min: 100, max: 3500}, 'img');
-Map.addLayer(lc, classVis, 'lc');
 Map.addLayer(imgClassified, classVis, 'Classified');
 Map.addLayer(roi, {color: 'white'}, 'ROI', false, 0.5);
 Map.addLayer(trainingSample, {color: 'black'}, 'Training sample', false);
