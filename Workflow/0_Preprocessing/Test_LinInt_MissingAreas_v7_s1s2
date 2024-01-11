@@ -227,7 +227,7 @@ var processTiles = function(tile){
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
         .select(bands)
-        //.divide(10000)
+        .divide(10000)
         .clip(interm_aoi) // s2grid_f interm_aoi
         .copyProperties(img, ["system:time_start"]);
     });
