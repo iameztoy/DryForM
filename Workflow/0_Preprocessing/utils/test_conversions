@@ -48,6 +48,7 @@ Export.image.toAsset({
   //region: region,
   scale: 10,
   crs: 'EPSG:4326',
+  maxPixels: 1e13
   //pyramidingPolicy: {SR_B5: 'mode'}
 });
 
@@ -58,6 +59,7 @@ Export.image.toAsset({
   //region: region,
   scale: 10,
   crs: 'EPSG:4326',
+  maxPixels: 1e13
   //pyramidingPolicy: {SR_B5: 'mode'}
 });
 
@@ -68,6 +70,7 @@ Export.image.toAsset({
   //region: region,
   scale: 10,
   crs: 'EPSG:4326',
+  maxPixels: 1e13
   //pyramidingPolicy: {SR_B5: 'mode'}
 });
 
@@ -78,6 +81,7 @@ Export.image.toAsset({
   //region: region,
   scale: 10,
   crs: 'EPSG:4326',
+  maxPixels: 1e13
   //pyramidingPolicy: {SR_B5: 'mode'}
 });
 
@@ -88,6 +92,7 @@ Export.image.toAsset({
   //region: region,
   scale: 10,
   crs: 'EPSG:4326',
+  maxPixels: 1e13
   //pyramidingPolicy: {SR_B5: 'mode'}
 });
 
