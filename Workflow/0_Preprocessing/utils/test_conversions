@@ -27,19 +27,19 @@ var normalize = ee.ImageCollection.fromImages(
     return band.unitScale(ee.Number(minMax.get(name.cat('_min'))), ee.Number(minMax.get(name.cat('_max'))))
 })).toBands().rename(image.bandNames());
 
-var norm_toInt16 = normalize.multiply(10000).uint16()
+var norm_uint16 = normalize.multiply(10000).uint16()
 
 print("only uint16", only_uint16)
 print("only byte", only_byte)
 print("original", image)
 print("min max", normalize)
-print("to uint", norm_toInt16)
+print("to uint", norm_uint16)
 
 Map.addLayer(image, vp_original, "Original")
 Map.addLayer(only_uint16, vp_onlyuint, "Only Uint16")
 Map.addLayer(only_byte, vp_onlyByte, "Only byte")
 Map.addLayer(normalize, vp_minmax, "MinMax")
-Map.addLayer(norm_toInt16, vp_norm2uint, "Norm toInt16")
+Map.addLayer(norm_uint16, vp_norm2uint, "Norm toInt16")
 
 Export.image.toAsset({
   image: image,
