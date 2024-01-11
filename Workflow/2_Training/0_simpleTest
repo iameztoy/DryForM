@@ -2,6 +2,7 @@
 var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/S2inter_Caatinga"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
