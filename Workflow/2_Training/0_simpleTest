@@ -91,9 +91,13 @@ Map.addLayer(imgClassified, classVis, 'Classified');
 Map.addLayer(roi, {color: 'white'}, 'ROI', false, 0.5);
 Map.addLayer(trainingSample, {color: 'black'}, 'Training sample', false);
 Map.addLayer(validationSample, {color: 'white'}, 'Validation sample', false);
+
 var visualization = {
   bands: ['Map'],
 };
-Map.addLayer(lc, visualization, 'ESA WC v200');
+
+
+
+Map.addLayer(lc, visualization, 'Landcover');
 
 
