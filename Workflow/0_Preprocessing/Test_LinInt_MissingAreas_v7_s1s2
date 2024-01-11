@@ -227,7 +227,7 @@ var processTiles = function(tile){
     .map(function(img) {
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
         .select(bands)
-        .divide(10000)
+        //.divide(10000)
         .clip(interm_aoi) // s2grid_f interm_aoi
         .copyProperties(img, ["system:time_start"]);
     });
@@ -395,13 +395,12 @@ var processTiles = function(tile){
     var endMonth = ee.List(months).get(1);
     var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
     var seasonFiltered = interpolatedCol.filter(monthFilter);
-    var composite = seasonFiltered.median();
+    var composite = seasonFiltered.median().float();
     return composite; //.clip(aoi); //clip not necessary here if it is applied while filtering the collection
   };
 
   var compList_s2 = t_int.map(createSeasonComposites_s2);
-  var s2_comp = ee.ImageCollection.fromImages(compList_s2);
-  //print("S2_comp", s2_comp)
+  var s2_comp = ee.ImageCollection.fromImages(compList_s2)
   
     // Add Indexes function
   var addIndex = function addindexes(img) {
