@@ -440,6 +440,8 @@ var processTiles = function(tile){
   var interpolatedCol_i_glcm = interpolatedCol_i.map(addglcm);
   interpolatedCol_i_glcm = interpolatedCol_i_glcm.select(s2_fbands);
   
+  print("Interpolated + i + g", interpolatedCol_i_glcm)
+  
   var s2_final = interpolatedCol_i_glcm.toBands();
 
 
