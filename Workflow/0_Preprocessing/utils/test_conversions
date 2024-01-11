@@ -86,7 +86,7 @@ Export.image.toAsset({
 });
 
 Export.image.toAsset({
-  image: norm_toInt16,
+  image: norm_uint16,
   description: 'norm_toInt16',
   assetId: 'projects/hardy-tenure-383607/assets/Test_DataTypes/norm_toInt16',
   //region: region,
