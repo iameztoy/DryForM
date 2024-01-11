@@ -18,8 +18,18 @@ var img = ic.mosaic()
 Map.addLayer(ic)
 var roi = geometry
 
+
+var lc = ee.ImageCollection('ESA/WorldCover/v200').first();
+
+var visualization = {
+  bands: ['Map'],
+};
+
+Map.centerObject(roi);
+
+Map.addLayer(lc, visualization, 'ESA WC v200');
 // ESA WorldCover land cover map, used as label source in classifier training.
-var lc = ee.Image('ESA/WorldCover/v100/2020');
+//var lc = ee.Image('ESA/WorldCover/v100/2020');
 
 // Remap the land cover class values to a 0-based sequential series.
 var classValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100];
