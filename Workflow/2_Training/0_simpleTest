@@ -15,19 +15,10 @@ var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/S2inter_Caating
           [-41.372750584677306, -13.496397490652596]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var img = ic.mosaic()
-Map.addLayer(ic)
 var roi = geometry
-
-
 var lc = ee.ImageCollection('ESA/WorldCover/v200').first();
 
-var visualization = {
-  bands: ['Map'],
-};
 
-Map.centerObject(roi);
-
-Map.addLayer(lc, visualization, 'ESA WC v200');
 // ESA WorldCover land cover map, used as label source in classifier training.
 //var lc = ee.Image('ESA/WorldCover/v100/2020');
 
@@ -101,4 +92,9 @@ Map.addLayer(imgClassified, classVis, 'Classified');
 Map.addLayer(roi, {color: 'white'}, 'ROI', false, 0.5);
 Map.addLayer(trainingSample, {color: 'black'}, 'Training sample', false);
 Map.addLayer(validationSample, {color: 'white'}, 'Validation sample', false);
+var visualization = {
+  bands: ['Map'],
+};
+Map.addLayer(lc, visualization, 'ESA WC v200');
+Map.addLayer(ic, null, "Multitemp S2 Composite")
 
