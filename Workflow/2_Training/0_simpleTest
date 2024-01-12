@@ -1,5 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
+var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga"),
+    geometry = 
     /* color: #d63000 */
     /* shown: false */
     /* displayProperties: [
@@ -8,13 +9,12 @@ var geometry =
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-44.902108494833556, -13.496397490652596],
-          [-44.902108494833556, -14.365437636753542],
-          [-41.372750584677306, -14.365437636753542],
-          [-41.372750584677306, -13.496397490652596]]], null, false),
-    geometry2 = /* color: #d63000 */ee.Geometry.Point([-42.333206926600866, -13.675667535459835]),
-    ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga");
+        [[[-43.10093446994123, -7.192152737366333],
+          [-43.10093446994123, -8.074150822137398],
+          [-41.33213564181623, -8.074150822137398],
+          [-41.33213564181623, -7.192152737366333]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
 var img = ic.mosaic()
 var roi = geometry
 var lc = ee.ImageCollection('ESA/WorldCover/v200').first();
