@@ -1,0 +1,64 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var countries = ee.FeatureCollection("FAO/GAUL_SIMPLIFIED_500m/2015/level0");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//Set 30° N/S Aoi
+var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
+
+//My tiles
+
+var Zones = tropic.coveringGrid({
+  	proj: "EPSG:4326", //EPSG:32720
+  	scale: 100000 
+});
+
+// CoveringGrid produces a strange ID so I make a new fc with proper
+// unique id so we can parse them to the name while running the Export Loop.
+
+// make a list of length of features
+var idList = ee.List.sequence(0,Zones.size().subtract(1)); 
+// featureCollection to a List
+var list = Zones.toList(Zones.size());
+// set the system:index
+var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
+  var feat = ee.Feature(list.get(newSysIndex));
+  // format number to string (system:index must be a string)
+  var indexString = ee.Number(newSysIndex).format('%03d'); //3 is until 999, increase if needed 
+                                                          //but big chance of client crash while exporting
+  return feat.set('system:index', indexString, 'ID', indexString);
+}));
+
+// UTM Zones
+var longitude = ee.Image.pixelLonLat().select('longitude');
+var utmZones = longitude.add(180).divide(6).int();
+
+var utm2vec = utmZones.reduceToVectors({
+    reducer:null,
+    geometry: tropic,
+    scale: 10000,
+    geometryType:"polygon",
+    maxPixels: 1e13,
+    tileScale: 6,
+})
+
+// Orbits
+
+var orbits = ee.FeatureCollection("users/SimonettiDario/Tropics_30_60km_orbits_neg_buff");
+var AOI = orbits.filterBounds(tropic);   //orbits by country
+
+var availableOrbits = AOI.aggregate_array('OrbitRelat').distinct();
+        
+AOI = AOI.filter(ee.Filter.inList('OrbitRelat', availableOrbits));
+availableOrbits = availableOrbits.getInfo();
+
+availableOrbits.map(function(orbit){
+      var tmpAOI = AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
+      Map.addLayer(tmpAOI,{},'Orbits'+orbit,1);
+   });
+
+
+Map.addLayer(orbits, {color: 'green'}, "Orbits")
+Map.addLayer(utm2vec, {color: 'red'}, "UTM vector", 1)
+Map.addLayer(zonesID)
+Map.addLayer(countries)
+
+
