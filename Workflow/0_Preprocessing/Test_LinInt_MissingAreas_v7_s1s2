@@ -70,7 +70,7 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-var aoisel = caatinga;
+var aoisel = caatinga; var expname = "Caatinga"
 var aoi = aoisel.geometry();
 
 //Time intervals for composites
@@ -170,7 +170,10 @@ print("Number of Tiles in AOI for", zonesID.size());
 //var tl = zonesID.aggregate_array("ID"); 
 //print("Array Tile list", tl)
 
-var tilelist = (['009', '010', '011']); // '000', '001', '002', '003', '004', '005', '006'
+var tilelist = (["032", "033", "123",	"124"]); // 009 010	011	075	076	077 Caatinga "009", "010", "075", "076"
+                                        // 032 033	034	123	124	125 Chaco "032", "033", "123",	"124"
+                                        // 043 044	045	288	289	290 Cerrado "043", "044",	"288", "289"
+                                        // 054 055	056	105	106	107 Tanzania "054", "055", "105", "106"
 /*
 //Build the final tiles to apply the func. afterwards
 var n = Zones.size().getInfo()-1; //Get the tile size to the list afterwards
@@ -547,8 +550,8 @@ var processTiles = function(tile){
 
   Export.image.toAsset({
     image: s1s2final,
-    description: name+disS, //"test", //.toString(), Now the ID is already a string
-    assetId: 'projects/hardy-tenure-383607/assets/S2inter_Caatinga/' + name+disS, //.toString(),
+    description: name+disS+"_"+expname, //"test", //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga/' + name+disS+"_"+expname, //.toString(),
     pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     region: interm_aoi,
