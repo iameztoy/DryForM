@@ -1,6 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/S2inter_Caatinga"),
-    geometry = 
+var geometry = 
     /* color: #d63000 */
     /* shown: false */
     /* displayProperties: [
@@ -13,7 +12,8 @@ var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/S2inter_Caating
           [-44.902108494833556, -14.365437636753542],
           [-41.372750584677306, -14.365437636753542],
           [-41.372750584677306, -13.496397490652596]]], null, false),
-    geometry2 = /* color: #d63000 */ee.Geometry.Point([-42.333206926600866, -13.675667535459835]);
+    geometry2 = /* color: #d63000 */ee.Geometry.Point([-42.333206926600866, -13.675667535459835]),
+    ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var img = ic.mosaic()
 var roi = geometry
@@ -65,7 +65,6 @@ var trainedClassifier = ee.Classifier.smileRandomForest(50).train({
   inputProperties: img.bandNames()
 });
 
-print("explain", trainedClassifier.explain())
 
 // Get information about the trained classifier.
 print('Results of trained classifier', trainedClassifier.explain());
