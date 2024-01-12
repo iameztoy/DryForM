@@ -1,0 +1,47 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[-74.28685972996797, -9.528747568692667],
+          [-74.28685972996797, -10.524040057135092],
+          [-73.39696715184297, -10.524040057135092],
+          [-73.39696715184297, -9.528747568692667]]]),
+    RF_ACCA = ee.FeatureCollection("users/osmaryupanqui/random_forest_logging_ACCA");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+//From https://groups.google.com/g/google-earth-engine-developers/c/v10zWzQd7N4/m/01NMkK-NAgAJ
+var AOI = geometry
+
+var START_DATE = '2020-09-10'
+var END_DATE = '2020-09-20'
+
+var S2_collection = ee.ImageCollection('COPERNICUS/S2_SR')
+    .filterDate(START_DATE, END_DATE).filterBounds(AOI)
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 25))
+    .mosaic()
+    
+var vis_params = {
+    'bands' : ['B4', 'B3', 'B2'],
+    'min' : 300,
+    'max' : 2000,
+    'gamma' : 1.1
+}
+Map.addLayer(S2_collection, vis_params, 'Sentinel-2', true)
+
+function lambdax(x){
+  return ee.String(x).replace("#", "\n", "g")
+}
+
+var rf_fc = ee.FeatureCollection(RF_ACCA).aggregate_array('tree').map(lambdax)
+print(rf_fc)
+
+
+var len = rf_fc.join("/n").length()
+print('String length: ', len)
+
+
+var classifier = ee.Classifier.decisionTreeEnsemble(rf_fc)
+print(classifier)
+
+var result = S2_collection.classify(classifier)
+Map.addLayer(result, {"min": 0, "max": 1}, 'Classification', true)
