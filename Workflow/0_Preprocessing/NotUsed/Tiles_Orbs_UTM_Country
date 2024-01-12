@@ -52,7 +52,7 @@ availableOrbits = availableOrbits.getInfo();
 
 availableOrbits.map(function(orbit){
       var tmpAOI = AOI.filter(ee.Filter.eq('OrbitRelat', orbit)).union();
-      Map.addLayer(tmpAOI,{},'Orbits'+orbit,1);
+      Map.addLayer(tmpAOI,{},'Orbits'+orbit,0);
    });
 
 
