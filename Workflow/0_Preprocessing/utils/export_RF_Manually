@@ -1,0 +1,26 @@
+// TRAIN CLASSIFIER AND SAVE AS ASSET
+//**********************************************************************
+// Make a Random Forest classifier and train it.
+var classifier = ee.Classifier.smileRandomForest(10)
+    .train({
+      features: training,
+      classProperty: 'Land_Cover_Type_1',
+      inputProperties: ['B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7']
+    });
+
+// extract the trees and perpare a dummy FeatureCollection with one feature per tree
+var trees = ee.List(ee.Dictionary(classifier.explain()).get('trees')),
+    dummy = ee.Feature(geometry)
+
+var col = ee.FeatureCollection(trees.map(function(x){return dummy.set('tree',x)}))
+
+Export.table.toAsset(col,'save_classifier',AssetName)
+
+
+and
+
+
+// LOAD CLASSIFIER FROM ASSET
+//************************************************************************
+var trees = ee.FeatureCollection(AssetName).aggregate_array('tree').aside(print)
+var classifier = ee.Classifier.decisionTreeEnsemble(trees) 
