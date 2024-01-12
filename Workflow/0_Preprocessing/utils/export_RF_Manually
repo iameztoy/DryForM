@@ -1,3 +1,5 @@
+//From: https://groups.google.com/g/google-earth-engine-developers/c/9700ysDXM5M/m/92UOqNlaCQAJ
+
 // TRAIN CLASSIFIER AND SAVE AS ASSET
 //**********************************************************************
 // Make a Random Forest classifier and train it.
