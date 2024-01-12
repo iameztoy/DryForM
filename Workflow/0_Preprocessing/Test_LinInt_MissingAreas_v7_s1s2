@@ -375,6 +375,7 @@ var processTiles = function(tile){
       't1': timeImage.select('t1'),
       't2': timeImage.select('t2'),
     });
+    
   // Compute an image with the interpolated image y
     var interpolated = beforeMosaic
       .add((afterMosaic.subtract(beforeMosaic).multiply(timeRatio)));
