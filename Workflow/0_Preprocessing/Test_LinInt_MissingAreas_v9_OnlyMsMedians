@@ -404,7 +404,7 @@ var processTiles = function(tile){
     var endMonth = ee.List(months).get(1);
     var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
     var seasonFiltered = interpolatedCol.filter(monthFilter);
-    var composite = seasonFiltered.median().int16()//float();
+    var composite = seasonFiltered.median().uint16()//float();
     return composite; //.clip(aoi); //clip not necessary here if it is applied while filtering the collection
   };
 
@@ -531,7 +531,7 @@ var processTiles = function(tile){
     if (parameter.FORMAT=='DB'){var toDB = seasonFiltered.map(helper.lin_to_db)}
     //var toDB = seasonFiltered.map(helper.lin_to_db);
     var composite = toDB.mean();
-    var compositeint = composite.multiply(10000).toInt(); //convert db to Int.
+    var compositeint = composite.multiply(10000).int16(); //convert db to Int.
     return compositeint.select("VV", "VH").clip(interm_aoi);
   };
 
@@ -553,7 +553,7 @@ var processTiles = function(tile){
   var ren = blist.map(cat);
 
   var s1s2final = s1s2_final.select(blist).rename(ren);
-  //print("S1S2 final", s1s2final)
+  print("S1S2 final", s1s2final)
 
   ////////////// EXPORT ///////////////////////
 
