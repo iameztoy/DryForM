@@ -242,6 +242,8 @@ var processTiles = function(tile){
   print('Number of images in S2 collection: ', filtered.size());
   
   /*
+  INTERPOLATION
+  
   Add a band containing timestamp to each image.
   This will be used to do pixel-wise interpolation later. 
   The key here is to mask the timestamp band with the same mask as the image. 
