@@ -531,10 +531,11 @@ var processTiles = function(tile){
     if (parameter.FORMAT=='DB'){var toDB = seasonFiltered.map(helper.lin_to_db)}
     //var toDB = seasonFiltered.map(helper.lin_to_db);
     var composite = toDB.mean();
-    var compositeint = composite.multiply(10000).int16(); //convert db to Int.
+    var compositeint = composite.multiply(10000).toInt16(); //convert db to Int.
     return compositeint.select("VV", "VH").clip(interm_aoi);
   };
-
+  
+  
   var compList_s1 = t_int.map(createSeasonComposites_s1);
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
   var s1_final = s1_comp.toBands();
