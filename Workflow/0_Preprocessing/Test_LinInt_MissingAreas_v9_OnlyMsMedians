@@ -531,12 +531,15 @@ var processTiles = function(tile){
     if (parameter.FORMAT=='DB'){var toDB = seasonFiltered.map(helper.lin_to_db)}
     //var toDB = seasonFiltered.map(helper.lin_to_db);
     var composite = toDB.mean();
-    return composite.select("VV", "VH").clip(interm_aoi);
+    var compositeint = composite.multiply(10000).toInt(); //convert db to Int.
+    return compositeint.select("VV", "VH").clip(interm_aoi);
   };
 
   var compList_s1 = t_int.map(createSeasonComposites_s1);
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
   var s1_final = s1_comp.toBands();
+  
+  print("S1 Final", s1_final);
   
   
   //---------------------------------------------------------------------------//
@@ -550,7 +553,7 @@ var processTiles = function(tile){
   var ren = blist.map(cat);
 
   var s1s2final = s1s2_final.select(blist).rename(ren);
-  print("S1S2 final", s1s2final)
+  //print("S1S2 final", s1s2final)
 
   ////////////// EXPORT ///////////////////////
 
