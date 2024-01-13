@@ -166,7 +166,7 @@ print("Number of Tiles in AOI for", zonesID.size());
 //print("Array Tile list", tl)
 
 // We select here the tiles we want to process. For e.g. cgScale 100000 works. Each output is around 40GB
-var tilelist = (["054", "055", "105", "106"]); 
+var tilelist = (["054"]); 
                                         // For testing purposes:
                                         // 009 010	011	075	076	077 Caatinga "009", "010", "075", "076"
                                         // 032 033	034	123	124	125 Chaco "032", "033", "123", "124"
@@ -414,7 +414,8 @@ var processTiles = function(tile){
   
   print("S2 final quarterly", s2_final);
   
-  /*
+  /* This is applied on working version 8.
+  
     // Add Indexes function
   var addIndex = function addindexes(img) {
     //var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']); 
