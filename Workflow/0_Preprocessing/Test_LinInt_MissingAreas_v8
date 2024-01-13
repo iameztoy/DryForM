@@ -130,7 +130,7 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
 // DEFINITION OF TILES FOR EXPORTING
 //---------------------------------------------------------------------------//
 
-// We need first to create a grid framework or grid system over which the interpolation will be carried out.
+// We need first to create a grid system over which the interpolation will be carried out.
 // Note that running on big tiles provoques "out of memory" errors. Thus e.g. a Covering Grid and its associated scale parameter allow 
 //    to test quickly the process for different tile sizes by just modifying this parameter. 
 
