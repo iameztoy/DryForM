@@ -62,11 +62,13 @@ print(pixelCount)
 //map if else algorithm over dictionary 
 //if (value/100)>500 then 500 otherwise value/100
 var scale = function (key, value) {
-  return ee.Number(value).divide(250).min(500).int() //original 100 (%1 ?)
+  return ee.Number(value).divide(100).int() //original 100 (%1 ?)
 };
 //error, expected number and got dictionary
 var pixelCount = ee.Dictionary(pixelCount).map(scale)
 print(pixelCount)
+
+
 
 //Need help here
 //somehow extract two lists from pixelCount
@@ -75,15 +77,18 @@ var cp = ee.List(pixelCount.keys()).map(ee.Number.parse)
 print("cp", cp)
 var cv = ee.List(pixelCount.values())
 print("cv", cv)
-var sampbyclust = strata.addBands(ee.Image.pixelLonLat())
+var sampbyclust = strata.addBands(strata)
 .stratifiedSample({
   numPoints: 500,
   classBand: 'clusters',
   classValues:cv,
   classPoints:cp,
   scale: 270,
-  region: geometry
+  region: geometry,
+  geometries:true
 })
+
+
 
 Map.addLayer(sampbyclust, null, "Samples")
 
