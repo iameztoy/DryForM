@@ -46,7 +46,10 @@ var pixelCount = lc.reduceRegion({
 print("Overall pixel count", pixelCount)
 
 var scale = function (key, value) {
-  return ee.Number(value).divide(400).min(500).int() //400 = 0.25% 
+  return ee.Number(value).divide(40000).min(500).int() //400 = 0.25% 
+                                                     //if buffer after (10x10)
+                                                    //need to divide by 100pixels
+                                                    //400x100
 };
 //error, expected number and got dictionary
 var pixelCount = ee.Dictionary(pixelCount).map(scale)
@@ -83,7 +86,7 @@ var trainingSample = sample.filter('random <= 0.8');
 var validationSample = sample.filter('random > 0.8');
 
 // Train a 10-tree random forest classifier from the training sample.
-var trainedClassifier = ee.Classifier.smileRandomForest(50).train({
+var trainedClassifier = ee.Classifier.smileRandomForest(100).train({
   features: trainingSample,
   classProperty: label,
   inputProperties: img.bandNames()
