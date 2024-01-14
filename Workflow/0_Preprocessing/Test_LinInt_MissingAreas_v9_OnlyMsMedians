@@ -525,14 +525,12 @@ var processTiles = function(tile){
     var endMonth = ee.List(months).get(1);
     var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
     var seasonFiltered = s1_preprocces.filter(monthFilter);
-    if (parameter.FORMAT=='DB'){var toDB = seasonFiltered.map(helper.lin_to_db)}
+    var composite = seasonFiltered.mean()
     //var toDB = seasonFiltered.map(helper.lin_to_db);
-    var composite = toDB.mean();
-    var compositeint = composite.multiply(10000).toInt16(); //convert db to Int.
-    return compositeint.select("VV", "VH").clip(interm_aoi);
+    if (parameter.FORMAT=='DB'){var s1_composite = composite.log10().multiply(10.0)};
+    return s1_composite.select("VV", "VH").clip(interm_aoi);
   };
-  
-  
+
   var compList_s1 = t_int.map(createSeasonComposites_s1);
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
   var s1_final = s1_comp.toBands();
