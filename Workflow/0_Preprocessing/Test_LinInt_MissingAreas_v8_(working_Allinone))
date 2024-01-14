@@ -161,7 +161,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 
 
 //print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
-print("Number of Tiles in AOI for", zonesID.size());
+print("Number of Tiles in AOI", zonesID.size());
 //var tl = zonesID.aggregate_array("ID"); 
 //print("Array Tile list", tl)
 
@@ -529,13 +529,11 @@ var processTiles = function(tile){
 
   var compList_s1 = t_int.map(createSeasonComposites_s1);
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
-  
   var s1db = s1_comp.map(helper.lin_to_db);
-  
   var s1_final = s1db.toBands();
   
   Map.addLayer(s1_final)
-  print(s1_final)
+  print("s1 final (to db)", s1db.first())
   
   
   //---------------------------------------------------------------------------//
