@@ -71,7 +71,7 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code
 //---------------------------------------------------------------------------//
 
 var aoisel = tanzania; var expname = "Tanzania"
-var aoi = aoisel.geometry().buffer(100000);
+var aoi = aoisel.geometry() //.buffer(100000);
 
 //Time intervals for composites
 var year = 2020;
@@ -523,13 +523,16 @@ var processTiles = function(tile){
     var seasonFiltered = s1_preprocces.filter(monthFilter);
     var composite = seasonFiltered.mean()
     //var toDB = seasonFiltered.map(helper.lin_to_db);
-    if (parameter.FORMAT=='DB'){var s1_composite = composite.log10().multiply(10.0)}
-    return s1_composite.select("VV", "VH").clip(interm_aoi);
+    //if (parameter.FORMAT=='DB'){var s1_composite = composite.log10().multiply(10.0)}
+    return composite.select("VV", "VH").clip(interm_aoi);
   };
 
   var compList_s1 = t_int.map(createSeasonComposites_s1);
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
-  var s1_final = s1_comp.toBands();
+  
+  var s1db = s1_comp.map(helper.lin_to_db);
+  
+  var s1_final = s1db.toBands();
   
   Map.addLayer(s1_final)
   print(s1_final)
