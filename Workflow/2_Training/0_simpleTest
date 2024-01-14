@@ -44,7 +44,7 @@ var pixelCount = lc.reduceRegion({
 }).get('lc')
 
 var scale = function (key, value) {
-  return ee.Number(value).divide(4000).min(250).int()
+  return ee.Number(value).divide(100).min(250).int()
 };
 //error, expected number and got dictionary
 var pixelCount = ee.Dictionary(pixelCount).map(scale)
