@@ -61,7 +61,7 @@ print(pixelCount)
 //map if else algorithm over dictionary 
 //if (value/100)>500 then 500 otherwise value/100
 var scale = function (key, value) {
-  return ee.Number(value).divide(100).min(500).int()
+  return ee.Number(value).divide(250).min(500).int() //original 100 (%1 ?)
 };
 //error, expected number and got dictionary
 var pixelCount = ee.Dictionary(pixelCount).map(scale)
