@@ -44,6 +44,7 @@ var training = all_clipped.sample({
 //clusterer
 var clusterer = ee.Clusterer.wekaKMeans(8).train(training);
 var strata = all_clipped.cluster(clusterer).rename('clusters');
+print("strata", strata)
 Map.addLayer(strata, {min:0,max:7,palette:['indigo','cyan','limegreen','yellow']},'strata')
 
 var pixelCount = strata.reduceRegion({
@@ -71,16 +72,21 @@ print(pixelCount)
 //somehow extract two lists from pixelCount
 //class values and number of pixels after mapping function
 var cp = ee.List(pixelCount.keys()).map(ee.Number.parse)
+print("cp", cp)
 var cv = ee.List(pixelCount.values())
+print("cv", cv)
 var sampbyclust = strata.addBands(ee.Image.pixelLonLat())
 .stratifiedSample({
   numPoints: 500,
-  classBand: 'class',
+  classBand: 'clusters',
   classValues:cv,
   classPoints:cp,
   scale: 270,
   region: geometry
 })
+
+Map.addLayer(sampbyclust, null, "Samples")
+
 
 
 
