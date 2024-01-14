@@ -9,10 +9,10 @@ var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-43.10093446994123, -7.192152737366333],
-          [-43.10093446994123, -8.074150822137398],
-          [-41.33213564181623, -8.074150822137398],
-          [-41.33213564181623, -7.192152737366333]]], null, false);
+        [[[-42.28125462404964, -7.196603529129494],
+          [-42.28125462404964, -8.081311754827786],
+          [-41.33093724123714, -8.081311754827786],
+          [-41.33093724123714, -7.196603529129494]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var img = ic.mosaic()
@@ -33,19 +33,41 @@ var classValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100];
 var remapValues = ee.List.sequence(0, 10);
 var label = 'lc';
 lc = lc.remap(classValues, remapValues).rename(label).toByte();
+print(lc)
+
+var pixelCount = lc.reduceRegion({
+  geometry: geometry,
+  scale: 10,
+  //crs:PRJ,
+  reducer: ee.Reducer.frequencyHistogram().unweighted(),
+  maxPixels: 70000000000,
+}).get('lc')
+
+var scale = function (key, value) {
+  return ee.Number(value).divide(4000).min(250).int()
+};
+//error, expected number and got dictionary
+var pixelCount = ee.Dictionary(pixelCount).map(scale)
+print("Pixel Count", pixelCount)
+
+var cp = ee.List(pixelCount.keys()).map(ee.Number.parse)
+var cv = ee.List(pixelCount.values())
+
+print("cp", cp)
+print("cv", cv)
 
 // Add land cover as a band of the reflectance image and sample 100 pixels at
 // 10 m scale from each land cover class within a region of interest.
 var roi = geometry;
 var sample = img.addBands(lc).stratifiedSample({
-	numPoints:100,
+	numPoints:250,
 	classBand:label,
 	region:roi,
 	scale:10,
 //	projection:null,
 //	seed:false,
-//	classValues:null,
-//	classPoints:null,
+	classValues: cv,
+	classPoints: cp,
 //	dropNulls:true,
 	tileScale:4,
 	geometries:true,
