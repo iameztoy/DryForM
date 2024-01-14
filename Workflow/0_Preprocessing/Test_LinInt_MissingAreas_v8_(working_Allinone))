@@ -531,7 +531,8 @@ var processTiles = function(tile){
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
   var s1_final = s1_comp.toBands();
   
-  //Map.addLayer(s1_final)
+  Map.addLayer(s1_final)
+  print(s1_final)
   
   
   //---------------------------------------------------------------------------//
