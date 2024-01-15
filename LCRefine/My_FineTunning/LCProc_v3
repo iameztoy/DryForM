@@ -11,6 +11,8 @@ var esri = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Glob
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 
+Map.addLayer(esri)
+
 //--------------
 // VARIABLES GENERAL
 
@@ -61,15 +63,15 @@ var dw_floodv = dwMode.eq(3).rename(['dw_floodv']);
 
 // 4. ESRI
 
-var esri_tree = esri.eq(3).rename(['esri_tree']);  
-var esri_shrub = esri.eq(7).rename(['esri_shrub']);
-var esri_grass = esri.eq(4).rename(['esri_grass']);
-var esri_crop = esri.eq(6).rename(['esri_crop']);
-var esri_built = esri.eq(8).rename(['esri_built']);
-var esri_bare = esri.eq(9).rename(['esri_bare']);
-var esri_snow = esri.eq(10).rename(['esri_snow']);
-var esri_water = esri.eq(2).rename(['esri_water']);
-var esri_floodv = esri.eq(5).rename(['esri_floodv']);
+var esri_tree = esri.eq(2).rename(['esri_tree']);  
+var esri_shrub = esri.eq(6).rename(['esri_shrub']);
+var esri_grass = esri.eq(3).rename(['esri_grass']);
+var esri_crop = esri.eq(5).rename(['esri_crop']);
+var esri_built = esri.eq(7).rename(['esri_built']);
+var esri_bare = esri.eq(8).rename(['esri_bare']);
+var esri_snow = esri.eq(9).rename(['esri_snow']);
+var esri_water = esri.eq(1).rename(['esri_water']);
+var esri_floodv = esri.eq(4).rename(['esri_floodv']);
 
 
 // 5. WRI
