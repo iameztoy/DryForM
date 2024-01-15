@@ -173,7 +173,7 @@ Map.addLayer(gfc_stree, null, "GFC TC %", 0);
 
 Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
 Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
-Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up")
+Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up", 0)
 
 Map.addLayer(tree_maj, vp_trees, "Trees Majority", 0);
 Map.addLayer(shrub_maj, vp_shrub, "Shrub Majority", 0);
