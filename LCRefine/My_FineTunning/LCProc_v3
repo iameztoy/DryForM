@@ -1,3 +1,16 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
+    vp_shrub = {"opacity":1,"bands":["shrub"],"palette":["ffbb22"]},
+    vp_grass = {"opacity":1,"bands":["grass"],"palette":["ffff4c"]},
+    vp_crop = {"opacity":1,"bands":["crop"],"palette":["f096ff"]},
+    vp_built = {"opacity":1,"bands":["built"],"palette":["fa0000"]},
+    vp_bare = {"opacity":1,"bands":["bare"],"palette":["b4b4b4"]},
+    vp_snow = {"opacity":1,"bands":["snow"],"palette":["f0f0f0"]},
+    vp_water = {"opacity":1,"bands":["water"],"palette":["0064c8"]},
+    vp_floodv = {"opacity":1,"bands":["floodv"],"palette":["0096a0"]},
+    vp_mang = {"opacity":1,"bands":["mang"],"palette":["00cf75"]},
+    vp_mossl = {"opacity":1,"bands":["mossl"],"palette":["fae6a0"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
 var glc = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10").mosaic();
@@ -102,41 +115,41 @@ var gedigte= gedi_lang.gte(5);
 //******************************
 
 // Overall Trees
-var trees = wc_tree.add(dw_tree).add(esri_tree).add(glc_tree).add(gfc_tree);
+var trees = wc_tree.add(dw_tree).add(esri_tree).add(glc_tree).add(gfc_tree).rename(['trees']);
 // Overall Shrub
-var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).add(glc_shrub);
+var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).add(glc_shrub).rename(['shrub']);
 // Overall Grass
-var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass);
+var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass).rename(['grass']);
 // Overall Crop
-var crop = wc_crop.add(dw_crop).add(esri_crop).add(glc_crop);
+var crop = wc_crop.add(dw_crop).add(esri_crop).add(glc_crop).rename(['crop']);
 // Overall built
-var built = wc_built.add(dw_built).add(esri_built).add(glc_built);
+var built = wc_built.add(dw_built).add(esri_built).add(glc_built).rename(['built']);
 // Overall bare
-var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare);
+var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']);
 // Overall snow
-var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow);
+var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).rename(['snow']);
 // Overall water
-var water = wc_water.add(dw_water).add(esri_water).add(glc_water);
+var water = wc_water.add(dw_water).add(esri_water).add(glc_water).rename(['water']);
 // Overall floodv
-var floodv = wc_floodv.add(dw_floodv).add(esri_floodv);
+var floodv = wc_floodv.add(dw_floodv).add(esri_floodv).rename(['floodv']);
 // Overall mang
-var mang = wc_mang
+var mang = wc_mang.rename(['mang'])
 // Overall mossl
-var mossl = wc_mossl
+var mossl = wc_mossl.rename(['mossl'])
 
 // Majority Binary Masks
 
-var tree_maj = trees.gt(2).rename(['trees']);
-var shrub_maj = shrub.gt(2).updateMask(gedilt).unmask().rename(['shrub']);
-var grass_maj = grass.gte(2).updateMask(gedilt).unmask().rename(['grass']);
-var crop_maj = crop.gt(2).updateMask(gedilt).unmask().rename(['crop']);
-var built_maj = built.gt(2).rename(['built']);
-var bare_maj = bare.gt(2).rename(['bare']);
-var snow_maj = snow.gt(2).rename(['snow']);
-var water_maj = water.gt(2).rename(['water']);
-var floodv_maj = floodv.gt(1).rename(['floodv']);
-var mang_maj = mang.rename(['mang']);
-var mossl_maj = mossl.rename(['mossl']);
+var tree_maj = trees.gt(2).rename(['trees']).selfMask();
+var shrub_maj = shrub.gt(2).updateMask(gedilt).unmask().rename(['shrub']).selfMask();
+var grass_maj = grass.gte(2).updateMask(gedilt).unmask().rename(['grass']).selfMask();
+var crop_maj = crop.gt(2).updateMask(gedilt).unmask().rename(['crop']).selfMask();
+var built_maj = built.gt(2).rename(['built']).selfMask();
+var bare_maj = bare.gt(2).rename(['bare']).selfMask();
+var snow_maj = snow.gt(2).rename(['snow']).selfMask();
+var water_maj = water.gt(2).rename(['water']).selfMask();
+var floodv_maj = floodv.gt(1).rename(['floodv']).selfMask();
+var mang_maj = mang.rename(['mang']).selfMask();
+var mossl_maj = mossl.rename(['mossl']).selfMask();
 
 
 
@@ -157,17 +170,17 @@ Map.addLayer(gfc_stree, null, "GFC TC %", 0);
 Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
 Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
 
-Map.addLayer(tree_maj, null, "Trees Majority", 0);
-Map.addLayer(shrub_maj, null, "Shrub Majority", 0);
-Map.addLayer(grass_maj, null, "Grass Majority", 0);
-Map.addLayer(crop_maj, null, "Crop Majority", 0);
-Map.addLayer(built_maj, null, "Built Majority", 0);
-Map.addLayer(bare_maj, null, "Bare Majority", 0);
-Map.addLayer(snow_maj, null, "Snow Majority", 0);
-Map.addLayer(water_maj, null, "Water Majority", 0);
-Map.addLayer(floodv_maj, null, "Flood Veg. Majority", 0);
-Map.addLayer(mang_maj, null, "Mangroves Majority", 0);
-Map.addLayer(mossl_maj, null, "Moss/Linchen Majority", 0);
+Map.addLayer(tree_maj, vp_trees, "Trees Majority", 0);
+Map.addLayer(shrub_maj, vp_shrub, "Shrub Majority", 0);
+Map.addLayer(grass_maj, vp_grass, "Grass Majority", 0);
+Map.addLayer(crop_maj, vp_crop, "Crop Majority", 0);
+Map.addLayer(built_maj, vp_built, "Built Majority", 0);
+Map.addLayer(bare_maj, vp_bare, "Bare Majority", 0);
+Map.addLayer(snow_maj, vp_snow, "Snow Majority", 0);
+Map.addLayer(water_maj, vp_water, "Water Majority", 0);
+Map.addLayer(floodv_maj, vp_floodv, "Flood Veg. Majority", 0);
+Map.addLayer(mang_maj, vp_mang, "Mangroves Majority", 0);
+Map.addLayer(mossl_maj, vp_mossl, "Moss/Linchen Majority", 0);
 
 
 
