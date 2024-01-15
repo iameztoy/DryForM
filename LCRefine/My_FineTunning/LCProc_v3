@@ -1,1 +1,135 @@
- 
+
+var esawc = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
+var glc = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10").mosaic();
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m").mosaic(); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
+var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+
+//--------------
+// VARIABLES GENERAL
+
+Map.setOptions("SATELLITE");
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+//--------------
+// SELECT CLASSES
+
+// 1. ESA World Cover
+
+var wc_tree = esawc.eq(10).rename(['wc_trees']);  
+var wc_shrub = esawc.eq(20).rename(['wc_shrub']); 
+var wc_grass =  esawc.eq(30).rename(['wc_grass']); 
+var wc_crop = esawc.eq(40).rename(['wc_crop']); 
+var wc_built = esawc.eq(50).rename(['wc_built']); 
+var wc_bare = esawc.eq(60).rename(['wc_bare']); 
+var wc_snow = esawc.eq(70).rename(['wc_snow']); 
+var wc_water = esawc.eq(80).rename(['wc_water']); 
+var wc_floodv = esawc.eq(90).rename(['wc_floodv']); 
+var wc_mang = esawc.eq(95).rename(['wc_mang']); 
+var wc_mossl = esawc.eq(100).rename(['wc_mossl']); 
+
+// 2. GLC
+
+var glc_tree = glc.eq(20).rename(['glc_tree']); 
+var glc_shrub = glc.eq(40).rename(['glc_shrub']); 
+var glc_grass = glc.eq(30).rename(['glc_grass']); 
+var glc_crop = glc.eq(10).rename(['glc_crop']); 
+var glc_built = glc.eq(80).rename(['glc_built']); 
+var glc_bare = glc.eq(90).rename(['glc_bare']); 
+var glc_snow = glc.eq(100).rename(['glc_snow']); 
+var glc_water = glc.eq(60).rename(['glc_water']); 
+
+// 3. Dynamic World
+
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dw_tree = dwMode.eq(1).rename(['dw_trees']);  
+var dw_shrub = dwMode.eq(5).rename(['dw_shrub']); 
+var dw_grass = dwMode.eq(2).rename(['dw_grass']); 
+var dw_crop = dwMode.eq(4).rename(['dw_crop']); 
+var dw_built = dwMode.eq(8).rename(['dw_built']); 
+var dw_bare = dwMode.eq(9).rename(['dw_bare']); 
+var dw_snow = dwMode.eq(10).rename(['dw_snow']); 
+var dw_water = dwMode.eq(2).rename(['dw_water']); 
+var dw_floodv = dwMode.eq(3).rename(['dw_floodv']); 
+
+// 4. ESRI
+
+var esri_tree = esri.eq(3).rename(['esri_tree']);  
+var esri_shrub = esri.eq(7).rename(['esri_shrub']);
+var esri_grass = esri.eq(4).rename(['esri_grass']);
+var esri_crop = esri.eq(6).rename(['esri_crop']);
+var esri_built = esri.eq(8).rename(['esri_built']);
+var esri_bare = esri.eq(9).rename(['esri_bare']);
+var esri_snow = esri.eq(10).rename(['esri_snow']);
+var esri_water = esri.eq(2).rename(['esri_water']);
+var esri_floodv = esri.eq(5).rename(['esri_floodv']);
+
+
+// 5. WRI
+
+var wri_tree = wri.gte(80);
+
+// 6. GFC
+
+var gfc_tree = gfc.select(['treecover2000']);
+var gfc_tree10 = gfc_tree.gte(10);
+var lossYear = gfc.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var gfc_treed = gfc_tree10.subtract(lossb2020);
+
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var gfc_tree = gfc_treed.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
+// End of Select Classes
+//******************************
+
+// Overall Trees
+var trees = wc_tree.add(dw_tree).add(esri_tree).add(wri_tree).add(glc_tree).add(gfc_tree);
+// Overall Shrub
+var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).add(glc_shrub);
+// Overall Grass
+var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass);
+// Overall Crop
+var crop = wc_crop.add(dw_crop).add(esri_crop).add(glc_crop);
+// Overall built
+var built = wc_built.add(dw_built).add(esri_built).add(glc_built);
+// Overall bare
+var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare);
+// Overall snow
+var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow);
+// Overall water
+var water = wc_water.add(dw_water).add(esri_water).add(glc_water);
+// Overall floodv
+var floodv = wc_floodv.add(dw_floodv).add(esri_floodv);
+// Overall mang
+var mang = wc_mang
+// Overall mossl
+var mossl = wc_mossl
+
+Map.addLayer(trees, null, "Trees");
+Map.addLayer(shrub, null, "Shrub");
+Map.addLayer(grass, null, "Grass");
+Map.addLayer(crop, null, "Crop");
+Map.addLayer(built, null, "Built");
+Map.addLayer(bare, null, "Bare");
+Map.addLayer(snow, null, "Snow");
+Map.addLayer(water, null, "Water");
+Map.addLayer(floodv, null, "Flood Veg.");
+Map.addLayer(mang, null, "Mangroves");
+Map.addLayer(mossl, null, "Moss/Linchen");
+
+
+
+
+
+
