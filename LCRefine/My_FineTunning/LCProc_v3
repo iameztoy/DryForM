@@ -1,8 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #d63000 */
-    /* shown: false */
-    ee.Geometry.Point([-41.88385787305759, -9.852303576818114]);
+var geometry = /* color: #d63000 */ee.Geometry.Point([-41.88385787305759, -9.852303576818114]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
