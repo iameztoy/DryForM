@@ -128,7 +128,7 @@ var mossl = wc_mossl
 
 var tree_maj = trees.gt(2);
 var shrub_maj = shrub.gt(2);
-var shrub_maj_mask = shrub_maj.updateMask(gedilt)
+var shrub_maj_mask = shrub_maj.updateMask(gedigte)
 
 var grass_maj = grass.gte(2);
 var crop_maj = crop.gt(2);
@@ -156,8 +156,8 @@ Map.addLayer(mang, null, "Mangroves", 0);
 Map.addLayer(mossl, null, "Moss/Linchen", 0);
 Map.addLayer(gfc_stree, null, "GFC TC %", 0);
 
-Map.addLayer(gedilt, null, "GEDI Lang < 5m")
-Map.addLayer(gedigte, null, "GEDI Lang >= 5m")
+Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
+Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
 
 Map.addLayer(tree_maj, null, "Trees Majority", 0);
 Map.addLayer(shrub_maj, null, "Shrub Majority", 0);
