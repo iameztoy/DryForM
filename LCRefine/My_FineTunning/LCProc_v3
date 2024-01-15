@@ -11,7 +11,6 @@ var esri = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Glob
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 
-Map.addLayer(esri)
 
 //--------------
 // VARIABLES GENERAL
