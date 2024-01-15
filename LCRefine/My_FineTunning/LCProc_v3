@@ -127,11 +127,10 @@ var mossl = wc_mossl
 // Majority Binary Masks
 
 var tree_maj = trees.gt(2);
-var shrub_maj = shrub.gt(2);
-var shrub_maj_mask = shrub_maj.updateMask(gedigte)
+var shrub_maj = shrub.gt(2).updateMask(gedilt).unmask();
 
-var grass_maj = grass.gte(2);
-var crop_maj = crop.gt(2);
+var grass_maj = grass.gte(2).updateMask(gedilt).unmask();
+var crop_maj = crop.gt(2).updateMask(gedilt).unmask();
 var built_maj = built.gt(2);
 var bare_maj = bare.gt(2);
 var snow_maj = snow.gt(2);
