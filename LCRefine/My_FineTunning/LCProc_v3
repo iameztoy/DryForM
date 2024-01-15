@@ -128,17 +128,17 @@ var mossl = wc_mossl.rename(['mossl'])
 
 // Majority Binary Masks
 
-var tree_maj = trees.gt(2).rename(['trees']).selfMask();
-var shrub_maj = shrub.gt(2).updateMask(gedilt).unmask().rename(['shrub']).selfMask();
-var grass_maj = grass.gte(2).updateMask(gedilt).unmask().rename(['grass']).selfMask();
-var crop_maj = crop.gt(2).updateMask(gedilt).unmask().rename(['crop']).selfMask();
-var built_maj = built.gt(2).rename(['built']).selfMask();
-var bare_maj = bare.gt(2).rename(['bare']).selfMask();
-var snow_maj = snow.gt(2).rename(['snow']).selfMask();
-var water_maj = water.gt(2).rename(['water']).selfMask();
-var floodv_maj = floodv.gt(1).rename(['floodv']).selfMask();
-var mang_maj = mang.rename(['mang']).selfMask();
-var mossl_maj = mossl.rename(['mossl']).selfMask();
+var tree_maj = trees.gt(2).rename(['trees']);
+var shrub_maj = shrub.gt(2).updateMask(gedilt).unmask().rename(['shrub']);
+var grass_maj = grass.gte(2).updateMask(gedilt).unmask().rename(['grass']);
+var crop_maj = crop.gt(2).updateMask(gedilt).unmask().rename(['crop']);
+var built_maj = built.gt(2).rename(['built']);
+var bare_maj = bare.gt(2).rename(['bare']);
+var snow_maj = snow.gt(2).rename(['snow']);
+var water_maj = water.gt(2).rename(['water']);
+var floodv_maj = floodv.gt(1).rename(['floodv']);
+var mang_maj = mang.rename(['mang']);
+var mossl_maj = mossl.rename(['mossl']);
 
 
 
@@ -175,22 +175,25 @@ Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
 Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
 Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up", 0)
 
-Map.addLayer(tree_maj, vp_trees, "Trees Majority", 0);
-Map.addLayer(shrub_maj, vp_shrub, "Shrub Majority", 0);
-Map.addLayer(grass_maj, vp_grass, "Grass Majority", 0);
-Map.addLayer(crop_maj, vp_crop, "Crop Majority", 0);
-Map.addLayer(built_maj, vp_built, "Built Majority", 0);
-Map.addLayer(bare_maj, vp_bare, "Bare Majority", 0);
-Map.addLayer(snow_maj, vp_snow, "Snow Majority", 0);
-Map.addLayer(water_maj, vp_water, "Water Majority", 0);
-Map.addLayer(floodv_maj, vp_floodv, "Flood Veg. Majority", 0);
-Map.addLayer(mang_maj, vp_mang, "Mangroves Majority", 0);
-Map.addLayer(mossl_maj, vp_mossl, "Moss/Linchen Majority", 0);
+Map.addLayer(tree_maj.selfMask(), vp_trees, "Trees Majority", 0);
+Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
+Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass Majority", 0);
+Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
+Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 0);
+Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 0);
+Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 0);
+Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 0);
+Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 0);
+Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 0);
+Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 0);
 
 Map.addLayer(wri_tree.selfMask(), vp_writrees, "WRI Tree Cover", 0);
 
 var sum_tsgc = tree_maj.or(shrub_maj).or(grass_maj).or(crop_maj);
-Map.addLayer(sum_tsgc, null, "Sum T+S+G+C")
+Map.addLayer(sum_tsgc.selfMask(), null, "Sum T+S+G+C")
+
+var wri_tree_m = wri_tree.updateMask(sum_tsgc)
+Map.addLayer(wri_tree_m.selfMask(), null, "Masked WRI with TSGC")
 
 
 
