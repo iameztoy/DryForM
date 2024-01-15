@@ -146,7 +146,7 @@ Map.addLayer(mang, null, "Mangroves", 0);
 Map.addLayer(mossl, null, "Moss/Linchen", 0);
 Map.addLayer(gfc_stree, null, "GFC TC %", 0),
 
-Map.addLayer(trees_maj, null, "Trees Majority", 0);
+Map.addLayer(tree_maj, null, "Trees Majority", 0);
 Map.addLayer(shrub_maj, null, "Shrub Majority", 0);
 Map.addLayer(grass_maj, null, "Grass Majority", 0);
 Map.addLayer(crop_maj, null, "Crop Majority", 0);
