@@ -216,9 +216,8 @@ var floodv_majf = floodv_maj.multiply(90)
 var mang_majf = mang_maj.multiply(100)
 var mossl_majf = mossl_maj.multiply(110)
 
-var final = tree_majf.add(treeld_majf)
-
-Map.addLayer(final.selfMask(), null, "Final LC")
+Map.addLayer(tree_majf, null, "Tree Maj")
+Map.addLayer(treeld_majf, null, "Tree LD")
 
 
 
