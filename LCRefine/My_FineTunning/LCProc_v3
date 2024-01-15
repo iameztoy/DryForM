@@ -9,7 +9,8 @@ var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
     vp_water = {"opacity":1,"bands":["water"],"palette":["0064c8"]},
     vp_floodv = {"opacity":1,"bands":["floodv"],"palette":["0096a0"]},
     vp_mang = {"opacity":1,"bands":["mang"],"palette":["00cf75"]},
-    vp_mossl = {"opacity":1,"bands":["mossl"],"palette":["fae6a0"]};
+    vp_mossl = {"opacity":1,"bands":["mossl"],"palette":["fae6a0"]},
+    vp_writrees = {"opacity":1,"bands":["b1"],"palette":["97ff56"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
@@ -182,7 +183,7 @@ Map.addLayer(floodv_maj, vp_floodv, "Flood Veg. Majority", 0);
 Map.addLayer(mang_maj, vp_mang, "Mangroves Majority", 0);
 Map.addLayer(mossl_maj, vp_mossl, "Moss/Linchen Majority", 0);
 
-Map.addLayer(wri_tree.selfMask(), null, "WRI Tree Cover", 0);
+Map.addLayer(wri_tree.selfMask(), vp_writrees, "WRI Tree Cover", 0);
 
 
 
