@@ -192,7 +192,7 @@ Map.addLayer(wri_tree.selfMask(), vp_writrees, "WRI Tree Cover", 0);
 var sum_tsgc = tree_maj.or(shrub_maj).or(grass_maj).or(crop_maj);
 Map.addLayer(sum_tsgc.selfMask(), null, "Sum T+S+G+C")
 
-var wri_tree_m = wri_tree.updateMask(sum_tsgc)
+var wri_tree_m = wri_tree.updateMask(sum_tsgc.not())
 Map.addLayer(wri_tree_m.selfMask(), null, "Masked WRI with TSGC")
 
 
