@@ -229,6 +229,9 @@ Map.addLayer(floodv_majf, null, "Flooded Veg. Final", 0);
 Map.addLayer(mang_majf, null, "Mangroves Final", 0);
 Map.addLayer(mossl_majf, null, "Moss/Linchen Final", 0);
 
+var final = tree_majf.add(treeld_majf)
+Map.addLayer(final, null, "Final LC")
+
 
 
 
