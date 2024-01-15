@@ -48,9 +48,9 @@ var dw_tree = dwMode.eq(1).rename(['dw_trees']);
 var dw_shrub = dwMode.eq(5).rename(['dw_shrub']); 
 var dw_grass = dwMode.eq(2).rename(['dw_grass']); 
 var dw_crop = dwMode.eq(4).rename(['dw_crop']); 
-var dw_built = dwMode.eq(8).rename(['dw_built']); 
-var dw_bare = dwMode.eq(9).rename(['dw_bare']); 
-var dw_snow = dwMode.eq(10).rename(['dw_snow']); 
+var dw_built = dwMode.eq(6).rename(['dw_built']); 
+var dw_bare = dwMode.eq(7).rename(['dw_bare']); 
+var dw_snow = dwMode.eq(8).rename(['dw_snow']); 
 var dw_water = dwMode.eq(2).rename(['dw_water']); 
 var dw_floodv = dwMode.eq(3).rename(['dw_floodv']); 
 
