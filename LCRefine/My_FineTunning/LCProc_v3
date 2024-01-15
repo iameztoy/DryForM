@@ -216,8 +216,18 @@ var floodv_majf = floodv_maj.multiply(90)
 var mang_majf = mang_maj.multiply(100)
 var mossl_majf = mossl_maj.multiply(110)
 
-Map.addLayer(tree_majf, null, "Tree Maj")
-Map.addLayer(treeld_majf, null, "Tree LD")
+Map.addLayer(tree_majf, null, "Tree Maj Final")
+Map.addLayer(treeld_majf, null, "Tree LD Final")
+Map.addLayer(shrub_majf, null, "Shrub Final")
+Map.addLayer(grass_majf, null, "Grass Final")
+Map.addLayer(crop_majf, null, "Crop Final")
+Map.addLayer(built_majf, null, "Built Final")
+Map.addLayer(bare_majf, null, "Bare Final")
+Map.addLayer(snow_majf, null, "Snow Final")
+Map.addLayer(water_majf, null, "Water Final")
+Map.addLayer(floodv_majf, null, "Flooded Veg. Final")
+Map.addLayer(mang_majf, null, "Mangroves Final")
+Map.addLayer(mossl_majf, null, "Moss/Linchen Final")
 
 
 
