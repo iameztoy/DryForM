@@ -189,6 +189,9 @@ Map.addLayer(mossl_maj, vp_mossl, "Moss/Linchen Majority", 0);
 
 Map.addLayer(wri_tree.selfMask(), vp_writrees, "WRI Tree Cover", 0);
 
+var sum_tsgc = tree_maj.or(shrub_maj).or(grass_maj).or(crop_maj);
+Map.addLayer(sum_tsgc, null, "Sum T+S+G+C")
+
 
 
 
