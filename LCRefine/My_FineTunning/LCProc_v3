@@ -97,7 +97,8 @@ var gfc_tree = gfc_treed.remap({
 var gedi_lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var gedilt= gedi_lang.lt(5);
 var gedigte= gedi_lang.gte(5);
-var ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_C")
+var ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_C");
+ghsl = ghsl.mosaic().gte(11).selfMask();
 
 // End of Select Classes
 //******************************
@@ -154,7 +155,8 @@ var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
     vp_floodv = {"opacity":1,"bands":["floodv"],"palette":["0096a0"]},
     vp_mang = {"opacity":1,"bands":["mang"],"palette":["00cf75"]},
     vp_mossl = {"opacity":1,"bands":["mossl"],"palette":["fae6a0"]},
-    vp_writrees = {"opacity":1,"bands":["b1"],"palette":["97ff56"]};
+    vp_writrees = {"opacity":1,"bands":["b1"],"palette":["97ff56"]},
+    vp_ghsl = {"opacity":1,"bands":["built_characteristics"],"palette":["ff0000"]};
 
 Map.addLayer(trees, null, "Trees", 0);
 Map.addLayer(shrub, null, "Shrub", 0);
@@ -171,6 +173,7 @@ Map.addLayer(gfc_stree, null, "GFC TC %", 0);
 
 Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
 Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
+Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up")
 
 Map.addLayer(tree_maj, vp_trees, "Trees Majority", 0);
 Map.addLayer(shrub_maj, vp_shrub, "Shrub Majority", 0);
