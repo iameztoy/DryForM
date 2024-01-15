@@ -1,17 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
-    vp_shrub = {"opacity":1,"bands":["shrub"],"palette":["ffbb22"]},
-    vp_grass = {"opacity":1,"bands":["grass"],"palette":["ffff4c"]},
-    vp_crop = {"opacity":1,"bands":["crop"],"palette":["f096ff"]},
-    vp_built = {"opacity":1,"bands":["built"],"palette":["fa0000"]},
-    vp_bare = {"opacity":1,"bands":["bare"],"palette":["b4b4b4"]},
-    vp_snow = {"opacity":1,"bands":["snow"],"palette":["f0f0f0"]},
-    vp_water = {"opacity":1,"bands":["water"],"palette":["0064c8"]},
-    vp_floodv = {"opacity":1,"bands":["floodv"],"palette":["0096a0"]},
-    vp_mang = {"opacity":1,"bands":["mang"],"palette":["00cf75"]},
-    vp_mossl = {"opacity":1,"bands":["mossl"],"palette":["fae6a0"]},
-    vp_writrees = {"opacity":1,"bands":["b1"],"palette":["97ff56"]};
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
 var glc = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10").mosaic();
@@ -111,6 +97,7 @@ var gfc_tree = gfc_treed.remap({
 var gedi_lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var gedilt= gedi_lang.lt(5);
 var gedigte= gedi_lang.gte(5);
+var ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_C")
 
 // End of Select Classes
 //******************************
@@ -155,6 +142,20 @@ var mossl_maj = mossl.rename(['mossl']).selfMask();
 
 
 // Visu
+
+var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
+    vp_shrub = {"opacity":1,"bands":["shrub"],"palette":["ffbb22"]},
+    vp_grass = {"opacity":1,"bands":["grass"],"palette":["ffff4c"]},
+    vp_crop = {"opacity":1,"bands":["crop"],"palette":["f096ff"]},
+    vp_built = {"opacity":1,"bands":["built"],"palette":["fa0000"]},
+    vp_bare = {"opacity":1,"bands":["bare"],"palette":["b4b4b4"]},
+    vp_snow = {"opacity":1,"bands":["snow"],"palette":["f0f0f0"]},
+    vp_water = {"opacity":1,"bands":["water"],"palette":["0064c8"]},
+    vp_floodv = {"opacity":1,"bands":["floodv"],"palette":["0096a0"]},
+    vp_mang = {"opacity":1,"bands":["mang"],"palette":["00cf75"]},
+    vp_mossl = {"opacity":1,"bands":["mossl"],"palette":["fae6a0"]},
+    vp_writrees = {"opacity":1,"bands":["b1"],"palette":["97ff56"]};
+
 Map.addLayer(trees, null, "Trees", 0);
 Map.addLayer(shrub, null, "Shrub", 0);
 Map.addLayer(grass, null, "Grass", 0);
