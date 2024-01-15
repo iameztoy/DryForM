@@ -182,6 +182,8 @@ Map.addLayer(floodv_maj, vp_floodv, "Flood Veg. Majority", 0);
 Map.addLayer(mang_maj, vp_mang, "Mangroves Majority", 0);
 Map.addLayer(mossl_maj, vp_mossl, "Moss/Linchen Majority", 0);
 
+Map.addLayer(wri_trees.selfMask(), null, "WRI Tree Cover", 0);
+
 
 
 
