@@ -199,16 +199,26 @@ Map.addLayer(wri_tree.selfMask(), vp_writrees, "WRI Tree Cover", 0);
 var sum_tsgc = tree_maj.or(shrub_maj).or(grass_maj).or(crop_maj);
 Map.addLayer(sum_tsgc.selfMask(), null, "Sum T+S+G+C", 0)
 
-var wri_tree_m = wri_tree.updateMask(sum_tsgc.not())
+var wri_tree_m = wri_tree.updateMask(sum_tsgc.not()).unmask()
 Map.addLayer(wri_tree_m.selfMask(), vp_wri_masked, "Masked WRI with TSGC", 0)
 
 
-var allclasses = ee.List([tree_maj, shrub_maj, grass_maj, grass_maj, crop_maj, built_maj, bare_maj, snow_maj, water_maj, floodv_maj, mang_maj, mossl_maj, wri_tree_m]);
+var tree_majf = tree_maj.multiply(10)
+var treeld_majf = wri_tree_m.multiply(15)
+var shrub_majf = shrub_maj.multiply(20)
+var grass_majf = grass_maj.multiply(30)
+var crop_majf = crop_maj.multiply(40)
+var built_majf = (built_maj.or(ghsl)).multiply(50)
+var bare_majf = bare_maj.multiply(60)
+var snow_majf = snow_maj.multiply(70)
+var water_majf = water_maj.multiply(80)
+var floodv_majf = floodv_maj.multiply(90)
+var mang_majf = mang_maj.multiply(100)
+var mossl_majf = mossl_maj.multiply(110)
 
-var ic_allclasses = ee.ImageCollection.fromImages(allclasses);
-print(ic_allclasses);
+var final = tree_majf.add(treeld_majf)
 
-Map.addLayer(ic_allclasses.mosaic(), null, "All Classes");
+Map.addLayer(final.selfMask(), null, "Final LC")
 
 
 
