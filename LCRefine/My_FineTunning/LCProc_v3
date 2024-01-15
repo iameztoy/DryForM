@@ -203,31 +203,31 @@ var wri_tree_m = wri_tree.updateMask(sum_tsgc.not()).unmask()
 Map.addLayer(wri_tree_m.selfMask(), vp_wri_masked, "Masked WRI with TSGC", 0)
 
 
-var tree_majf = tree_maj.multiply(10)
-var treeld_majf = wri_tree_m.multiply(15)
-var shrub_majf = shrub_maj.multiply(20)
-var grass_majf = grass_maj.multiply(30)
-var crop_majf = crop_maj.multiply(40)
-var built_majf = (built_maj.or(ghsl)).multiply(50)
-var bare_majf = bare_maj.multiply(60)
-var snow_majf = snow_maj.multiply(70)
-var water_majf = water_maj.multiply(80)
-var floodv_majf = floodv_maj.multiply(90)
-var mang_majf = mang_maj.multiply(100)
-var mossl_majf = mossl_maj.multiply(110)
+var tree_majf = tree_maj.multiply(10);
+var treeld_majf = wri_tree_m.multiply(15);
+var shrub_majf = shrub_maj.multiply(20);
+var grass_majf = grass_maj.multiply(30);
+var crop_majf = crop_maj.multiply(40);
+var built_majf = (built_maj.or(ghsl)).multiply(50);
+var bare_majf = bare_maj.multiply(60);
+var snow_majf = snow_maj.multiply(70);
+var water_majf = water_maj.multiply(80);
+var floodv_majf = floodv_maj.multiply(90);
+var mang_majf = mang_maj.multiply(100);
+var mossl_majf = mossl_maj.multiply(110);
 
-Map.addLayer(tree_majf, null, "Tree Closed Final", 0)
-Map.addLayer(treeld_majf, null, "Tree Open Final", 0)
-Map.addLayer(shrub_majf, null, "Shrub Final", 0)
-Map.addLayer(grass_majf, null, "Grass Final", 0)
-Map.addLayer(crop_majf, null, "Crop Final", 0)
-Map.addLayer(built_majf, null, "Built Final", 0)
-Map.addLayer(bare_majf, null, "Bare Final", 0)
-Map.addLayer(snow_majf, null, "Snow Final", 0)
-Map.addLayer(water_majf, null, "Water Final", 0)
-Map.addLayer(floodv_majf, null, "Flooded Veg. Final", 0)
-Map.addLayer(mang_majf, null, "Mangroves Final", 0)
-Map.addLayer(mossl_majf, null, "Moss/Linchen Final", 0)
+Map.addLayer(tree_majf, null, "Tree Closed Final", 0);
+Map.addLayer(treeld_majf, null, "Tree Open Final", 0);
+Map.addLayer(shrub_majf, null, "Shrub Final", 0);
+Map.addLayer(grass_majf, null, "Grass Final", 0);
+Map.addLayer(crop_majf, null, "Crop Final", 0);
+Map.addLayer(built_majf, null, "Built Final", 0);
+Map.addLayer(bare_majf, null, "Bare Final", 0);
+Map.addLayer(snow_majf, null, "Snow Final", 0);
+Map.addLayer(water_majf, null, "Water Final", 0);
+Map.addLayer(floodv_majf, null, "Flooded Veg. Final", 0);
+Map.addLayer(mang_majf, null, "Mangroves Final", 0);
+Map.addLayer(mossl_majf, null, "Moss/Linchen Final", 0);
 
 
 
