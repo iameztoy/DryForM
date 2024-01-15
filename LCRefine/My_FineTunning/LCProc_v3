@@ -156,7 +156,8 @@ var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
     vp_mang = {"opacity":1,"bands":["mang"],"palette":["00cf75"]},
     vp_mossl = {"opacity":1,"bands":["mossl"],"palette":["fae6a0"]},
     vp_writrees = {"opacity":1,"bands":["b1"],"palette":["97ff56"]},
-    vp_ghsl = {"opacity":1,"bands":["built_characteristics"],"palette":["ff0000"]};
+    vp_ghsl = {"opacity":1,"bands":["built_characteristics"],"palette":["ff0000"]},
+    vp_wri_masked = {"opacity":0.79,"bands":["b1"],"palette":["b4ff62"]};
 
 Map.addLayer(trees, null, "Trees", 0);
 Map.addLayer(shrub, null, "Shrub", 0);
@@ -193,7 +194,7 @@ var sum_tsgc = tree_maj.or(shrub_maj).or(grass_maj).or(crop_maj);
 Map.addLayer(sum_tsgc.selfMask(), null, "Sum T+S+G+C")
 
 var wri_tree_m = wri_tree.updateMask(sum_tsgc.not())
-Map.addLayer(wri_tree_m.selfMask(), null, "Masked WRI with TSGC")
+Map.addLayer(wri_tree_m.selfMask(), vp_wri_masked, "Masked WRI with TSGC")
 
 
 
