@@ -1,7 +1,9 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
         [[-41.88385787305759, -9.852303576818114],
-         [-1.598268424324465, 6.733059846988567]]);
+         [-1.598268424324465, 6.733059846988567],
+         [-39.97301433560758, -10.829953036214794],
+         [-39.98767882350302, -10.825236136461271]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
@@ -136,7 +138,7 @@ var mossl = wc_mossl.rename(['mossl'])
 
 var tree_maj = trees.gt(2).rename(['trees']);
 var shrub_maj = shrub.gt(2).updateMask(gedilt).unmask().rename(['shrub']);
-var grass_maj = grass.gte(2).updateMask(gedilt).unmask().rename(['grass']);
+var grass_maj = grass.gt(2).updateMask(gedilt).unmask().rename(['grass']);
 var crop_maj = crop.gt(2).updateMask(gedilt).unmask().rename(['crop']);
 var built_maj = built.gt(2).rename(['built']);
 var bare_maj = bare.gt(2).rename(['bare']);
