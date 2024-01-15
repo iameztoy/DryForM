@@ -200,7 +200,7 @@ var sum_tsgc = tree_maj.or(shrub_maj).or(grass_maj).or(crop_maj);
 Map.addLayer(sum_tsgc.selfMask(), null, "Sum T+S+G+C", 0)
 
 var wri_tree_m = wri_tree.updateMask(sum_tsgc.not())
-Map.addLayer(wri_tree_m.selfMask(), vp_wri_masked, "Masked WRI with TSGC")
+Map.addLayer(wri_tree_m.selfMask(), vp_wri_masked, "Masked WRI with TSGC", 0)
 
 
 var allclasses = ee.List([tree_maj, shrub_maj, grass_maj, grass_maj, crop_maj, built_maj, bare_maj, snow_maj, water_maj, floodv_maj, mang_maj, mossl_maj, wri_tree_m]);
@@ -208,7 +208,7 @@ var allclasses = ee.List([tree_maj, shrub_maj, grass_maj, grass_maj, crop_maj, b
 var ic_allclasses = ee.ImageCollection.fromImages(allclasses);
 print(ic_allclasses);
 
-Map.addLayer(ic_allclasses, null, "All Classes");
+Map.addLayer(ic_allclasses.mosaic(), null, "All Classes");
 
 
 
