@@ -73,8 +73,8 @@ var wri_tree = wri.gte(80);
 
 // 6. GFC
 
-var gfc_tree = gfc.select(['treecover2000']);
-var gfc_tree10 = gfc_tree.gte(10);
+var gfc_stree = gfc.select(['treecover2000']);
+var gfc_tree10 = gfc_stree.gte(10);
 var lossYear = gfc.select(['lossyear']).unmask(); //2001=1, 2015=15
 var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
 //var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
@@ -116,17 +116,25 @@ var mang = wc_mang
 // Overall mossl
 var mossl = wc_mossl
 
-Map.addLayer(trees, null, "Trees");
-Map.addLayer(shrub, null, "Shrub");
-Map.addLayer(grass, null, "Grass");
-Map.addLayer(crop, null, "Crop");
-Map.addLayer(built, null, "Built");
-Map.addLayer(bare, null, "Bare");
-Map.addLayer(snow, null, "Snow");
-Map.addLayer(water, null, "Water");
-Map.addLayer(floodv, null, "Flood Veg.");
-Map.addLayer(mang, null, "Mangroves");
-Map.addLayer(mossl, null, "Moss/Linchen");
+
+
+
+
+// Visu
+Map.addLayer(trees, null, "Trees", 0);
+Map.addLayer(shrub, null, "Shrub", 0);
+Map.addLayer(grass, null, "Grass", 0);
+Map.addLayer(crop, null, "Crop", 0);
+Map.addLayer(built, null, "Built", 0);
+Map.addLayer(bare, null, "Bare", 0);
+Map.addLayer(snow, null, "Snow", 0);
+Map.addLayer(water, null, "Water", 0);
+Map.addLayer(floodv, null, "Flood Veg.", 0);
+Map.addLayer(mang, null, "Mangroves", 0);
+Map.addLayer(mossl, null, "Moss/Linchen", 0);
+Map.addLayer(gfc_stree, null, "GFC TC %", 0)
+
+
 
 
 
