@@ -116,7 +116,19 @@ var mang = wc_mang
 // Overall mossl
 var mossl = wc_mossl
 
+// Majority Binary Masks
 
+var tree_maj = trees.gt(3);
+var shrub_maj = shrub.gt(2); 
+var grass_maj = grass.gt(2);
+var crop_maj = crop.gt(2);
+var built_maj = built.gt(2);
+var bare_maj = bare.gt(2);
+var snow_maj = snow.gt(2);
+var water_maj = water.gt(2);
+var floodv_maj = floodv.gt(1);
+var mang_maj = mang;
+var mossl_maj = mossl;
 
 
 
@@ -132,7 +144,20 @@ Map.addLayer(water, null, "Water", 0);
 Map.addLayer(floodv, null, "Flood Veg.", 0);
 Map.addLayer(mang, null, "Mangroves", 0);
 Map.addLayer(mossl, null, "Moss/Linchen", 0);
-Map.addLayer(gfc_stree, null, "GFC TC %", 0)
+Map.addLayer(gfc_stree, null, "GFC TC %", 0),
+
+Map.addLayer(trees_maj, null, "Trees Majority", 0);
+Map.addLayer(shrub_maj, null, "Shrub Majority", 0);
+Map.addLayer(grass_maj, null, "Grass Majority", 0);
+Map.addLayer(crop_maj, null, "Crop Majority", 0);
+Map.addLayer(built_maj, null, "Built Majority", 0);
+Map.addLayer(bare_maj, null, "Bare Majority", 0);
+Map.addLayer(snow_maj, null, "Snow Majority", 0);
+Map.addLayer(water_maj, null, "Water Majority", 0);
+Map.addLayer(floodv_maj, null, "Flood Veg. Majority", 0);
+Map.addLayer(mang_maj, null, "Mangroves Majority", 0);
+Map.addLayer(mossl_maj, null, "Moss/Linchen Majority", 0);
+
 
 
 
