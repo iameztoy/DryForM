@@ -534,10 +534,18 @@ var processTiles = function(tile){
   var compList_s1 = t_int.map(createSeasonComposites_s1);
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
   var s1db = s1_comp.map(helper.lin_to_db);
-  var s1int = s1db.multiply(1000).toInt16()
+  
+  function int16(imgsc) {
+    return imgsc.multiply(1000).int16();
+  }
+  
+  var s1int = s1db.map(int16);
+  
   var s1_final = s1int.toBands();
   
-  print("S1 Final", s1_final);
+  Map.addLayer(s1_final)
+  print("s1 final (to db)", s1db.first())
+  
   
   
   //---------------------------------------------------------------------------//
