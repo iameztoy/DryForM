@@ -104,7 +104,7 @@ var gedi_lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var gedilt= gedi_lang.lt(5);
 var gedigte= gedi_lang.gte(5);
 var ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_C");
-ghsl = ghsl.mosaic().gte(11).selfMask();
+ghsl = ghsl.mosaic().gte(11);
 
 // End of Select Classes
 //******************************
