@@ -208,6 +208,7 @@ var allclasses = ee.List([tree_maj, shrub_maj, grass_maj, grass_maj, crop_maj, b
 var ic_allclasses = ee.ImageCollection.fromImages(allclasses);
 print(ic_allclasses);
 
+Map.addLayer(ic_allclasses, null, "All Classes");
 
 
 
