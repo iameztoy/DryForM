@@ -206,7 +206,7 @@ var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not());
 
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
 var crop_maj = crop.gt(3).unmask().rename(['crop']); //total: 6 (+1 if glc) //.updateMask(gedilt)
-var built_maj = built.gt(2).rename(['built']); //total: 5 (+1 if glc)
+var built_maj = built.gte(2).rename(['built']); //total: 5 (+1 if glc)
 var bare_maj = bare.gt(2).rename(['bare']); //total: 3 (+1 if glc)
 var snow_maj = snow.gt(3).rename(['snow']); //total: 5 (+1 if glc)
 var water_maj = water.gt(2) //water.gt(3).rename(['water']); //total: 5 (+1 if glc)
