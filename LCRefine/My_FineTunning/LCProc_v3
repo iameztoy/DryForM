@@ -195,7 +195,7 @@ var tree_overall_5cat = tree_overall_4cat.or(tree_maj5);
 var shrub_maj = shrub.gt(2).rename(['shrub']); //total: 3 (+1 if glc) //.updateMask(gedigte).unmask()
 //Other wooded land is the intersection between shrub majority and lowest density class (cat 4 or cat4 and cat5?) of forest
 // Test with cat4
-var owl = shrub_maj.and(tree_maj5) //.and((tree_maj5).or(tree_maj4))
+var owl = shrub_maj.and(tree_maj5) //.and((tree_maj5).or(tree_maj4)) //maj4 could be included for those cases wri is not available. i.e. beyond the tropics
 
 //Apply owl on Tree Cover maj5
 var tree_maj5_m = tree_maj5.updateMask(owl.not());
