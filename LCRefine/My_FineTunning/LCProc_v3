@@ -200,7 +200,7 @@ var mossl_maj = mossl.rename(['mossl']); //total: 1
 // Visu
 
 var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
-    vp_trees2 = {"opacity":1,"bands":["trees"],"palette":["006500"]},
+    vp_trees2 = {"opacity":1,"bands":["trees"],"palette":["009b00"]},
     vp_shrub = {"opacity":1,"bands":["shrub"],"palette":["ffbb22"]},
     vp_grass = {"opacity":1,"bands":["grass"],"palette":["ffff4c"]},
     vp_crop = {"opacity":1,"bands":["crop"],"palette":["f096ff"]},
@@ -234,7 +234,7 @@ Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up", 0)
 
 Map.addLayer(tree_maj.selfMask(), vp_trees, "Trees Majority", 0);
 Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
-Map.addLayer(tree_overall.selfMask(), vp_trees2, "Trees Majority Overall", 0);
+//Map.addLayer(tree_overall.selfMask(), vp_trees2, "Trees Majority Overall", 0);
 
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass Majority", 0);
