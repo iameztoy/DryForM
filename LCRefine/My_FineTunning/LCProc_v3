@@ -192,6 +192,15 @@ var tree_overall_5cat = tree_overall_4cat.or(tree_maj5);
 
 
 var shrub_maj = shrub.gt(2).rename(['shrub']); //total: 3 (+1 if glc) //.updateMask(gedigte).unmask()
+//Other wooded land is the intersection between shrub majority and lowest density class (cat 4 or cat4 and cat5?) of forest
+// Test with cat4
+var owl = shrub_maj.and(tree_maj5)
+
+//Apply owl on Shrubs and Tree Cover maj5
+var shrub_maj_m = shrub_maj.updateMask(owl);
+var tree_maj5_m = tree_maj5.updateMask(owl);
+
+
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
 var crop_maj = crop.gt(3).unmask().rename(['crop']); //total: 6 (+1 if glc) //.updateMask(gedilt)
 var built_maj = built.gt(2).rename(['built']); //total: 5 (+1 if glc)
@@ -212,6 +221,7 @@ var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
     vp_trees4 = {"opacity":1,"bands":["trees"],"palette":["00e600"]},
     vp_trees5 = {"opacity":1,"bands":["b1"],"palette":["00ff00"]},
     vp_shrub = {"opacity":1,"bands":["shrub"],"palette":["ffbb22"]},
+    vp_owl = {"opacity":1,"bands":["shrub"],"palette":["d28230"]},
     vp_grass = {"opacity":1,"bands":["grass"],"palette":["ffff4c"]},
     vp_crop = {"opacity":1,"bands":["crop"],"palette":["f096ff"]},
     vp_built = {"opacity":1,"bands":["built"],"palette":["fa0000"]},
@@ -250,9 +260,11 @@ Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5")
 Map.addLayer(tree_overall_4cat.selfMask(), vp_trees, "Trees Cat 1, 2, 3, 4 Overall", 0);
 Map.addLayer(tree_overall_5cat.selfMask(), vp_trees, "Trees Cat 1, 2, 3, 4, 5 Overall", 0);
 
-//Map.addLayer(tree_overall.selfMask(), vp_trees2, "Trees Majority Overall", 0);
-
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
+Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat5", 0);
+Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL", 0);
+Map.addLayer(tree_maj5_m.selfMask(), vp_trees5, "Tree Cat5 (final) masked by OWL", 0);
+
 Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass Majority", 0);
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
 Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 0);
