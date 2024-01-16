@@ -313,8 +313,8 @@ var chart = ui.Chart.image.histogram({
   image: histo,
   region: sample,
   scale: resolution,
-  maxBuckets: 20,
-  minBucketWidth: 1})
+  maxBuckets: 100,
+  minBucketWidth: 10})
   
 print(chart);
 
