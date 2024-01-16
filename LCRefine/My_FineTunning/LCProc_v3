@@ -103,18 +103,18 @@ var gfc_tree = gfc_treed.remap({
 // 7. GLC LCLU 2020
 
 var glclc20_tree = glclc20.gte(25).and(glclc20.lte(48)).rename(['glclc20_tree']);  
-var glclc20_crop = glclc20.eq(244).rename(['glclc20_crop']); ;
-var glclc20_built = glclc20.gte(250).rename(['glclc20_built']); ;
-var glclc20_snow = glclc20.eq(241).rename(['glclc20_snow']); ;
-var glclc20_water = glclc20.eq(200).and(glclc20.lte(207)).rename(['glclc20_water']); ;
-var glclc20_floodv = glclc20.gte(100).and(glclc20.lte(148)).rename(['glclc20_floodv']); ;
+var glclc20_crop = glclc20.eq(244).rename(['glclc20_crop']);
+var glclc20_built = glclc20.gte(250).rename(['glclc20_built']);
+var glclc20_snow = glclc20.eq(241).rename(['glclc20_snow']);
+var glclc20_water = glclc20.eq(200).and(glclc20.lte(207)).rename(['glclc20_water']);
+var glclc20_floodv = glclc20.gte(100).and(glclc20.lte(148)).rename(['glclc20_floodv']);
 
 
 // 8. GLC LC 2019
 
 var glclc19_tree = (glclc19.gte(51).and(glclc19.lte(74))).or(glclc19.gte(75).and(glclc19.lte(91))).rename(['glclc19_tree']); ;
 var glclc19_treeo = glclc19.gte(51).and(glclc19.lte(74)).rename(['glclc219_treeo']);
-var glclc19_treec = glclc19.gte(75).and(glclc19.lte(91));.rename(['glclc219_treec']);
+var glclc19_treec = glclc19.gte(75).and(glclc19.lte(91)).rename(['glclc219_treec']);
 var glclc19_crop = glclc19.eq(252).rename(['glclc219_crop']);
 var glclc19_built = glclc19.gte(240).and(glclc19.lte(249)).rename(['glclc219_built']);
 var glclc19_snow = glclc19.eq(251).rename(['glclc219_snow']);
