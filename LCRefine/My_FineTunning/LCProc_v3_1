@@ -321,7 +321,6 @@ var LoopSamples= function(feature) {
   return ee.Feature(null, vals).copyProperties(feature, feature.propertyNames());
 };
 
-
 var stats = sample.map(LoopSamples)
 
 // print(feedback_shp_datasets.limit(12))
