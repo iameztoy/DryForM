@@ -4,7 +4,8 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
          [-1.598268424324465, 6.733059846988567],
          [-39.97301433560758, -10.829953036214794],
          [-39.98767882350302, -10.825236136461271],
-         [34.741761036050235, -3.106859128147278]]);
+         [34.741761036050235, -3.106859128147278],
+         [19.90636304194326, -14.143006948538645]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 Map.addLayer(Zones,{},'Zones',false);
