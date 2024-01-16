@@ -112,7 +112,7 @@ var glclc20_floodv = glclc20.gte(100).and(glclc20.lte(148)).rename(['glclc20_flo
 
 // 8. GLC LC 2019
 
-var glclc19_tree = (glclc19.gte(51).and(glclc19.lte(74))).or(glclc19.gte(75).and(glclc19.lte(91))).rename(['glclc19_tree']); ;
+var glclc19_tree = (glclc19.gte(51).and(glclc19.lte(74))).or(glclc19.gte(75).and(glclc19.lte(91))).rename(['glclc19_tree']);
 var glclc19_treeo = glclc19.gte(51).and(glclc19.lte(74)).rename(['glclc219_treeo']);
 var glclc19_treec = glclc19.gte(75).and(glclc19.lte(91)).rename(['glclc219_treec']);
 var glclc19_crop = glclc19.eq(252).rename(['glclc219_crop']);
