@@ -306,7 +306,7 @@ histo = histo.clip(Ecozone3)
 Map.addLayer(Ecozone3, null, "Ecozone3", 0)
 Map.addLayer(histo, null, "TC % Class one Dry Forest")
 
-var sample = ee.FeatureCollection.randomPoints(Ecozone3, 3000)
+var sample = ee.FeatureCollection.randomPoints(Ecozone3, 100)
 Map.addLayer(sample, {color: "red"}, "sample")
 
 var chart = ui.Chart.image.histogram({
@@ -321,7 +321,7 @@ print(chart);
 // Reduce the region. The region parameter is the Feature geometry.
 var meanDictionary = histo.reduceRegion({
   reducer: ee.Reducer.mean(),
-  geometry: Ecozone3.geometry(),
+  geometry: sample(),
   scale: resolution,
   maxPixels: 1e13
 });
