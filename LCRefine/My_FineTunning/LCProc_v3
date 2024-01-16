@@ -180,10 +180,10 @@ var mossl = wc_mossl.rename(['mossl'])
 
 // Majority Binary Masks
 
-var tree_maj = trees.gt(3).rename(['trees']); //total: 7
-var shrub_maj = shrub.gt(1).updateMask(gedigte).unmask().rename(['shrub']); //total: 3
+var tree_maj = trees.gte(3).rename(['trees']); //total: 7
+var shrub_maj = shrub.gt(1).rename(['shrub']); //total: 3 //.updateMask(gedigte).unmask()
 var grass_maj = grass.gt(1).updateMask(gedigte).unmask().rename(['grass']); //total: 3
-var crop_maj = crop.gte(3).updateMask(gedilt).unmask().rename(['crop']); //total: 6
+var crop_maj = crop.gte(3).unmask().rename(['crop']); //total: 6 //.updateMask(gedilt)
 var built_maj = built.gt(2).rename(['built']); //total: 5
 var bare_maj = bare.gt(1).rename(['bare']); //total: 3
 var snow_maj = snow.gt(2).rename(['snow']); //total: 5
@@ -288,8 +288,6 @@ var wc = ee.ImageCollection('ESA/WorldCover/v200').first();
 var visualization = {
   bands: ['Map'],
 };
-
-Map.centerObject(wc);
 
 Map.addLayer(wc, visualization, 'WC Landcover');
 
