@@ -306,7 +306,7 @@ histo = histo.clip(Ecozone3)
 Map.addLayer(Ecozone3, null, "Ecozone3", 0)
 Map.addLayer(histo, null, "TC % Class one Dry Forest")
 
-var sample = ee.FeatureCollection.randomPoints(Ecozone3, 500)
+var sample = ee.FeatureCollection.randomPoints(Ecozone3, 10000)
 Map.addLayer(sample, {color: "red"}, "sample")
 
 var chart = ui.Chart.image.histogram({
