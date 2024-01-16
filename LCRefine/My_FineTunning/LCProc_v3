@@ -78,7 +78,7 @@ var esri_floodv = esri.eq(4).rename(['esri_floodv']);
 
 // 5. WRI
 
-var wri_tree = wri.gte(80).rename(['wri_tree']);  ;
+var wri_tree = wri.gte(80);
 
 // 6. GFC
 
@@ -136,23 +136,23 @@ ghsl = ghsl.mosaic().gte(11);
 //******************************
 
 // Overall Trees
-var trees = wc_tree.add(dw_tree).add(esri_tree).add(glc_tree).add(gfc_tree).rename(['trees']);
+var trees = wc_tree.add(dw_tree).add(esri_tree).add(glc_tree).add(gfc_tree).add(glclc20_tree).add(glclc19_tree).rename(['trees']);
 // Overall Shrub
 var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).add(glc_shrub).rename(['shrub']);
 // Overall Grass
 var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass).rename(['grass']);
 // Overall Crop
-var crop = wc_crop.add(dw_crop).add(esri_crop).add(glc_crop).rename(['crop']);
+var crop = wc_crop.add(dw_crop).add(esri_crop).add(glc_crop).add(glclc20_crop).add(glclc19_crop).rename(['crop']);
 // Overall built
-var built = wc_built.add(dw_built).add(esri_built).add(glc_built).rename(['built']);
+var built = wc_built.add(dw_built).add(esri_built).add(glc_built).add(glclc20_built).add(glclc19_built).rename(['built']);
 // Overall bare
 var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']);
 // Overall snow
-var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).rename(['snow']);
+var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']);
 // Overall water
-var water = wc_water.add(dw_water).add(esri_water).add(glc_water).rename(['water']);
+var water = wc_water.add(dw_water).add(esri_water).add(glc_water).add(glclc20_water).add(glclc19_water).rename(['water']);
 // Overall floodv
-var floodv = wc_floodv.add(dw_floodv).add(esri_floodv).rename(['floodv']);
+var floodv = wc_floodv.add(dw_floodv).add(esri_floodv).add(glclc20_floodv).add(glclc19_floodv).rename(['floodv']);
 // Overall mang
 var mang = wc_mang.rename(['mang'])
 // Overall mossl
@@ -160,15 +160,15 @@ var mossl = wc_mossl.rename(['mossl'])
 
 // Majority Binary Masks
 
-var tree_maj = trees.gt(2).rename(['trees']);
+var tree_maj = trees.gt(3).rename(['trees']);
 var shrub_maj = shrub.gt(2).updateMask(gedilt).unmask().rename(['shrub']);
 var grass_maj = grass.gt(2).updateMask(gedilt).unmask().rename(['grass']);
-var crop_maj = crop.gt(2).updateMask(gedilt).unmask().rename(['crop']);
-var built_maj = built.gt(2).rename(['built']);
+var crop_maj = crop.gt(3).updateMask(gedilt).unmask().rename(['crop']);
+var built_maj = built.gt(3).rename(['built']);
 var bare_maj = bare.gt(2).rename(['bare']);
-var snow_maj = snow.gt(2).rename(['snow']);
-var water_maj = water.gt(2).rename(['water']);
-var floodv_maj = floodv.gt(1).rename(['floodv']);
+var snow_maj = snow.gt(3).rename(['snow']);
+var water_maj = water.gt(3).rename(['water']);
+var floodv_maj = floodv.gt(2).rename(['floodv']);
 var mang_maj = mang.rename(['mang']);
 var mossl_maj = mossl.rename(['mossl']);
 
