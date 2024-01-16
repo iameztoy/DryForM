@@ -186,7 +186,7 @@ var tree_maj = trees.gt(5).rename(['trees']); //total: 7 (+1 if glc)
 var tree_maj2 = trees.gt(4).and(trees.lte(5)); // Second category of trees
 var tree_maj3 = trees.gt(3).and(trees.lte(4)); // Third category of trees
 var tree_maj4 = trees.gt(2).and(trees.lte(3));
-var tree_overall_4cat = tree_maj.or(tree_maj2).or(tree_maj3).or(tree_maj4); //Trees overall maj+maj2+maj3
+var tree_overall_4cat = tree_maj.or(tree_maj2).or(tree_maj3).or(tree_maj4); //Trees overall maj+maj2+maj3+maj4
 var tree_maj5 = wri_tree.updateMask(tree_overall_4cat.not()).unmask();
 
 var tree_overall_5cat = tree_overall_4cat.or(tree_maj5);
