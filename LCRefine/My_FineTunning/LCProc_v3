@@ -25,6 +25,7 @@ var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var glclc20 = ee.Image('projects/glad/GLCLU2020/v2/LCLUC_2020').updateMask(ee.Image("projects/glad/OceanMask").lte(1));
 var glclc19 = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //// UMD Land cover map 2019 - Legend - https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
+var osmw = ee.ImageCollection("projects/sat-io/open-datasets/OSM_waterLayer"); //https://gee-community-catalog.org/projects/osm_water/?h=water
 
 var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
 var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
@@ -143,6 +144,10 @@ var glclc19_floodv = glclc19.gte(126).and(glclc19.lte(211)).rename(['glclc219_fl
 
 var umd_crop = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
 
+// 10. OSM Water
+var vis={min: 1, max: 5, palette: ["08306b","08519c","2171b5","4292c6","6baed6"]};
+//Map.addLayer(osm_water.median(),vis,'OSM Water Global')
+
 
 // Others
 
@@ -201,8 +206,6 @@ var owl = shrub_maj.and(tree_maj5) //.and((tree_maj5).or(tree_maj4)) //maj4 coul
 var tree_maj5_m = tree_maj5.updateMask(owl.not());
 //Apply Overall Tree Cover on Shrubs
 var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not());
-
-
 
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
 var crop_maj = crop.gt(3).unmask().rename(['crop']); //total: 6 (+1 if glc) //.updateMask(gedilt)
