@@ -299,14 +299,15 @@ Map.addLayer(tree_maj, null, "Majority Class 1", 0)
 var histo = gfc_stree.updateMask(tree_maj)
 Map.addLayer(histo, null, "TC % - Class 1", 0)
 
-histo = histo.unmask()
+histo = histo //.unmask()
 var resolution = histo.projection().nominalScale();
 histo = histo.clip(Ecozone3)
 
-Map.addLayer(Ecozone3, null, "Ecozone3")
+Map.addLayer(Ecozone3, null, "Ecozone3", 0)
 Map.addLayer(histo, null, "TC % Class one Dry Forest")
 
 var sample = ee.FeatureCollection.randomPoints(Ecozone3, 3000)
+Map.addLayer(sample, {color: "red"}, "sample")
 
 var chart = ui.Chart.image.histogram({
   image: histo,
