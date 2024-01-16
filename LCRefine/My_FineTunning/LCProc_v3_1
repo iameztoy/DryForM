@@ -321,7 +321,7 @@ print(chart);
 // Reduce the region. The region parameter is the Feature geometry.
 var meanDictionary = histo.reduceRegion({
   reducer: ee.Reducer.mean(),
-  geometry: sample(),
+  geometry: sample,
   scale: resolution,
   maxPixels: 1e13
 });
