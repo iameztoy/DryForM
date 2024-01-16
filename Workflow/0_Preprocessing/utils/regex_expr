@@ -1,0 +1,11 @@
+ // .regexpRename('$', '_suffix') //add suffix to all bands
+  // .regexpRename('^', 'prefix_') //add prefix to all bands
+  // .regexpRename('^[^_]*_', '') //remove all up to and including first underscore
+  // .regexpRename('.{4}$','') //remove last 4 characters
+  // .select('.*_suffix$') //select all bands that end in suffix
+  // .select('^prefix.*'); //select all bands that start in prefix
+  
+ // If Band names e.g. t0_B4, t1_B4, t2, B4, t0_B5, t1_B5,....
+ // select bands starting with t0 and ending B4 ->
+  
+  // var select = image.select('$t0.*|.*B4$')
