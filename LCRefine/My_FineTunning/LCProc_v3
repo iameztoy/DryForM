@@ -12,7 +12,9 @@ var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://develope
 var esri = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m").mosaic(); //+Info https://gee-community-catalog.org/projects/esrilc2020/
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
-var glclc = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //// UMD Land cover map 2019 - Legend - https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
+var glclc20 = ee.Image('projects/glad/GLCLU2020/v2/LCLUC_2020').updateMask(ee.Image("projects/glad/OceanMask").lte(1));
+
+// Not used var glclc = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //// UMD Land cover map 2019 - Legend - https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
 
 
 //--------------
@@ -98,7 +100,20 @@ var gfc_tree = gfc_treed.remap({
   bandName: 'treecover2000'
 });
 
-// 7. GLC LC
+
+// 7. GLC LCLU 2020
+
+var glclc20_tree = (glclc20.gte(51).and(glclc20.lte(74))).or(glclc20.gte(75).and(glclc20.lte(91)));
+var glclc20_treeo = glclc20.gte(51).and(glclc20.lte(74));
+var glclc20_treec = glclc20.gte(75).and(glclc20.lte(91));
+var glclc20_crop = glclc20.eq(252);
+var glclc20_built = glclc20.gte(240).and(glclc20.lte(249));
+var glclc20_snow = glclc20.eq(251);
+var glclc20_water = glclc20.eq(250);
+var glclc20_floodv = glclc20.gte(126).and(glclc20.lte(211));
+
+/* Not used 
+// 8. GLC LC 2019
 
 var glclc_tree = (glclc.gte(51).and(glclc.lte(74))).or(glclc.gte(75).and(glclc.lte(91)));
 var glclc_treeo = glclc.gte(51).and(glclc.lte(74));
@@ -108,7 +123,7 @@ var glclc_built = glclc.gte(240).and(glclc.lte(249));
 var glclc_snow = glclc.eq(251);
 var glclc_water = glclc.eq(250);
 var glclc_floodv = glclc.gte(126).and(glclc.lte(211));
-
+*/
 
 // Others
 
