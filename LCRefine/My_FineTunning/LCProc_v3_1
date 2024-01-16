@@ -299,9 +299,7 @@ Map.addLayer(tree_maj, null, "Majority Class 1", 0)
 var histo = gfc_stree.updateMask(tree_maj)
 Map.addLayer(histo, null, "TC % - Class 1", 0)
 
-histo = histo //.unmask()
 var resolution = histo.projection().nominalScale();
-histo = histo.clip(Ecozone3)
 
 Map.addLayer(Ecozone3, null, "Ecozone3", 0)
 Map.addLayer(histo, null, "TC % Class one Dry Forest")
@@ -309,25 +307,30 @@ Map.addLayer(histo, null, "TC % Class one Dry Forest")
 var sample = ee.FeatureCollection.randomPoints(Ecozone3, 10000)
 Map.addLayer(sample, {color: "red"}, "sample")
 
-var chart = ui.Chart.image.histogram({
-  image: histo,
-  region: sample,
-  scale: resolution,
-  maxBuckets: 100,
-  minBucketWidth: 10})
+//---------
+
+var LoopSamples= function(feature) {
   
-print(chart);
+  var vals = histo.reduceRegion({
+    reducer: ee.Reducer.mean(), 
+    geometry: Ecozone3,
+    scale: resolution,
+    maxPixels: 1e13,
+  });
+ 
+  return ee.Feature(null, vals).copyProperties(feature, feature.propertyNames());
+};
 
-// Reduce the region. The region parameter is the Feature geometry.
-var meanDictionary = histo.reduceRegion({
-  reducer: ee.Reducer.mean(),
-  geometry: sample,
-  scale: resolution,
-  maxPixels: 1e13
+
+var stats = sample.map(LoopSamples)
+
+// print(feedback_shp_datasets.limit(12))
+
+Export.table.toDrive({
+  collection: stats,
+  description:'stats',
+  fileFormat: 'CSV'
 });
-
-// The result is a Dictionary.  Print it.
-print(meanDictionary);
 
 
 
