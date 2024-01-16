@@ -24,6 +24,13 @@ var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9");
 var glclc20 = ee.Image('projects/glad/GLCLU2020/v2/LCLUC_2020').updateMask(ee.Image("projects/glad/OceanMask").lte(1));
 var glclc19 = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //// UMD Land cover map 2019 - Legend - https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
 
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2019=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
+
+
 
 //--------------
 // VARIABLES GENERAL
@@ -130,6 +137,10 @@ var glclc19_snow = glclc19.eq(251).rename(['glclc219_snow']);
 var glclc19_water = glclc19.eq(250).rename(['glclc219_water']);
 var glclc19_floodv = glclc19.gte(126).and(glclc19.lte(211)).rename(['glclc219_floodw']);
 
+// 9. UMD Crops (2003, 2007, 2011, 2015, 2019)
+
+var umd_crop = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
+
 
 // Others
 
@@ -151,7 +162,7 @@ var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).add(glc_shrub).rename(['shrub
 // Overall Grass
 var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass).rename(['grass']);
 // Overall Crop
-var crop = wc_crop.add(dw_crop).add(esri_crop).add(glc_crop).add(glclc20_crop).add(glclc19_crop).rename(['crop']);
+var crop = wc_crop.add(dw_crop).add(esri_crop).add(glc_crop).add(glclc20_crop).add(glclc19_crop).add(umd_crop).rename(['crop']);
 // Overall built
 var built = wc_built.add(dw_built).add(esri_built).add(glc_built).add(glclc20_built).add(glclc19_built).rename(['built']);
 // Overall bare
@@ -234,8 +245,11 @@ Map.addLayer(wri_tree.selfMask(), vp_writrees, "WRI Tree Cover", 0);
 var sum_tsgc = tree_maj.or(shrub_maj).or(grass_maj).or(crop_maj);
 Map.addLayer(sum_tsgc.selfMask(), null, "Sum T+S+G+C", 0)
 
-var wri_tree_m = wri_tree.updateMask(sum_tsgc.not()).unmask()
-Map.addLayer(wri_tree_m.selfMask(), vp_wri_masked, "Masked WRI with TSGC", 0)
+var wri_tree_m = wri_tree.updateMask(sum_tsgc.not()).unmask();
+Map.addLayer(wri_tree_m.selfMask(), vp_wri_masked, "Masked WRI with TSGC", 0);
+
+Map.addLayer(cropmask_UMD.updateMask(cropmask_UMD),{},'cropmask_UMD',false);
+
 
 
 var tree_majf = tree_maj.multiply(10);
