@@ -171,7 +171,7 @@ var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']); /
 // Overall snow
 var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']); //.add(glc_snow)
 // Overall water
-var water = wc_water.add(dw_water).add(esri_water).add(glc_water).add(glclc20_water).add(glclc19_water).rename(['water']); //.add(glc_water)
+var water = wc_water.or(dw_water).or(esri_water).or(glc_water).or(glclc20_water).or(glclc19_water).rename(['water']); //.add(glc_water)
 // Overall floodv
 var floodv = wc_floodv.add(dw_floodv).add(esri_floodv).add(glclc20_floodv).add(glclc19_floodv).rename(['floodv']);
 // Overall mang
@@ -195,7 +195,7 @@ var crop_maj = crop.gt(3).unmask().rename(['crop']); //total: 6 (+1 if glc) //.u
 var built_maj = built.gt(3).rename(['built']); //total: 5 (+1 if glc)
 var bare_maj = bare.gt(2).rename(['bare']); //total: 3 (+1 if glc)
 var snow_maj = snow.gt(3).rename(['snow']); //total: 5 (+1 if glc)
-var water_maj = water.gt(3).rename(['water']); //total: 5 (+1 if glc)
+var water_maj = water //water.gt(3).rename(['water']); //total: 5 (+1 if glc)
 var floodv_maj = floodv.gt(2).rename(['floodv']); //total: 4 (+1 if glc)
 var mang_maj = mang.rename(['mang']); //total:1
 var mossl_maj = mossl.rename(['mossl']); //total: 1
