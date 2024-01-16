@@ -185,8 +185,10 @@ var tree_maj = trees.gt(5).rename(['trees']); //total: 7 (+1 if glc)
 var tree_maj2 = trees.gt(4).and(trees.lte(5)); // Second category of trees
 var tree_maj3 = trees.gt(3).and(trees.lte(4)); // Third category of trees
 var tree_maj4 = trees.gt(2).and(trees.lte(3));
-var tree_overall = tree_maj.or(tree_maj2).or(tree_maj3).or(tree_maj4); //Trees overall maj+maj2+maj3
-var tree_maj5 = wri_tree.updateMask(tree_overall.not()).selfMask();
+var tree_overall_4cat = tree_maj.or(tree_maj2).or(tree_maj3).or(tree_maj4); //Trees overall maj+maj2+maj3
+var tree_maj5 = wri_tree.updateMask(tree_overall_4cat.not());
+
+var tree_overall_5cat = tree_overall_4cat.or(tree_maj5);
 
 
 var shrub_maj = shrub.gt(2).rename(['shrub']); //total: 3 (+1 if glc) //.updateMask(gedigte).unmask()
@@ -244,8 +246,9 @@ Map.addLayer(tree_maj.selfMask(), vp_trees, "Trees Majority cat 1", 0);
 Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
 Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 0);
 Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 0);
-Map.addLayer(tree_maj5, vp_trees5, "Trees Majority cat 5")
-Map.addLayer(tree_overall.selfMask(), vp_trees, "Trees Cat 1, 2, 3, 4 Overall", 0);
+Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5")
+Map.addLayer(tree_overall_4cat.selfMask(), vp_trees, "Trees Cat 1, 2, 3, 4 Overall", 0);
+Map.addLayer(tree_overall_5cat.selfMask(), vp_trees, "Trees Cat 1, 2, 3, 4, 5 Overall", 0);
 
 //Map.addLayer(tree_overall.selfMask(), vp_trees2, "Trees Majority Overall", 0);
 
