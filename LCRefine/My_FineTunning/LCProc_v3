@@ -3,7 +3,8 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
         [[-41.88385787305759, -9.852303576818114],
          [-1.598268424324465, 6.733059846988567],
          [-39.97301433560758, -10.829953036214794],
-         [-39.98767882350302, -10.825236136461271]]);
+         [-39.98767882350302, -10.825236136461271],
+         [34.741761036050235, -3.106859128147278]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 Map.addLayer(Zones,{},'Zones',false);
@@ -183,7 +184,8 @@ var mossl = wc_mossl.rename(['mossl'])
 var tree_maj = trees.gt(5).rename(['trees']); //total: 7 (+1 if glc)
 var tree_maj2 = trees.gt(4).and(trees.lte(5)); // Second category of trees
 var tree_maj3 = trees.gt(3).and(trees.lte(4)); // Third category of trees
-var tree_overall = tree_maj.or(tree_maj2).or(tree_maj3); //Trees overall maj+maj2+maj3
+var tree_maj4 = trees.gt(2).and(trees.lte(3));
+var tree_overall = tree_maj.or(tree_maj2).or(tree_maj3).or(tree_maj4); //Trees overall maj+maj2+maj3
 
 var shrub_maj = shrub.gt(2).rename(['shrub']); //total: 3 (+1 if glc) //.updateMask(gedigte).unmask()
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
@@ -203,6 +205,7 @@ var mossl_maj = mossl.rename(['mossl']); //total: 1
 var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
     vp_trees2 = {"opacity":1,"bands":["trees"],"palette":["009b00"]},
     vp_trees3 = {"opacity":1,"bands":["trees"],"palette":["00c200"]},
+    vp_trees4 = {"opacity":1,"bands":["trees"],"palette":["00e600"]},
     vp_shrub = {"opacity":1,"bands":["shrub"],"palette":["ffbb22"]},
     vp_grass = {"opacity":1,"bands":["grass"],"palette":["ffff4c"]},
     vp_crop = {"opacity":1,"bands":["crop"],"palette":["f096ff"]},
@@ -234,9 +237,12 @@ Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
 Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
 Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up", 0)
 
-Map.addLayer(tree_maj.selfMask(), vp_trees, "Trees Majority", 0);
+Map.addLayer(tree_maj.selfMask(), vp_trees, "Trees Majority cat 1", 0);
 Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
 Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 0);
+Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 0);
+Map.addLayer(tree_overall.selfMask(), vp_trees, "Trees Cat 1, 2, 3, 4 Overall", 0);
+
 //Map.addLayer(tree_overall.selfMask(), vp_trees2, "Trees Majority Overall", 0);
 
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
