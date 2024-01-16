@@ -197,8 +197,8 @@ var shrub_maj = shrub.gt(2).rename(['shrub']); //total: 3 (+1 if glc) //.updateM
 var owl = shrub_maj.and(tree_maj5)
 
 //Apply owl on Shrubs and Tree Cover maj5
-var shrub_maj_m = shrub_maj.updateMask(owl);
-var tree_maj5_m = tree_maj5.updateMask(owl);
+var shrub_maj_m = shrub_maj.updateMask(owl.not());
+var tree_maj5_m = tree_maj5.updateMask(owl.not());
 
 
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
