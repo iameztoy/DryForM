@@ -156,21 +156,21 @@ ghsl = ghsl.mosaic().gte(11);
 //******************************
 
 // Overall Trees
-var trees = wc_tree.add(dw_tree).add(esri_tree).add(gfc_tree).add(glclc20_tree).add(glclc19_tree).rename(['trees']); //.add(glc_tree)
+var trees = wc_tree.add(dw_tree).add(esri_tree).add(gfc_tree).add(glc_tree).add(glclc20_tree).add(glclc19_tree).rename(['trees']); //.add(glc_tree)
 // Overall Shrub
-var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).rename(['shrub']); //.add(glc_shrub)
+var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).add(glc_shrub).rename(['shrub']); //.add(glc_shrub)
 // Overall Grass
-var grass = wc_grass.add(dw_grass).add(esri_grass).rename(['grass']); //.add(glc_grass)
+var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass).rename(['grass']); //.add(glc_grass)
 // Overall Crop
 var crop = wc_crop.add(dw_crop).add(esri_crop).add(glclc20_crop).add(glclc19_crop).add(umd_crop).rename(['crop']); //.add(glc_crop)
 // Overall built
-var built = wc_built.add(dw_built).add(esri_built).add(glclc20_built).add(glclc19_built).rename(['built']); //.add(glc_built)
+var built = wc_built.add(dw_built).add(esri_built).add(glc_built).add(glclc20_built).add(glclc19_built).rename(['built']); //.add(glc_built)
 // Overall bare
-var bare = wc_bare.add(dw_bare).add(esri_bare).rename(['bare']); //.add(glc_bare)
+var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']); //.add(glc_bare)
 // Overall snow
-var snow = wc_snow.add(dw_snow).add(esri_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']); //.add(glc_snow)
+var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']); //.add(glc_snow)
 // Overall water
-var water = wc_water.add(dw_water).add(esri_water).add(glclc20_water).add(glclc19_water).rename(['water']); //.add(glc_water)
+var water = wc_water.add(dw_water).add(esri_water).add(glc_water).add(glclc20_water).add(glclc19_water).rename(['water']); //.add(glc_water)
 // Overall floodv
 var floodv = wc_floodv.add(dw_floodv).add(esri_floodv).add(glclc20_floodv).add(glclc19_floodv).rename(['floodv']);
 // Overall mang
