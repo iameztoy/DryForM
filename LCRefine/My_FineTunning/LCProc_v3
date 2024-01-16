@@ -180,10 +180,13 @@ var mossl = wc_mossl.rename(['mossl'])
 
 // Majority rules
 
-var tree_maj = trees.gt(3).rename(['trees']); //total: 7 (+1 if glc)
+var tree_maj = trees.gt(5).rename(['trees']); //total: 7 (+1 if glc)
+var tree_maj2 = trees.gte(4).and(trees.lte(5)); // Second category of trees
+var tree_overall = tree_maj.or(tree_maj2)
+
 var shrub_maj = shrub.gt(2).rename(['shrub']); //total: 3 (+1 if glc) //.updateMask(gedigte).unmask()
-var grass_maj = grass.gt(2).updateMask(gedigte).unmask().rename(['grass']); //total: 3 (+1 if glc)
-var crop_maj = crop.gt(4).unmask().rename(['crop']); //total: 6 (+1 if glc) //.updateMask(gedilt)
+var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
+var crop_maj = crop.gt(3).unmask().rename(['crop']); //total: 6 (+1 if glc) //.updateMask(gedilt)
 var built_maj = built.gt(3).rename(['built']); //total: 5 (+1 if glc)
 var bare_maj = bare.gt(2).rename(['bare']); //total: 3 (+1 if glc)
 var snow_maj = snow.gt(3).rename(['snow']); //total: 5 (+1 if glc)
@@ -197,6 +200,7 @@ var mossl_maj = mossl.rename(['mossl']); //total: 1
 // Visu
 
 var vp_trees = {"opacity":1,"bands":["trees"],"palette":["006500"]},
+    vp_trees2 = {"opacity":1,"bands":["trees"],"palette":["006500"]},
     vp_shrub = {"opacity":1,"bands":["shrub"],"palette":["ffbb22"]},
     vp_grass = {"opacity":1,"bands":["grass"],"palette":["ffff4c"]},
     vp_crop = {"opacity":1,"bands":["crop"],"palette":["f096ff"]},
@@ -229,6 +233,9 @@ Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
 Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up", 0)
 
 Map.addLayer(tree_maj.selfMask(), vp_trees, "Trees Majority", 0);
+Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
+Map.addLayer(tree_overall.selfMask(), vp_trees2, "Trees Majority Overall", 0);
+
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass Majority", 0);
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
