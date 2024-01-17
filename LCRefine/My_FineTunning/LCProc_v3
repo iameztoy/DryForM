@@ -284,7 +284,7 @@ Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,
 
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
 Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
-Map.addLayer(tree_maj67_m.selfMask(), vp_trees5, "Tree Cat 6, 7 (final) masked by OWL", 0);
+Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 0);
 
 
 
