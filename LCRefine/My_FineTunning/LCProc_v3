@@ -33,13 +33,38 @@ var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_201
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
 var cropmask_UMD_2019=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
 
-
-
 //--------------
 // VARIABLES GENERAL
 
 Map.setOptions("SATELLITE");
 var srt = '2020-01-01'; var end = '2021-01-01';
+
+// Visu
+
+var vp_trees1 = {"opacity":1,"palette":["005200"]},
+    vp_trees2 = {"opacity":1,"palette":["008100"]},
+    vp_trees3 = {"opacity":1,"palette":["00a300"]},
+    vp_trees4 = {"opacity":1,"palette":["00c000"]},
+    vp_trees5 = {"opacity":1,"palette":["00de00"]},
+    vp_trees6 = {"opacity":1,"palette":["00f900"]},
+    vp_trees7 = {"opacity":1,"palette":["c6f92a"]},
+    vp_shrub = {"opacity":1,"palette":["ffbb22"]},
+    vp_owl = {"opacity":1,"palette":["d28230"]},
+    vp_grass = {"opacity":1,"palette":["ffff4c"]},
+    vp_crop = {"opacity":1,"palette":["f096ff"]},
+    vp_built = {"opacity":1,"palette":["fa0000"]},
+    vp_bare = {"opacity":1,"palette":["b4b4b4"]},
+    vp_snow = {"opacity":1,"palette":["f0f0f0"]},
+    vp_water = {"opacity":1,"palette":["0064c8"]},
+    vp_floodv = {"opacity":1,"palette":["0096a0"]},
+    vp_mang = {"opacity":1,"palette":["00cf75"]},
+    vp_mossl = {"opacity":1,"palette":["fae6a0"]},
+    vp_writrees = {"opacity":1,"palette":["97ff56"]},
+    vp_ghsl = {"opacity":1,"palette":["ff0000"]},
+    vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
+
+
+
 
 //--------------
 // SELECT CLASSES
@@ -144,13 +169,7 @@ var glclc19_floodv = glclc19.gte(126).and(glclc19.lte(211)).rename(['glclc219_fl
 
 var umd_crop = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
 
-// 10. OSM Water
-var vis={min: 1, max: 5, palette: ["08306b","08519c","2171b5","4292c6","6baed6"]};
-//Map.addLayer(osm_water.median(),vis,'OSM Water Global')
-
-
 // Others
-
 // GEDI Lang
 
 var gedi_lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
@@ -247,30 +266,9 @@ var mossl_maj = mossl.rename(['mossl']); //total: 1
 
 
 
-// Visu
 
-var vp_trees1 = {"opacity":1,"palette":["005200"]},
-    vp_trees2 = {"opacity":1,"palette":["008100"]},
-    vp_trees3 = {"opacity":1,"palette":["00a300"]},
-    vp_trees4 = {"opacity":1,"palette":["00c000"]},
-    vp_trees5 = {"opacity":1,"palette":["00de00"]},
-    vp_trees6 = {"opacity":1,"palette":["00f900"]},
-    vp_trees7 = {"opacity":1,"palette":["c6f92a"]},
-    vp_shrub = {"opacity":1,"palette":["ffbb22"]},
-    vp_owl = {"opacity":1,"palette":["d28230"]},
-    vp_grass = {"opacity":1,"palette":["ffff4c"]},
-    vp_crop = {"opacity":1,"palette":["f096ff"]},
-    vp_built = {"opacity":1,"palette":["fa0000"]},
-    vp_bare = {"opacity":1,"palette":["b4b4b4"]},
-    vp_snow = {"opacity":1,"palette":["f0f0f0"]},
-    vp_water = {"opacity":1,"palette":["0064c8"]},
-    vp_floodv = {"opacity":1,"palette":["0096a0"]},
-    vp_mang = {"opacity":1,"palette":["00cf75"]},
-    vp_mossl = {"opacity":1,"palette":["fae6a0"]},
-    vp_writrees = {"opacity":1,"palette":["97ff56"]},
-    vp_ghsl = {"opacity":1,"palette":["ff0000"]},
-    vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
 
+/*
 Map.addLayer(trees, null, "Trees", 0);
 Map.addLayer(shrub, null, "Shrub", 0);
 Map.addLayer(grass, null, "Grass", 0);
@@ -287,6 +285,7 @@ Map.addLayer(gfc_stree, null, "GFC TC %", 0);
 Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
 Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
 Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up", 0)
+*/
 
 Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 0);
 Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
@@ -305,15 +304,7 @@ Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by
 Map.addLayer(tree_maj67_m.selfMask(), vp_trees5, "Tree Cat 6, 7 (final) masked by OWL", 0);
 
 
-//
 
-var wc = ee.ImageCollection('ESA/WorldCover/v200').first();
-
-var visualization = {
-  bands: ['Map'],
-};
-
-Map.addLayer(wc, visualization, 'WC Landcover', 0);
 
 
 
