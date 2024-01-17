@@ -259,9 +259,6 @@ var shrub_maj_m = shrub_maj.updateMask(owl.not());
 // version of shrubs masked by the majority of tree cover (excluding the lowest density TC areas)
 shrub_maj_m = shrub_maj_m.updateMask(tree_overall_4cat.not())
 
-//Overall Tree Cover including category 7 that has been masked
-var tree_overall_7cat = tree_overall_6cat.or(tree_maj67_m);
-
 
 
 //Process Grass
@@ -282,8 +279,7 @@ Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
 Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
 Map.addLayer(tree_maj67_m.selfMask(), vp_trees5, "Tree Cat 6, 7 (final) masked by OWL", 0);
 
-Map.addLayer(tree_overall_4cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4 Majority", 0);
-Map.addLayer(tree_overall_7cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 6, 7 Overall", 0);
+
 
 
 
