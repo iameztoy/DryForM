@@ -42,12 +42,12 @@ var srt = '2020-01-01'; var end = '2021-01-01';
 // Visu
 
 var vp_trees1 = {"opacity":1,"palette":["005200"]},
-    vp_trees2 = {"opacity":1,"palette":["008100"]},
-    vp_trees3 = {"opacity":1,"palette":["00a300"]},
-    vp_trees4 = {"opacity":1,"palette":["00c000"]},
-    vp_trees5 = {"opacity":1,"palette":["00de00"]},
-    vp_trees6 = {"opacity":1,"palette":["00f900"]},
-    vp_trees7 = {"opacity":1,"palette":["c6f92a"]},
+    vp_trees2 = {"opacity":1,"palette":["007400"]},
+    vp_trees3 = {"opacity":1,"palette":["009f00"]},
+    vp_trees4 = {"opacity":1,"palette":["00ba00"]},
+    vp_trees5 = {"opacity":1,"palette":["00d400"]},
+    vp_trees6 = {"opacity":1,"palette":["00eb00"]},
+    vp_trees7 = {"opacity":1,"palette":["aceb14"]},
     vp_shrub = {"opacity":1,"palette":["ffbb22"]},
     vp_owl = {"opacity":1,"palette":["d28230"]},
     vp_grass = {"opacity":1,"palette":["ffff4c"]},
