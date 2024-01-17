@@ -97,7 +97,7 @@ var esri_floodv = esri.eq(4).rename(['esri_floodv']);
 
 // 5. WRI
 
-var wri_tree = wri.gte(80);
+var wri_tree = wri.gte(10);
 
 // 6. GFC
 
