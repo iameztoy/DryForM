@@ -187,6 +187,9 @@ var mossl = wc_mossl.rename(['mossl'])
 
 // Majority rules
 
+// ---------------------
+//  TREES and SHRUBS
+// ---------------------
 var tree_maj1 = trees.eq(7);
 var tree_maj2 = trees.eq(6);
 var tree_maj3 = trees.eq(5); 
@@ -196,21 +199,32 @@ var tree_maj6 = trees.eq(2); //------ Overall til here ----- maj6
 var tree_overall_6cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4)
                         .or(tree_maj5).or(tree_maj6); //Trees overall maj+maj2+maj3+maj4+maj5+maj6
 
-var tree_maj7 = wri_tree.updateMask(tree_overall_6cat.not()).unmask();
+//Anything that does not fall within the 6 categories but has been mappen by WRI Tree.
+//Mainly trees outside forest
+var tree_maj7 = wri_tree.updateMask(tree_overall_6cat.not()).unmask(); 
+
+//Overall Tree Cover including category 7
 var tree_overall_7cat = tree_overall_6cat.or(tree_maj7);
 
+// Shrub majority (overall 4 products used). Majority: >2
+var shrub_maj = shrub.gt(2).rename(['shrub']);
 
-var shrub_maj = shrub.gt(2).rename(['shrub']); //total: 3 (+1 if glc) //.updateMask(gedigte).unmask()
-//Other wooded land is the intersection between shrub majority and lowest density class (cat 4 or cat4 and cat5?) of forest
-// Test with cat4
-var owl = shrub_maj.and((tree_maj6).or(tree_maj7)) //.and((tree_maj5).or(tree_maj4)) //maj4 could be included for those cases wri is not available. i.e. beyond the tropics
+// Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
+// Note that WRI TC does not cover areas outside the tropics. In order to have OWL outside the tropics it is neccessary to
+// include an additional low density class (i.e. maj6). This also makes sense as maj6 still has a lot of overlap with shrub majority.
+var owl = shrub_maj.and((tree_maj6).or(tree_maj7))
 
-//Apply owl on Tree Cover maj6 and maj7 if owl is made by both
+//Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
 var tree_maj6_m = tree_maj6.updateMask(owl.not());
 var tree_maj7_m = tree_maj7.updateMask(owl.not());
+
+// Overall maj67 (masked by owl). This is still considered Tree Cover at this stage.
+// Some of these areas will be probably masked afterwards by the grass majority
 var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
-//Apply Overall Tree Cover on Shrubs
+
+//Clean version of shrubs
 var shrub_maj_m = shrub_maj.updateMask(tree_overall_7cat.not());
+
 
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
 var crop_maj = crop.gt(3).unmask().rename(['crop']); //total: 6 (+1 if glc) //.updateMask(gedilt)
@@ -221,6 +235,8 @@ var water_maj = water.gt(2) //water.gt(3).rename(['water']); //total: 5 (+1 if g
 var floodv_maj = floodv.gt(2).rename(['floodv']); //total: 4 (+1 if glc)
 var mang_maj = mang.rename(['mang']); //total:1
 var mossl_maj = mossl.rename(['mossl']); //total: 1
+
+//Process Grass
 
 
 
