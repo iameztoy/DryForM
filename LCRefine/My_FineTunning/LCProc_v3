@@ -290,7 +290,11 @@ print(interm)
 // Remove from grass Majority - TC Cat 1 -4 (4cat)
 
 var grass_maj_m = grass_maj.updateMask(tree_overall_4cat.not()).unmask()
-Map.addLayer(grass_maj_m.selfMask(), null, "removed TC")
+Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC")
+
+// Remove from maj67 majority of grass already masked
+var tree_maj67_mm = tree_maj67_m.updateMask(grass_maj_m.not()).unmask();
+Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "tree_maj67 masked by grass");
 
 
 
