@@ -122,7 +122,7 @@ var esri_floodv = esri.eq(4).rename(['esri_floodv']);
 
 // 5. WRI
 
-var wri_tree = wri.gte(30); //Classes 10 and 20 are not included to avoid commission.
+var wri_tree = wri.gte(10); //Classes 10 and 20 are not included to avoid commission.
                             // Although this could be probably masked afterwards by majority of grass?
 
 // 6. GFC
@@ -285,6 +285,10 @@ Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
 Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
 Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 0);
+
+
+
+Map.addLayer(grass, null, "Grass", 0);
 
 
 
