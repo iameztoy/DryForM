@@ -218,9 +218,6 @@ var tree_maj6 = trees.eq(2); //------ Overall til here ----- maj6
 var tree_overall_6cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4)
                         .or(tree_maj5).or(tree_maj6); //Trees overall maj+maj2+maj3+maj4+maj5+maj6
 
-var tree_overall_6cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4)
-                        .or(tree_maj5).or(tree_maj6); 
-
 // Tree Cover Majority: >3 (total is 7). This is to be used along with shrubs
 var tree_overall_4cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4);
 
@@ -247,9 +244,10 @@ var tree_maj7_m = tree_maj7.updateMask(owl.not());
 // Some of these areas will be probably masked afterwards by the grass majority
 var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
 
-//Clean version of shrubs masked by the majority of forests.
-// Need to exclude from the masking the lowest density forest classes i.e. 4, 5, 7
-var shrub_maj_m = shrub_maj.updateMask(tree_overall_4cat.not());
+//Version of shrubs masked by owl.
+var shrub_maj_m = shrub_maj.updateMask(owl.not());
+// version of shrubs masked by the majority of tree cover
+shrub_maj_m = shrub_maj_m.updateMask(tree_overall_4cat.not())
 
 
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
@@ -265,27 +263,7 @@ var mossl_maj = mossl.rename(['mossl']); //total: 1
 //Process Grass
 
 
-
-
-
-/*
-Map.addLayer(trees, null, "Trees", 0);
-Map.addLayer(shrub, null, "Shrub", 0);
-Map.addLayer(grass, null, "Grass", 0);
-Map.addLayer(crop, null, "Crop", 0);
-Map.addLayer(built, null, "Built", 0);
-Map.addLayer(bare, null, "Bare", 0);
-Map.addLayer(snow, null, "Snow", 0);
-Map.addLayer(water, null, "Water", 0);
-Map.addLayer(floodv, null, "Flood Veg.", 0);
-Map.addLayer(mang, null, "Mangroves", 0);
-Map.addLayer(mossl, null, "Moss/Linchen", 0);
-Map.addLayer(gfc_stree, null, "GFC TC %", 0);
-
-Map.addLayer(gedilt, null, "GEDI Lang < 5m", 0);
-Map.addLayer(gedigte, null, "GEDI Lang >= 5m", 0);
-Map.addLayer(ghsl, vp_ghsl, "GHSL Built-up", 0)
-*/
+// ADD LAYERS
 
 Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 0);
 Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
@@ -295,12 +273,13 @@ Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 0);
 Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
 Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0)
 
+Map.addLayer(tree_overall_6cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4 Majority", 0);
 Map.addLayer(tree_overall_6cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 6 Overall", 0);
 Map.addLayer(tree_overall_7cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 6, 7 Overall", 0);
 
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
-Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by Overall Trees masked by owl", 0);
+Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
 Map.addLayer(tree_maj67_m.selfMask(), vp_trees5, "Tree Cat 6, 7 (final) masked by OWL", 0);
 
 
