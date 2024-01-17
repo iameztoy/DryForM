@@ -122,7 +122,8 @@ var esri_floodv = esri.eq(4).rename(['esri_floodv']);
 
 // 5. WRI
 
-var wri_tree = wri.gte(10);
+var wri_tree = wri.gte(30); //Classes 10 and 20 are not included to avoid commission.
+                            // Although this could be probably masked afterwards by majority of grass?
 
 // 6. GFC
 
@@ -236,19 +237,19 @@ var shrub_maj = shrub.gt(2).rename(['shrub']);
 // include an additional low density class (i.e. maj6). This also makes sense as maj6 still has a lot of overlap with shrub majority.
 var owl = shrub_maj.and((tree_maj6).or(tree_maj7));
 
-//Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
+// Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
+// These are low density tree cover areas that did not intersect with Shrub Majority
 var tree_maj6_m = tree_maj6.updateMask(owl.not());
 var tree_maj7_m = tree_maj7.updateMask(owl.not());
 
-// Overall maj67 (masked by owl). This is still considered Tree Cover at this stage.
+// Overall maj67 (masked by owl). 
 // Some of these areas will be probably masked afterwards by the grass majority
 var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
 
 //Version of shrubs masked by owl.
 var shrub_maj_m = shrub_maj.updateMask(owl.not());
-// version of shrubs masked by the majority of tree cover
+// version of shrubs masked by the majority of tree cover (excluding the lowest density TC areas)
 shrub_maj_m = shrub_maj_m.updateMask(tree_overall_4cat.not())
-
 
 var grass_maj = grass.gte(2).unmask().rename(['grass']); //total: 3 (+1 if glc)
 var crop_maj = crop.gt(3).unmask().rename(['crop']); //total: 6 (+1 if glc) //.updateMask(gedilt)
