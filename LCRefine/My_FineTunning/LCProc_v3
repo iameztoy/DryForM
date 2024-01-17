@@ -187,12 +187,12 @@ var mossl = wc_mossl.rename(['mossl'])
 
 // Majority rules
 
-var tree_maj1 = trees.eq(8);
-var tree_maj2 = trees.eq(7);
-var tree_maj3 = trees.eq(6); //total: 7 (+1 if glc)
-var tree_maj4 = trees.eq(5); // Second category of trees
-var tree_maj5 = trees.eq(4); // Third category of trees
-var tree_maj6 = trees.eq(3); //------ Overall til here ----- maj6
+var tree_maj1 = trees.eq(7);
+var tree_maj2 = trees.eq(6);
+var tree_maj3 = trees.eq(5); 
+var tree_maj4 = trees.eq(4); 
+var tree_maj5 = trees.eq(3);
+var tree_maj6 = trees.eq(2); //------ Overall til here ----- maj6
 var tree_overall_6cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4)
                         .or(tree_maj5).or(tree_maj6); //Trees overall maj+maj2+maj3+maj4+maj5+maj6
 
@@ -277,7 +277,7 @@ Map.addLayer(tree_overall_7cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat7", 0);
 Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by Overall Trees masked by owl", 0);
-Map.addLayer(tree_maj7_m.selfMask(), vp_trees5, "Tree Cat5 (final) masked by OWL", 0);
+Map.addLayer(tree_maj7_m.selfMask(), vp_trees5, "Tree Cat7 (final) masked by OWL", 0);
 
 Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass Majority", 0);
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
