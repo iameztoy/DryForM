@@ -271,24 +271,24 @@ var shrub_maj_mm = shrub_maj_m.updateMask(owl.not())
 
 // ADD LAYERS
 
-Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 0);
-Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
-Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 0);
-Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 0);
-Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 0);
+Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 1);
+Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 1);
+Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 1);
+Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 1);
+Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 1);
 Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
 Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
 
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,3,4,5", 0);
 
-Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
-Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
-Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 0);
+Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 1);
+Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 1);
+Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 1);
 
 
 
-Map.addLayer(grass, null, "Grass", 0);
+Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass", 0);
 
 
 
