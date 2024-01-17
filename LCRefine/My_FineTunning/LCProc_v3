@@ -245,11 +245,15 @@ var tree_overall_7cat = tree_overall_6cat.or(tree_maj7);
 // Shrub majority is masked by majority of Tree cover
 var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not()).unmask();
 
-
 // Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
 // Note that WRI TC does not cover areas outside the tropics. In order to have OWL outside the tropics it is neccessary to
 // include an additional low density class (i.e. maj5 and maj6). This also makes sense as these still has a lot of overlap with shrub majority.
-var owl = shrub_maj.and(tree_maj6).and(tree_maj7);
+
+var owl1 = shrub_maj_m.and(tree_maj6); //Outside the tropics
+var owl2 = shrub_maj_m.and(tree_maj7); //In and outside the tropics
+
+var owl = owl1.or(owl2)
+
 
 // Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
 // These are low density tree cover areas that did not intersect with Shrub Majority
@@ -261,9 +265,6 @@ var tree_maj7_m = tree_maj7.updateMask(owl.not());
 var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
 
 //Version of shrubs masked by owl and TC majority
-
-
-
 
 
 //Process Grass
@@ -283,7 +284,7 @@ Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,3,4,5", 0);
 
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
-//Map.addLayer(shrub_maj_tcmm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
+Map.addLayer(shrub_maj_tcmm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
 Map.addLayer(tree_maj67_m.selfMask(), vp_trees5, "Tree Cat 6, 7 (final) masked by OWL", 0);
 
 
