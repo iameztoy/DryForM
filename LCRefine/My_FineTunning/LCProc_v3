@@ -237,9 +237,6 @@ var tree_overall_4cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4);
 //Mainly trees outside forest
 var tree_maj7 = wri_tree.updateMask(tree_overall_6cat.not()).unmask(); 
 
-//Overall Tree Cover including category 7
-var tree_overall_7cat = tree_overall_6cat.or(tree_maj7);
-
 
 
 // Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
@@ -255,6 +252,9 @@ var tree_maj7_m = tree_maj7.updateMask(owl.not());
 // Overall maj67 (masked by owl). 
 // Some of these areas will be probably masked afterwards by the grass majority
 var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
+
+//Overall Tree Cover including category 7 that has been masked
+var tree_overall_7cat = tree_overall_6cat.or(tree_maj67_m);
 
 //Version of shrubs masked by owl.
 var shrub_maj_m = shrub_maj.updateMask(owl.not());
@@ -274,16 +274,16 @@ Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 0);
 Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 0);
 Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 0);
 Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
-Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0)
-
-Map.addLayer(tree_overall_6cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4 Majority", 0);
-Map.addLayer(tree_overall_6cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 6 Overall", 0);
-Map.addLayer(tree_overall_7cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 6, 7 Overall", 0);
+Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
 
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
 Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
 Map.addLayer(tree_maj67_m.selfMask(), vp_trees5, "Tree Cat 6, 7 (final) masked by OWL", 0);
+
+Map.addLayer(tree_overall_4cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4 Majority", 0);
+Map.addLayer(tree_overall_6cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 6 Overall", 0);
+Map.addLayer(tree_overall_7cat.selfMask(), vp_trees1, "Trees Cat 1, 2, 3, 4, 5, 6, 7 Overall", 0);
 
 
 
