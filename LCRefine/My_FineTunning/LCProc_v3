@@ -213,10 +213,10 @@ var crop_maj = crop.gt(3).unmask().rename(['crop']); // Crop majority (overall 6
 var built_maj = built.gte(2).rename(['built']); // Built layer (overall 4 products) Rule: gte(2) Allow a bit more flexibility instead of majority. To be crossed with GHSL
 var bare_maj = bare.gt(2).rename(['bare']); // Bare majority (overall 4 products). Majority: >2
 var snow_maj = snow.gt(3).rename(['snow']); // Snow Majority (overall 6 products). Majority: >3
-var water_maj = water.gt(2) //Water layer (overall 4 products) Majority: >2. If being more flexible (e.g. gte(2) -> Shadows included
-var floodv_maj = floodv.gt(2).rename(['floodv']); //total: 4 (+1 if glc)
-var mang_maj = mang.rename(['mang']); //total:1
-var mossl_maj = mossl.rename(['mossl']); //total: 1
+var water_maj = water.gt(2) // Water majority (overall 4 products) Majority: >2. If being more flexible (e.g. gte(2) -> Shadows included
+var floodv_maj = floodv.gt(2).rename(['floodv']); // Flooded vegetation: (Overall 4 products) Majority: >2
+var mang_maj = mang.rename(['mang']); // Only 1 class available. Eventually cross with flooded vegetation.
+var mossl_maj = mossl.rename(['mossl']); // Moss and linchen. Only one layer available, eventually remove.
 
 // ---------------------
 //  TREES and SHRUBS
