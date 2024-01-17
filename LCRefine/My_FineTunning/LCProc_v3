@@ -240,24 +240,28 @@ var tree_overall_6cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(t
 //Mainly trees outside forest
 var tree_maj7 = wri_tree.updateMask(tree_overall_6cat.not()).unmask(); 
 
-// Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
+// Shrub majority is masked by majority of Tree cover
+
+var shrub_maj_tcm = shrub.updateMask(tree_overall_4cat.not())
+
+// Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 5, 6 and 7)
 // Note that WRI TC does not cover areas outside the tropics. In order to have OWL outside the tropics it is neccessary to
-// include an additional low density class (i.e. maj6). This also makes sense as maj6 still has a lot of overlap with shrub majority.
-var owl = shrub_maj.and((tree_maj6).or(tree_maj7));
+// include an additional low density class (i.e. maj5 and maj6). This also makes sense as these still has a lot of overlap with shrub majority.
+var owl = shrub_maj_tcm.and((tree_maj5).or(tree_maj6).or(tree_maj7));
 
 // Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
 // These are low density tree cover areas that did not intersect with Shrub Majority
+var tree_maj5_m = tree_maj5.updateMask(owl.not());
 var tree_maj6_m = tree_maj6.updateMask(owl.not());
 var tree_maj7_m = tree_maj7.updateMask(owl.not());
 
 // Overall maj67 (masked by owl). 
 // Some of these areas will be probably masked afterwards by the grass majority
-var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
+var tree_maj567_m = tree_maj5_m.or(tree_maj6_m).or(tree_maj7_m);
 
-//Version of shrubs masked by owl.
-var shrub_maj_m = shrub_maj.updateMask(owl.not());
-// version of shrubs masked by the majority of tree cover (excluding the lowest density TC areas)
-shrub_maj_m = shrub_maj_m.updateMask(tree_overall_4cat.not())
+//Version of shrubs masked by owl and TC majority
+var shrub_maj_tcmm = shrub_maj_tcm.updateMask(owl.not());
+
 
 
 
@@ -275,9 +279,9 @@ Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
 Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
 
 Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
-Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 0);
-Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
-Map.addLayer(tree_maj67_m.selfMask(), vp_trees5, "Tree Cat 6, 7 (final) masked by OWL", 0);
+Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 5, 6 and 7", 0);
+Map.addLayer(shrub_maj_tcmm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 0);
+Map.addLayer(tree_maj567_m.selfMask(), vp_trees5, "Tree Cat 5, 6, 7 (final) masked by OWL", 0);
 
 
 
