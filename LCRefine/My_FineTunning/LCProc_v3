@@ -268,12 +268,35 @@ var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
 //Version of shrubs masked by owl and TC majority
 var shrub_maj_mm = shrub_maj_m.updateMask(owl.not())
 
+tree_maj1 = tree_maj1.rename("tree_maj1");
+tree_maj2 = tree_maj2.rename("tree_maj2");
+tree_maj3 = tree_maj3.rename("tree_maj3");
+tree_maj4 = tree_maj4.rename("tree_maj4");
+tree_maj5 = tree_maj5.rename("tree_maj5");
+owl = owl.rename("owl_maj67");
+shrub_maj_mm = shrub_maj_mm.rename("shrub")
+tree_maj67_m = tree_maj67_m.rename("tree_maj67")
+
+
+var interm1_list = ([tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, owl, shrub_maj_mm, tree_maj67_m]);
+var interm = ee.ImageCollection.fromImages(interm1_list)
+print(interm)
+
 // ---------------------
 //  GRASS
 // ---------------------
 
 // First we need to apply some masks: 
+// Remove from grass Majority - TC Cat 1 -4 (4cat)
+
+var grass_maj_m = grass_maj.updateMask(tree_overall_4cat.not()).unmask()
+Map.addLayer(grass_maj_m.selfMask(), null, "removed TC")
+
+
+
 // Apply grass majority on previous versions of low density TC (maj5? 6 and 7) + non dominant shrubs. 
+
+
 // Leave owl as this is already contained within the shrub majority.
 
 // ---------------------
