@@ -307,6 +307,7 @@ Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "tree_maj67 masked by grass");
 //  CROPS
 // ---------------------
 // Crops do dominate over the other classes (Tree low density, non majority shrub and non majority grass.
+// Eventually also over majority grass
 // OWL remains, as said before, because it is contained in the shrub majority class).
 
 // ---------------------
