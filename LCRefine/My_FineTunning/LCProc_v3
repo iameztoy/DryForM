@@ -1,11 +1,15 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    ee.Geometry.MultiPoint(
         [[-41.88385787305759, -9.852303576818114],
          [-1.598268424324465, 6.733059846988567],
          [-39.97301433560758, -10.829953036214794],
          [-39.98767882350302, -10.825236136461271],
          [34.741761036050235, -3.106859128147278],
-         [19.90636304194326, -14.143006948538645]]);
+         [19.90636304194326, -14.143006948538645],
+         [-53.364860279287946, -12.050167173431003]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 Map.addLayer(Zones,{},'Zones',false);
@@ -45,13 +49,13 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_trees2 = {"opacity":1,"palette":["007400"]},
     vp_trees3 = {"opacity":1,"palette":["009f00"]},
     vp_trees4 = {"opacity":1,"palette":["00ba00"]},
-    vp_trees5 = {"opacity":1,"palette":["00d400"]},
+    vp_trees5 = {"opacity":1,"palette":["e2bc31"]}, // Changed the color as it might be a transition zone between low tree cover and shrubs
     vp_trees6 = {"opacity":1,"palette":["00eb00"]},
     vp_trees7 = {"opacity":1,"palette":["aceb14"]},
     vp_shrub = {"opacity":1,"palette":["ffbb22"]},
     vp_owl = {"opacity":1,"palette":["d28230"]},
     vp_grass = {"opacity":1,"palette":["ffff4c"]},
-    vp_crop = {"opacity":1,"palette":["f096ff"]},
+    vp_crop = {"opacity":0.7,"palette":["f096ff"]},
     vp_built = {"opacity":1,"palette":["fa0000"]},
     vp_bare = {"opacity":1,"palette":["b4b4b4"]},
     vp_snow = {"opacity":1,"palette":["f0f0f0"]},
@@ -289,6 +293,15 @@ Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked b
 
 
 Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass", 0);
+
+Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
+Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 0);
+Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 0);
+Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 0);
+Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 0);
+Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 0);
+Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 0);
+Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 0);
 
 
 
