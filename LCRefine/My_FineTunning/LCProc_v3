@@ -277,7 +277,7 @@ owl = owl.rename("owl_maj67");
 shrub_maj_mm = shrub_maj_mm.rename("shrub")
 tree_maj67_m = tree_maj67_m.rename("tree_maj67")
 
-
+//Intermediate list
 var interm1_list = ([tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, owl, shrub_maj_mm, tree_maj67_m]);
 var interm = ee.ImageCollection.fromImages(interm1_list)
 print(interm)
@@ -296,7 +296,7 @@ Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC")
 var tree_maj67_mm = tree_maj67_m.updateMask(grass_maj_m.not()).unmask();
 Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "tree_maj67 masked by grass");
 
-
+// Trees on grass (only tropics - WRI Extent): tree_maj7_m with grass_maj_m? 
 
 // Apply grass majority on previous versions of low density TC (maj5? 6 and 7) + non dominant shrubs. 
 
