@@ -251,7 +251,7 @@ var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not()).unmask();
 
 // Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
 // Note that WRI TC does not cover areas outside the tropics. In order to have OWL outside the tropics it is neccessary to
-// include an additional low density class (i.e. maj5 and maj6). This also makes sense as these still have a lot of overlap with shrub majority.
+// include an additional low density class (i.e. maj5 and maj6). This also makes sense as this class still has a lot of overlap with shrub majority.
 
 var owl1 = shrub_maj_m.and(tree_maj6); //Outside the tropics
 var owl2 = shrub_maj_m.and(tree_maj7); //In and outside the tropics
