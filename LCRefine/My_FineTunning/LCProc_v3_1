@@ -16,7 +16,9 @@ var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO
 //Map.addLayer(Zones,{},'Zones',false);
 
 // ---- !!! --- Notes --- Need to be corrected !!! ---
-// There are seasonal water pixels over built -
+// There are seasonal water pixels over built - Correct? Some are fine. 
+    //Some isolated pixels can be corrected by connectedPixels 1 or 2?
+    // 
 
 
 var Ecozone1 = Zones.filter(ee.Filter.eq('GEZ_CODE', 11)); // = Tropical rain forest 
