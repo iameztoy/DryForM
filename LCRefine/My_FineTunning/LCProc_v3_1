@@ -434,6 +434,7 @@ Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
 //  SNOW
 // ---------------------
 
+// The Majority class of bare soil areas is prioritized over all others
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
 
 
