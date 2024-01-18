@@ -305,8 +305,8 @@ tree_maj67_m = tree_maj67_m.rename("tree_maj67");
 
 //Intermediate list
 var interm1_list = ([tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, owl, shrub_maj_mm, tree_maj67_m]);
-var interm = ee.ImageCollection.fromImages(interm1_list)
-print(interm)
+var interm = ee.ImageCollection.fromImages(interm1_list);
+print(interm);
 
 // ---------------------
 //  GRASS
@@ -320,7 +320,7 @@ var grasstree67 = grass_maj_m.and(tree_maj67_m);
 // We update/mask the tree_maj67m with the new grasstree67
 var tree_maj67_mm = tree_maj67_m.updateMask(grasstree67.not()).unmask();
 // We update/mask the Grass Majority already masked with TC Cat 1-5 with the new grasstree67
-var grass_maj_mm = grass_maj_m.updateMask(grasstree67.not()).unmask()
+var grass_maj_mm = grass_maj_m.updateMask(grasstree67.not()).unmask();
 
 // -----------------------------------------------
 //  Wrap-up | Intermediate list of final layers
@@ -364,8 +364,8 @@ Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 1);
 Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 1);
 //First we build an overall mask for this specific case
 var mask4built = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67);
-Map.addLayer(mask4built)
-built_maj = tree_maj1.updateMask(mask4built.not()).unmask();
+//Map.addLayer(mask4built)
+built_maj = (tree_maj1.updateMask(mask4built.not())).unmask();
 Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority masked by other classes", 1);
 
 // ---------------------
