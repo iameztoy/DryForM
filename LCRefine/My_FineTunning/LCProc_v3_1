@@ -29,6 +29,7 @@ var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9");
 var glclc20 = ee.Image('projects/glad/GLCLU2020/v2/LCLUC_2020').updateMask(ee.Image("projects/glad/OceanMask").lte(1));
 var glclc19 = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //// UMD Land cover map 2019 - Legend - https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
 var osmw = ee.ImageCollection("projects/sat-io/open-datasets/OSM_waterLayer"); //https://gee-community-catalog.org/projects/osm_water/?h=water
+var jrc_water = ee.ImageCollection('JRC/GSW1_4/YearlyHistory');
 
 var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
 var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
