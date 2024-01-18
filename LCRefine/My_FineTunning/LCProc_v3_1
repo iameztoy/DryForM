@@ -517,20 +517,13 @@ var reduce = ind.filter(ee.Filter.notNull(['area_in_meters'])).reduceToImage({pr
 Map.addLayer(reduce.gt(100), {palette: ['red']}, "Buildings");
 
 // Mining -- https://gee-community-catalog.org/projects/global-mining/
-
 // Mangroves -- https://gee-community-catalog.org/projects/mangrove/
-
 // Glaciers -- https://gee-community-catalog.org/projects/rgi/
-
 // Impervious -- https://gee-community-catalog.org/projects/gisd30/
-
 // Global Intra-Urban Land Use -- https://gee-community-catalog.org/projects/giulu/
-
 // World Settlement Footprint & Evolution -- https://gee-community-catalog.org/projects/wsf/
-
 // Oil Palm -- https://gee-community-catalog.org/projects/oil-palm/
-
-// Roads
+// Roads -- https://gee-community-catalog.org/projects/grip/?h=roads
 
 
 
