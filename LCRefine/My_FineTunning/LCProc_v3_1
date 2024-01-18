@@ -1,0 +1,426 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
+        [[-41.88385787305759, -9.852303576818114],
+         [-1.598268424324465, 6.733059846988567],
+         [-39.97301433560758, -10.829953036214794],
+         [-39.98767882350302, -10.825236136461271],
+         [34.741761036050235, -3.106859128147278],
+         [19.90636304194326, -14.143006948538645],
+         [-53.364860279287946, -12.050167173431003],
+         [-42.76708374548736, -5.071142985763169],
+         [-9.082732679444161, 52.454683409230384]]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
+//Map.addLayer(Zones,{},'Zones',false);
+
+var Ecozone1 = Zones.filter(ee.Filter.eq('GEZ_CODE', 11)); // = Tropical rain forest 
+var Ecozone2 = Zones.filter(ee.Filter.eq('GEZ_CODE', 12)); // = Tropical Moist Deciduous forest
+var Ecozone3 = Zones.filter(ee.Filter.eq('GEZ_CODE', 13));// = Tropical Dry forest
+var Ecozone4 = Zones.filter(ee.Filter.eq('GEZ_CODE', 16));// = Tropical mountain system
+
+// LC products
+
+var esawc = ee.ImageCollection("ESA/WorldCover/v200").first(); //v100 also available
+var glc = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10").mosaic(); //'FROM-GLC10 Land Cover'
+var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
+var esri = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m").mosaic(); //+Info https://gee-community-catalog.org/projects/esrilc2020/
+var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
+var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var glclc20 = ee.Image('projects/glad/GLCLU2020/v2/LCLUC_2020').updateMask(ee.Image("projects/glad/OceanMask").lte(1));
+var glclc19 = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //// UMD Land cover map 2019 - Legend - https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
+var osmw = ee.ImageCollection("projects/sat-io/open-datasets/OSM_waterLayer"); //https://gee-community-catalog.org/projects/osm_water/?h=water
+
+var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
+var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
+var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
+var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
+var cropmask_UMD_2019=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
+
+//--------------
+// VARIABLES GENERAL
+
+Map.setOptions("SATELLITE");
+var srt = '2020-01-01'; var end = '2021-01-01';
+
+// Visu
+
+var vp_trees1 = {"opacity":1,"palette":["005200"]},
+    vp_trees2 = {"opacity":1,"palette":["007400"]},
+    vp_trees3 = {"opacity":1,"palette":["009f00"]},
+    vp_trees4 = {"opacity":1,"palette":["00ba00"]},
+    vp_trees5 = {"opacity":1,"palette":["e2bc31"]}, // Changed the color as it might be a transition zone between low tree cover and shrubs
+    vp_trees6 = {"opacity":1,"palette":["00eb00"]},
+    vp_trees7 = {"opacity":1,"palette":["aceb14"]},
+    vp_shrub = {"opacity":1,"palette":["ffbb22"]},
+    vp_owl = {"opacity":1,"palette":["d28230"]},
+    vp_grasstree = {"opacity":1,"palette":["d8ff60"]},
+    vp_grass = {"opacity":1,"palette":["ffff4c"]},
+    vp_crop = {"opacity":0.7,"palette":["f096ff"]},
+    vp_built = {"opacity":1,"palette":["fa0000"]},
+    vp_bare = {"opacity":1,"palette":["b4b4b4"]},
+    vp_snow = {"opacity":1,"palette":["f0f0f0"]},
+    vp_water = {"opacity":1,"palette":["0064c8"]},
+    vp_floodv = {"opacity":1,"palette":["0096a0"]},
+    vp_mang = {"opacity":1,"palette":["00cf75"]},
+    vp_mossl = {"opacity":1,"palette":["fae6a0"]},
+    vp_writrees = {"opacity":1,"palette":["97ff56"]},
+    vp_ghsl = {"opacity":1,"palette":["ff0000"]},
+    vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
+    
+    
+
+
+//--------------
+// SELECT CLASSES
+
+// 1. ESA World Cover
+
+var wc_tree = esawc.eq(10).rename(['wc_trees']);  
+var wc_shrub = esawc.eq(20).rename(['wc_shrub']); 
+var wc_grass =  esawc.eq(30).rename(['wc_grass']); 
+var wc_crop = esawc.eq(40).rename(['wc_crop']); 
+var wc_built = esawc.eq(50).rename(['wc_built']); 
+var wc_bare = esawc.eq(60).rename(['wc_bare']); 
+var wc_snow = esawc.eq(70).rename(['wc_snow']); 
+var wc_water = esawc.eq(80).rename(['wc_water']); 
+var wc_floodv = esawc.eq(90).rename(['wc_floodv']); 
+var wc_mang = esawc.eq(95).rename(['wc_mang']); 
+var wc_mossl = esawc.eq(100).rename(['wc_mossl']); 
+
+// 2. GLC
+
+var glc_tree = glc.eq(20).rename(['glc_tree']); 
+var glc_shrub = glc.eq(40).rename(['glc_shrub']); 
+var glc_grass = glc.eq(30).rename(['glc_grass']); 
+var glc_crop = glc.eq(10).rename(['glc_crop']); 
+var glc_built = glc.eq(80).rename(['glc_built']); 
+var glc_bare = glc.eq(90).rename(['glc_bare']); 
+var glc_snow = glc.eq(100).rename(['glc_snow']); 
+var glc_water = glc.eq(60).rename(['glc_water']); 
+
+// 3. Dynamic World
+
+var dwl = dw.filterDate(srt, end).select("label"); //.filterBounds(AOIpt)
+var dwMode = dwl.reduce(ee.Reducer.mode()); //Mode reducer for the period selected
+var dw_tree = dwMode.eq(1).rename(['dw_trees']);  
+var dw_shrub = dwMode.eq(5).rename(['dw_shrub']); 
+var dw_grass = dwMode.eq(2).rename(['dw_grass']); 
+var dw_crop = dwMode.eq(4).rename(['dw_crop']); 
+var dw_built = dwMode.eq(6).rename(['dw_built']); 
+var dw_bare = dwMode.eq(7).rename(['dw_bare']); 
+var dw_snow = dwMode.eq(8).rename(['dw_snow']); 
+var dw_water = dwMode.eq(0).rename(['dw_water']); 
+var dw_floodv = dwMode.eq(3).rename(['dw_floodv']); 
+
+// 4. ESRI
+
+var esri_tree = esri.eq(2).rename(['esri_tree']);  
+var esri_shrub = esri.eq(6).rename(['esri_shrub']);
+var esri_grass = esri.eq(3).rename(['esri_grass']);
+var esri_crop = esri.eq(5).rename(['esri_crop']);
+var esri_built = esri.eq(7).rename(['esri_built']);
+var esri_bare = esri.eq(8).rename(['esri_bare']);
+var esri_snow = esri.eq(9).rename(['esri_snow']);
+var esri_water = esri.eq(1).rename(['esri_water']);
+var esri_floodv = esri.eq(4).rename(['esri_floodv']);
+
+// 5. WRI
+
+var wri_tree = wri.gte(10); //Classes 10 and 20 are not included to avoid commission.
+                            // Although this could be probably masked afterwards by majority of grass?
+
+// 6. GFC
+
+var gfc_stree = gfc.select(['treecover2000']);
+var gfc_tree10 = gfc_stree.gte(10);
+var lossYear = gfc.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var gfc_treed = gfc_tree10.subtract(lossb2020);
+
+var fromList = [-1, 0, 1];
+var toList =   [0, 0, 1];
+
+var gfc_tree = gfc_treed.remap({
+  from: fromList,
+  to: toList,
+  defaultValue: 0,
+  bandName: 'treecover2000'
+});
+
+
+// 7. GLC LCLU 2020
+
+var glclc20_tree = glclc20.gte(25).and(glclc20.lte(48)).rename(['glclc20_tree']);  
+var glclc20_crop = glclc20.eq(244).rename(['glclc20_crop']);
+var glclc20_built = glclc20.gte(250).rename(['glclc20_built']);
+var glclc20_snow = glclc20.eq(241).rename(['glclc20_snow']);
+var glclc20_water = glclc20.eq(200).and(glclc20.lte(207)).rename(['glclc20_water']);
+var glclc20_floodv = glclc20.gte(100).and(glclc20.lte(148)).rename(['glclc20_floodv']);
+
+
+// 8. GLC LC 2019
+
+var glclc19_tree = (glclc19.gte(51).and(glclc19.lte(74))).or(glclc19.gte(75).and(glclc19.lte(91))).rename(['glclc19_tree']);
+var glclc19_treeo = glclc19.gte(51).and(glclc19.lte(74)).rename(['glclc219_treeo']);
+var glclc19_treec = glclc19.gte(75).and(glclc19.lte(91)).rename(['glclc219_treec']);
+var glclc19_crop = glclc19.eq(252).rename(['glclc219_crop']);
+var glclc19_built = glclc19.gte(240).and(glclc19.lte(249)).rename(['glclc219_built']);
+var glclc19_snow = glclc19.eq(251).rename(['glclc219_snow']);
+var glclc19_water = glclc19.eq(250).rename(['glclc219_water']);
+var glclc19_floodv = glclc19.gte(126).and(glclc19.lte(211)).rename(['glclc219_floodw']);
+
+// 9. UMD Crops (2003, 2007, 2011, 2015, 2019)
+
+var umd_crop = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
+
+// Others
+// GEDI Lang
+
+var gedi_lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
+var gedilt= gedi_lang.lt(5);
+var gedigte= gedi_lang.gte(5);
+var ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_C");
+ghsl = ghsl.mosaic().gte(11);
+
+// End of Select Classes
+//******************************
+
+// Overall Trees
+var trees = wc_tree.add(dw_tree).add(esri_tree).add(gfc_tree).add(glc_tree).add(glclc20_tree).add(glclc19_tree).rename(['trees']); //.add(glc_tree)
+// Overall Shrub
+var shrub = wc_shrub.add(dw_shrub).add(esri_shrub).add(glc_shrub).rename(['shrub']); //.add(glc_shrub)
+// Overall Grass
+var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass).rename(['grass']); //.add(glc_grass)
+// Overall Crop
+var crop = wc_crop.add(dw_crop).add(esri_crop).add(glclc20_crop).add(glclc19_crop).add(umd_crop).rename(['crop']); //.add(glc_crop)
+// Overall built
+var built = wc_built.add(dw_built).add(esri_built).add(glc_built).rename(['built']); //.add(glclc20_built).add(glclc19_built)
+// Overall bare
+var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']); //.add(glc_bare)
+// Overall snow
+var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']); //.add(glc_snow)
+// Overall water
+var water = wc_water.add(dw_water).add(esri_water).add(glc_water).rename(['water']); //.or(glclc20_water).or(glclc19_water)
+// Overall floodv
+var floodv = wc_floodv.add(dw_floodv).add(esri_floodv).add(glclc20_floodv).add(glclc19_floodv).rename(['floodv']);
+// Overall mang
+var mang = wc_mang.rename(['mang'])
+// Overall mossl
+var mossl = wc_mossl.rename(['mossl'])
+
+// Majority rules
+
+var shrub_maj = shrub.gt(2).rename(['shrub']); // Shrub majority (overall 4 products used). Majority: >2
+var grass_maj = grass.gte(2).unmask().rename(['grass']); // Grass majority (overall 4 products). Majority: >2
+var crop_maj = crop.gt(3).unmask().rename(['crop']); // Crop majority (overall 6 products). Majority: >3
+var built_maj = built.gte(2).rename(['built']); // Built layer (overall 4 products) Rule: gte(2) Allow a bit more flexibility instead of majority. To be crossed with GHSL
+var bare_maj = bare.gt(2).rename(['bare']); // Bare majority (overall 4 products). Majority: >2
+var snow_maj = snow.gt(3).rename(['snow']); // Snow Majority (overall 6 products). Majority: >3
+var water_maj = water.gt(2) // Water majority (overall 4 products) Majority: >2. If being more flexible (e.g. gte(2) -> Shadows included
+var floodv_maj = floodv.gt(2).rename(['floodv']); // Flooded vegetation: (Overall 4 products) Majority: >2
+var mang_maj = mang.rename(['mang']); // Only 1 class available. Eventually cross with flooded vegetation.
+var mossl_maj = mossl.rename(['mossl']); // Moss and linchen. Only one layer available, eventually remove.
+
+// ---------------------
+//  TREES and SHRUBS - 1
+// ---------------------
+
+// ---- Majority ---- //
+var tree_maj1 = trees.eq(7);
+var tree_maj2 = trees.eq(6);
+var tree_maj3 = trees.eq(5); 
+var tree_maj4 = trees.eq(4); 
+// ---- Low desn. ---- //
+var tree_maj5 = trees.eq(3);
+var tree_maj6 = trees.eq(2); //------ Overall til here ----- maj6
+
+// Tree Cover Majority: >3 (total is 7). This is to be used along with shrubs
+var tree_overall_4cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4);
+var tree_overall_5cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5);
+var tree_overall_6cat = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj6);
+
+//Anything that does not fall within the 6 categories but has been mappen by WRI Tree.
+//Mainly trees outside forest
+var tree_maj7 = wri_tree.updateMask(tree_overall_6cat.not()).unmask(); 
+var tree_overall_7cat = tree_overall_6cat.or(tree_maj7);
+
+// ---------------------
+//  WATER
+// ---------------------
+
+// Water masks all others
+
+tree_maj1 = tree_maj1
+tree_maj2 = tree_maj2
+tree_maj3 = tree_maj3
+tree_maj4 = tree_maj4
+tree_maj5 =
+tree_maj6 =
+tree_maj7 =
+tree_overall_4cat =
+tree_overall_5cat =
+tree_overall_6cat =
+tree_overall_7cat =
+
+crop_maj = crop_maj.updateMask(water_maj.not()).unmask();
+
+// ---------------------
+//  TREES and SHRUBS - 2
+// ---------------------
+
+
+
+// Shrub majority is masked by majority of Tree cover
+var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not()).unmask();
+
+// Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
+// Note that WRI TC does not cover areas outside the tropics. In order to have OWL outside the tropics it is neccessary to
+// include an additional low density class (i.e. maj5 and maj6). This also makes sense as this class still has a lot of overlap with shrub majority.
+
+var owl1 = shrub_maj_m.and(tree_maj6); //Outside the tropics
+var owl2 = shrub_maj_m.and(tree_maj7); //In and outside the tropics
+
+var owl = owl1.or(owl2);
+
+// Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
+// These are low density tree cover areas that did not intersect with Shrub Majority
+var tree_maj6_m = tree_maj6.updateMask(owl.not());
+var tree_maj7_m = tree_maj7.updateMask(owl.not());
+
+// Overall maj67 (masked by owl). 
+// Some of these areas will be probably masked afterwards by the grass majority
+var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
+
+//Version of shrubs masked by owl and TC majority
+var shrub_maj_mm = shrub_maj_m.updateMask(owl.not())
+
+tree_maj1 = tree_maj1.rename("tree_maj1");
+tree_maj2 = tree_maj2.rename("tree_maj2");
+tree_maj3 = tree_maj3.rename("tree_maj3");
+tree_maj4 = tree_maj4.rename("tree_maj4");
+tree_maj5 = tree_maj5.rename("tree_maj5");
+owl = owl.rename("owl_maj67");
+shrub_maj_mm = shrub_maj_mm.rename("shrub")
+tree_maj67_m = tree_maj67_m.rename("tree_maj67")
+
+//Intermediate list
+var interm1_list = ([tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, owl, shrub_maj_mm, tree_maj67_m]);
+var interm = ee.ImageCollection.fromImages(interm1_list)
+print(interm)
+
+// ---------------------
+//  GRASS
+// ---------------------
+
+// First we need to a mask: 
+// Remove from grass Majority - TC Cat 1-5 (5cat)
+
+var grass_maj_m = grass_maj.updateMask(tree_overall_5cat.not()).unmask();
+// We cross majority of grass already masked with TC 1-5 with remaining TC 6 and 7 (the one already masked by OWL) to create a new mixed class
+var grasstree67 = grass_maj_m.and(tree_maj67_m);
+// We update/mask the tree_maj67m with the new grasstree67
+var tree_maj67_mm = tree_maj67_m.updateMask(grasstree67.not()).unmask();
+// We update/mask the Grass Majority already masked with TC Cat 1-5 with the new grasstree67
+var grass_maj_mm = grass_maj_m.updateMask(grasstree67.not()).unmask()
+
+// ---------------------
+//  CROPS
+// ---------------------
+// Crops do dominate over the other classes (Tree low density, non majority shrub and non majority grass.
+// Eventually also over majority grass
+// OWL remains, as said before, because it is contained in the shrub majority class).
+
+/* Wrap-up | Intermediate list of final layers
+
+Trees: tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, tree_maj67_mm
+Shrub: shrub_maj_mm
+Owl: owl
+Grass: grass_maj_mm
+Grass Tree: grasstree67
+*/
+
+
+tree_maj1 = tree_maj1.updateMask(crop_maj.not()).unmask();
+tree_maj2 = tree_maj2.updateMask(crop_maj.not()).unmask();
+tree_maj3 = tree_maj3.updateMask(crop_maj.not()).unmask();
+tree_maj4 = tree_maj4.updateMask(crop_maj.not()).unmask();
+tree_maj5 = tree_maj5.updateMask(crop_maj.not()).unmask();
+tree_maj67_mm = tree_maj67_mm.updateMask(crop_maj.not()).unmask();
+shrub_maj_mm = shrub_maj_mm.updateMask(crop_maj.not()).unmask();
+owl = owl.updateMask(crop_maj.not()).unmask();
+grass_maj_mm = grass_maj_mm.updateMask(crop_maj.not()).unmask();
+grasstree67 = grasstree67.updateMask(crop_maj.not()).unmask();
+
+
+
+Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 1);
+Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 1);
+
+// ---------------------
+//  BUILT
+// ---------------------
+
+// ---------------------
+//  BARE
+// ---------------------
+
+// ---------------------
+//  SNOW
+// ---------------------
+
+
+
+// ---------------------
+//  FLOODED VEG.
+// ---------------------
+
+// ---------------------
+//  MANGROVES
+// ---------------------
+
+// ---------------------
+//  MOSCH AND LICHEN
+// ---------------------
+
+
+// ADD LAYERS
+
+Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 1);
+Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 1);
+Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 1);
+Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 1);
+Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 1);
+//Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
+//Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
+//Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
+//Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,3,4,5", 0);
+Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "Tree-Cover 67", 1)
+Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Shrub + TC 67", 1);
+Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub - masked by OWL and TC Majority", 1);
+//Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 1);
+//Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass", 0);
+//Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC 1 to 5", 0);
+Map.addLayer(grass_maj_mm.selfMask(), vp_grass, "Grass - Masked TC 1 to 5 and Grass/Tree", 1);
+Map.addLayer(grasstree67.selfMask(), vp_grasstree, "Grass/Tree67", 1)
+
+
+/*
+Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
+Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 0);
+Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 0);
+Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 0);
+Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 0);
+Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 0);
+Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 0);
+Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 0);
+*/
+
+
+
+
+
+
+
+
+
