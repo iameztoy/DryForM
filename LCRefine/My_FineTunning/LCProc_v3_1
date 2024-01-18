@@ -292,7 +292,7 @@ var tree_maj7_m = tree_maj7.updateMask(owl.not());
 var tree_maj67_m = tree_maj6_m.or(tree_maj7_m);
 
 //Version of shrubs masked by owl and TC majority
-var shrub_maj_mm = shrub_maj_m.updateMask(owl.not())
+var shrub_maj_mm = shrub_maj_m.updateMask(owl.not());
 
 tree_maj1 = tree_maj1.rename("tree_maj1");
 tree_maj2 = tree_maj2.rename("tree_maj2");
@@ -300,8 +300,8 @@ tree_maj3 = tree_maj3.rename("tree_maj3");
 tree_maj4 = tree_maj4.rename("tree_maj4");
 tree_maj5 = tree_maj5.rename("tree_maj5");
 owl = owl.rename("owl_maj67");
-shrub_maj_mm = shrub_maj_mm.rename("shrub")
-tree_maj67_m = tree_maj67_m.rename("tree_maj67")
+shrub_maj_mm = shrub_maj_mm.rename("shrub");
+tree_maj67_m = tree_maj67_m.rename("tree_maj67");
 
 //Intermediate list
 var interm1_list = ([tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, owl, shrub_maj_mm, tree_maj67_m]);
@@ -312,9 +312,8 @@ print(interm)
 //  GRASS
 // ---------------------
 
-// First we need to a mask: 
-// Remove from grass Majority - TC Cat 1-5 (5cat)
-
+ 
+// First we need to apply a mask. Remove from grass Majority - TC Cat 1-5 (5cat)
 var grass_maj_m = grass_maj.updateMask(tree_overall_5cat.not()).unmask();
 // We cross majority of grass already masked with TC 1-5 with remaining TC 6 and 7 (the one already masked by OWL) to create a new mixed class
 var grasstree67 = grass_maj_m.and(tree_maj67_m);
@@ -323,15 +322,11 @@ var tree_maj67_mm = tree_maj67_m.updateMask(grasstree67.not()).unmask();
 // We update/mask the Grass Majority already masked with TC Cat 1-5 with the new grasstree67
 var grass_maj_mm = grass_maj_m.updateMask(grasstree67.not()).unmask()
 
-// ---------------------
-//  CROPS
-// ---------------------
-// Crops do dominate over the other classes (Tree low density, non majority shrub and non majority grass.
-// Eventually also over majority grass
-// OWL remains, as said before, because it is contained in the shrub majority class).
+// -----------------------------------------------
+//  Wrap-up | Intermediate list of final layers
+// -----------------------------------------------
 
-/* Wrap-up | Intermediate list of final layers
-
+/*
 Trees: tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, tree_maj67_mm
 Shrub: shrub_maj_mm
 Owl: owl
@@ -339,6 +334,10 @@ Grass: grass_maj_mm
 Grass Tree: grasstree67
 */
 
+// ---------------------
+//  CROPS
+// ---------------------
+// Crops dominate over the other classes 
 
 tree_maj1 = tree_maj1.updateMask(crop_maj.not()).unmask();
 tree_maj2 = tree_maj2.updateMask(crop_maj.not()).unmask();
@@ -351,14 +350,20 @@ owl = owl.updateMask(crop_maj.not()).unmask();
 grass_maj_mm = grass_maj_mm.updateMask(crop_maj.not()).unmask();
 grasstree67 = grasstree67.updateMask(crop_maj.not()).unmask();
 
-
-
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 1);
 Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 1);
 
 // ---------------------
 //  BUILT
 // ---------------------
+
+// The majority class of built-up areas go beyond the real boundaries of the real built-up class
+// It does not contain other classes so we mask the built up with all other classes except Bare/Snow/FG/Mangroves (water is already masked)
+
+//First we build an overall mask for this specific case
+var mask4built = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67)
+built_maj = tree_maj1.updateMask(mask4built.not()).unmask();
+Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority masked by other classes", 1);
 
 // ---------------------
 //  BARE
