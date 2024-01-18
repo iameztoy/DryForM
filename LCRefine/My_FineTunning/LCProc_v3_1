@@ -152,7 +152,6 @@ var gfc_tree = gfc_treed.remap({
   bandName: 'treecover2000'
 });
 
-
 // 7. GLC LCLU 2020
 
 var glclc20_tree = glclc20.gte(25).and(glclc20.lte(48)).rename(['glclc20_tree']);  
@@ -383,7 +382,6 @@ grasstree67 = grasstree67.updateMask(crop_maj.not()).unmask();
 
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 1);
 Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 1);
-
 
 // ---------------------
 //  BUILT
