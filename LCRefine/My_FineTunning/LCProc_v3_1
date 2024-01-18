@@ -513,7 +513,7 @@ var reduce = ind.filter(ee.Filter.notNull(['area_in_meters'])).reduceToImage({pr
     reducer: ee.Reducer.first()
 });
 
-Map.addLayer(reduce, {palette: ['red']});
+Map.addLayer(reduce.gt(100), {palette: ['red']}, "Buildings");
 
 
 
