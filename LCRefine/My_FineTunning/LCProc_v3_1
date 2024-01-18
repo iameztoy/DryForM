@@ -507,6 +507,8 @@ Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 0);
 
 // Experimental
 
+/*
+
 //Building footprints -- https://gee-community-catalog.org/projects/global_buildings/?h=buildings
 var ind = ee.FeatureCollection("projects/sat-io/open-datasets/VIDA_COMBINED/IND");
 print(ind.limit(1))
@@ -542,6 +544,6 @@ Map.addLayer(ee.FeatureCollection(grip4_south_east_asia).style({color: '413B3A',
 Map.addLayer(ee.FeatureCollection(grip4_middle_east_central_asia).style({color: '413B3A',width:1}),{},'Grip4 Middle East and Central Asia')
 
 
-
+*/
 
 
