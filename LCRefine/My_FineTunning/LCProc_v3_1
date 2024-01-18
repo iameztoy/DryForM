@@ -29,7 +29,9 @@ var gfc = ee.Image("UMD/hansen/global_forest_change_2021_v1_9");
 var glclc20 = ee.Image('projects/glad/GLCLU2020/v2/LCLUC_2020').updateMask(ee.Image("projects/glad/OceanMask").lte(1));
 var glclc19 = ee.ImageCollection('projects/glad/GLCmap2019').mosaic(); //// UMD Land cover map 2019 - Legend - https://storage.googleapis.com/earthenginepartners-hansen/GLCLU_2019/legend.xlsx
 var osmw = ee.ImageCollection("projects/sat-io/open-datasets/OSM_waterLayer"); //https://gee-community-catalog.org/projects/osm_water/?h=water
-var jrc_water = ee.ImageCollection('JRC/GSW1_4/YearlyHistory');
+//var jrc_water = ee.ImageCollection('JRC/GSW1_4/YearlyHistory'); 
+var jrc_water = ee.Image('JRC/GSW1_4/YearlyHistory/2020');  //#99d9ea: Seasonal Water, #0000ff Permanent Water
+
 
 var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_2003').mosaic().unmask(); 
 var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
@@ -174,6 +176,10 @@ var glclc19_floodv = glclc19.gte(126).and(glclc19.lte(211)).rename(['glclc219_fl
 // 9. UMD Crops (2003, 2007, 2011, 2015, 2019)
 
 var umd_crop = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
+
+// 10. JRC Water (2020) - Seasonal
+var jrc_waterse = jrc_water.eq(2).unmask()
+
 
 // Others
 // GEDI Lang
@@ -409,7 +415,7 @@ Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub - masked by OWL and TC Ma
 Map.addLayer(grass_maj_mm.selfMask(), vp_grass, "Grass - Masked TC 1 to 5 and Grass/Tree", 1);
 Map.addLayer(grasstree67.selfMask(), vp_grasstree, "Grass/Tree67", 1)
 
-
+Map.addLayer(jrc_waterse.selfMask(), {palette: "99d9ea"}, 'JRC Water 2020 - Seasonal');
 /*
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
 Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 0);
