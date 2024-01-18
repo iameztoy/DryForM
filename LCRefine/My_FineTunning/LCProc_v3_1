@@ -280,7 +280,7 @@ var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not()).unmask();
 var owl1 = shrub_maj_m.and(tree_maj6); // Outside the tropics
 var owl2 = shrub_maj_m.and(tree_maj7); // In and outside the tropics
 
-var owl = owl1.or(owl2);
+var owl = owl1.or(owl2); // Overall owl
 
 // Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
 // These are low density tree cover areas that did not intersect with Shrub Majority
