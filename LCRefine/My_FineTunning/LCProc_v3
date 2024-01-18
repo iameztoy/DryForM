@@ -330,7 +330,7 @@ grasstree67 = grasstree67.updateMask(crop_maj.not()).unmask();
 // Crops can contain water -> Mask crops with water_maj
 var crop_maj_m = crop_maj.updateMask(water_maj.not()).unmask();
 
-Map.addLayer(crop_maj_m.selfMask(), vp_crop, "Crop Majority", 0);
+Map.addLayer(crop_maj_m.selfMask(), vp_crop, "Crop Majority masked by water", 0);
 
 // ---------------------
 //  BUILT
