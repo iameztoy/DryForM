@@ -309,7 +309,7 @@ water_maj = water_maj.updateMask(jrc_waterse.not()).unmask();
 // Shrub majority is masked by majority of Tree cover
 var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not()).unmask();
 
-// Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
+// Other wooded land is the intersection between shrub majority and lowest density classes of Tree Cover (cat 6 and 7)
 // Note that WRI TC does not cover areas outside the tropics. In order to have OWL outside the tropics it is neccessary to
 // include an additional low density class (i.e. maj6). This also makes sense as this class still has a lot of overlap with shrub majority.
 
