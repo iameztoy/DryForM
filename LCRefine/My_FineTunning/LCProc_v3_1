@@ -401,22 +401,31 @@ Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1
 //  BARE
 // ---------------------
 
+// The Majority class of bare soil areas is prioritized over all others
+
 // ---------------------
 //  SNOW
 // ---------------------
+
+Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
 
 // ---------------------
 //  FLOODED VEG.
 // ---------------------
 
+Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
+
 // ---------------------
 //  MANGROVES
 // ---------------------
+Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
+
 
 // ---------------------
 //  MOSCH AND LICHEN
 // ---------------------
 
+Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 1);
 
 // ADD LAYERS
 
