@@ -457,7 +457,7 @@ Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
 // ---------------------
 
 // The Majority class of bare soil areas is prioritized over all others. Therefore, all others should be masked
-
+Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 1);
 
 // ---------------------
 //  MOSCH AND LICHEN
