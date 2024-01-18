@@ -508,13 +508,12 @@ Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 0);
 // Experimental
 
 var ind = ee.FeatureCollection("projects/sat-io/open-datasets/VIDA_COMBINED/IND");
-
+print(ind.limit(1))
 var reduce = ind.filter(ee.Filter.notNull(['area_in_meters'])).reduceToImage({properties: ['area_in_meters'],
     reducer: ee.Reducer.first()
 });
 
-var bld = reduce.gt(100)
-Map.addLayer(bld, {palette: ['red']});
+Map.addLayer(reduce, {palette: ['red']});
 
 
 
