@@ -420,7 +420,7 @@ floodv_maj = floodv_maj.updateMask(mang_maj.not()).unmask();
 var mask4_tc67 = mang_maj.or(floodv_maj);
 tree_maj67_mm = tree_maj67_mm.updateMask(mask4_tc67.not()).unmask();
 
-// We also need to mask from mangroves and wetlands all the other classes to avoid overlaps
+// We also need to mask from mangroves and wetlands all the other classes to avoid overlaps | not snow
 var mask4both = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(crop_maj).or(built_maj_m).or(mossl_maj).or(jrc_waterse).or(water_maj);
 mang_maj = mang_maj.updateMask(mask4both.not()).unmask(); 
 floodv_maj = floodv_maj.updateMask(mask4both.not()).unmask(); 
@@ -428,6 +428,29 @@ floodv_maj = floodv_maj.updateMask(mask4both.not()).unmask();
 
 Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
 Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
+
+// -----------------------------------------------
+//  Wrap-up | Intermediate list of final layers
+// -----------------------------------------------
+
+/*
+18 classes
+tree_maj1, tree_maj2, tree_maj3,tree_maj4, tree_maj5, tree_maj67_mm, 
+shrub_maj_mm, owl, 
+grass_maj_mm, grasstree67, 
+crop_maj, 
+built_maj_m,
+mang_maj, floodv_maj, 
+snow_maj
+water_maj, jrc_waterse,
+mossl_maj
+*/
+
+
+
+
+
+
 
 // ---------------------
 //  SNOW
