@@ -412,12 +412,10 @@ floodv_maj = floodv_maj.updateMask(mang_maj.not()).unmask()
 
 //We also separate both the mangroves and floodv from TC-67
 var mask4_tc67 = mang_maj.or(floodv_maj)
-tree_maj67_mm = tree_maj67_mm.updateMask(mang_maj.not()).unmask();
+tree_maj67_mm = tree_maj67_mm.updateMask(mask4_tc67.not()).unmask();
 
 // We also need to mask from mangroves and wetlands all other classes to avoid overlaps
-
-// Although tree_maj67_mm has already been masked beforehand in mang_maj; we create one mask for both. 
-var mask4both = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(crop_maj).or(built_maj_m).or(mossl_maj).or(jrc_waterse).or(water_maj);
+var mask4both = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(crop_maj).or(built_maj_m).or(mossl_maj).or(jrc_waterse).or(water_maj);
 mang_maj = mang_maj.updateMask(mask4both.not()).unmask(); 
 floodv_maj = floodv_maj.updateMask(mask4both.not()).unmask(); 
 
