@@ -430,7 +430,7 @@ Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
 Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
 
 // -----------------------------------------------
-//  Wrap-up | Intermediate list of final layers
+//  Wrap-up | Intermediate list of layers
 // -----------------------------------------------
 
 /* --- 18 classes ---
