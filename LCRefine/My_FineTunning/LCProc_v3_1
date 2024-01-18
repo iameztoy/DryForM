@@ -464,7 +464,7 @@ Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 1);
 //  MOSCH AND LICHEN
 // ---------------------
 
-// Mosh and lichen are added only where others are not present
+// Mosh and lichen are added only where others are not present. ML is only available in ESA-WC
 
 Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 1);
 
