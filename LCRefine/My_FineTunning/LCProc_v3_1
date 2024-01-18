@@ -15,6 +15,10 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
 
+// ---- !!! --- Notes ---
+// There are seasonal water pixels over built
+
+
 var Ecozone1 = Zones.filter(ee.Filter.eq('GEZ_CODE', 11)); // = Tropical rain forest 
 var Ecozone2 = Zones.filter(ee.Filter.eq('GEZ_CODE', 12)); // = Tropical Moist Deciduous forest
 var Ecozone3 = Zones.filter(ee.Filter.eq('GEZ_CODE', 13));// = Tropical Dry forest
