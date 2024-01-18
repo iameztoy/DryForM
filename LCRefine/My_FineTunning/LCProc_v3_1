@@ -398,16 +398,22 @@ var mask4built = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj
 var built_maj_m = built_maj.updateMask(mask4built.not()).unmask();
 Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1);
 
-// ---------------------
-//  MANGROVES
-// ---------------------
+// ------------------------------------------------
+//  MANGROVES - HERBACEOUS WETLAND (flooded veg.)
+// ------------------------------------------------
 
 // In terms of majority layers, both mangroves and hervaceous wetland are very similar in extent 
 // Thus, in principle there is no way to discriminate between both unless if we cross TC-67 with the mangroves first.
-mang_maj = mang_maj.and(tree_maj67_mm) // These are mangroves masked.
+mang_maj = mang_maj.and(tree_maj67_mm) 
 
-//Now we need to mask from TC-67 the mangroves
+// Now we need to separate herbaceous wetland (floodv) from the mangroves
+floodv_maj = floodv_maj.updateMask(mang_maj.not()).unmask()
+
+//We also separate both the mangroves and floodv from TC-67
+var mask4_tc67 = mang_maj.or(floodv_maj)
 tree_maj67_mm = tree_maj67_mm.updateMask(mang_maj.not()).unmask();
+
+
 Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
 
 // ---------------------
@@ -422,9 +428,7 @@ Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
 
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
 
-// ---------------------
-//  FLOODED VEG.
-// ---------------------
+
 
 Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
 
