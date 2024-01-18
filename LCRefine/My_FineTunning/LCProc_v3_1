@@ -8,7 +8,8 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
          [19.90636304194326, -14.143006948538645],
          [-53.364860279287946, -12.050167173431003],
          [-42.76708374548736, -5.071142985763169],
-         [-9.082732679444161, 52.454683409230384]]);
+         [-9.082732679444161, 52.454683409230384],
+         [-16.661807830882125, 12.84153836813104]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
@@ -398,6 +399,18 @@ var built_maj_m = built_maj.updateMask(mask4built.not()).unmask();
 Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1);
 
 // ---------------------
+//  MANGROVES
+// ---------------------
+
+// In terms of majority layers, both mangroves and hervaceous wetland are very similar in extent 
+// Thus, in principle there is no way to discriminate between both unless if we cross TC-67 with the mangroves first.
+mang_maj = mang_maj.and(tree_maj67_mm) // These are mangroves masked.
+
+//Now we need to mask from TC-67 the mangroves
+tree_maj67_mm = tree_maj67_mm.updateMask(mang_maj.not()).unmask();
+Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
+
+// ---------------------
 //  BARE
 // ---------------------
 
@@ -415,10 +428,7 @@ Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
 
 Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
 
-// ---------------------
-//  MANGROVES
-// ---------------------
-Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
+
 
 
 // ---------------------
