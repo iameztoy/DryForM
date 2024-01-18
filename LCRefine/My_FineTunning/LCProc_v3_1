@@ -230,6 +230,10 @@ var floodv_maj = floodv.gt(2).rename(['floodv']); // Flooded vegetation: (Overal
 var mang_maj = mang.rename(['mang']); // Only 1 class available. Eventually cross with flooded vegetation.
 var mossl_maj = mossl.rename(['mossl']); // Moss and linchen. Only one layer available, eventually remove.
 
+// ------------------------
+// *** ITERATION - 1 *** 
+// ------------------------
+
 // ---------------------
 //  TREES and SHRUBS - 1
 // ---------------------
