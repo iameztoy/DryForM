@@ -11,7 +11,7 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
          [-9.082732679444161, 52.454683409230384]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
-Map.addLayer(Zones,{},'Zones',false);
+//Map.addLayer(Zones,{},'Zones',false);
 
 var Ecozone1 = Zones.filter(ee.Filter.eq('GEZ_CODE', 11)); // = Tropical rain forest 
 var Ecozone2 = Zones.filter(ee.Filter.eq('GEZ_CODE', 12)); // = Tropical Moist Deciduous forest
@@ -53,6 +53,7 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_trees7 = {"opacity":1,"palette":["aceb14"]},
     vp_shrub = {"opacity":1,"palette":["ffbb22"]},
     vp_owl = {"opacity":1,"palette":["d28230"]},
+    vp_grasstree = {"opacity":1,"palette":["d8ff60"]},
     vp_grass = {"opacity":1,"palette":["ffff4c"]},
     vp_crop = {"opacity":0.7,"palette":["f096ff"]},
     vp_built = {"opacity":1,"palette":["fa0000"]},
@@ -65,6 +66,8 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_writrees = {"opacity":1,"palette":["97ff56"]},
     vp_ghsl = {"opacity":1,"palette":["ff0000"]},
     vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
+    
+    
 
 
 //--------------
@@ -285,22 +288,26 @@ print(interm)
 //  GRASS
 // ---------------------
 
-// First we need to apply some masks: 
-// Remove from grass Majority - TC Cat 1 -4 (4cat)
+// First we need to a mask: 
+// Remove from grass Majority - TC Cat 1-5 (5cat)
 
-var grass_maj_m = grass_maj.updateMask(tree_overall_4cat.not()).unmask()
-Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC")
+var grass_maj_m = grass_maj.updateMask(tree_overall_5cat.not()).unmask();
+Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC 1 to 5", 0);
 
-// Remove from maj67 majority of grass already masked
-var tree_maj67_mm = tree_maj67_m.updateMask(grass_maj_m.not()).unmask();
-Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "tree_maj67 masked by grass");
+// We cross majority of grass already masked with TC 1-5 with remaining TC 6 and 7 (the one already masked by OWL) to create a new mixed class
 
-// Trees on grass (only tropics - WRI Extent): tree_maj7_m with grass_maj_m? 
+var grasstree67 = grass_maj_m.and(tree_maj67_m);
+Map.addLayer(grasstree67.selfMask(), vp_grasstree, "Grass/Tree67")
 
-// Apply grass majority on previous versions of low density TC (maj5? 6 and 7) + non dominant shrubs. 
+// We update/mask the tree_maj67m with the new grasstree67
 
+var tree_maj67_mm = tree_maj67_m.updateMask(grasstree67.not()).unmask();
+Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "Updated TC 67")
 
-// Leave owl as this is already contained within the shrub majority.
+// We update/mask the Grass Majority already masked with TC Cat 1-5 with the new grasstree67
+var grass_maj_mm = grass_maj_m.updateMask(grasstree67.not()).unmask()
+Map.addLayer(grass_maj_mm.selfMask(), vp_grass, "grass removed TC 1 to 5 and Grass/Tree");
+
 
 // ---------------------
 //  CROPS
@@ -308,6 +315,15 @@ Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "tree_maj67 masked by grass");
 // Crops do dominate over the other classes (Tree low density, non majority shrub and non majority grass.
 // Eventually also over majority grass
 // OWL remains, as said before, because it is contained in the shrub majority class).
+
+/* Intermediate list of final layers
+
+Trees: tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, tree_maj67_mm
+Shrub: shrub_maj_mm
+Owl: owl
+Grass: grass_maj_mm
+Grass Tree: grasstree67
+*/
 
 // ---------------------
 //  BUILT
