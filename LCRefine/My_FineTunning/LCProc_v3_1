@@ -401,15 +401,17 @@ Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1
 //  MANGROVES - HERBACEOUS WETLAND (flooded veg.)
 // ------------------------------------------------
 
-// In terms of majority layers, both mangroves and hervaceous wetland are very similar in extent 
-// Thus, in principle there is no way to discriminate between both unless if we cross TC-67 with the mangroves first.
-mang_maj = mang_maj.and(tree_maj67_mm) 
+// Should be considered that mangroves are only classified in in ESA-WC. All other datasets do not contain this class but only herbaceous wetlands.
+// The problem is that in terms of majority vote, both mangroves and herbaceous wetland are very similar in extent. 
+// However, there is in principle a good match between Mangroves and TC-67. This helps to discriminate between both.
+// Therefore, here we define the mangroves as the intersection between TC-67 and the Majority Vote for TC-67.
+mang_maj = mang_maj.and(tree_maj67_mm);
 
 // Now we need to separate herbaceous wetland (floodv) from the mangroves
-floodv_maj = floodv_maj.updateMask(mang_maj.not()).unmask()
+floodv_maj = floodv_maj.updateMask(mang_maj.not()).unmask();
 
 //We also separate both the mangroves and floodv from TC-67
-var mask4_tc67 = mang_maj.or(floodv_maj)
+var mask4_tc67 = mang_maj.or(floodv_maj);
 tree_maj67_mm = tree_maj67_mm.updateMask(mask4_tc67.not()).unmask();
 
 // We also need to mask from mangroves and wetlands all other classes to avoid overlaps
