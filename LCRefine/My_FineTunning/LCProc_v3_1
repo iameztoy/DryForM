@@ -450,7 +450,6 @@ mossl_maj
 //  SNOW
 // ---------------------
 
-
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
 
 // ---------------------
