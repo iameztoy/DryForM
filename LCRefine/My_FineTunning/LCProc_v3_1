@@ -279,7 +279,6 @@ var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not()).unmask();
 
 var owl1 = shrub_maj_m.and(tree_maj6); // Outside the tropics
 var owl2 = shrub_maj_m.and(tree_maj7); // In and outside the tropics
-
 var owl = owl1.or(owl2); // Overall owl
 
 // Apply owl mask on Tree Cover maj6 and maj7 so we get clean maj6 and maj7 classes
@@ -337,7 +336,7 @@ Grass Tree: grasstree67
 // ---------------------
 //  CROPS
 // ---------------------
-// Crops dominate over the other classes 
+// Crops dominate over the other classes | At least the following: 
 
 tree_maj1 = tree_maj1.updateMask(crop_maj.not()).unmask();
 tree_maj2 = tree_maj2.updateMask(crop_maj.not()).unmask();
@@ -353,6 +352,7 @@ grasstree67 = grasstree67.updateMask(crop_maj.not()).unmask();
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 1);
 Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 1);
 
+
 // ---------------------
 //  BUILT
 // ---------------------
@@ -361,12 +361,11 @@ Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 1);
 // It does not contain other classes so we mask the built up with all other classes except Bare/Snow/FG/Mangroves (water is already masked)
 // Note that this might remove small built-up areas. These can be corrected on a second phase by:
     // Selecting the small built up areas from the original built_maj viaconnectedPixels and stich them aftewards to the outcome.
-Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 1);
+
 //First we build an overall mask for this specific case
-var mask4built = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67);
-//Map.addLayer(mask4built)
-built_maj = (tree_maj1.updateMask(mask4built.not())).unmask();
-Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority masked by other classes", 1);
+var mask4built = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(crop_maj);
+var built_maj_m = built_maj.updateMask(mask4built.not()).unmask();
+Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1);
 
 // ---------------------
 //  BARE
