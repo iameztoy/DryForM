@@ -54,6 +54,7 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_trees5 = {"opacity":1,"palette":["e2bc31"]}, // Changed the color as it might be a transition zone between low tree cover and shrubs
     vp_trees6 = {"opacity":1,"palette":["00eb00"]},
     vp_trees7 = {"opacity":1,"palette":["aceb14"]},
+    vp_trees67 = {"opacity":1,"palette":["67a0da13"]},
     vp_shrub = {"opacity":1,"palette":["ffbb22"]},
     vp_owl = {"opacity":1,"palette":["d28230"]},
     vp_grasstree = {"opacity":1,"palette":["d8ff60"]},
@@ -70,9 +71,6 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_writrees = {"opacity":1,"palette":["97ff56"]},
     vp_ghsl = {"opacity":1,"palette":["ff0000"]},
     vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
-    
-    
-
 
 //--------------
 // SELECT CLASSES
@@ -162,7 +160,6 @@ var glclc20_snow = glclc20.eq(241).rename(['glclc20_snow']);
 var glclc20_water = glclc20.eq(200).and(glclc20.lte(207)).rename(['glclc20_water']);
 var glclc20_floodv = glclc20.gte(100).and(glclc20.lte(148)).rename(['glclc20_floodv']);
 
-
 // 8. GLC LC 2019
 
 var glclc19_tree = (glclc19.gte(51).and(glclc19.lte(74))).or(glclc19.gte(75).and(glclc19.lte(91))).rename(['glclc19_tree']);
@@ -188,6 +185,7 @@ var jrc_waterse = jrc_water.eq(2).unmask()
 var gedi_lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var gedilt= gedi_lang.lt(5);
 var gedigte= gedi_lang.gte(5);
+
 var ghsl = ee.ImageCollection("JRC/GHSL/P2023A/GHS_BUILT_C");
 ghsl = ghsl.mosaic().gte(11);
 
@@ -203,7 +201,7 @@ var grass = wc_grass.add(dw_grass).add(esri_grass).add(glc_grass).rename(['grass
 // Overall Crop
 var crop = wc_crop.add(dw_crop).add(esri_crop).add(glclc20_crop).add(glclc19_crop).add(umd_crop).rename(['crop']); //.add(glc_crop)
 // Overall built
-var built = wc_built.add(dw_built).add(esri_built).add(glc_built).rename(['built']); //.add(glclc20_built).add(glclc19_built)
+var built = wc_built.add(dw_built).add(esri_built).add(glc_built).add(ghsl).rename(['built']); //.add(glclc20_built).add(glclc19_built)
 // Overall bare
 var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']); //.add(glc_bare)
 // Overall snow
@@ -213,9 +211,9 @@ var water = wc_water.add(dw_water).add(esri_water).add(glc_water).rename(['water
 // Overall floodv
 var floodv = wc_floodv.add(dw_floodv).add(esri_floodv).add(glclc20_floodv).add(glclc19_floodv).rename(['floodv']);
 // Overall mang
-var mang = wc_mang.rename(['mang'])
+var mang = wc_mang.rename(['mang']);
 // Overall mossl
-var mossl = wc_mossl.rename(['mossl'])
+var mossl = wc_mossl.rename(['mossl']);
 
 // Majority rules
 
@@ -223,9 +221,10 @@ var shrub_maj = shrub.gt(2).rename(['shrub']); // Shrub majority (overall 4 prod
 var grass_maj = grass.gte(2).unmask().rename(['grass']); // Grass majority (overall 4 products). Majority: >2
 var crop_maj = crop.gt(3).unmask().rename(['crop']); // Crop majority (overall 6 products). Majority: >3
 var built_maj = built.gte(2).rename(['built']); // Built layer (overall 4 products) Rule: gte(2) Allow a bit more flexibility instead of majority. To be crossed with GHSL
+built_maj = built_maj.or(ghsl); //GHSL might be more accurate even than the majority of the previous, so we include with an .or statement
 var bare_maj = bare.gt(2).rename(['bare']); // Bare majority (overall 4 products). Majority: >2
 var snow_maj = snow.gt(3).rename(['snow']); // Snow Majority (overall 6 products). Majority: >3
-var water_maj = water.gt(2) // Water majority (overall 4 products) Majority: >2. If being more flexible (e.g. gte(2) -> Shadows included
+var water_maj = water.gt(2); // Water majority (overall 4 products) Majority: >2. If being more flexible (e.g. gte(2) -> Shadows included
 var floodv_maj = floodv.gt(2).rename(['floodv']); // Flooded vegetation: (Overall 4 products) Majority: >2
 var mang_maj = mang.rename(['mang']); // Only 1 class available. Eventually cross with flooded vegetation.
 var mossl_maj = mossl.rename(['mossl']); // Moss and linchen. Only one layer available, eventually remove.
@@ -257,7 +256,10 @@ var tree_overall_7cat = tree_overall_6cat.or(tree_maj7);
 //  WATER Permanent & Seasonal
 // -----------------------------
 
-// Water Permanent masks all others
+// Water Permanent masks all others but not crops (water within crops is probably well delineated)
+// Then we first mask the permanent water layers with crops
+
+water_maj = water_maj.updateMask(crop_maj.not()).unmask();
 
 tree_maj1 = tree_maj1.updateMask(water_maj.not()).unmask();
 tree_maj2 = tree_maj2.updateMask(water_maj.not()).unmask();
@@ -268,7 +270,6 @@ tree_maj6 = tree_maj6.updateMask(water_maj.not()).unmask();
 tree_maj7 = tree_maj7.updateMask(water_maj.not()).unmask();
 shrub_maj = shrub_maj.updateMask(water_maj.not()).unmask();
 grass_maj = grass_maj.updateMask(water_maj.not()).unmask();
-crop_maj = crop_maj.updateMask(water_maj.not()).unmask();
 built_maj = built_maj.updateMask(water_maj.not()).unmask();
 floodv_maj = floodv_maj.updateMask(water_maj.not()).unmask();
 mang_maj = mang_maj.updateMask(water_maj.not()).unmask();
@@ -341,7 +342,6 @@ print(interm);
 //  GRASS
 // ---------------------
 
- 
 // First we need to apply a mask. Remove from grass Majority - TC Cat 1-5 (5cat)
 var grass_maj_m = grass_maj.updateMask(tree_overall_5cat.not()).unmask();
 // We cross majority of grass already masked with TC 1-5 with remaining TC 6 and 7 (the one already masked by OWL) to create a new mixed class
@@ -429,7 +429,7 @@ Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 1);
 //Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
 //Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
 //Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,3,4,5", 0);
-Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "Tree-Cover 67", 1)
+Map.addLayer(tree_maj67_mm.selfMask(), vp_trees67, "Tree-Cover 67", 1)
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Shrub + TC 67", 1);
 Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub - masked by OWL and TC Majority", 1);
 //Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 1);
