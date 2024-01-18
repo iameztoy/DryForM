@@ -405,6 +405,8 @@ Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1
 // The problem is that in terms of majority vote, both mangroves and herbaceous wetland are very similar in extent. 
 // However, there is in principle a good match between Mangroves and TC-67. This helps to discriminate between both.
 // Therefore, here we define the mangroves as the intersection between TC-67 and the Majority Vote for TC-67.
+
+//First we mask the mangroves with TC67
 mang_maj = mang_maj.and(tree_maj67_mm);
 
 // Now we need to separate herbaceous wetland (floodv) from the mangroves
@@ -414,7 +416,7 @@ floodv_maj = floodv_maj.updateMask(mang_maj.not()).unmask();
 var mask4_tc67 = mang_maj.or(floodv_maj);
 tree_maj67_mm = tree_maj67_mm.updateMask(mask4_tc67.not()).unmask();
 
-// We also need to mask from mangroves and wetlands all other classes to avoid overlaps
+// We also need to mask from mangroves and wetlands all the other classes to avoid overlaps
 var mask4both = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(crop_maj).or(built_maj_m).or(mossl_maj).or(jrc_waterse).or(water_maj);
 mang_maj = mang_maj.updateMask(mask4both.not()).unmask(); 
 floodv_maj = floodv_maj.updateMask(mask4both.not()).unmask(); 
