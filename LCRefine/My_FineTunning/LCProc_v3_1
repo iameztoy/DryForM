@@ -199,7 +199,7 @@ var built = wc_built.add(dw_built).add(esri_built).add(glc_built).rename(['built
 // Overall bare
 var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']); //.add(glc_bare)
 // Overall snow
-var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']); //.add(glc_snow)
+var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']); // Majority contains certain omission. Might be better to take the overall (.or)
 // Overall water
 var water = wc_water.add(dw_water).add(esri_water).add(glc_water).rename(['water']); //.or(glclc20_water).or(glclc19_water)
 // Overall floodv
@@ -374,8 +374,6 @@ Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1
 // ---------------------
 //  SNOW
 // ---------------------
-
-
 
 // ---------------------
 //  FLOODED VEG.
