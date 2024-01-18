@@ -292,21 +292,21 @@ print(interm)
 // Remove from grass Majority - TC Cat 1-5 (5cat)
 
 var grass_maj_m = grass_maj.updateMask(tree_overall_5cat.not()).unmask();
-Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC 1 to 5", 0);
+//Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC 1 to 5", 0);
 
 // We cross majority of grass already masked with TC 1-5 with remaining TC 6 and 7 (the one already masked by OWL) to create a new mixed class
 
 var grasstree67 = grass_maj_m.and(tree_maj67_m);
-Map.addLayer(grasstree67.selfMask(), vp_grasstree, "Grass/Tree67")
+Map.addLayer(grasstree67.selfMask(), vp_grasstree, "Grass/Tree67", 1)
 
 // We update/mask the tree_maj67m with the new grasstree67
 
 var tree_maj67_mm = tree_maj67_m.updateMask(grasstree67.not()).unmask();
-Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "Updated TC 67")
+Map.addLayer(tree_maj67_mm.selfMask(), vp_trees7, "Updated TC 67", 1)
 
 // We update/mask the Grass Majority already masked with TC Cat 1-5 with the new grasstree67
 var grass_maj_mm = grass_maj_m.updateMask(grasstree67.not()).unmask()
-Map.addLayer(grass_maj_mm.selfMask(), vp_grass, "grass removed TC 1 to 5 and Grass/Tree");
+Map.addLayer(grass_maj_mm.selfMask(), vp_grass, "grass removed TC 1 to 5 and Grass/Tree", 1);
 
 
 // ---------------------
@@ -361,19 +361,17 @@ Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 1);
 Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 1);
 Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 1);
 Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 1);
-Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
-Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
+//Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
+//Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
 
-Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
-Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,3,4,5", 0);
+//Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
+//Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,3,4,5", 0);
 
 Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Cat 6 and 7", 1);
 Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub Majority (final) masked by OWL and TC Majority", 1);
-Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 1);
+//Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 1);
 
-
-
-Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass", 0);
+//Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass", 0);
 
 Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
 Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 0);
