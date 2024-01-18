@@ -251,35 +251,34 @@ var tree_overall_7cat = tree_overall_6cat.or(tree_maj7);
 
 // Water masks all others
 
-tree_maj1 = tree_maj1
-tree_maj2 = tree_maj2
-tree_maj3 = tree_maj3
-tree_maj4 = tree_maj4
-tree_maj5 =
-tree_maj6 =
-tree_maj7 =
-tree_overall_4cat =
-tree_overall_5cat =
-tree_overall_6cat =
-tree_overall_7cat =
-
+tree_maj1 = tree_maj1.updateMask(water_maj.not()).unmask();
+tree_maj2 = tree_maj2.updateMask(water_maj.not()).unmask();
+tree_maj3 = tree_maj3.updateMask(water_maj.not()).unmask();
+tree_maj4 = tree_maj4.updateMask(water_maj.not()).unmask();
+tree_maj5 = tree_maj5.updateMask(water_maj.not()).unmask();
+tree_maj6 = tree_maj6.updateMask(water_maj.not()).unmask();
+tree_maj7 = tree_maj7.updateMask(water_maj.not()).unmask();
+shrub_maj = shrub_maj.updateMask(water_maj.not()).unmask();
+grass_maj = grass_maj.updateMask(water_maj.not()).unmask();
 crop_maj = crop_maj.updateMask(water_maj.not()).unmask();
+built_maj = built_maj.updateMask(water_maj.not()).unmask();
+floodv_maj = floodv_maj.updateMask(water_maj.not()).unmask();
+mang_maj = mang_maj.updateMask(water_maj.not()).unmask();
+mossl_maj = mossl_maj.updateMask(water_maj.not()).unmask();
 
 // ---------------------
 //  TREES and SHRUBS - 2
 // ---------------------
-
-
 
 // Shrub majority is masked by majority of Tree cover
 var shrub_maj_m = shrub_maj.updateMask(tree_overall_5cat.not()).unmask();
 
 // Other wooded land is the intersection between shrub majority and lowest density classes of forest (cat 6 and 7)
 // Note that WRI TC does not cover areas outside the tropics. In order to have OWL outside the tropics it is neccessary to
-// include an additional low density class (i.e. maj5 and maj6). This also makes sense as this class still has a lot of overlap with shrub majority.
+// include an additional low density class (i.e. maj6). This also makes sense as this class still has a lot of overlap with shrub majority.
 
-var owl1 = shrub_maj_m.and(tree_maj6); //Outside the tropics
-var owl2 = shrub_maj_m.and(tree_maj7); //In and outside the tropics
+var owl1 = shrub_maj_m.and(tree_maj6); // Outside the tropics
+var owl2 = shrub_maj_m.and(tree_maj7); // In and outside the tropics
 
 var owl = owl1.or(owl2);
 
