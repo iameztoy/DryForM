@@ -9,7 +9,8 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
          [-53.364860279287946, -12.050167173431003],
          [-42.76708374548736, -5.071142985763169],
          [-9.082732679444161, 52.454683409230384],
-         [-16.661807830882125, 12.84153836813104]]);
+         [-16.661807830882125, 12.84153836813104],
+         [-6.335493793888194, 37.00993295496592]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
@@ -413,8 +414,15 @@ floodv_maj = floodv_maj.updateMask(mang_maj.not()).unmask()
 var mask4_tc67 = mang_maj.or(floodv_maj)
 tree_maj67_mm = tree_maj67_mm.updateMask(mang_maj.not()).unmask();
 
+// We also need to mask from mangroves and wetlands all other classes to avoid overlaps
+
+var mask4both = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(crop_maj).or(built_maj_m).or(mossl_maj).or(jrc_waterse).or(water_maj);
+mang_maj = mang_maj.updateMask(mask4both.not()).unmask();
+floodv_maj = floodv_maj.updateMask(mask4both.not()).unmask();
+
 
 Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
+Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
 
 // ---------------------
 //  BARE
@@ -428,9 +436,6 @@ Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
 
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
 
-
-
-Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
 
 
 
