@@ -70,7 +70,7 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_ghsl = {"opacity":1,"palette":["ff0000"]},
     vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
     
-var Final_lc = {"opacity":1,"bands":["Tree1"],"max":18,
+var vp_finallc = {"opacity":1,"bands":["Tree1"],"max":18,
   "palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c",
              "d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]
   };
@@ -493,7 +493,7 @@ floodv_maj = floodv_maj.updateMask(snow_maj.not()).unmask();
 water_maj =  water_maj.updateMask(snow_maj.not()).unmask();
 mossl_maj = mossl_maj.updateMask(snow_maj.not()).unmask();
 jrc_waterse = jrc_waterse.updateMask(snow_maj.not()).unmask();
-snow_maj = snow_maj.updateMask(snow_maj.not()).unmask();
+jrc_waterse = jrc_waterse.updateMask(snow_maj.not()).unmask();
 built_maj_m = built_maj_m .updateMask(snow_maj.not()).unmask();
 
 // ---------------------
@@ -541,51 +541,43 @@ print(lc_final);
 print(lc_finalbands);
 
 
-var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tree_maj5).add(tree_maj67_mm).add(mang_maj).add(floodv_maj).add(built_maj_m)
-                   .add(water_maj).add(jrc_waterse).add(snow_maj).add(bare_maj).add(mossl_maj);
+var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tree_maj5).add(tree_maj67_mm)
+                  .add(shrub_maj_mm).add(owl)
+                  .add(grass_maj_mm).add(grasstree67)
+                  .add(mang_maj).add(floodv_maj)
+                  .add(built_maj_m)
+                  .add(water_maj).add(jrc_waterse)
+                  .add(snow_maj).add(bare_maj)
+                  .add(mossl_maj);
 
+print(lc_final_img)
 Map.addLayer(lc_final_img, null, "FINAL LC")
 
 // ADD LAYERS
-/*
-Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 1);
-Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 1);
-Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 1);
-Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 1);
-Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 1);
-Map.addLayer(tree_maj67_mm.selfMask(), vp_trees67, "Tree-Cover 67", 1)
-Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Shrub + TC 67", 1);
-Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub - masked by OWL and TC Majority", 1);
-Map.addLayer(grass_maj_mm.selfMask(), vp_grass, "Grass - Masked TC 1 to 5 and Grass/Tree", 1);
-Map.addLayer(grasstree67.selfMask(), vp_grasstree, "Grass/Tree67", 1);
-Map.addLayer(water_maj.selfMask(), vp_water, "Permanent Water Majority", 1);
-Map.addLayer(jrc_waterse.selfMask(), {palette: "99d9ea"}, 'JRC Water 2020 - Seasonal');
-Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 1);
-Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 1);
-Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 1);
-Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 1);
-Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 1);
-Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 1);
-*/
-/*
-Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority", 0);
-Map.addLayer(built_maj.selfMask(), vp_built, "Built Majority", 0);
-Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 0);
-Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 0);
-Map.addLayer(water_maj.selfMask(), vp_water, "Water Majority", 0);
-Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 0);
+
+
+Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 0);
+Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
+Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 0);
+Map.addLayer(tree_maj4.selfMask(), vp_trees4, "Trees Majority cat 4", 0);
+Map.addLayer(tree_maj5.selfMask(), vp_trees5, "Trees Majority cat 5", 0);
+Map.addLayer(tree_maj67_mm.selfMask(), vp_trees67, "Tree-Cover 67", 0);
+Map.addLayer(owl.selfMask(), vp_owl, "Other wooded land TC - Shrub + TC 67", 0);
+Map.addLayer(shrub_maj_mm.selfMask(), vp_shrub, "Shrub - masked by OWL and TC Majority", 0);
+Map.addLayer(grass_maj_mm.selfMask(), vp_grass, "Grass - Masked TC 1 to 5 and Grass/Tree", 0);
+Map.addLayer(grasstree67.selfMask(), vp_grasstree, "Grass/Tree67", 0);
+Map.addLayer(water_maj.selfMask(), vp_water, "Permanent Water Majority", 0);
+Map.addLayer(jrc_waterse.selfMask(), {palette: "99d9ea"}, 'JRC Water 2020 - Seasonal', 0);
 Map.addLayer(mang_maj.selfMask(), vp_mang, "Mangroves Majority", 0);
-Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 0);
-Map.addLayer(tree_maj6.selfMask(), vp_trees6, "Trees Majority cat 6", 0)
-Map.addLayer(tree_maj7.selfMask(), vp_trees7, "Trees Majority cat 7", 0);
-Map.addLayer(shrub_maj.selfMask(), vp_shrub, "Shrub Majority", 0);
-Map.addLayer(shrub_maj_m.selfMask(), vp_shrub, "Shrub Majority masked by TC 1,2,3,4,5", 0);
-Map.addLayer(tree_maj67_m.selfMask(), vp_trees7, "Tree Cat 6, 7 (final) masked by OWL", 1);
-Map.addLayer(grass_maj.selfMask(), vp_grass, "Grass", 0);
-Map.addLayer(grass_maj_m.selfMask(), vp_grass, "grass removed TC 1 to 5", 0);
-Map.addLayer(mossl_maj.selfMask(), vp_mossl, "Moss/Linchen Majority", 1);
-Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow Majority", 1);
-*/
+Map.addLayer(floodv_maj.selfMask(), vp_floodv, "Flood Veg. Majority", 0);
+Map.addLayer(built_maj_m.selfMask(), vp_built, "Built Majority Masked by all", 0);
+Map.addLayer(bare_maj.selfMask(), vp_bare, "Bare Majority", 0);
+Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 0);
+Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 0);
+Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
+
+
+
 
 // Experimental
 
