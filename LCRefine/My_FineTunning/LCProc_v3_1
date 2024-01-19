@@ -540,6 +540,7 @@ var lc_finalbands = lc_final.toBands();
 print(lc_final);
 print(lc_finalbands);
 
+Map.addLayer(lc_final.mosaic(), null, "final IC")
 
 var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tree_maj5).add(tree_maj67_mm)
                   .add(shrub_maj_mm).add(owl)
