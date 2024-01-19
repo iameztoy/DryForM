@@ -1,17 +1,5 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
-        [[-41.88385787305759, -9.852303576818114],
-         [-1.598268424324465, 6.733059846988567],
-         [-39.97301433560758, -10.829953036214794],
-         [-39.98767882350302, -10.825236136461271],
-         [34.741761036050235, -3.106859128147278],
-         [19.90636304194326, -14.143006948538645],
-         [-53.364860279287946, -12.050167173431003],
-         [-42.76708374548736, -5.071142985763169],
-         [-9.082732679444161, 52.454683409230384],
-         [-16.661807830882125, 12.84153836813104],
-         [-6.335493793888194, 37.00993295496592],
-         [106.72426619780688, -6.71743326199312]]);
+var Final_lc = {"opacity":1,"bands":["Tree1"],"max":18,"palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c","d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
@@ -81,6 +69,12 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_writrees = {"opacity":1,"palette":["97ff56"]},
     vp_ghsl = {"opacity":1,"palette":["ff0000"]},
     vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
+    
+var Final_lc = {"opacity":1,"bands":["Tree1"],"max":18,
+  "palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c",
+             "d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]
+  };
+
 
 //--------------
 // SELECT CLASSES
