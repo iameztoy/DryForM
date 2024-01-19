@@ -554,10 +554,7 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
 
 
 print(lc_final_img)
-Map.addLayer(lc_final_img, null, "FINAL LC", 0)
-
-var sel = lc_final_img.gt(180)
-Map.addLayer(sel)
+Map.addLayer(lc_final_img, null, "FINAL LC", 0);
 
 // ADD LAYERS
 
