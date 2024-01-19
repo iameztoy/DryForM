@@ -1,5 +1,11 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Final_lc = {"opacity":1,"bands":["Tree1"],"max":18,"palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c","d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]};
+var Final_lc = {"opacity":1,"bands":["Tree1"],"max":18,"palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c","d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]},
+    geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
+        [[-1.610330066543293, 6.713188372797725],
+         [-53.19623922669387, -12.34589794806201],
+         [-82.93481405826599, 47.569826385300864],
+         [-41.431327741290325, -9.920018161603119],
+         [-45.71579734641904, -11.671287694437144]]);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
@@ -7,7 +13,7 @@ var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO
 // ---- !!! --- Notes --- Need to be corrected !!! ---
 // There are seasonal water pixels over built - Correct? Some are fine. 
     //Some isolated pixels can be corrected by connectedPixels 1 or 2?
-    // 
+    //Perhaps remove Seasonal waters from coastlines? Some overlap too much.
 
 
 var Ecozone1 = Zones.filter(ee.Filter.eq('GEZ_CODE', 11)); // = Tropical rain forest 
