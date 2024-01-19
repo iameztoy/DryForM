@@ -514,7 +514,8 @@ water_maj =  water_maj.updateMask(snow_maj.not()).unmask();
 mossl_maj = mossl_maj.updateMask(snow_maj.not()).unmask();
 jrc_waterse = jrc_waterse.updateMask(snow_maj.not()).unmask();
 jrc_waterse = jrc_waterse.updateMask(snow_maj.not()).unmask();
-built_maj_m = built_maj_m .updateMask(snow_maj.not()).unmask();
+built_maj_m = built_maj_m.updateMask(snow_maj.not()).unmask();
+crop_maj = crop_maj.updateMask(snow_maj.not()).unmask();
 
 // ---------------------
 //  MOSCH AND LICHEN
@@ -555,7 +556,7 @@ jrc_waterse = jrc_waterse.multiply(15).rename(["SWater"]);
 snow_maj = snow_maj.multiply(16).rename(["SnowIce"]);
 bare_maj = bare_maj.multiply(17).rename(["Bare"]);
 mossl_maj = mossl_maj.multiply(18).rename(["MosLin"]);
-crop_maj = crop_maj.multiply(19).rename(["Crop"])
+crop_maj = crop_maj.multiply(19).rename(["Crop"]);
 
 
 // Test IC - Intermediate list
@@ -575,7 +576,7 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
                   .add(water_maj).add(jrc_waterse)
                   .add(snow_maj).add(bare_maj)
                   .add(mossl_maj)
-                  .add(crop);
+                  .add(crop_maj);
 
 
 
