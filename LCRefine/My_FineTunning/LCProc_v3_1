@@ -73,26 +73,27 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
   
 // Define a palette for the 18 distinct land cover classes.
 var lc_Palette = [
-  '000000', // nodata
-  '005200', // TC-1
-  '007400', // TC-2
-  '009f00', // TC-3
-  '00ba00', // TC-4
-  'e2bc31', // TC-5
-  '00d800', // TC-67
-  'ffbb22', // Shrub
-  'd28230', // OWL
-  'ffff4c', // Grass
-  'ffff4c', // Grass-Tree
-  'd8ff60', // Mangroves
-  '00cf75', // Herbaceous Veg.
-  '0096a0', // Built-up
-  'fa0000', // Permanent Water
-  '0064c8', // Seasonal Water
-  '99d9ea', // Snow
-  'f0f0f0', // Bare
-  'fae6a0'  // Mosch/Lin
+  '000000', // 0 nodata 
+  '005200', // 1 TC-1   
+  '007400', // 2 TC-2
+  '009f00', // 3 TC-3
+  '00ba00', // 4 TC-4
+  'e2bc31', // 5  TC-5
+  '00d800', // 6 TC-67
+  'ffbb22', // 7 Shrub
+  'd28230', // 8 OWL
+  'ffff4c', // 9 Grass
+  'ffff4c', // 10 Grass-Tree
+  'd8ff60', // 11 Mangroves
+  '00cf75', // 12 Herbaceous Veg.
+  'fa0000', // 13 Built-up
+  '0064c8', // 14 Permanent Water
+  '99d9ea', // 15 Seasonal Water
+  'f0f0f0', // 16 Snow
+  'f0f0f0', // 17 Bare
+  'fae6a0'  // 18 Mosch/Lin
 ];
+
 
 //--------------
 // SELECT CLASSES
