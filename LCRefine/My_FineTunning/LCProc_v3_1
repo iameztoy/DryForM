@@ -585,8 +585,8 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
                   .add(crop_maj);
 
 
-
-print(lc_final_img)
+lc_final_img = lc_final_img.byte();
+print(lc_final_img);
 Map.addLayer(lc_final_img, {min: 0, max: 19, palette: lc_Palette}, "FINAL LC", 0);
 
 // ADD LAYERS
