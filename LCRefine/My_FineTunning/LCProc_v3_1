@@ -91,7 +91,8 @@ var lc_Palette = [
   '99d9ea', // 15 Seasonal Water
   'f0f0f0', // 16 Snow
   'f0f0f0', // 17 Bare
-  'fae6a0'  // 18 Mosch/Lin
+  'fae6a0',
+  'f096ff'// 18 Mosch/Lin
 ];
 
 
@@ -475,7 +476,7 @@ var mask4bare = snow.or(jrc_waterse).or(crop_maj).or(built_maj_m);
 bare_maj = bare_maj.updateMask(mask4bare.not()).unmask();
 
 //We apply the masks
-tree_maj1 =tree_maj1.updateMask(bare_maj.not()).unmask();
+tree_maj1 = tree_maj1.updateMask(bare_maj.not()).unmask();
 tree_maj2 = tree_maj2.updateMask(bare_maj.not()).unmask();
 tree_maj3 = tree_maj3.updateMask(bare_maj.not()).unmask();
 tree_maj4 = tree_maj4.updateMask(bare_maj.not()).unmask();
@@ -522,8 +523,13 @@ built_maj_m = built_maj_m .updateMask(snow_maj.not()).unmask();
 // Mosh and lichen are added only where others are not present. ML is only available in ESA-WC
 // We mask ML by the sum of all others
 
-var mask4ML = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(mang_maj)
-              .or(floodv_maj).or(water_maj).or(jrc_waterse).or(snow_maj).or(built_maj_m);
+var mask4ML = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm)
+              .or(shrub_maj_mm).or(owl)
+              .or(grass_maj_mm).or(grasstree67)
+              .or(mang_maj).or(floodv_maj)
+              .or(crop_maj)
+              .or(water_maj).or(jrc_waterse).or(snow_maj)
+              .or(built_maj_m);
 mossl_maj = mossl_maj.updateMask(mask4ML.not()).unmask();
 
 
@@ -549,11 +555,13 @@ jrc_waterse = jrc_waterse.multiply(15).rename(["SWater"]);
 snow_maj = snow_maj.multiply(16).rename(["SnowIce"]);
 bare_maj = bare_maj.multiply(17).rename(["Bare"]);
 mossl_maj = mossl_maj.multiply(18).rename(["MosLin"]);
+crop_maj = crop_maj.multiply(19).rename(["Crop"])
 
 
 // Test IC - Intermediate list
-var interm1_list = ([tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, tree_maj67_m, shrub_maj_mm, owl, grass_maj_mm, grasstree67, mang_maj, floodv_maj, 
-                    built_maj_m, water_maj, jrc_waterse, snow_maj, bare_maj, mossl_maj]);
+var interm1_list = ([tree_maj1, tree_maj2, tree_maj3, tree_maj4, tree_maj5, tree_maj67_m, 
+                    shrub_maj_mm, owl, grass_maj_mm, grasstree67, mang_maj, floodv_maj, 
+                    built_maj_m, water_maj, jrc_waterse, snow_maj, bare_maj, mossl_maj, crop_maj]);
 var lc_final = ee.ImageCollection.fromImages(interm1_list);
 var lc_finalbands = lc_final.toBands();
 print(lc_final);
@@ -566,12 +574,13 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
                   .add(built_maj_m)
                   .add(water_maj).add(jrc_waterse)
                   .add(snow_maj).add(bare_maj)
-                  .add(mossl_maj);
+                  .add(mossl_maj)
+                  .add(crop);
 
 
 
 print(lc_final_img)
-Map.addLayer(lc_final_img, {min: 0, max: 18, palette: lc_Palette}, "FINAL LC", 0);
+Map.addLayer(lc_final_img, {min: 0, max: 19, palette: lc_Palette}, "FINAL LC", 0);
 
 // ADD LAYERS
 
