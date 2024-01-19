@@ -70,11 +70,29 @@ var vp_trees1 = {"opacity":1,"palette":["005200"]},
     vp_ghsl = {"opacity":1,"palette":["ff0000"]},
     vp_wri_masked = {"opacity":0.79,"palette":["b4ff62"]};
     
-var vp_finallc = {"opacity":1,"bands":["Tree1"],"max":18,
-  "palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c",
-             "d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]
-  };
-
+  
+// Define a palette for the 18 distinct land cover classes.
+var lc_Palette = [
+  '000000', // nodata
+  '005200', // TC-1
+  '007400', // TC-2
+  '009f00', // TC-3
+  '00ba00', // TC-4
+  'e2bc31', // TC-5
+  '00d800', // TC-67
+  'ffbb22', // Shrub
+  'd28230', // OWL
+  'ffff4c', // Grass
+  'ffff4c', // Grass-Tree
+  'd8ff60', // Mangroves
+  '00cf75', // Herbaceous Veg.
+  '0096a0', // Built-up
+  'fa0000', // Permanent Water
+  '0064c8', // Seasonal Water
+  '99d9ea', // Snow
+  'f0f0f0', // Bare
+  'fae6a0'  // Mosch/Lin
+];
 
 //--------------
 // SELECT CLASSES
@@ -512,24 +530,24 @@ mossl_maj = mossl_maj.updateMask(mask4ML.not()).unmask();
 //  RENAME and JOIN
 // ---------------------
 
-tree_maj1 = tree_maj1.multiply(10).rename(["Tree1"]);
-tree_maj2 = tree_maj2.multiply(20).rename(["Tree2"]);
-tree_maj3 = tree_maj3.multiply(30).rename(["Tree3"]);
-tree_maj4 = tree_maj4.multiply(40).rename(["Tree4"]);
-tree_maj5 = tree_maj5.multiply(50).rename(["Tree5"]);
-tree_maj67_mm = tree_maj67_mm.multiply(60).rename(["Tree67"]);
-shrub_maj_mm = shrub_maj_mm.multiply(70).rename(["Shrub"]);
-owl = owl.multiply(80).rename(["OWL"]);
-grass_maj_mm = grass_maj_mm.multiply(90).rename(["Grass"]);
-grasstree67 = grasstree67.multiply(100).rename(["Grass_Tree"]);
-mang_maj = mang_maj.multiply(110).rename(["Mangrove"]);
-floodv_maj = floodv_maj.multiply(120).rename(["Floodv"]);
-built_maj_m = built_maj_m.multiply(130).rename(["Built"]);
-water_maj =  water_maj.multiply(140).rename(["PWater"]);
-jrc_waterse = jrc_waterse.multiply(150).rename(["SWater"]);
-snow_maj = snow_maj.multiply(160).rename(["SnowIce"]);
-bare_maj = bare_maj.multiply(170).rename(["Bare"]);
-mossl_maj = mossl_maj.multiply(180).rename(["MosLin"]);
+tree_maj1 = tree_maj1.multiply(1).rename(["Tree1"]);
+tree_maj2 = tree_maj2.multiply(2).rename(["Tree2"]);
+tree_maj3 = tree_maj3.multiply(3).rename(["Tree3"]);
+tree_maj4 = tree_maj4.multiply(4).rename(["Tree4"]);
+tree_maj5 = tree_maj5.multiply(5).rename(["Tree5"]);
+tree_maj67_mm = tree_maj67_mm.multiply(6).rename(["Tree67"]);
+shrub_maj_mm = shrub_maj_mm.multiply(7).rename(["Shrub"]);
+owl = owl.multiply(8).rename(["OWL"]);
+grass_maj_mm = grass_maj_mm.multiply(9).rename(["Grass"]);
+grasstree67 = grasstree67.multiply(10).rename(["Grass_Tree"]);
+mang_maj = mang_maj.multiply(11).rename(["Mangrove"]);
+floodv_maj = floodv_maj.multiply(12).rename(["Floodv"]);
+built_maj_m = built_maj_m.multiply(13).rename(["Built"]);
+water_maj =  water_maj.multiply(14).rename(["PWater"]);
+jrc_waterse = jrc_waterse.multiply(15).rename(["SWater"]);
+snow_maj = snow_maj.multiply(16).rename(["SnowIce"]);
+bare_maj = bare_maj.multiply(17).rename(["Bare"]);
+mossl_maj = mossl_maj.multiply(18).rename(["MosLin"]);
 
 
 // Test IC - Intermediate list
@@ -552,7 +570,7 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
 
 
 print(lc_final_img)
-Map.addLayer(lc_final_img, null, "FINAL LC", 0);
+Map.addLayer(lc_final_img, {min: 0, max: 18, palette: lc_Palette}, "FINAL LC", 0);
 
 // ADD LAYERS
 
