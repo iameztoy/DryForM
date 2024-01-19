@@ -513,7 +513,7 @@ built_maj_m = built_maj_m .updateMask(snow_maj.not()).unmask();
 // Mosh and lichen are added only where others are not present. ML is only available in ESA-WC
 // We mask ML by the sum of all others
 
-var mask4ML = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(mang_maj)
+var mask4ML = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj67_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(mang_maj)
               .or(floodv_maj).or(water_maj).or(jrc_waterse).or(snow_maj).or(built_maj_m);
 mossl_ma = mossl_ma.updateMask(mask4ML.not()).unmask();
 
