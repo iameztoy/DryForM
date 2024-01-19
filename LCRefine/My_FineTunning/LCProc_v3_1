@@ -219,7 +219,7 @@ var built = wc_built.add(dw_built).add(esri_built).add(glc_built).add(ghsl).rena
 // Overall bare
 var bare = wc_bare.add(dw_bare).add(esri_bare).add(glc_bare).rename(['bare']); //.add(glc_bare)
 // Overall snow
-var snow = wc_snow.or(dw_snow).or(esri_snow).or(glc_snow).or(glclc20_snow).or(glclc19_snow).or(glacier_binary).rename(['snow']); // Majority contains certain omission. Might be better to take the overall (.or)
+var snow = wc_snow.add(dw_snow).add(esri_snow).add(glc_snow).add(glclc20_snow).add(glclc19_snow).rename(['snow']); // Majority contains certain omission. Might be better to take the overall (.or)
 // Overall water
 var water = wc_water.add(dw_water).add(esri_water).add(glc_water).rename(['water']); //.or(glclc20_water).or(glclc19_water)
 // Overall floodv
@@ -238,6 +238,7 @@ var built_maj = built.gte(2).rename(['built']); // Built layer (overall 4 produc
 built_maj = built_maj.or(ghsl); //GHSL might be more accurate even than the majority of the previous, so we include with an .or statement
 var bare_maj = bare.gt(2).rename(['bare']); // Bare majority (overall 4 products). Majority: >2
 var snow_maj = snow.gt(3).rename(['snow']); // Snow Majority (overall 6 products). Majority: >3
+snow_maj = snow_maj.or(glacier_binary) // Snow Majority or glaciers
 var water_maj = water.gt(2); // Water majority (overall 4 products) Majority: >2. If being more flexible (e.g. gte(2) -> Shadows included
 var floodv_maj = floodv.gt(2).rename(['floodv']); // Flooded vegetation: (Overall 4 products) Majority: >2
 var mang_maj = mang.rename(['mang']); // Only 1 class available. Eventually cross with flooded vegetation.
@@ -464,6 +465,7 @@ mossl_maj
 var mask4bare = snow.or(jrc_waterse).or(crop_maj).or(built_maj_m);
 bare_maj = bare_maj.updateMask(mask4bare.not()).unmask();
 
+//We apply the masks
 tree_maj1 =tree_maj1.updateMask(bare_maj.not()).unmask();
 tree_maj2 = tree_maj2.updateMask(bare_maj.not()).unmask();
 tree_maj3 = tree_maj3.updateMask(bare_maj.not()).unmask();
@@ -484,17 +486,40 @@ mossl_maj = mossl_maj.updateMask(bare_maj.not()).unmask();
 //  SNOW
 // ---------------------
 
+// The snow is prioritized over all the other classes. Although it is unlikely that snow cover certain classes, we mask them all to avoid overlapping pixels of possible snow commission errors.
 
-
-
+tree_maj1 =tree_maj1.updateMask(snow_maj.not()).unmask();
+tree_maj2 = tree_maj2.updateMask(snow_maj.not()).unmask();
+tree_maj3 = tree_maj3.updateMask(snow_maj.not()).unmask();
+tree_maj4 = tree_maj4.updateMask(snow_maj.not()).unmask();
+tree_maj5 = tree_maj5.updateMask(snow_maj.not()).unmask();
+tree_maj67_mm = tree_maj67_mm .updateMask(snow_maj.not()).unmask();
+shrub_maj_mm = shrub_maj_mm.updateMask(snow_maj.not()).unmask();
+owl = owl.updateMask(snow_maj.not()).unmask();
+grass_maj_mm = grass_maj_mm.updateMask(snow_maj.not()).unmask();
+grasstree67 = grasstree67.updateMask(snow_maj.not()).unmask();
+mang_maj = mang_maj.updateMask(snow_maj.not()).unmask();
+floodv_maj = floodv_maj.updateMask(snow_maj.not()).unmask();
+water_maj =  water_maj.updateMask(snow_maj.not()).unmask();
+mossl_maj = mossl_maj.updateMask(snow_maj.not()).unmask();
+jrc_waterse = jrc_waterse.updateMask(snow_maj.not()).unmask();
+snow_maj = snow_maj.updateMask(snow_maj.not()).unmask();
+built_maj_m = built_maj_m .updateMask(snow_maj.not()).unmask();
 
 // ---------------------
 //  MOSCH AND LICHEN
 // ---------------------
 
 // Mosh and lichen are added only where others are not present. ML is only available in ESA-WC
+// We mask ML by the sum of all others
 
+var mask4ML = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).or(tree_maj_mm).or(shrub_maj_mm).or(owl).or(grass_maj_mm).or(grasstree67).or(mang_maj)
+              .or(floodv_maj).or(water_maj).or(jrc_waterse).or(snow_maj).or(built_maj_m);
+mossl_ma = mossl_ma.updateMask(mask4ML.not()).unmask();
 
+// ------------------------
+// *** ITERATION - 1 *** 
+// ------------------------
 
 // ADD LAYERS
 
@@ -552,7 +577,7 @@ Map.addLayer(reduce.gt(100), {palette: ['red']}, "Buildings");
 
 // Mining -- https://gee-community-catalog.org/projects/global-mining/
 // Mangroves -- https://gee-community-catalog.org/projects/mangrove/
-// Glaciers -- https://gee-community-catalog.org/projects/rgi/
+// ** Glaciers -- https://gee-community-catalog.org/projects/rgi/
 // Impervious -- https://gee-community-catalog.org/projects/gisd30/
 // Global Intra-Urban Land Use -- https://gee-community-catalog.org/projects/giulu/
 // World Settlement Footprint & Evolution -- https://gee-community-catalog.org/projects/wsf/
