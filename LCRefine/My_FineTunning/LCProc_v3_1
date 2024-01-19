@@ -550,8 +550,13 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
                   .add(snow_maj).add(bare_maj)
                   .add(mossl_maj);
 
+
+
 print(lc_final_img)
-Map.addLayer(lc_final_img, null, "FINAL LC")
+Map.addLayer(lc_final_img, null, "FINAL LC", 0)
+
+var sel = lc_final_img.gt(180)
+Map.addLayer(sel)
 
 // ADD LAYERS
 
