@@ -517,9 +517,7 @@ var mask4ML = tree_maj1.or(tree_maj2).or(tree_maj3).or(tree_maj4).or(tree_maj5).
               .or(floodv_maj).or(water_maj).or(jrc_waterse).or(snow_maj).or(built_maj_m);
 mossl_ma = mossl_ma.updateMask(mask4ML.not()).unmask();
 
-// ------------------------
-// *** ITERATION - 2 *** 
-// ------------------------
+
 
 // ADD LAYERS
 
