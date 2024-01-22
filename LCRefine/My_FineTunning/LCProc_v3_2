@@ -597,7 +597,7 @@ var lc_final_img2 = lc_final_img.add(esawc_nd).byte();
 
 Map.addLayer(lc_final_img.selfMask(), {min: 0, max: 19, palette: lc_Palette}, "FINAL LC", 0);
 Map.addLayer(nodata, null, "nodata", 0);
-Map.addLayer(esawc_nd, null, "ESA WC - Nodata filled", 0);
+Map.addLayer(esawc_nd.selfMask(), null, "ESA WC - Nodata filled", 0);
 Map.addLayer(lc_final_img2, {min: 0, max: 19, palette: lc_Palette}, "FINAL LC 2", 0);
 
   //Indiv. layers - Iteration 1 -
