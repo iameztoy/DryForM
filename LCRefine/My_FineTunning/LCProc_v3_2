@@ -495,7 +495,9 @@ mossl_maj = mossl_maj.updateMask(bare_maj.not()).unmask();
 //  SNOW
 // ---------------------
 
-// The snow is prioritized over all the other classes. Although it is unlikely that snow cover certain classes, we mask them all to avoid overlapping pixels of possible snow commission errors.
+// The snow is prioritized over all the other classes. 
+//    Although it is unlikely that snow cover certain classes, we mask them all 
+//    to avoid overlapping pixels of possible snow commission errors.
 
 tree_maj1 =tree_maj1.updateMask(snow_maj.not()).unmask();
 tree_maj2 = tree_maj2.updateMask(snow_maj.not()).unmask();
