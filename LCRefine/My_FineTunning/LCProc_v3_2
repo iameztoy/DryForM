@@ -585,6 +585,7 @@ var nodata = lc_final_img.eq(0);
 // *** ITERATION - 2 *** 
 // ------------------------
 
+//Filling only with ESA WC
 var esawc_nd = esawc.updateMask(nodata).unmask();
 var lc_final_img2 = lc_final_img.add(esawc_nd).byte();
 
