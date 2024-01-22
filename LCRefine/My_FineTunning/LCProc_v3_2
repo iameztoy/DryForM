@@ -579,21 +579,18 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
 
 
 lc_final_img = lc_final_img.byte();
-print(lc_final_img);
-Map.addLayer(lc_final_img.selfMask(), {min: 0, max: 19, palette: lc_Palette}, "FINAL LC", 0);
-
-
 var nodata = lc_final_img.eq(0);
-Map.addLayer(nodata, null, "nodata", 0);
 
 // ------------------------
 // *** ITERATION - 2 *** 
 // ------------------------
 
 var esawc_nd = esawc.updateMask(nodata).unmask();
-Map.addLayer(esawc_nd, null, "ESA WC - Nodata", 0);
 var lc_final_img2 = lc_final_img.add(esawc_nd).byte();
-print(lc_final_img2)
+
+Map.addLayer(lc_final_img.selfMask(), {min: 0, max: 19, palette: lc_Palette}, "FINAL LC", 0);
+Map.addLayer(nodata, null, "nodata", 0);
+Map.addLayer(esawc_nd, null, "ESA WC - Nodata", 0);
 Map.addLayer(lc_final_img2, {min: 0, max: 19, palette: lc_Palette}, "FINAL LC 2", 0);
 
 // ADD LAYERS
@@ -619,7 +616,7 @@ Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 0);
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 0);
 Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
-
+/*
 
 // EXPORT
 
@@ -646,3 +643,5 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
+
+*/
