@@ -581,7 +581,8 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
 
 
 lc_final_img = lc_final_img.byte();
-var nodata = lc_final_img.eq(0);
+var nodata = lc_final_img.unmask().eq(0) //The values are between 0 and masked -> all should be 0, 
+                                          //therefore we need to apply ummask or discover where the error is coming from
 
 // ------------------------
 // *** ITERATION - 2 *** 
