@@ -620,6 +620,7 @@ Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 0);
 Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
 
+
 // EXPORT
 
 var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
@@ -636,7 +637,7 @@ for (var f in featlist) {
   Export.image.toAsset({
     image: lc_final_img2,
     description: name+disS.toString(),
-    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS.toString(),
+    assetId: 'projects/dryform-383607/assets/MajorityVote_LC/' + name+disS.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
