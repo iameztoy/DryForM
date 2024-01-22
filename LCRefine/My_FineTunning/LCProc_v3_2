@@ -637,7 +637,7 @@ for (var f in featlist) {
   Export.image.toAsset({
     image: lc_final_img2,
     description: name+disS.toString(),
-    assetId: 'projects/dryform-383607/assets/MajorityVote_LC/' + name+disS.toString(),
+    assetId: 'projects/dryform-383607/assets/MajorityVote_LC/' + name+disS.toString(), //Change to correct IC
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
