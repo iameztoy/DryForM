@@ -1,12 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var Final_lc = {"opacity":1,"bands":["Tree1"],"max":18,"palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c","d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]},
-    geometry = /* color: #d63000 */ee.Geometry.MultiPoint(
-        [[-1.610330066543293, 6.713188372797725],
-         [-53.19623922669387, -12.34589794806201],
-         [-82.93481405826599, 47.569826385300864],
-         [-41.431327741290325, -9.920018161603119],
-         [-45.71579734641904, -11.671287694437144]]);
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
 
@@ -100,6 +91,8 @@ var lc_Palette = [
   'fae6a0', // 18 Mosch/Lin
   'f096ff'  // 19 Crops
 ];
+
+//var Final_lc = {"opacity":1,"bands":["Tree1"],"max":18,"palette":["000000","005200","007400","009f00","00ba00","e2bc31","00d800","ffbb22","d28230","ffff4c","d8ff60","00cf75","0096a0","fa0000","0064c8","99d9ea","f0f0f0","b4b4b4","fae6a0"]};
 
 
 //--------------
@@ -591,14 +584,17 @@ Map.addLayer(lc_final_img.selfMask(), {min: 0, max: 19, palette: lc_Palette}, "F
 
 
 var nodata = lc_final_img.eq(0);
-Map.addLayer(nodata, null, "nodata");
+Map.addLayer(nodata, null, "nodata", 0);
 
 // ------------------------
 // *** ITERATION - 2 *** 
 // ------------------------
 
-var a = esawc.updateMask(nodata)
-Map.addLayer(a)
+var esawc_nd = esawc.updateMask(nodata).unmask();
+Map.addLayer(esawc_nd, null, "ESA WC - Nodata", 0);
+var lc_final_img2 = lc_final_img.add(esawc_nd).byte();
+print(lc_final_img2)
+Map.addLayer(lc_final_img2, {min: 0, max: 19, palette: lc_Palette}, "FINAL LC 2", 0);
 
 // ADD LAYERS
 
@@ -624,47 +620,28 @@ Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 0);
 Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
 
+// EXPORT
+
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
 
 
-// Experimental
-
-/*
-
-//Building footprints -- https://gee-community-catalog.org/projects/global_buildings/?h=buildings
-var ind = ee.FeatureCollection("projects/sat-io/open-datasets/VIDA_COMBINED/IND");
-print(ind.limit(1))
-var reduce = ind.filter(ee.Filter.notNull(['area_in_meters'])).reduceToImage({properties: ['area_in_meters'],
-    reducer: ee.Reducer.first()
-});
-
-Map.addLayer(reduce.gt(100), {palette: ['red']}, "Buildings");
-
-// Mining -- https://gee-community-catalog.org/projects/global-mining/
-// Mangroves -- https://gee-community-catalog.org/projects/mangrove/
-// ** Glaciers -- https://gee-community-catalog.org/projects/rgi/
-// Impervious -- https://gee-community-catalog.org/projects/gisd30/
-// Global Intra-Urban Land Use -- https://gee-community-catalog.org/projects/giulu/
-// World Settlement Footprint & Evolution -- https://gee-community-catalog.org/projects/wsf/
-// Oil Palm -- https://gee-community-catalog.org/projects/oil-palm/
-// Roads -- https://gee-community-catalog.org/projects/grip/?h=roads
-
-var grip4_africa = ee.FeatureCollection("projects/sat-io/open-datasets/GRIP4/Africa"),
-    grip4_central_south_america = ee.FeatureCollection("projects/sat-io/open-datasets/GRIP4/Central-South-America"),
-    grip4_europe = ee.FeatureCollection("projects/sat-io/open-datasets/GRIP4/Europe"),
-    grip4_north_america = ee.FeatureCollection("projects/sat-io/open-datasets/GRIP4/North-America"),
-    grip4_oceania = ee.FeatureCollection("projects/sat-io/open-datasets/GRIP4/Oceania"),
-    grip4_south_east_asia = ee.FeatureCollection("projects/sat-io/open-datasets/GRIP4/South-East-Asia"),
-    grip4_middle_east_central_asia = ee.FeatureCollection("projects/sat-io/open-datasets/GRIP4/Middle-East-Central-Asia");
-
-Map.addLayer(ee.FeatureCollection(grip4_africa).style({color: '413B3A',width:1}),{},'Grip4 Africa')
-Map.addLayer(ee.FeatureCollection(grip4_central_south_america).style({color: '413B3A',width:1}),{},'Grip4 Central South America')
-Map.addLayer(ee.FeatureCollection(grip4_north_america).style({color: '413B3A',width:1}),{},'Grip4 North America')
-Map.addLayer(ee.FeatureCollection(grip4_europe).style({color: '413B3A',width:1}),{},'Grip4 Europe')
-Map.addLayer(ee.FeatureCollection(grip4_oceania).style({color: '413B3A',width:1}),{},'Grip4 Oceania')
-Map.addLayer(ee.FeatureCollection(grip4_south_east_asia).style({color: '413B3A',width:1}),{},'Grip4 South East Asia')
-Map.addLayer(ee.FeatureCollection(grip4_middle_east_central_asia).style({color: '413B3A',width:1}),{},'Grip4 Middle East and Central Asia')
-
-
-*/
-
-
+// Loop to export
+var featlist = Zones.getInfo()["features"];
+//print(featlist)
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "chip";  
+  Export.image.toAsset({
+    image: Edged3,
+    description: name+disS.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS.toString(),
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
