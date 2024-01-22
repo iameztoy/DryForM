@@ -621,13 +621,35 @@ Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 0);
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 0);
 Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
-/*
+
 
 // EXPORT
 
-var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+//Set 30° N/S Aoi
+var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
+
+Zones = Zones.filterBounds(tropic)
+
+var featlist = Zones.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
+  var disS = dis.getInfo();
+  var name = "tile";  
+  Export.image.toDrive({
+    image: lc_final_img,
+    description: name+disS.toString(), //(only if integer ID)
+    folder: "Zones_test",
+    fileNamePrefix: name+disS.toString(), //(only if integer ID)
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
 
 
+/*
 // Loop to export
 var featlist = Zones.getInfo()["features"];
 //print(featlist)
@@ -637,7 +659,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "tile";  
   Export.image.toAsset({
-    image: lc_final_img2,
+    image: lc_final_img2, //lc_final_img
     description: name+disS.toString(),
     assetId: 'projects/dryform-383607/assets/MajorityVote_LC/' + name+disS.toString(), //Change to correct IC
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
@@ -648,5 +670,4 @@ for (var f in featlist) {
     maxPixels: 1e13
   });
 }
-
 */
