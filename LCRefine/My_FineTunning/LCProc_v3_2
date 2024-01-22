@@ -588,14 +588,15 @@ var nodata = lc_final_img.eq(0);
 var esawc_nd = esawc.updateMask(nodata).unmask();
 var lc_final_img2 = lc_final_img.add(esawc_nd).byte();
 
-Map.addLayer(lc_final_img.selfMask(), {min: 0, max: 19, palette: lc_Palette}, "FINAL LC", 0);
-Map.addLayer(nodata, null, "nodata", 0);
-Map.addLayer(esawc_nd, null, "ESA WC - Nodata", 0);
-Map.addLayer(lc_final_img2, {min: 0, max: 19, palette: lc_Palette}, "FINAL LC 2", 0);
 
 // ADD LAYERS
 
+Map.addLayer(lc_final_img.selfMask(), {min: 0, max: 19, palette: lc_Palette}, "FINAL LC", 0);
+Map.addLayer(nodata, null, "nodata", 0);
+Map.addLayer(esawc_nd, null, "ESA WC - Nodata filled", 0);
+Map.addLayer(lc_final_img2, {min: 0, max: 19, palette: lc_Palette}, "FINAL LC 2", 0);
 
+  //Indiv. layers - Iteration 1 -
 Map.addLayer(tree_maj1.selfMask(), vp_trees1, "Trees Majority cat 1", 0);
 Map.addLayer(tree_maj2.selfMask(), vp_trees2, "Trees Majority cat 2", 0);
 Map.addLayer(tree_maj3.selfMask(), vp_trees3, "Trees Majority cat 3", 0);
