@@ -632,9 +632,9 @@ for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
   var dis = feat.get("id");
   var disS = dis.getInfo();
-  var name = "chip";  
+  var name = "tile";  
   Export.image.toAsset({
-    image: Edged3,
+    image: lc_final_img2,
     description: name+disS.toString(),
     assetId: 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/' + name+disS.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
