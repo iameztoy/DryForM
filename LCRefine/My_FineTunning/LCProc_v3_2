@@ -634,7 +634,7 @@ Zones = Zones.filterBounds(tropic)
 var featlist = Zones.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("ID");
+  var dis = feat.get("id");
   var disS = dis.getInfo();
   var name = "tile";  
   Export.image.toDrive({
