@@ -625,6 +625,8 @@ Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
 // EXPORT
 
+/*
+
 var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
 //Set 30° N/S Aoi
 var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
@@ -648,7 +650,7 @@ for (var f in featlist) {
 }
 
 
-/*
+
 // Loop to export
 var featlist = Zones.getInfo()["features"];
 //print(featlist)
