@@ -474,7 +474,7 @@ var processTiles = function(tile){
     // DEFINE SENTINEL-1 PARAMETERS
     //---------------------------------------------------------------------------//
 
-    //Would need to optimize this and add the parameters outside the function.
+    //Would need to optimize this and add the parameters outside the function. However, it works for the moment being.
     
     var parameter = {//1. Data Selection 
               START_DATE: str, 
@@ -562,7 +562,7 @@ var processTiles = function(tile){
 
   ////////////// EXPORT ///////////////////////
 
-  //No need for loop here. Need to optimize
+  //No need for loop here. Need to optimize, but it works so far. 
   var featlist = interm_aoi.getInfo()["features"];
   for (var f in featlist) {
     var feat = ee.Feature(featlist[f]);
