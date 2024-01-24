@@ -104,7 +104,7 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
 
     // GLCM Texture parameters
     var glcm_band = "gray";
-    var glcm_size = 2;
+    var glcm_size = 2; // Higher values generalize the textures too much.
 
     var days = 270; // How many days go backward/forward in the interpolation process? Original 30. For quarters: From Nov 15 2019 to March 31 2020: 140.
                                                                                                             //From Nov 15 2020 to Feb 15 2021: 140
