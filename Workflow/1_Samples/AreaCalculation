@@ -1,0 +1,78 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
+    cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var AOI = caatinga
+var esawc = ee.ImageCollection("ESA/WorldCover/v200").mosaic().clip(AOI); // Band name "Map"
+
+/*
+
+//************************
+// Overall areas for AOIs
+//************************
+
+var caatingaarea = caatinga.geometry().area().divide(1e6).round();
+var cerradoarea = cerrado.geometry().area().divide(1e6).round();
+var chacoarea = chaco.geometry().area().divide(1e6).round();
+var tanzaniaarea = tanzania.geometry().area().divide(1e6).round();
+
+print("Caatinga Area", caatingaarea); print("Cerrado Area", cerradoarea); print("Chaco Area", chacoarea); print("Tanzania Area", tanzaniaarea);
+
+//***********************************
+// Single areas per class and AOI
+//***********************************
+
+var targetclass = esawc.eq(10);
+var areaImage = targetclass.multiply(ee.Image.pixelArea());
+
+var area = areaImage.reduceRegion({
+  reducer: ee.Reducer.sum(),
+  geometry: AOI.geometry(),
+  scale: 10,
+  maxPixels: 1e10
+});
+
+var area_sqKM = ee.Number(area.get('Map')).divide(1e6).round();
+print(area_sqKM);
+*/
+
+//***********************************
+// Area calculation by class and AOI
+//***********************************
+
+var areaImage = ee.Image.pixelArea().addBands(
+      esawc)
+ 
+var areas = areaImage.reduceRegion({
+      reducer: ee.Reducer.sum().group({
+      groupField: 1,
+      groupName: 'class',
+    }),
+    geometry: AOI.geometry(),
+    scale: 10,
+    maxPixels: 1e13
+    }); 
+ 
+print("Areas by class", areas)
+
+var nestedList = ee.List(
+  [['a', 'b'], ['c', 'd'], ['e', 'f']]);
+print(nestedList);
+// Output: [["a","b"],["c","d"],["e","f"]]
+print(nestedList.flatten());
+// Output: ["a","b","c","d","e","f"]
+
+var classAreas = ee.List(areas.get('groups'))
+ 
+var classAreaLists = classAreas.map(function(item) {
+  var areaDict = ee.Dictionary(item)
+  var classNumber = ee.Number(areaDict.get('class')).format()
+  var area = ee.Number(
+    areaDict.get('sum')).divide(1e6).round()
+  return ee.List([classNumber, area])
+})
+ 
+var result = ee.Dictionary(classAreaLists.flatten())
+print(result)
