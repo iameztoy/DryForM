@@ -4,8 +4,13 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var AOI = cerrado
+var AOI = tanzania
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").mosaic().clip(AOI); // Band name "Map"
+
+// Majority Vote
+var mv = ee.ImageCollection("projects/dryform-383607/assets/MajorityVote_LC").mosaic().clip(AOI); // Band name "Trees1"
+print(mv)
+
 
 /*
 
@@ -84,7 +89,7 @@ print(result);
 
 // Exports the Feature Collection as a CSV file
 
-var areaImage = ee.Image.pixelArea().divide(1e6).addBands(esawc);
+var areaImage = ee.Image.pixelArea().divide(1e6).addBands(mv);
 
 var areas = areaImage.reduceRegion({
       reducer: ee.Reducer.sum().group({
@@ -98,7 +103,8 @@ var areas = areaImage.reduceRegion({
     
 var classAreas = ee.List(areas.get('groups'));
 
-// Define a dictionary with class names
+/*
+// Define a dictionary with class names for ESA-WC
 var classNames = ee.Dictionary({
   '10': 'treecover',
   '20': 'shrubland',
@@ -111,6 +117,31 @@ var classNames = ee.Dictionary({
   '90': 'herb_wetland',
   '95': 'mangroves',
   '100': 'moss_lichen'
+});
+*/
+
+// Define a dictionary with class names for Majority Vote
+var classNames = ee.Dictionary({
+  '0' : 'nodata',
+  '1' : 'TC1',   
+  '2' : 'TC2',
+  '3' : 'TC3',
+  '4' : 'TC4',
+  '5' : ' TC5',
+  '6' : 'TC67',
+  '7' : 'Shrub',
+  '8' : 'OWL',
+  '9' : 'Grass',
+  '10' : 'GrassTree',
+  '11' : 'Mangroves',
+  '12' : 'HerbaceousVeg',
+  '13' : 'Built',
+  '14' : 'Permanen Water',
+  '15' : 'SeasonalWater',
+  '16' : 'Snow',
+  '17' : 'Bare',
+  '18' : 'Moss_Lin',
+  '19' : 'Crops'
 });
 
 var classAreas = classAreas.map(function(item) {
