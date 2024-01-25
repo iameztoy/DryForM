@@ -4,7 +4,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var AOI = cerrado
+var AOI = tanzania
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").mosaic().clip(AOI); // Band name "Map"
 
 /*
@@ -75,3 +75,62 @@ var classAreaLists = classAreas.map(function(item) {
  
 var result = ee.Dictionary(classAreaLists.flatten());
 print(result);
+
+//*******************************************************
+// Area calculation by class and AOI for large areas
+//*******************************************************
+
+// Export the Feature Collection
+
+var areaImage = ee.Image.pixelArea().divide(1e6).addBands(esawc);
+
+var areas = areaImage.reduceRegion({
+      reducer: ee.Reducer.sum().group({
+      groupField: 1,
+      groupName: 'classification',
+    }),
+    geometry: AOI,
+    scale: 10,
+    maxPixels: 1e13
+    }); 
+    
+var classAreas = ee.List(areas.get('groups'));
+
+// Define a dictionary with class names
+var classNames = ee.Dictionary({
+  '10': 'treecover',
+  '20': 'shrubland',
+  '30': 'grassland',
+  '40': 'cropland',
+  '50': 'built',
+  '60': 'bare',
+  '70': 'snow',
+  '80': 'water',
+  '90': 'herb_wetland',
+  '95': 'mangroves',
+  '100': 'moss_lichen'
+});
+
+var classAreas = classAreas.map(function(item) {
+  var areaDict = ee.Dictionary(item);
+  var classNumber = ee.Number(areaDict.get('classification')).format();
+  var className = classNames.get(classNumber);
+  var area = ee.Number(
+    areaDict.get('sum'));
+  return ee.Feature(null, {'class': classNumber, 'class_name': className, 'area': area});
+});
+
+var classAreaFc = ee.FeatureCollection(classAreas);
+
+// Export the FeatureCollection.
+Export.table.toDrive({
+  collection: classAreaFc,
+  description: 'exportTable',
+  fileFormat: 'CSV'
+});
+
+
+ 
+
+
+
