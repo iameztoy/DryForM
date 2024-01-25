@@ -82,7 +82,7 @@ print(result);
 // Area calculation by class and AOI for large areas
 //*******************************************************
 
-// Export the Feature Collection
+// Exports the Feature Collection as a CSV file
 
 var areaImage = ee.Image.pixelArea().divide(1e6).addBands(esawc);
 
