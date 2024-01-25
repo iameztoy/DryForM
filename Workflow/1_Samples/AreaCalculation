@@ -36,7 +36,7 @@ var area = areaImage.reduceRegion({
 
 var area_sqKM = ee.Number(area.get('Map')).divide(1e6).round();
 print(area_sqKM);
-*/
+
 
 //***********************************
 // Area calculation by class and AOI
@@ -75,6 +75,8 @@ var classAreaLists = classAreas.map(function(item) {
  
 var result = ee.Dictionary(classAreaLists.flatten());
 print(result);
+
+*/
 
 //*******************************************************
 // Area calculation by class and AOI for large areas
@@ -121,6 +123,7 @@ var classAreas = classAreas.map(function(item) {
 });
 
 var classAreaFc = ee.FeatureCollection(classAreas);
+print(classAreaFc)
 
 // Export the FeatureCollection.
 Export.table.toDrive({
