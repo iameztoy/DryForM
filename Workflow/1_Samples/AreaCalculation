@@ -109,6 +109,7 @@ var areas = areaImage.reduceRegion({
     
 var classAreas = ee.List(areas.get('groups'));
 
+// Need to adapt the legend depending on the LC product used
 /*
 // Define a dictionary with class names for ESA-WC
 var classNames = ee.Dictionary({
@@ -133,7 +134,7 @@ var classNames = ee.Dictionary({
   '2' : 'TC2',
   '3' : 'TC3',
   '4' : 'TC4',
-  '5' : ' TC5',
+  '5' : 'TC5',
   '6' : 'TC67',
   '7' : 'Shrub',
   '8' : 'OWL',
