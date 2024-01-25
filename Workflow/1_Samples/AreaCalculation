@@ -4,7 +4,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var AOI = caatinga
+var AOI = cerrado
 var esawc = ee.ImageCollection("ESA/WorldCover/v200").mosaic().clip(AOI); // Band name "Map"
 
 /*
