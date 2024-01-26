@@ -1,6 +1,4 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 print(a)
 
 //Direct conversion to by for values like float or double ranging between 0 and 1
@@ -111,11 +109,12 @@ Export.image.toAsset({
   region: geometry,
   scale: 10,
   maxPixels: 1e13})
-// Once the export finishes, import the asset and display
-var pcaImported = ee.Image('users/ujavalgandhi/e2e/arkavathy_pca')
-var pcaVisParams = {bands: ['pc1', 'pc2', 'pc3'], min: -2, max: 2};
 
-Map.addLayer(pcaImported, pcaVisParams, 'Principal Components');
+// Once the export finishes, import the asset and display
+//var pcaImported = ee.Image('users/ujavalgandhi/e2e/arkavathy_pca')
+//var pcaVisParams = {bands: ['pc1', 'pc2', 'pc3'], min: -2, max: 2};
+
+//Map.addLayer(pcaImported, pcaVisParams, 'Principal Components');
 
 
 
