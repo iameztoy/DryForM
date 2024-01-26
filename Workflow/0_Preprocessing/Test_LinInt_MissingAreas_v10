@@ -417,7 +417,7 @@ var processTiles = function(tile){
     var idm_a = glcm.select("gray_idm").rename("gray_idm_glcm");
     var idm = idm_a.multiply(255).toByte();
     var savg_a = glcm.select("gray_savg").rename("gray_savg_glcm");
-    var savg = savg_a.toByte()
+    var savg = savg_a.toByte();
     
     return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
   };
