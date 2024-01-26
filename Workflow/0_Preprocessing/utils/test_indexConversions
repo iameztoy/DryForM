@@ -11,27 +11,27 @@ function byte(img) {
 
 // gNDVI ************************
 var gndvi = a.select("t0_gNDVI","t1_gNDVI","t2_gNDVI","t3_gNDVI")
-var gndvi_byte = gndvi.map(byte)
+var gndvi_byte = gndvi.map(byte).toBands();
 
 // MSAVI ************************
 var msavi = a.select("t0_MSAVI","t1_MSAVI","t2_MSAVI","t3_MSAVI")
-var msavi_byte = msavi.map(byte)
+var msavi_byte = msavi.map(byte).toBands();
 
 
 // BI ********************mu*
 var bi = a.select("t0_BI","t1_BI","t2_BI","t3_BI")
-var bi_byte =bi.map(byte)
+var bi_byte =bi.map(byte).toBands();
 
 // SI *********************
 
 var si = a.select("t0_SI","t1_SI","t2_SI","t3_SI")
-var si_byte =si.map(byte)
+var si_byte =si.map(byte).toBands();
 
 
 // gray_asm_glcm  *********************
 
 var asm = a.select("t0_gray_asm_glcm","t1_gray_asm_glcm","t2_gray_asm_glcm","t3_gray_asm_glcm")
-var asm_byte = asm.map(byte).m
+var asm_byte = asm.map(byte).toBands();
 
 
 
@@ -44,7 +44,7 @@ function cntr_byte(img) {
     return img.multiply(10).toByte();
   }
   
-var contrast_byte = contrast.map(cntr_byte)
+var contrast_byte = contrast.map(cntr_byte).toBands();
 
 
 
@@ -52,9 +52,7 @@ var contrast_byte = contrast.map(cntr_byte)
 // gray_corr_glcm  *********************
 
 var corr = a.select("t0_gray_corr_glcm","t1_gray_corr_glcm","t2_gray_corr_glcm","t3_gray_corr_glcm")
-var corr_byte = corr.map(byte)
-
-Map.addLayer(corr_byte)
+var corr_byte = corr.map(byte).toBands();
 
 
 // gray_ent_glcm  *********************
@@ -66,7 +64,7 @@ function entbyte(img) {
     return img.multiply(10).toByte();
   }
   
-var ent_byte = ent.map(entbyte)
+var ent_byte = ent.map(entbyte).toBands();
 
 
 // gray_var_glcm  *********************
@@ -78,7 +76,7 @@ function varbyte(img) {
     return img.multiply(10).toByte();
   }
   
-var vari_byte =  vari.map(varbyte)
+var vari_byte =  vari.map(varbyte).toBands();
 
 
 
@@ -92,7 +90,7 @@ function idmbyte(img) {
     return img.multiply(255).toByte();
   }
   
-var idm_byte = idm.map(idmbyte)
+var idm_byte = idm.map(idmbyte).toBands();
 
 
 // gray_savg_glcm  *********************
@@ -104,8 +102,15 @@ function savgbyte(img) {
     return img.toByte();
   }
   
-var savg_byte = savg.map(savgbyte)
-Map.addLayer(savg_byte, null, "byte")
+var savg_byte = savg.map(savgbyte).toBands();
+
+// **********************************************
+
+
+var a = savg_byte.addBands(idm_byte).addBands(vari_byte).addBands(ent_byte).addBands(corr_byte).addBands(contrast_byte)
+        .addBands(asm_byte).addBands(si_byte).addBands(gndvi_byte).addBands(bi_byte).addBands(msavi_byte)
+print(a)
+
 
 
 
