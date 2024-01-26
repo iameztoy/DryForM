@@ -524,7 +524,7 @@ var processTiles = function(tile){
   
   var s1_final = s1db.toBands();
   
-  Map.addLayer(s1_final)
+  //Map.addLayer(s1_final)
   print("s1 final (to db)", s1db.first())
   
   
