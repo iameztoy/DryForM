@@ -125,7 +125,8 @@ print("Number of Tiles in AOI", zonesID.size());
 //var tl = zonesID.aggregate_array("ID"); 
 //print("Array Tile list", tl)
 
-// We select here the tiles we want to process. For e.g. cgScale 100000 works. Each output is around 40GB if not converted to int or byte beforehand.
+// For testing purposes
+//We select here the tiles we want to process. For e.g. cgScale 100000 works. Each output is around 40GB if not converted to int or byte beforehand.
 var tilelist = (["054"]); 
                                         // For testing purposes:
                                         // 009 010	011	075	076	077 Caatinga "009", "010", "075", "076"
