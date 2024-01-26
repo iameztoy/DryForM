@@ -382,7 +382,7 @@ var processTiles = function(tile){
       .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt())
       .divide(2).rename("MSAVI");
     //var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt'); //texture of 5x5 pixel window 
-    var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("BI");
+    var bi = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("iBI"); //I add the "i" to avoid the "B.*" selection afterwards
     var si = img.expression('((1-red)*(1-green)*(1-blue)**(0.333333) )', {
       'red': img.select('B4'), 'green': img.select('B3'),'blue': img.select('B2')}).rename('SI');
       //( (1-b2)*(1-b3)*(1-b4) )^(1/3)
