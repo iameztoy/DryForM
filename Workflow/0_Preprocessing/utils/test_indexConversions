@@ -109,8 +109,8 @@ Export.image.toAsset({
   description: 'Principal_Components_Image',
   assetId: 'users/ujavalgandhi/e2e/arkavathy_pca',
   region: geometry,
-  scale: scale,
-  maxPixels: 1e10})
+  scale: 10,
+  maxPixels: 1e13})
 // Once the export finishes, import the asset and display
 var pcaImported = ee.Image('users/ujavalgandhi/e2e/arkavathy_pca')
 var pcaVisParams = {bands: ['pc1', 'pc2', 'pc3'], min: -2, max: 2};
