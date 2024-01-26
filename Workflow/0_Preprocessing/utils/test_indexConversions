@@ -1,3 +1,18 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-46.70850567527371, -11.680221109356433],
+          [-46.70850567527371, -12.575752140263827],
+          [-45.81861309714871, -12.575752140263827],
+          [-45.81861309714871, -11.680221109356433]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga");
 print(a)
 
@@ -105,7 +120,7 @@ var pca = PCA(composite)
 Export.image.toAsset({
   image: pca,
   description: 'Principal_Components_Image',
-  assetId: 'users/ujavalgandhi/e2e/arkavathy_pca',
+  assetId: 'projects/dryform-383607/assets/PCA_indexes',
   region: geometry,
   scale: 10,
   maxPixels: 1e13})
@@ -114,7 +129,7 @@ Export.image.toAsset({
 //var pcaImported = ee.Image('users/ujavalgandhi/e2e/arkavathy_pca')
 //var pcaVisParams = {bands: ['pc1', 'pc2', 'pc3'], min: -2, max: 2};
 
-//Map.addLayer(pcaImported, pcaVisParams, 'Principal Components');
+//Map.addLayer(pca, pcaVisParams, 'Principal Components');
 
 
 
