@@ -426,7 +426,7 @@ var processTiles = function(tile){
   var s2ms_toBands = s2ms_byte.toBands();
   
   //Merge the indexes with the MS bands
-  var selind = interpolatedCol_i_glcm.select("gNDVI", "MSAVI", "BI", "SI", "gray.*").toBands();
+  var selind = interpolatedCol_i_glcm.select("gNDVI", "MSAVI", "iBI", "SI", "gray.*").toBands();
     var s2final = s2ms_toBands.addBands(selind)
   
   // Remove non desired bands
