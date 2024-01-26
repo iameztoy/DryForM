@@ -1,20 +1,8 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-46.70850567527371, -11.680221109356433],
-          [-46.70850567527371, -12.575752140263827],
-          [-45.81861309714871, -12.575752140263827],
-          [-45.81861309714871, -11.680221109356433]]], null, false);
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga");
 print(a)
+
+var geometry = a.geometry().bounds()
+Map.addLayer(geometry)
 
 //Direct conversion to by for values like float or double ranging between 0 and 1
 function byte(img) {
