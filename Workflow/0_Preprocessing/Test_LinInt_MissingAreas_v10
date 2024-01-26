@@ -554,7 +554,7 @@ var processTiles = function(tile){
   Export.image.toAsset({
     image: s1s2final,
     description: name+disS+"_"+expname, //"test", //.toString(), Now the ID is already a string
-    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga/' + name+disS+"_"+expname, //.toString(),
+    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco/' + name+disS+"_"+expname, //.toString(),
     pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
     region: interm_aoi,
