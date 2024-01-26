@@ -43,7 +43,7 @@ var t_int = t_int4;
 var cg_scale = 100000; // Scale for Covering Grid. Several tests done to see which is the optimal scale: 
                        // The objective is to see which scale does not give memory problems while still maximizing the area covered to reduce processing time.
                       
-var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
+var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "iBI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
 
     //---------------------------------------------------------------------------//
     // DEFINE SENTINEL-2 PARAMETERS
@@ -52,7 +52,7 @@ var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "gray
     var collection = "2A";
     var bands = ["B2", "B3","B4", "B8", "B11", "B12"]; // bands to filter the S2 collection
     var glcm_bands = ["gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"];
-    var s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "BI", "SI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
+    var s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "iBI", "SI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
     
     var cloud_per = 65; //Still want to take advantage of cloud free regions in the 45% of area with no clouds.
     var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
