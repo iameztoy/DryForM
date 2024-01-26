@@ -18,7 +18,7 @@ var msavi = a.select("t0_MSAVI","t1_MSAVI","t2_MSAVI","t3_MSAVI")
 var msavi_byte = msavi.map(byte)
 
 
-// BI *********************
+// BI ********************mu*
 var bi = a.select("t0_BI","t1_BI","t2_BI","t3_BI")
 var bi_byte =bi.map(byte)
 
@@ -31,7 +31,7 @@ var si_byte =si.map(byte)
 // gray_asm_glcm  *********************
 
 var asm = a.select("t0_gray_asm_glcm","t1_gray_asm_glcm","t2_gray_asm_glcm","t3_gray_asm_glcm")
-var asm_byte = asm.map(byte)
+var asm_byte = asm.map(byte).m
 
 
 
@@ -83,7 +83,7 @@ var vari_byte =  vari.map(varbyte)
 // gray_idm_glcm  *********************
 
 var idm  = a.select("t0_gray_idm_glcm","t1_gray_idm_glcm","t2_gray_idm_glcm","t3_gray_idm_glcm")
-
+to
 
 
 function idmbyte(img) {
@@ -96,7 +96,7 @@ var idm_byte = idm.map(idmbyte)
 // gray_savg_glcm  *********************
 
 var savg = a.select("t0_gray_savg_glcm","t1_gray_savg_glcm","t2_gray_savg_glcm","t3_gray_savg_glcm")
-Map.addLayer(savg)
+
 
 function savgbyte(img) {
     return img.toByte();
