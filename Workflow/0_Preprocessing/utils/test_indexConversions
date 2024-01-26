@@ -54,6 +54,8 @@ var contrast_byte = contrast.map(cntr_byte)
 var corr = a.select("t0_gray_corr_glcm","t1_gray_corr_glcm","t2_gray_corr_glcm","t3_gray_corr_glcm")
 var corr_byte = corr.map(byte)
 
+Map.addLayer(corr_byte)
+
 
 // gray_ent_glcm  *********************
 
@@ -83,7 +85,7 @@ var vari_byte =  vari.map(varbyte)
 // gray_idm_glcm  *********************
 
 var idm  = a.select("t0_gray_idm_glcm","t1_gray_idm_glcm","t2_gray_idm_glcm","t3_gray_idm_glcm")
-to
+
 
 
 function idmbyte(img) {
