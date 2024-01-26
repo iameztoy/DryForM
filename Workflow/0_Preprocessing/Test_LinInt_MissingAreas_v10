@@ -459,7 +459,7 @@ var processTiles = function(tile){
   
   print("Interpolated + i + g", interpolatedCol_i_glcm);
   
-  // Only MS bands to byte (we loose the indexes)
+  // Only MS bands to byte (we loose the indexes). Need to reduce collection size due to asset storage limitations
   // We loose the indexes so we need to bring them back afterwards
   function s2byte(img) {
     return img.select("B.*").multiply(255).toByte();
