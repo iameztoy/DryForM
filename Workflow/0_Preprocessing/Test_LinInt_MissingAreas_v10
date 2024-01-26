@@ -413,7 +413,7 @@ var processTiles = function(tile){
   };
 
   var compList_s2 = t_int.map(createSeasonComposites_s2);
-  var s2_comp = ee.ImageCollection.fromImages(compList_s2)
+  var s2_comp = ee.ImageCollection.fromImages(compList_s2);
   
     // Add Indexes function
   var addIndex = function addindexes(img) {
@@ -450,25 +450,38 @@ var processTiles = function(tile){
     var vari = glcm.select("gray_var").rename("gray_var_glcm");
     var idm = glcm.select("gray_idm").rename("gray_idm_glcm");
     var savg = glcm.select("gray_savg").rename("gray_savg_glcm");
-  return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
+    
+    return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
   };
   
   var interpolatedCol_i_glcm = interpolatedCol_i.map(addglcm);
   interpolatedCol_i_glcm = interpolatedCol_i_glcm.select(s2_fbands);
   
-  print("Interpolated + i + g", interpolatedCol_i_glcm)
+  print("Interpolated + i + g", interpolatedCol_i_glcm);
   
-  var s2_final = interpolatedCol_i_glcm.toBands();
-
-
+  // Only MS bands to byte (we loose the indexes)
+  // We loose the indexes so we need to bring them back afterwards
+  function s2byte(img) {
+    return img.select("B.*").multiply(255).toByte();
+  }
+  
+  var s2ms_byte = interpolatedCol_i_glcm.map(s2byte);
+  var s2ms_toBands = s2ms_byte.toBands();
+  
+  //Merge the indexes with the MS bands
+  var selind = interpolatedCol_i_glcm.select("gNDVI", "MSAVI", "BI", "SI", "gray.*").toBands()
+    var s2final = s2ms_toBands.addBands(selind)
+  
+  // Remove non desired bands
   function removeBand(img) {
     return img.select(
       img.bandNames().filter(
         ee.Filter.stringEndsWith('item', '_timestamp').not()));
   }
 
-  var s2final_i = removeBand(s2_final);
-  print("S2 final quarterly", s2_final);
+
+  var s2final_i = removeBand(s2final);
+  print("S2 final quarterly", s2final);
   
     //---------------------------------------------------------------------------//
     // DEFINE SENTINEL-1 PARAMETERS
@@ -546,13 +559,13 @@ var processTiles = function(tile){
   var clamp_min=-50;
   var clamp_max=-5;
   
-  function byte(img) {
+  function s1byte(img) {
     return img.clamp(clamp_min,clamp_max).unitScale(clamp_min,clamp_max).multiply(255).toByte();
   }
   
-  var s1db = s1db_c.map(byte);
+  var s1db = s1db_c.map(s1byte);
   
-  var s1_final = s1int.toBands();
+  var s1_final = s1db.toBands();
   
   Map.addLayer(s1_final)
   print("s1 final (to db)", s1db.first())
