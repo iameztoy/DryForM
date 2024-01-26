@@ -127,14 +127,14 @@ print("Number of Tiles in AOI", zonesID.size());
 
 // For testing purposes
 // We select here the tiles we want to process. For e.g. cgScale 100000 works. Each output is around 40GB if not converted to int or byte beforehand.
-var tilelist = (["054"]); 
+// var tilelist = (["054"]); 
                                         // For testing purposes:
                                         // 009 010	011	075	076	077 Caatinga "009", "010", "075", "076"
                                         // 032 033	034	123	124	125 Chaco "032", "033", "123", "124"
                                         // 043 044	045	288	289	290 Cerrado "043", "044",	"288", "289"
                                         // 054 055	056	105	106	107 Tanzania "054", "055", "105", "106"
 
-/*
+
 // Automated method:
 // Build the final tiles to apply the function afterwards
 var n = Zones.size().getInfo()-1; //Get the tile size to the list afterwards
@@ -151,7 +151,7 @@ tilelist = tilelist.filter(ee.Filter.lte('item', ns));
 
 var tilelist = tilelist.getInfo();
 //print("NSC", nsc)
-*/
+
 
 Map.addLayer(zonesID, null, "Covering grid: " + cg_scale.toString());
 
