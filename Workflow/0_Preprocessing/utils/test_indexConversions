@@ -1,0 +1,110 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+print(a)
+
+//Direct conversion to by for values like float or double ranging between 0 and 1
+function byte(img) {
+    return img.multiply(255).toByte();
+  }
+
+
+// gNDVI ************************
+var gndvi = a.select("t0_gNDVI","t1_gNDVI","t2_gNDVI","t3_gNDVI")
+var gndvi_byte = gndvi.map(byte)
+
+// MSAVI ************************
+var msavi = a.select("t0_MSAVI","t1_MSAVI","t2_MSAVI","t3_MSAVI")
+var msavi_byte = msavi.map(byte)
+
+
+// BI *********************
+var bi = a.select("t0_BI","t1_BI","t2_BI","t3_BI")
+var bi_byte =bi.map(byte)
+
+// SI *********************
+
+var si = a.select("t0_SI","t1_SI","t2_SI","t3_SI")
+var si_byte =si.map(byte)
+
+
+// gray_asm_glcm  *********************
+
+var asm = a.select("t0_gray_asm_glcm","t1_gray_asm_glcm","t2_gray_asm_glcm","t3_gray_asm_glcm")
+var asm_byte = asm.map(byte)
+
+
+
+// gray_contrast_glcm  *********************
+
+var contrast = a.select("t0_gray_contrast_glcm","t1_gray_contrast_glcm","t2_gray_contrast_glcm","t3_gray_contrast_glcm")
+
+
+function cntr_byte(img) {
+    return img.multiply(10).toByte();
+  }
+  
+var contrast_byte = contrast.map(cntr_byte)
+
+
+
+
+// gray_corr_glcm  *********************
+
+var corr = a.select("t0_gray_corr_glcm","t1_gray_corr_glcm","t2_gray_corr_glcm","t3_gray_corr_glcm")
+var corr_byte = corr.map(byte)
+
+
+// gray_ent_glcm  *********************
+
+var ent = a.select("t0_gray_ent_glcm","t1_gray_ent_glcm","t2_gray_ent_glcm","t3_gray_ent_glcm")
+
+
+function entbyte(img) {
+    return img.multiply(10).toByte();
+  }
+  
+var ent_byte = ent.map(entbyte)
+
+
+// gray_var_glcm  *********************
+
+var vari  = a.select("t0_gray_var_glcm","t1_gray_var_glcm","t2_gray_var_glcm","t3_gray_var_glcm")
+
+
+function varbyte(img) {
+    return img.multiply(10).toByte();
+  }
+  
+var vari_byte =  vari.map(varbyte)
+
+
+
+// gray_idm_glcm  *********************
+
+var idm  = a.select("t0_gray_idm_glcm","t1_gray_idm_glcm","t2_gray_idm_glcm","t3_gray_idm_glcm")
+
+
+
+function idmbyte(img) {
+    return img.multiply(255).toByte();
+  }
+  
+var idm_byte = idm.map(idmbyte)
+
+
+// gray_savg_glcm  *********************
+
+var savg = a.select("t0_gray_savg_glcm","t1_gray_savg_glcm","t2_gray_savg_glcm","t3_gray_savg_glcm")
+Map.addLayer(savg)
+
+function savgbyte(img) {
+    return img.toByte();
+  }
+  
+var savg_byte = savg.map(savgbyte)
+Map.addLayer(savg_byte, null, "byte")
+
+
+
+
