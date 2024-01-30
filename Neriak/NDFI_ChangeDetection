@@ -1,0 +1,49 @@
+//https://google-earth-engine.com/Terrestrial-Applications-part-1/Deforestation-Viewed-from-Multiple-Sensors/
+//https://github.com/krishnakafle/gee-tutorials/blob/main/Part%20A%20-%20Applications/A3%20-%20Terrestial%20Applications/A3.5%20Deforestation%20Viewed%20from%20Multiple%20Sensors/A35g-code.js
+
+var dataset = ee.ImageCollection('COPERNICUS/S2_SR')
+                  .filterDate('2020-01-01', '2020-01-30')
+                  // Pre-filter to get less cloudy granules.
+                  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20));
+                  
+var image = dataset.first()
+
+var paramEndmembers = ee.Dictionary({
+     'cfThreshold': .05,
+     'soil': [2000, 3000, 3400, 5800, 6000, 5800],
+     'gv': [500, 900, 400, 6100, 3000, 1000],
+     'npv': [1400, 1700, 2200, 3000, 5500, 3000],
+     'shade': [0, 0, 0, 0, 0, 0],
+     'cloud': [9000, 9600, 8000, 7800, 7200, 6500]})
+
+var doNDFI = function(image, params) {
+  /* Do spectral unmixing */
+  var params = ee.Dictionary(params)
+  var gv = params.get('gv')
+  var shade = params.get('shade')
+  var npv = params.get('npv')
+  var soil = params.get('soil')
+  var cloud = params.get('cloud')
+  var cfThreshold = ee.Image.constant(params.get('cfThreshold'))
+  /*  Do spectral unmixing on a single image  */
+  var unmixImage = ee.Image(image).unmix([gv, shade, npv, soil, cloud], true,true)
+                  .rename(['band_0', 'band_1', 'band_2','band_3','band_4'])
+  var newImage = ee.Image(image).addBands(unmixImage.rename(['GV','Shade','NPV','Soil','Cloud']))
+  var mask = newImage.select('Cloud').lt(cfThreshold)
+
+  var ndfi = ee.Image(unmixImage).expression(
+    '((GV / (1 - SHADE)) - (NPV + SOIL)) / ((GV / (1 - SHADE)) + NPV + SOIL)', {
+      'GV': ee.Image(unmixImage).select('band_0'),
+      'SHADE': ee.Image(unmixImage).select('band_1'),
+      'NPV': ee.Image(unmixImage).select('band_2'),
+      'SOIL': ee.Image(unmixImage).select('band_3')
+    })
+    
+  return ee.Image(newImage)
+        .addBands(ee.Image(ndfi).rename(['NDFI']))
+        .updateMask(mask)
+  
+}
+
+var NDFI = doNDFI(image, paramEndmembers)
+print(NDFI)
