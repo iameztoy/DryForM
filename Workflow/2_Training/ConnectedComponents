@@ -58,7 +58,7 @@ Map.setCenter(83.277, 17.7009, 12);
 
 dataset = dataset.mean().clip(geometry)
 
-dataset = dataset.select("B8")
+dataset = dataset.select("B8", "B4", "B3")
 
 var mask = dataset.select("B8").gt(0)
 print(mask)
@@ -73,8 +73,6 @@ var objectId = mask.connectedComponents({
 Map.addLayer(objectId.randomVisualizer(), null, 'Objects');
 
 print(objectId)
-
-
 
 dataset = dataset.addBands(objectId.select('labels'));
 print(dataset)
