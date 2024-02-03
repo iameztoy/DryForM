@@ -1,0 +1,100 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      },
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.MultiPolygon(
+        [[[[83.19657664489746, 17.735647686490505],
+           [83.19657664489746, 17.730333770636324],
+           [83.20215563964844, 17.730333770636324],
+           [83.20215563964844, 17.735647686490505]]],
+         [[[83.21640353393555, 17.745294084755635],
+           [83.21640353393555, 17.7414519375383],
+           [83.2217250366211, 17.7414519375383],
+           [83.2217250366211, 17.745294084755635]]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+/**
+ * Function to mask clouds using the Sentinel-2 QA band
+ * @param {ee.Image} image Sentinel-2 image
+ * @return {ee.Image} cloud masked Sentinel-2 image
+ */
+function maskS2clouds(image) {
+  var qa = image.select('QA60');
+
+  // Bits 10 and 11 are clouds and cirrus, respectively.
+  var cloudBitMask = 1 << 10;
+  var cirrusBitMask = 1 << 11;
+
+  // Both flags should be set to zero, indicating clear conditions.
+  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
+      .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
+
+  return image.updateMask(mask).divide(10000);
+}
+
+var dataset = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+                  .filterDate('2020-01-01', '2020-01-30')
+                  // Pre-filter to get less cloudy granules.
+                  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',20))
+                  .map(maskS2clouds);
+
+var visualization = {
+  min: 0.0,
+  max: 0.3,
+  bands: ['B4', 'B3', 'B2'],
+};
+
+Map.setCenter(83.277, 17.7009, 12);
+
+//Map.addLayer(dataset.mean(), visualization, 'RGB');
+
+
+dataset = dataset.mean().clip(geometry)
+
+dataset = dataset.select("B8")
+
+var mask = dataset.select("B8").gt(0)
+print(mask)
+Map.addLayer(mask)
+
+var objectId = mask.connectedComponents({
+  connectedness: ee.Kernel.plus(1),
+  maxSize: 80
+});
+
+// Display the uniquely ID'ed objects to the Map.
+Map.addLayer(objectId.randomVisualizer(), null, 'Objects');
+
+print(objectId)
+
+
+
+dataset = dataset.addBands(objectId.select('labels'));
+print(dataset)
+
+var mean = dataset.reduceConnectedComponents({
+  reducer: ee.Reducer.mean(),
+  labelBand: 'labels'
+});
+
+Map.addLayer(
+  mean,null,
+  'Mean'
+);
+
+
+
+
+
+
+
+
+
+
