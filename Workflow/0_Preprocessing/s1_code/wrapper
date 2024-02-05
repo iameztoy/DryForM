@@ -102,6 +102,9 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
 //    );
 //  })}
   
+  var mean_angle = s1.select("angle").mean()
+  print("mean angle", mean_angle)
+  
   if (params.APPLY_ANGLEFILT)  {s1 = s1.map(function (image) {
     var angle = image.select('angle');
     return image.updateMask(
