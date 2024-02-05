@@ -105,7 +105,6 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
   if (params.APPLY_ANGLEFILT)  {s1 = s1.map(function (image) {
     var angle = image.select('angle');
     return image.updateMask(
-      //angle.gte(params.ANGLE_GT).and(angle.lt(params.ANGLE_LT))
       angle.gte(params.ANGLE_GT).and(angle.lt(params.ANGLE_LT)) //apply the mean angle
     );
   })}
