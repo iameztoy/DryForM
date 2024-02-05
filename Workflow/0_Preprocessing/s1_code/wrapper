@@ -108,6 +108,7 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
       angle.gte(params.ANGLE_GT).and(angle.lt(params.ANGLE_LT))
     );
   })}
+  else {s1 = s1}
   
   print('Number of images in S1 collection: ', s1.size());
   
