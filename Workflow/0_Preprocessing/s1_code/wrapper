@@ -85,7 +85,9 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
       .filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VH'))
       .filterDate(params.START_DATE, params.STOP_DATE)
       .filterBounds(params.GEOMETRY); 
-  print("From Wrapper", s1)
+      
+      
+
   //select orbit
   if (params.ORBIT !== 'BOTH'){s1 = s1.filter(ee.Filter.eq('orbitProperties_pass', params.ORBIT))}
   
@@ -93,6 +95,13 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
   if (params.POLARIZATION=='VV') { s1 = s1.select(['VV','angle'])}
   else if (params.POLARIZATION=='VH') {s1 = s1.select(['VH','angle'])}
   else if (params.POLARIZATION=='VVVH') {s1 = s1.select(['VV', 'VH', 'angle'])}
+  
+s1 = s1.map(function (image) {
+    var angle = image.select('angle')
+    return image.updateMask(
+      angle.gte(30).and(angle.lt(35))
+    )
+  })
   
   print('Number of images in S1 collection: ', s1.size());
   
