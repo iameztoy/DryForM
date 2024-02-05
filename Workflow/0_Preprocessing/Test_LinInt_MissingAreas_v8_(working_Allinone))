@@ -439,6 +439,9 @@ var processTiles = function(tile){
               //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
               //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
               //2. Additional Border noise correction
+              APPLY_ANGLEFILT: true, //Added by IAA to apply angle filtering | See function in wrapper (line 97)
+              ANGLE_LT: 38,
+              ANGLE_GT: 0,
               APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
               //3.Speckle filter
               APPLY_SPECKLE_FILTERING: true,
