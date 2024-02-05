@@ -98,7 +98,7 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
   if (params.APPLY_ANGLEFILT) {
     var angle = image.select('angle')
     return image.updateMask(
-      angle.gte(30).and(angle.lt(35))
+      angle.gte(params.).and(angle.lt(35))
     )}
   else {s1 = s1}
   
