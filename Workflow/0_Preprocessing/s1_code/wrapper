@@ -95,12 +95,12 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
   else if (params.POLARIZATION=='VVVH') {s1 = s1.select(['VV', 'VH', 'angle'])}
   
   //Added (IAA) to filter by angle value
-  if (params.APPLY_ANGLEFILT) {
+  if (params.APPLY_ANGLEFILT=="true") {s1 = s1.map(function (image) {
     var angle = image.select('angle')
     return image.updateMask(
       angle.gte(30).and(angle.lt(35))
-    )}
-  else {s1 = s1}
+    )
+  })};
   
   print('Number of images in S1 collection: ', s1.size());
   
