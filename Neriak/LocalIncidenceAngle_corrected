@@ -11,6 +11,8 @@ var geometry = /* color: #d63000 */ee.Geometry.Polygon(
 // combined with the knowledge of the S1 azimuth angle. The projected slope can be transformed in the projected terrain zenith
 // angle, which is then subtracted from the S1 incidence angle to derive the local incidence angle (LIA)
 
+// GEE forum link: https://groups.google.com/g/google-earth-engine-developers/c/cO0o2yoGdr0/m/w5bFE8GuAwAJ
+
 
 // filtering of the S1 image collection, considering polrization, instrument mode, orbit direction, and the area of interest
 var sentinel1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT').filter(ee.Filter.listContains('transmitterReceiverPolarisation', 'VV'))
