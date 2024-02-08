@@ -18,7 +18,7 @@ Continues in folder 2.
 */
 
 
-var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
+var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
 
 // ---- !!! --- Notes --- Need to be corrected !!! ---
