@@ -1,3 +1,23 @@
+// #############################################################################
+// ### Processing Workflow for LC Majority computation ###
+// #############################################################################
+
+/*
+
+This code was developed under the Exploratory Research Project (JRC-EC S.4/D1) and it aims at stablishing a 
+preliminary framework to extract samples to be used in Supervised Classification activities. 
+A number of global coverage Land Cover products are used and mixed different rules. The outcome is a new
+LC map containing overall 19 classes for different Areas of Interest; currently Chaco, Caatinga, Cerrado and Tanzania.
+Note that not all the regions contain the same number of classes.
+
+The outcome of this procedure is exported both as an asset and to drive so it can be used to get samples using a
+a stratified random sampling approach implemented in AcATaMa plugin for QGIS - https://plugins.qgis.org/plugins/AcATaMa/
+
+Continues in folder 2.
+
+*/
+
+
 var Zones=ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/FAO_ecozones");
 //Map.addLayer(Zones,{},'Zones',false);
 
