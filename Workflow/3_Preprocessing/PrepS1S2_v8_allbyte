@@ -1,0 +1,574 @@
+
+// Preprocessing of imagery
+
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+
+
+//---------------------------------------------------------------------------//
+// REQUIRE
+//---------------------------------------------------------------------------//
+
+//var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
+var helper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/utilities');
+var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/wrapper');
+
+//---------------------------------------------------------------------------//
+// DEFINE GENERAL PARAMETERS
+//---------------------------------------------------------------------------//
+
+var aoisel = chaco; var expname = "Chaco"
+var aoi = aoisel.geometry() //.buffer(100000);
+
+//Time intervals for composites
+var year = 2020;
+var str0 = "2019-07-01"; var end0 = "2021-04-01"; // Initial Image Collection dates to allow extended imagery search for interpolation
+var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"; // Second Image Collection dates to calculate medians within the months of interest (see year and t_int parameter)
+
+var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]]); //quarterly composites
+var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]); //bimonthly composites
+var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8], [9,9], [10, 10], [11, 11], [12, 12]]); //monthly composites
+var t_int = t_int4;
+
+var cg_scale = 100000; // Scale for Covering Grid. Several tests done to see which is the optimal scale: 
+                       // The objective is to see which scale does not give memory problems while still maximizing the area covered to reduce processing time.
+                      
+var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "iBI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
+
+    //---------------------------------------------------------------------------//
+    // DEFINE SENTINEL-2 PARAMETERS
+    //---------------------------------------------------------------------------//
+
+    var collection = "2A";
+    var bands = ["B2", "B3","B4", "B8", "B11", "B12"]; // bands to filter the S2 collection
+    var glcm_bands = ["gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"];
+    var s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "iBI", "SI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
+    
+    var cloud_per = 65; //Still want to take advantage of cloud free regions in the 45% of area with no clouds.
+    var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
+    var CLEAR_THRESHOLD = 0.65; // The threshold for masking; values between 0.50 and 0.65 generally work well.
+                            // Higher values will remove thin clouds, haze & cirrus shadows.
+
+    // GLCM Texture parameters
+    var glcm_band = "gray";
+    var glcm_size = 2; // Higher values generalize the textures too much.
+
+    var days = 270; // How many days go backward/forward in the interpolation process? Original 30. For quarters: From Nov 15 2019 to March 31 2020: 140.
+                                                                                                            //From Nov 15 2020 to Feb 15 2021: 140
+
+
+    if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
+    if (collection == "1C"){var col = 'COPERNICUS/S2_HARMONIZED'}
+   
+    //---------------------------------------------------------------------------//
+    // DEFINE SENTINEL-1 PARAMETERS
+    //---------------------------------------------------------------------------// 
+    
+    // ****!!*** Take a look within the function  ****!!***
+    //
+    // I have moved the parameters section to the function so the tiles "aoi_interm" can be iterated.
+    // Alternatively bring the wrapper here but it makes the code very long.
+
+
+//---------------------------------------------------------------------------//
+// ********** END OF PARAMETERS ************
+//---------------------------------------------------------------------------//
+
+//---------------------------------------------------------------------------//
+// DEFINITION OF TILES FOR EXPORTING
+//---------------------------------------------------------------------------//
+
+// We need first to create a grid system over which the interpolation will be carried out.
+// Note that running on big tiles provoques "out of memory" errors. Thus e.g. a Covering Grid and its associated scale parameter allow 
+//    to test quickly the process for different tile sizes by just modifying this parameter. 
+
+// Create a covering GRID. This is created considering the initial Area of Interest.
+
+var Zones = aoi.coveringGrid({
+  	proj: "EPSG:4326", //EPSG:32720
+  	scale: cg_scale 
+});
+
+
+// CoveringGrid produces a strange ID so I make a new fc with proper
+// unique id. This way we can parse them to the name while running the Export Loop.
+// Take into account that we need to differentiate each tile so we do not have the same name while exporting; otherwise you get an error.
+
+// make a list of length of features
+var idList = ee.List.sequence(0,Zones.size().subtract(1)); 
+// featureCollection to a List
+var list = Zones.toList(Zones.size());
+// set the system:index
+var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
+  var feat = ee.Feature(list.get(newSysIndex));
+  // format number to string (system:index must be a string)
+  var indexString = ee.Number(newSysIndex).format('%03d'); //3 is until 999, increase if needed 
+                                                          // but big chance of client crash while exporting. 
+                                                          // Take into account that this is a loop on the client side.
+  return feat.set('system:index', indexString, 'ID', indexString);
+}));
+
+
+
+//print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
+print("Number of Tiles in AOI", zonesID.size());
+//var tl = zonesID.aggregate_array("ID"); 
+//print("Array Tile list", tl)
+
+// For testing purposes
+// We select here the tiles we want to process. For e.g. cgScale 100000 works. Each output is around 40GB if not converted to int or byte beforehand.
+// var tilelist = (["054"]); 
+                                        // For testing purposes:
+                                        // 009 010	011	075	076	077 Caatinga "009", "010", "075", "076"
+                                        // 032 033	034	123	124	125 Chaco "032", "033", "123", "124"
+                                        // 043 044	045	288	289	290 Cerrado "043", "044",	"288", "289"
+                                        // 054 055	056	105	106	107 Tanzania "054", "055", "105", "106"
+
+
+// Automated method:
+// Build the final tiles to apply the function afterwards
+var n = Zones.size().getInfo()-1; //Get the tile size to the list afterwards
+var ns = n.toString();
+
+// May require to add more tiles (>1000) for very wide biomes
+// (e.g. Cerrado) if the is small (e.g. cgScale: 50000 for Cerrado are 1438 tiles) 
+
+var tilelist = ee.List(['126','129','128','127', '125','121','120','081', '076'])
+tilelist = tilelist.filter(ee.Filter.lte('item', ns));
+//print("Manual tile list", tilelist)
+
+var tilelist = tilelist.getInfo();
+//print("NSC", nsc)
+
+
+Map.addLayer(zonesID, null, "Covering grid: " + cg_scale.toString());
+
+//var test = zonesID.filter(ee.Filter.eq('ID', '005')) 
+//Map.addLayer(test, null, "Test tile")
+
+
+//---------------------------------------------------------------------------//
+// PROCESSING
+//---------------------------------------------------------------------------//
+
+  // In order to avoid memory errors we create a function with the entire process within a single function.
+  // This should be run along with the list of input tiles (tilelist).
+
+var processTiles = function(tile){
+  
+  //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
+  //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
+  var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
+  //print("interm aoi fx", interm_aoi)
+  Map.addLayer(interm_aoi, {color: 'red'}, "Intermediate AOI/tile", 0);
+
+  //---------------------------------------------------------------------------//
+  // PROCESS Sentinel-2
+  //---------------------------------------------------------------------------//
+  
+  // Harmonized Sentinel-2 Level 2A collection.
+  var s2 = ee.ImageCollection(col);
+
+  // Cloud Score+ image collection. Note Cloud Score+ is produced from Sentinel-2
+  // Level 1C data and can be applied to either L1C or L2A collections.
+  
+  var csPlus = ee.ImageCollection('GOOGLE/CLOUD_SCORE_PLUS/V1/S2_HARMONIZED');
+
+  // SELECT AND MASK CLOUD/SHADOWS
+  var filtered = s2
+    .filterBounds(interm_aoi) // s2grid_f interm_aoi
+    .filterDate(str0, end0) //leave enough space for interpolation
+    .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',cloud_per)) 
+    .linkCollection(csPlus, [QA_BAND])
+    .map(function(img) {
+      return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
+        .select(bands)
+        .divide(10000)
+        .clip(interm_aoi) // s2grid_f interm_aoi
+        .copyProperties(img, ["system:time_start"]);
+    });
+  
+  print("Filtered s2 limit(1)", filtered.limit(1));
+  print('Number of images in S2 collection: ', filtered.size());
+  
+  /*
+  INTERPOLATION
+  
+  Add a band containing timestamp to each image.
+  This will be used to do pixel-wise interpolation later. 
+  The key here is to mask the timestamp band with the same mask as the image. 
+  If your image has more than 1-band, the code below will use the mask from the first band.
+  */
+   
+  var filtered = filtered.map(function(image) {
+    var timeImage = image.metadata('system:time_start').rename('timestamp');
+    var timeImageMasked = timeImage.updateMask(image.mask().select(0));
+    return image.addBands(timeImageMasked);
+  });
+
+  /*
+  Next we specify the time-window. 
+  This will determine how much backward and forward are we willing to look for 
+  an unmasked pixel in the time-series. The filters in subsequent 
+  steps need the time difference in milliseconds, so we convert days to milliseconds.
+  */
+
+  //var days = 180 // How many days go backward/forward? Original 30 | Moved outside the function
+  var millis = ee.Number(days).multiply(1000*60*60*24);
+
+  /*
+  For each image in the collection, we need to find all images before and after the specified time-window. 
+  This is accomplished using Joins. We need to do 2 joins
+
+  Join 1: Join the collection with itself to find all images before each image
+  Join 2: Join the collection with itself to find all images after each image
+  We first define the filters needed for the join. Define a maxDifference filter to find 
+  all images within the specified days.
+  */
+
+  var maxDiffFilter = ee.Filter.maxDifference({
+    difference: millis,
+    leftField: 'system:time_start',
+    rightField: 'system:time_start'
+  });
+
+  /*
+  We need 2 more filters.
+
+  A lessThanOrEquals filter to find all images after a given image. 
+      This will compare the given image’s timestamp against other images’ timestamps
+  A greaterThanOrEquals filter to find all images before a given image. 
+      This will compare the given image’s timestamp against other images’ timestamps
+  */
+
+  var lessEqFilter = ee.Filter.lessThanOrEquals({
+   leftField: 'system:time_start',
+   rightField: 'system:time_start'
+  });
+  var greaterEqFilter = ee.Filter.greaterThanOrEquals({
+    leftField: 'system:time_start',
+    rightField: 'system:time_start'
+  });
+
+  /*
+  Now we apply the joins.
+  We join the image collection with itself and match before/after images for each image 
+  in the collection that meet our criteria.
+
+  Join1 is to find all images after each image that are winthin the time-window. 
+  We have 2 filters already defined for these two conditions. 
+  We combine them and apply the join. This join will find all images after, 
+  sorted in descending order. This will gives us resulting images such that closest image is last.
+  */
+
+  var filter1 = ee.Filter.and(maxDiffFilter, lessEqFilter);
+ 
+  var join1 = ee.Join.saveAll({
+    matchesKey: 'after',
+    ordering: 'system:time_start',
+    ascending: false});
+   
+  var join1Result = join1.apply({
+    primary: filtered,
+    secondary: filtered,
+    condition: filter1
+  });
+
+  /*
+  Do the Join2 now to match all images within the time-window that come before each image.
+  This join will find all images before, sorted in ascending order. 
+  This will gives us images so that closest is last.
+  */
+
+  var filter2 = ee.Filter.and(maxDiffFilter, greaterEqFilter);
+ 
+  var join2 = ee.Join.saveAll({
+    matchesKey: 'before',
+    ordering: 'system:time_start',
+    ascending: true});
+   
+  var join2Result = join2.apply({
+    primary: join1Result,
+    secondary: join1Result,
+    condition: filter2
+  });
+
+  /*
+  The collection is now ready for interpolation. 
+  We write a function that will be used to interpolate all images. 
+  This function takes an image and replaces the masked pixels with the interpolated value 
+  from before and after images.
+
+  Interpolation Formula
+  y = y1 + (y2-y1)*((t – t1) / (t2 – t1))
+  y = interpolated image
+  y1 = before image
+  y2 = after image
+  t = interpolation timestamp
+  t1 = before image timestamp
+  t2 = after image timestamp
+
+  If you wanted a simple average of before and after images, you can set the value of timeRatio to 0.5.
+
+  */
+
+  var interpolateImages = function(image) {
+    var image = ee.Image(image)
+    // We get the list of before and after images from the image property
+    // Mosaic the images so we a before and after image with the closest unmasked pixel
+    var beforeImages = ee.List(image.get('before'));
+    var beforeMosaic = ee.ImageCollection.fromImages(beforeImages).mosaic();
+    var afterImages = ee.List(image.get('after'));
+    var afterMosaic = ee.ImageCollection.fromImages(afterImages).mosaic();
+  // Get image with before and after times
+    var t1 = beforeMosaic.select('timestamp').rename('t1');
+    var t2 = afterMosaic.select('timestamp').rename('t2');
+    var t = image.metadata('system:time_start').rename('t');
+    var timeImage = ee.Image.cat([t1, t2, t]);
+    var timeRatio = timeImage.expression('(t - t1) / (t2 - t1)', {
+      't': timeImage.select('t'),
+      't1': timeImage.select('t1'),
+      't2': timeImage.select('t2'),
+    });
+    
+  // Compute an image with the interpolated image y
+    var interpolated = beforeMosaic
+      .add((afterMosaic.subtract(beforeMosaic).multiply(timeRatio)));
+  // Replace the masked pixels in the current image with the average value
+    var result = image.unmask(interpolated);
+    return result.copyProperties(image, ['system:time_start']);
+  };
+
+  /*
+  Now map() the function to interpolate all images in the collection. 
+  The interpolatedCol is a continuous time-series with cloudy pixels 
+  replaced by interpolated values from closest cloud-free pixels.
+  */
+
+  // map() the function to interpolate all images in the collection
+  var interpolatedCol = ee.ImageCollection(join2Result.map(interpolateImages));
+  interpolatedCol = interpolatedCol.filterDate(str, end); //Need to filter again to the target year (or Date range 1 (not 0))
+  
+  var createSeasonComposites_s2 = function(months) {
+    var startMonth = ee.List(months).get(0);
+    var endMonth = ee.List(months).get(1);
+    var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+    var seasonFiltered = interpolatedCol.filter(monthFilter);
+    var composite = seasonFiltered.median().float();
+    return composite; //.clip(aoi); //clip not necessary here if it is applied while filtering the collection
+  };
+
+  var compList_s2 = t_int.map(createSeasonComposites_s2);
+  var s2_comp = ee.ImageCollection.fromImages(compList_s2);
+  
+    // Add Indexes function
+  var addIndex = function addindexes(img) {
+    //var nbr = img.normalizedDifference(['B8', 'B12']).rename(['NBR']); 
+    //var ndvi = img.normalizedDifference(['B8', 'B4']).rename('NDVI');
+    var gndvi_a = img.normalizedDifference(['B8', 'B3']).rename('gNDVI');
+    var gndvi = gndvi_a.multiply(255).toByte();
+    var msavi2_a = img.select('B8').multiply(2).add(1)
+      .subtract(img.select('B8').multiply(2).add(1).pow(2)
+      .subtract(img.select('B8').subtract(img.select('B4')).multiply(8)).sqrt())
+      .divide(2).rename("MSAVI");
+    var msavi2 = msavi2_a.multiply(255).toByte();
+    //var msavit = msavi2.reduceNeighborhood({reducer: ee.Reducer.stdDev(),kernel: ee.Kernel.square(2.5)}).rename('MSAVIt'); //texture of 5x5 pixel window 
+    var bi_a = ((img.select("B4").pow(2).add(img.select("B3").pow(2))).divide(2)).sqrt().rename("iBI"); //I add the "i" to avoid the "B.*" selection afterwards
+    var bi = bi_a.multiply(255).toByte();
+    var si_a = img.expression('((1-red)*(1-green)*(1-blue)**(0.333333) )', {
+      'red': img.select('B4'), 'green': img.select('B3'),'blue': img.select('B2')}).rename('SI');
+      //( (1-b2)*(1-b3)*(1-b4) )^(1/3)
+    var si = si_a.multiply(255).toByte();
+    var gray = img.select("B8").multiply(0.3).add(img.select("B4").multiply(0.59)).add(img.select("B3").multiply(0.11)).rename('gray'); //'(0.3 * NIR) + (0.59 * R) + (0.11 * G)'
+    //mtvi = 1.5 * (1.2 * (nir - green) - 2.5 * (red - green)) / 
+    //sqrt( (2 * nir + 1)^2 - (6 * nir - 5 * sqrt(red) - 0.5) ) //https://gis.stackexchange.com/questions/308633/soil-adjusted-vegetation-index-values-msavi2-are-not-within-expected-range
+    return img.addBands(ee.Image.cat(gndvi, msavi2, bi, si, gray));
+      };
+  
+  var interpolatedCol_i = s2_comp.map(addIndex);
+  print("Interpol median index", interpolatedCol_i);
+  
+  // Add glcm function
+  
+  var addglcm = function addglmc(img) {
+  //var glcm = img.select(glcm_band).int16().glcmTexture({size: glcm_size}); //My original
+    var glcm = img.select(glcm_band).unitScale(0, 0.30).multiply(100).toInt().glcmTexture({size: glcm_size});
+    var asm_a = glcm.select("gray_asm").rename("gray_asm_glcm");
+    var asm = asm_a.multiply(255).toByte();
+    var contrast_a = glcm.select("gray_contrast").rename("gray_contrast_glcm");
+    var contrast = contrast_a.multiply(10).toByte();
+    var corr_a = glcm.select("gray_corr").rename("gray_corr_glcm"); 
+    var corr = corr_a.multiply(255).toByte();
+    var ent_a = glcm.select("gray_ent").rename("gray_ent_glcm");
+    var ent = ent_a.multiply(10).toByte();
+    var vari_a = glcm.select("gray_var").rename("gray_var_glcm");
+    var vari = vari_a.multiply(10).toByte();
+    var idm_a = glcm.select("gray_idm").rename("gray_idm_glcm");
+    var idm = idm_a.multiply(255).toByte();
+    var savg_a = glcm.select("gray_savg").rename("gray_savg_glcm");
+    var savg = savg_a.toByte();
+    
+    return img.addBands(ee.Image.cat(asm, contrast, corr, ent, vari, idm, savg));
+  };
+  
+  var interpolatedCol_i_glcm = interpolatedCol_i.map(addglcm);
+  interpolatedCol_i_glcm = interpolatedCol_i_glcm.select(s2_fbands);
+  
+  print("Interpolated + i + g", interpolatedCol_i_glcm);
+  
+  // Only MS bands to byte (we loose the indexes). Need to reduce collection size due to asset storage limitations
+  // We loose the indexes so we need to bring them back afterwards
+  function s2byte(img) {
+    return img.select("B.*").multiply(255).toByte();
+  }
+  
+  var s2ms_byte = interpolatedCol_i_glcm.map(s2byte);
+  var s2ms_toBands = s2ms_byte.toBands();
+  
+  //Merge the indexes with the MS bands
+  var selind = interpolatedCol_i_glcm.select("gNDVI", "MSAVI", "iBI", "SI", "gray.*").toBands();
+    var s2final = s2ms_toBands.addBands(selind)
+  
+  // Remove non desired bands
+  function removeBand(img) {
+    return img.select(
+      img.bandNames().filter(
+        ee.Filter.stringEndsWith('item', '_timestamp').not()));
+  }
+
+
+  var s2final_i = removeBand(s2final);
+  print("S2 final quarterly", s2final);
+  
+    //---------------------------------------------------------------------------//
+    // DEFINE SENTINEL-1 PARAMETERS
+    //---------------------------------------------------------------------------//
+
+    //Would need to optimize this and add the parameters outside the function. However, it works for the moment being.
+    
+    var parameter = {//1. Data Selection 
+              START_DATE: str, 
+              STOP_DATE: end, 
+              POLARIZATION:'VVVH',
+              ORBIT : 'BOTH', //Optionally "ASCENDING" "DESCENDING
+              GEOMETRY: interm_aoi, //uncomment if interactively selecting a region of interest
+              //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
+              //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
+              //2. Additional Border noise correction
+              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
+              //3.Speckle filter
+              APPLY_SPECKLE_FILTERING: true,
+              SPECKLE_FILTER_FRAMEWORK: 'MULTI',
+              SPECKLE_FILTER: 'REFINED LEE',
+              SPECKLE_FILTER_KERNEL_SIZE: 9,
+              SPECKLE_FILTER_NR_OF_IMAGES: 12,
+              //4. Radiometric terrain normalization
+              APPLY_TERRAIN_FLATTENING: true,
+              DEM: ee.Image('USGS/SRTMGL1_003'),
+              TERRAIN_FLATTENING_MODEL: 'VOLUME',
+              TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER: 0,
+              //5. Output
+              FORMAT : 'DB',
+              CLIP_TO_ROI: false, // I do it outside the s1 box while creating the composites: See createSeasonComposites_s1
+              SAVE_ASSETS: false  //          ""           
+};
+  
+  //---------------------------------------------------------------------------//
+  // PROCESS Sentinel-1
+  //---------------------------------------------------------------------------//
+
+
+  //Preprocess the S1 collection
+  var s1_preprocces = wrapper.s1_preproc(parameter);
+
+  var s1 = s1_preprocces[0];
+  s1_preprocces = s1_preprocces[1];
+
+  //Convert format for export  
+  // *changed from original so it does not provoque any conflit with the Visu section
+  // *this conditional is run only AFTER the Visu section in the original code
+  // *for export purposses
+
+
+  var createSeasonComposites_s1 = function(months) {
+    var startMonth = ee.List(months).get(0);
+    var endMonth = ee.List(months).get(1);
+    var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
+    var seasonFiltered = s1_preprocces.filter(monthFilter);
+    var composite = seasonFiltered.mean()
+    //var toDB = seasonFiltered.map(helper.lin_to_db);
+    //if (parameter.FORMAT=='DB'){var s1_composite = composite.log10().multiply(10.0)}
+    return composite.select("VV", "VH").clip(interm_aoi);
+  };
+
+  var compList_s1 = t_int.map(createSeasonComposites_s1);
+  var s1_comp = ee.ImageCollection.fromImages(compList_s1);
+  var s1db_c = s1_comp.map(helper.lin_to_db);
+  
+  /*
+  function int16(imgsc) {
+    return imgsc.multiply(1000).int16();
+  }
+  
+  var s1int = s1db.map(int16);
+  */
+  
+  var clamp_min=-50;
+  var clamp_max=-5;
+  
+  function s1byte(img) {
+    return img.clamp(clamp_min,clamp_max).unitScale(clamp_min,clamp_max).multiply(255).toByte();
+  }
+  
+  var s1db = s1db_c.map(s1byte);
+  
+  var s1_final = s1db.toBands();
+  
+  //Map.addLayer(s1_final)
+  //print("s1 final (to db)", s1db.first());
+  
+  
+  //---------------------------------------------------------------------------//
+  // MERGE S1 AND S2 COMPOSITES | Rename for export as asset
+  //---------------------------------------------------------------------------//
+  
+  var s1s2_final = s2final_i.addBands(s1_final);
+  
+  var blist = s1s2_final.bandNames();
+  var cat = function(ele){return ee.String("t").cat(ele)};
+  var ren = blist.map(cat);
+
+  var s1s2final = s1s2_final.select(blist).rename(ren);
+ //print("S1S2 final", s1s2final);
+
+  ////////////// EXPORT ///////////////////////
+
+  //No need for loop here. Need to optimize, but it works so far. 
+  var featlist = interm_aoi.getInfo()["features"];
+  for (var f in featlist) {
+    var feat = ee.Feature(featlist[f]);
+    var dis = feat.get("ID");
+    var disS = dis.getInfo();
+    var name = "tile"; 
+
+  Export.image.toAsset({
+    image: s1s2final,
+    description: name+disS+"_"+expname, //"test", //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco/' + name+disS+"_"+expname, //.toString(),
+    pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    region: interm_aoi,
+    scale: 10,
+    maxPixels: 1e13
+    });
+  }
+  
+  return  s1s2final;
+
+};
+
+var results = tilelist.map(processTiles);
+
+
