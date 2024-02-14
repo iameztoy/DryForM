@@ -1,4 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
     geometry = 
     /* color: #d63000 */
@@ -13,7 +12,7 @@ var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1
           [-60.28765050612006, -21.979410242062578],
           [-60.046037118058535, -21.979410242062578],
           [-60.046037118058535, -21.82611238568326]]], null, false);
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
 a = a.mosaic().clip(geometry)
 Map.addLayer(a)
 
@@ -49,3 +48,15 @@ Export.image.toDrive({
   crs: proj.crs,
   maxPixels: 1e13
 });
+
+/*
+Export.image.toAsset({
+  image: snic,
+  description: 'image_export_maxpixels',
+  assetId: 'projects/dryform-383607/assets/SNIC_Test',  // <> modify these
+  region: geometry,
+  scale: 10,
+  crs: proj.crs,
+  maxPixels: 1e13
+});
+*/
