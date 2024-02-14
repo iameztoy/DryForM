@@ -1,0 +1,51 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.28765050612006, -21.82611238568326],
+          [-60.28765050612006, -21.979410242062578],
+          [-60.046037118058535, -21.979410242062578],
+          [-60.046037118058535, -21.82611238568326]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+a = a.mosaic().clip(geometry)
+Map.addLayer(a)
+
+var dataset = ee.ImageCollection('COPERNICUS/S2_SR')
+                  .filterDate('2020-01-01', '2020-01-30')
+
+var proj = dataset.first().select("B8").projection();
+print(proj)
+
+
+var size_segmentation = 49
+
+var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
+
+var snic = ee.Algorithms.Image.Segmentation.SNIC({
+  image: a, 
+  compactness: 0,  
+  connectivity: 8, 
+  neighborhoodSize: 256, 
+  seeds: seeds
+})
+
+print(snic)
+
+Map.addLayer(snic.select("clusters"))
+
+Export.image.toDrive({
+  image: snic,
+  description: 'snic2drive',
+  folder: 'snic',
+  region: geometry,
+  scale: 10,
+  crs: proj.crs,
+  maxPixels: 1e13
+});
