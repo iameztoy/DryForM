@@ -44,8 +44,8 @@ proj.evaluate(function(proj_obj) {
     image: snic,
     description: 'SNICExport',
     assetId: 'projects/dryform-383607/assets/SNIC_Test/test1',
-    crs: proj_obj.crs,
-    crsTransform: proj_obj.transform,
+    //crs: proj_obj.crs,
+    //crsTransform: proj_obj.transform,
     scale: 10,
     region: geometry,
     maxPixels: 1e13
