@@ -52,11 +52,11 @@ Export.image.toDrive({
 /*
 Export.image.toAsset({
   image: snic,
-  description: 'image_export_maxpixels',
-  assetId: 'projects/dryform-383607/assets/SNIC_Test',  // <> modify these
+  description: 'SNIC_Test',
+  assetId: 'projects/dryform-383607/assets/SNIC_Test/test1',  // <> modify these
   region: geometry,
   scale: 10,
-  crs: proj.crs,
+  crs: "EPSG:32658",
   maxPixels: 1e13
 });
 */
