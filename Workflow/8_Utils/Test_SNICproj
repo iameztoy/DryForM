@@ -39,14 +39,18 @@ print(snic)
 
 Map.addLayer(snic.select("clusters"))
 
-Export.image.toDrive({
-  image: snic,
-  description: 'snic2drive',
-  folder: 'snic',
-  region: geometry,
-  scale: 10,
-  crs: proj.crs,
-  maxPixels: 1e13
+proj.evaluate(function(proj_obj) {
+  Export.image.toAsset({
+    image: snic,
+    description: 'SNICExport',
+    assetId: 'projects/dryform-383607/assets/SNIC_Test/test1',
+    crs: proj_obj.crs,
+    crsTransform: proj_obj.transform,
+    scale: 10,
+    region: geometry,
+    maxPixels: 1e13
+    
+  });
 });
 
 /*
