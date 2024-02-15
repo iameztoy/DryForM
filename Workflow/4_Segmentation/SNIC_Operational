@@ -5,15 +5,15 @@ var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preproces
 chaco = chaco.geometry().buffer(300)
 
 chaco_ic = chaco_ic.mosaic().clip(chaco)
-Map.addLayer(a, null, "Image Collection")
+//Map.addLayer(a, null, "Image Collection")
 
-var size_segmentation = 24
+var size_segmentation = 12
 
 var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
 
 var snic = ee.Algorithms.Image.Segmentation.SNIC({
   image: a, 
-  size: 24,
+  //size: 12,
   compactness: 0,  
   connectivity: 8, 
   neighborhoodSize: 256, 
