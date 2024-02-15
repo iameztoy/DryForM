@@ -1,0 +1,23 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_s49c0c8n256se49"),
+    image2 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_s49oc0c8n256se24"),
+    image3 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_sNoc0c8n256se24"),
+    image4 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_sNoc0c8n256se49"),
+    image5 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_s24oc0c8n256se49"),
+    imagevp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":23.414012908935547,"max":113.30961608886719,"gamma":1},
+    image2vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.91302490234375,"max":116.6225357055664,"gamma":1},
+    image3vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.91302490234375,"max":116.6225357055664,"gamma":1},
+    image4vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.290254592895508,"max":122.29492950439453,"gamma":1},
+    image5vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.290254592895508,"max":124.27131652832031,"gamma":1},
+    Clustersvp_image = {"opacity":1,"bands":["clusters"],"min":-2138732190,"max":2144614549,"gamma":1},
+    Clustersvp_image2 = {"opacity":1,"bands":["clusters"],"min":-2137402703,"max":2146688858,"gamma":1};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(image, imagevp, "test_s49c0c8n256se49")
+Map.addLayer(image2, image2vp, "test_s49oc0c8n256se24")
+Map.addLayer(image3, image3vp, "test_sNoc0c8n256se24")
+Map.addLayer(image4, image4vp, "test_sNoc0c8n256se49")
+Map.addLayer(image5, image5vp, "test_s24oc0c8n256se49")
+
+//Only 1 and 2 clusters
+Map.addLayer(image, Clustersvp_image, "Clusters Image seeds 49")
+Map.addLayer(image2, Clustersvp_image2, "Clusters Image2 seeds 24")
