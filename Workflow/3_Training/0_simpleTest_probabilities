@@ -1,19 +1,17 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = 
-    /* color: #d63000 */
-    /* shown: false */
+var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
+    geometry = 
+    /* color: #98ff00 */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-44.902108494833556, -13.496397490652596],
-          [-44.902108494833556, -14.365437636753542],
-          [-41.372750584677306, -14.365437636753542],
-          [-41.372750584677306, -13.496397490652596]]], null, false),
-    geometry2 = /* color: #d63000 */ee.Geometry.Point([-42.333206926600866, -13.675667535459835]),
-    ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Caatinga");
+        [[[-60.71832839295968, -25.440593125264616],
+          [-60.71832839295968, -26.12565007727107],
+          [-59.99048415467843, -26.12565007727107],
+          [-59.99048415467843, -25.440593125264616]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 var img = ic.mosaic()
 var roi = geometry
@@ -23,6 +21,7 @@ var visualization = {
 };
 
 Map.addLayer(lc, visualization, 'Landcover');
+Map.addLayer(geometry)
 
 
 // ESA WorldCover land cover map, used as label source in classifier training.
