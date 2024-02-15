@@ -1,6 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //***********************************************************
 // DRYFORM - Step 4 -Segmentation of preprocessed imagery
@@ -15,37 +12,30 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 //    These can be further reduced both in the temporal and spectral domains by reducing the number of bands, indexes and glcm variables. 
 //    However, I want to use them all as to run a RF training step and check the importance table values. 
 
-//Areas of Interest
+// Area of Interest
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
-chaco = chaco.geometry().buffer(300); //Buffer to process areas outside the AOI | For future segmentation overlapping in contiguous biomes or AOIs
 
-//Image Collection - S1/S2 + Indexes and GLCM
+// Image Collection S1 + S2 + Indexes + GLCM variables
 var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
-print(chaco_ic)
-var bands = (["t0_B3", "t0_MSAVI"]); //e.g. "t0_B3", "t0_MSAVI",...
-//chaco_ic = chaco_ic.select(bands)
-//print(chaco_ic)
-
-chaco_ic = chaco_ic.mosaic().clip(chaco);
+chaco = chaco.geometry().buffer(300)
+chaco_ic = chaco_ic.mosaic().clip(chaco)
 //Map.addLayer(a, null, "Image Collection")
 
-// SNIC Parameters
-var segsize = 12;
-var comp = 0;
-var conn = 8;
-var nbsize =256;
+//var bands = (["t0_B4", "t1_MSAVI"]) //e.g. "t0_B4", "t1_MSAVI"
 
-var seeds = ee.Algorithms.Image.Segmentation.seedGrid(segsize);
+var size_segmentation = 12
+
+var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
+
 var snic = ee.Algorithms.Image.Segmentation.SNIC({
   image: chaco_ic, 
   //size: 12,
-  compactness: comp,  
-  connectivity: conn, 
-  neighborhoodSize: nbsize, 
+  compactness: 0,  
+  connectivity: 8, 
+  neighborhoodSize: 256, 
   seeds: seeds
 })
 
-// Export
 Export.image.toAsset({
   image: snic,
   description: 'Chaco_SNIC_sNAc0c8n256se12',
