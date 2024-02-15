@@ -22,19 +22,18 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
 
 
 
-proj.evaluate(function(proj_obj) {
-  Export.image.toAsset({
-    image: snic,
-    description: 'SNICExport',
-    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC',
-    //crs: proj_obj.crs,
-    //crsTransform: proj_obj.transform,
+Export.image.toAsset({
+  image: snic,
+  description: 'SNICExport',
+  assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC',
+  //crs: proj_obj.crs,
+  //crsTransform: proj_obj.transform,
     scale: 10,
-    region: geometry,
-    maxPixels: 1e13
+  //region: geometry,
+  maxPixels: 1e13
     
-  });
 });
+
 
 /*
 Export.image.toAsset({
