@@ -43,10 +43,10 @@ Map.addLayer(area_image2, {}, "Cluster Area Image 24") //min:50000, max: 500000
 
 
 Export.image.toAsset({
-    image: image, //image, image2 and image6
+    image: image6, //image (49), image2 (24) and image6 (12)
     description: 'SNICExport_Area',
-    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests_Area/image',  //image, image2 and image6
-    //crs: proj_obj.crs,
+    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests_Area/image6',  //image, image2 and image6
+    crs: "EPSG:4326", //proj_obj.crs,
     //crsTransform: proj_obj.transform,
     scale: 10,
     //region: geometry,
