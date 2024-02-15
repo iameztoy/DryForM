@@ -12,7 +12,7 @@ var size_segmentation = 12
 var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
 
 var snic = ee.Algorithms.Image.Segmentation.SNIC({
-  image: a, 
+  image: chaco_ic, 
   //size: 12,
   compactness: 0,  
   connectivity: 8, 
