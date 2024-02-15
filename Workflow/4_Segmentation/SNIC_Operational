@@ -26,7 +26,7 @@ Export.image.toAsset({
   image: snic,
   description: 'SNICExport',
   assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC',
-  //crs: proj_obj.crs,
+  crs: "EPSG:4326",
   //crsTransform: proj_obj.transform,
     scale: 10,
   //region: geometry,
