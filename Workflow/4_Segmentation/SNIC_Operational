@@ -2,13 +2,17 @@
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-//****************************************************
-// DRYFORM - Segmentation of preprocessed imagery
-//****************************************************
+//***********************************************************
+// DRYFORM - Step 4 -Segmentation of preprocessed imagery
+//***********************************************************
 
 // This piece of code is to export as an asset an all-in-one segmentation.
 // As input we use the preprocessed imagery that was also exported as an asset in a previous step.
 // It is also intended for testing purposes. Size segmentations (seeds): 12, 24 and 49.
+// First run uses all the available multitemporal bands (73)
+//    These can be further reduced both in the temporal and spectral domains by reducing the number of bands, indexes and glcm variables. 
+//    However, I want to use them all as to run a RF training step and check the importance tables. 
+
 
 var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
 chaco = chaco.geometry().buffer(300)
