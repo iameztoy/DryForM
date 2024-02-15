@@ -12,12 +12,23 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmen
     Clustersvp_image = {"opacity":1,"bands":["clusters"],"min":-2138732190,"max":2144614549,"gamma":1},
     Clustersvp_image2 = {"opacity":1,"bands":["clusters"],"min":-2137402703,"max":2146688858,"gamma":1};
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(image, imagevp, "test_s49c0c8n256se49")
-Map.addLayer(image2, image2vp, "test_s49oc0c8n256se24")
-Map.addLayer(image3, image3vp, "test_sNoc0c8n256se24")
-Map.addLayer(image4, image4vp, "test_sNoc0c8n256se49")
-Map.addLayer(image5, image5vp, "test_s24oc0c8n256se49")
+Map.addLayer(image, imagevp, "test_s49c0c8n256se49", 0)
+Map.addLayer(image2, image2vp, "test_s49oc0c8n256se24", 0)
+Map.addLayer(image3, image3vp, "test_sNoc0c8n256se24", 0)
+Map.addLayer(image4, image4vp, "test_sNoc0c8n256se49", 0)
+Map.addLayer(image5, image5vp, "test_s24oc0c8n256se49", 0)
 
 //Only 1 and 2 clusters
-Map.addLayer(image, Clustersvp_image, "Clusters Image seeds 49")
-Map.addLayer(image2, Clustersvp_image2, "Clusters Image2 seeds 24")
+Map.addLayer(image.randomVisualizer(), null, "Clusters Image seeds 49") //Clustersvp_image
+Map.addLayer(image2.randomVisualizer(), null, "Clusters Image2 seeds 24") //Clustersvp_image2
+
+
+// Areas
+
+var area_image = ee.Image.pixelArea().addBands(image.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256) 
+var area_image2 = ee.Image.pixelArea().addBands(image2.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
+//256: Size of the neighborhood to consider when aggregating values.
+//Any objects larger than maxSize in either the horizontal or vertical dimension will be masked, since portions of the object might be outside of the neighborhood.
+
+Map.addLayer(area_image, {}, "Cluster Area Image 49") //min:50000, max: 500000
+Map.addLayer(area_image2, {}, "Cluster Area Image 24") //min:50000, max: 500000
