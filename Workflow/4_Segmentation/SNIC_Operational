@@ -13,7 +13,7 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 //    These correspond to the 4%, 30%, 50% and 80% of the area of the Ground Truth buffers, being the 100% equal to a half an hectare polygon.
 // First run uses all the available multitemporal bands (73)
 //    These can be further reduced both in the temporal and spectral domains by reducing the number of bands, indexes and glcm variables. 
-//    However, I want to use them all as to run a RF training step and check the importance tables. 
+//    However, I want to use them all as to run a RF training step and check the importance table values. 
 
 
 var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
