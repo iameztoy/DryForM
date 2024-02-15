@@ -13,7 +13,7 @@ var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s
           [-59.99048415467843, -26.12565007727107],
           [-59.99048415467843, -25.440593125264616]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var img = ic.mosaic()
+var img = ic.mosaic().clip(geometry)
 var roi = geometry
 var lc = ee.ImageCollection('ESA/WorldCover/v200').first();
 var visualization = {
@@ -21,7 +21,7 @@ var visualization = {
 };
 
 Map.addLayer(lc, visualization, 'Landcover');
-Map.addLayer(geometry)
+Map.addLayer(img, null, "S1-S2")
 
 
 // ESA WorldCover land cover map, used as label source in classifier training.
@@ -124,7 +124,7 @@ Map.addLayer(trainingSample, {color: 'black'}, 'Training sample', false);
 Map.addLayer(validationSample, {color: 'white'}, 'Validation sample', false);
 */
 
-Map.addLayer(probabilities)
+Map.addLayer(probabilities, null, "Probabilities")
 
 
 
