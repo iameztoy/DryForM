@@ -1,0 +1,68 @@
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
+    geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [ 
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.28765050612006, -21.82611238568326],
+          [-60.28765050612006, -21.979410242062578],
+          [-60.046037118058535, -21.979410242062578],
+          [-60.046037118058535, -21.82611238568326]]], null, false);
+
+a = a.mosaic().clip(geometry)
+Map.addLayer(a, null, "Image Collection")
+
+var dataset = ee.ImageCollection('COPERNICUS/S2_SR')
+                  .filterDate('2020-01-01', '2020-01-30')
+
+var proj = dataset.first().select("B8").projection();
+print(proj)
+
+
+var size_segmentation = 49
+
+var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
+
+var snic = ee.Algorithms.Image.Segmentation.SNIC({
+  image: a, 
+  size: 24,
+  compactness: 0,  
+  connectivity: 8, 
+  neighborhoodSize: 256, 
+  seeds: seeds
+})
+
+
+print(snic)
+
+Map.addLayer(snic.select("clusters"), null, "clusters")
+
+proj.evaluate(function(proj_obj) {
+  Export.image.toAsset({
+    image: snic,
+    description: 'SNICExport',
+    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/testParams1',
+    //crs: proj_obj.crs,
+    //crsTransform: proj_obj.transform,
+    scale: 10,
+    region: geometry,
+    maxPixels: 1e13
+    
+  });
+});
+
+/*
+Export.image.toAsset({
+  image: snic,
+  description: 'SNIC_Test',
+  assetId: 'projects/dryform-383607/assets/SNIC_Test/test1',  // <> modify these
+  region: geometry,
+  scale: 10,
+  crs: "EPSG:32658",
+  maxPixels: 1e13
+});
+*/
