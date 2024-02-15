@@ -19,15 +19,14 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
 chaco = chaco.geometry().buffer(300)
 chaco_ic = chaco_ic.mosaic().clip(chaco)
-//Map.addLayer(a, null, "Image Collection")
-
 //var bands = (["t0_B4", "t1_MSAVI"]) //e.g. "t0_B4", "t1_MSAVI"
+//chao_ic = chao_ic.select(bands);
 
 // SNIC parameters
-var segsize = 12
-var comp = 0
-var conn = 8
-var nbsize = 256
+var segsize = 12;
+var comp = 0;
+var conn = 8;
+var nbsize = 256;
 
 var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
 
@@ -38,7 +37,7 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
   connectivity: conn, 
   neighborhoodSize: nbsize, 
   seeds: seeds
-})
+});
 
 Export.image.toAsset({
   image: snic,
