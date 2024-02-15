@@ -1,0 +1,73 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF"),
+    GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF"),
+    geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.58745636386633, -21.590648628983246],
+          [-60.58745636386633, -21.827963373397182],
+          [-60.121910709569455, -21.827963373397182],
+          [-60.121910709569455, -21.590648628983246]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
+
+a = a.mosaic().clip(geometry)
+Map.addLayer(a, null, "Image Collection")
+
+var dataset = ee.ImageCollection('COPERNICUS/S2_SR')
+                  .filterDate('2020-01-01', '2020-01-30')
+
+var proj = dataset.first().select("B8").projection();
+print(proj)
+
+
+var size_segmentation = 12
+
+var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation); //The superpixel seed location spacing, in pixels.
+
+var snic = ee.Algorithms.Image.Segmentation.SNIC({
+  image: a, 
+  //size: 24, 
+  compactness: 0,  
+  connectivity: 8, 
+  neighborhoodSize: 256, 
+  seeds: seeds
+})
+
+
+print(snic)
+
+Map.addLayer(snic.select("clusters"), null, "clusters")
+Map.addLayer(GroundTruthPol_DF, {color: "red"}, "GroundTruthPol_DF")
+Map.addLayer(GroundTruthPoint_DF, {color: "red"}, "GroundTruthPoint_DF")
+
+proj.evaluate(function(proj_obj) {
+  Export.image.toAsset({
+    image: snic,
+    description: 'SNICExport',
+    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/testParams1',
+    //crs: proj_obj.crs,
+    //crsTransform: proj_obj.transform,
+    scale: 10,
+    region: geometry,
+    maxPixels: 1e13
+    
+  });
+});
+
+/*
+Export.image.toAsset({
+  image: snic,
+  description: 'SNIC_Test',
+  assetId: 'projects/dryform-383607/assets/SNIC_Test/test1',  // <> modify these
+  region: geometry,
+  scale: 10,
+  crs: "EPSG:32658",
+  maxPixels: 1e13
+});
+*/
