@@ -43,7 +43,7 @@ Map.addLayer(area_image2, {}, "Cluster Area Image 24") //min:50000, max: 500000
 
 
 Export.image.toAsset({
-    image: export, //image, image2 and image6
+    image: image, //image, image2 and image6
     description: 'SNICExport_Area',
     assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests_Area/image',  //image, image2 and image6
     //crs: proj_obj.crs,
