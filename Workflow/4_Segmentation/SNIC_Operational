@@ -15,11 +15,16 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 //    These can be further reduced both in the temporal and spectral domains by reducing the number of bands, indexes and glcm variables. 
 //    However, I want to use them all as to run a RF training step and check the importance table values. 
 
+//Areas of Interest
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+chaco = chaco.geometry().buffer(300); //Buffer to process areas outside the AOI | For future segmentation overlapping in contiguous biomes or AOIs
 
+//Image Collection - S1/S2 + Indexes and GLCM
 var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
-chaco = chaco.geometry().buffer(300);
-var bands = [];
-// chaco_ic = chaco_ic.select(bands)
+print(chaco_ic)
+var bands = (["t0_B3", "t0_MSAVI"]); //e.g. "t0_B3", "t0_MSAVI",...
+//chaco_ic = chaco_ic.select(bands)
+//print(chaco_ic)
 
 chaco_ic = chaco_ic.mosaic().clip(chaco);
 //Map.addLayer(a, null, "Image Collection")
