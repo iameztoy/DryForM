@@ -12,7 +12,9 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmen
     Clustersvp_image = {"opacity":1,"bands":["clusters"],"min":-2138732190,"max":2144614549,"gamma":1},
     Clustersvp_image2 = {"opacity":1,"bands":["clusters"],"min":-2137402703,"max":2146688858,"gamma":1},
     image6 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_sNoc0c8n256se12"),
-    image6vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":25.24362564086914,"max":125.9674301147461,"gamma":1};
+    image6vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":25.24362564086914,"max":125.9674301147461,"gamma":1},
+    GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF"),
+    GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(image, imagevp, "test_s49c0c8n256se49", 0)
 Map.addLayer(image2, image2vp, "test_s49oc0c8n256se24", 0)
@@ -35,12 +37,14 @@ var area_image6 = ee.Image.pixelArea().addBands(image6.select("clusters")).reduc
 //256: Size of the neighborhood to consider when aggregating values.
 //Any objects larger than maxSize in either the horizontal or vertical dimension will be masked, since portions of the object might be outside of the neighborhood.
 
-Map.addLayer(area_image, {}, "Cluster Area Image 49") //min:50000, max: 500000
-Map.addLayer(area_image2, {}, "Cluster Area Image 24") //min:50000, max: 500000
+Map.addLayer(area_image, {}, "Cluster Area Image 49", 0) //min:50000, max: 500000
+Map.addLayer(area_image2, {}, "Cluster Area Image 24", 0) //min:50000, max: 500000
+Map.addLayer(area_image6, {}, "Cluster Area Image 12", 0) //min:50000, max: 500000
+
+Map.addLayer(GroundTruthPol_DF, null, "Ground Truth POL")
+Map.addLayer(GroundTruthPoint_DF, null, "Ground Truth Point")
 
 //Export Area
-
-
 
 Export.image.toAsset({
     image: image6, //image (49), image2 (24) and image6 (12)
