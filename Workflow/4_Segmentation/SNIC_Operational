@@ -6,8 +6,9 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 // DRYFORM - Segmentation of preprocessed imagery
 //****************************************************
 
-// This piece of code is to export as an asset an all-in-one segmentation
-// It is also intended for testing purposes. Size segmentation of 12, 24 and 49 has been run.
+// This piece of code is to export as an asset an all-in-one segmentation.
+// As input we use the preprocessed imagery that was also exported as an asset in a previous step.
+// It is also intended for testing purposes. Size segmentations (seeds): 12, 24 and 49.
 
 var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
 chaco = chaco.geometry().buffer(300)
