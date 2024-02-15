@@ -3,6 +3,7 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
     GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF"),
     geometry = 
     /* color: #d63000 */
+    /* shown: false */
     /* displayProperties: [
       {
         "type": "rectangle"
