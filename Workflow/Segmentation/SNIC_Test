@@ -44,8 +44,8 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
 print(snic)
 
 Map.addLayer(snic.select("clusters"), null, "clusters")
-Map.addLayer(GroundTruthPol_DF, {color: "red"}, "GroundTruthPol_DF")
-Map.addLayer(GroundTruthPoint_DF, {color: "red"}, "GroundTruthPoint_DF")
+Map.addLayer(GroundTruthPol_DF, {color: "red"}, "GroundTruthPol_DF", 1)
+Map.addLayer(GroundTruthPoint_DF, {color: "red"}, "GroundTruthPoint_DF". 1)
 
 proj.evaluate(function(proj_obj) {
   Export.image.toAsset({
