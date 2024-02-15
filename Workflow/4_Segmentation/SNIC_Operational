@@ -1,0 +1,49 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
+chaco = chaco.geometry().buffer(300)
+
+chaco_ic = chaco_ic.mosaic().clip(chaco)
+Map.addLayer(a, null, "Image Collection")
+
+var size_segmentation = 24
+
+var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
+
+var snic = ee.Algorithms.Image.Segmentation.SNIC({
+  image: a, 
+  size: 24,
+  compactness: 0,  
+  connectivity: 8, 
+  neighborhoodSize: 256, 
+  seeds: seeds
+})
+
+
+
+proj.evaluate(function(proj_obj) {
+  Export.image.toAsset({
+    image: snic,
+    description: 'SNICExport',
+    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC',
+    //crs: proj_obj.crs,
+    //crsTransform: proj_obj.transform,
+    scale: 10,
+    region: geometry,
+    maxPixels: 1e13
+    
+  });
+});
+
+/*
+Export.image.toAsset({
+  image: snic,
+  description: 'SNIC_Test',
+  assetId: 'projects/dryform-383607/assets/SNIC_Test/test1',  // <> modify these
+  region: geometry,
+  scale: 10,
+  crs: "EPSG:32658",
+  maxPixels: 1e13
+});
+*/
