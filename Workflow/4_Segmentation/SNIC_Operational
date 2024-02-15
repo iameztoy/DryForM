@@ -24,8 +24,8 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
 
 Export.image.toAsset({
   image: snic,
-  description: 'SNICExport',
-  assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC',
+  description: 'Chaco_SNIC_sNAc0c8n256se12',
+  assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12',
   crs: "EPSG:4326",
   //crsTransform: proj_obj.transform,
     scale: 10,
