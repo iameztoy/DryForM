@@ -23,13 +23,13 @@ var proj = dataset.first().select("B8").projection();
 print(proj)
 
 
-var size_segmentation = 49
+var size_segmentation = 12
 
-var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
+var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation); //The superpixel seed location spacing, in pixels.
 
 var snic = ee.Algorithms.Image.Segmentation.SNIC({
   image: a, 
-  size: 24,
+  //size: 24, 
   compactness: 0,  
   connectivity: 8, 
   neighborhoodSize: 256, 
