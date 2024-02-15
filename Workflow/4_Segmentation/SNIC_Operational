@@ -22,16 +22,19 @@ chaco = chaco.geometry().buffer(300)
 chaco_ic = chaco_ic.mosaic().clip(chaco)
 //Map.addLayer(a, null, "Image Collection")
 
-var size_segmentation = 12
+var segsize = 12
+var comp = 0
+var conn = 8
+var nbsize =256
 
-var seeds = ee.Algorithms.Image.Segmentation.seedGrid(size_segmentation);
+var seeds = ee.Algorithms.Image.Segmentation.seedGrid(segsize);
 
 var snic = ee.Algorithms.Image.Segmentation.SNIC({
   image: chaco_ic, 
   //size: 12,
-  compactness: 0,  
-  connectivity: 8, 
-  neighborhoodSize: 256, 
+  compactness: comp,  
+  connectivity: conn, 
+  neighborhoodSize: nbsize, 
   seeds: seeds
 })
 
