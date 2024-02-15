@@ -14,7 +14,8 @@ var image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmen
     image6 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_sNoc0c8n256se12"),
     image6vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":25.24362564086914,"max":125.9674301147461,"gamma":1},
     GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF"),
-    GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
+    GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF"),
+    image7 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/SNICTest_seed12_GT");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 Map.addLayer(image, imagevp, "test_s49c0c8n256se49", 0)
 Map.addLayer(image2, image2vp, "test_s49oc0c8n256se24", 0)
@@ -22,11 +23,13 @@ Map.addLayer(image3, image3vp, "test_sNoc0c8n256se24", 0)
 Map.addLayer(image4, image4vp, "test_sNoc0c8n256se49", 0)
 Map.addLayer(image5, image5vp, "test_s24oc0c8n256se49", 0)
 Map.addLayer(image6, image6vp, "test_sNoc0c8n256se12", 0)
+Map.addLayer(image7,  image6vp, "Clusters Image7 seeds 12 - GT") 
 
 //Only 1 and 2 clusters
 Map.addLayer(image.randomVisualizer(), null, "Clusters Image seeds 49") //Clustersvp_image
 Map.addLayer(image2.randomVisualizer(), null, "Clusters Image2 seeds 24") //Clustersvp_image2
-Map.addLayer(image6.randomVisualizer(), null, "Clusters Image2 seeds 12") //Clustersvp_image2
+Map.addLayer(image6.randomVisualizer(), null, "Clusters Image2 seeds 12") //Clustersvp_image6
+
 
 
 // Areas
