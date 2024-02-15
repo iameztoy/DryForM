@@ -24,7 +24,7 @@ Map.addLayer(image3, image3vp, "test_sNoc0c8n256se24", 0)
 Map.addLayer(image4, image4vp, "test_sNoc0c8n256se49", 0)
 Map.addLayer(image5, image5vp, "test_s24oc0c8n256se49", 0)
 Map.addLayer(image6, image6vp, "test_sNoc0c8n256se12", 0)
-Map.addLayer(image7,  image7vp, "Clusters Image7 seeds 12 - GT") 
+Map.addLayer(image7,  image7vp, "test_Clusters Image7 seeds 12 - GT") 
 
 //Only 1 and 2 clusters
 Map.addLayer(image.randomVisualizer(), null, "Clusters Image seeds 49") //Clustersvp_image
