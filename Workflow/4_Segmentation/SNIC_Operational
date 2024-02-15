@@ -9,7 +9,8 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 // This piece of code is to export as an asset an all-in-one segmented Image Collection.
 // As input we use the preprocessed imagery that was also exported as an asset in a previous step. See section "3_Preprocessing".
 // It is also intended for testing purposes. Size segmentations (seeds): 12, 24 and 49. 
-//    Alternativelly 5, 10, 17, 28. These correspond to the 4%, 30%, 50% and 80% of the area of the Ground Truth buffers, being the 100% equal to a half an hectare polygon.
+//    Alternativelly 5, 10, 17 (or 18), 28 could be used (not 5 nor 10). 
+//    These correspond to the 4%, 30%, 50% and 80% of the area of the Ground Truth buffers, being the 100% equal to a half an hectare polygon.
 // First run uses all the available multitemporal bands (73)
 //    These can be further reduced both in the temporal and spectral domains by reducing the number of bands, indexes and glcm variables. 
 //    However, I want to use them all as to run a RF training step and check the importance tables. 
