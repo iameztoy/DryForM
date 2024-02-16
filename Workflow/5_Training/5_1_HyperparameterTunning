@@ -199,7 +199,7 @@ var maxNodesList = ee.List.sequence(10, 150, 10);
 var seedList = ee.List.sequence(0, 150, 0);
 
 /*
-Better to run with fixed number of trees to avoid memory issues
+Better to run with fixed number of trees and less iterations to avoid memory issues
 var numTreesList = ee.List.sequence(100, 300, 50);
 var bagFractionList = ee.List.sequence(0.1, 0.9, 0.3);
 var minLeafPopList = ee.List.sequence(1, 12, 2);
