@@ -19,11 +19,20 @@ var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Prepro
 var  AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
 
 // Ground Truth
-// Notes: 
-// visulcrec attribute is the reclassified version of the disaggregated version. It includes 9 classes
-//  tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
-//  built	6, PWater	7, SWater	0, Bare	9,  Crops	10
-//  Not Included: tc4, tc5, tc67, Snow, moss/lichen
+
+// Notes:
+
+// ** visu_lc attribute is the original disaggregated version of the visual interpretation step
+//        
+//        It includes 13 classes:
+//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+// ** visulcrec attribute is the reclassified version of the disaggregated version (visu_lc). 
+//        It includes 9 classes:
+//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
 
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
