@@ -192,17 +192,19 @@ Export.table.toDrive({
 // Hyperparameter Tuning - Multiple Parameter x4
 //************************************************************************** 
 
-var numTreesList = ee.List.sequence(10, 500, 10);
-var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
-var minLeafPopList = ee.List.sequence(1, 12, 1);
-var maxNodesList = ee.List.sequence(10, 150, 10);
+var numTreesList = ee.List.sequence(50, 500, 50);
+var bagFractionList = ee.List.sequence(0.1, 0.9, 0.3);
+var minLeafPopList = ee.List.sequence(1, 24, 4);
+var maxNodesList = ee.List.sequence(10, 150, 30);
 var seedList = ee.List.sequence(0, 150, 0);
 
 /*
 Better to run with fixed number of trees and less iterations to avoid memory issues
-var numTreesList = ee.List.sequence(100, 300, 50);
+Otherwise make it sequentially - one by one or two by two - first number of trees
+Then with the best performing number test the bag fraction, etc.
+var numTreesList = ee.List.sequence(50, 500, 50);
 var bagFractionList = ee.List.sequence(0.1, 0.9, 0.3);
-var minLeafPopList = ee.List.sequence(1, 12, 2);
+var minLeafPopList = ee.List.sequence(1, 24, 4);
 var maxNodesList = ee.List.sequence(10, 150, 30);
 var seedList = ee.List.sequence(0, 150, 0);
 */
