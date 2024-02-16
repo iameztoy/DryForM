@@ -6,12 +6,41 @@
 // pb = Pixel Based
 // oo = Object Oriented
 
-// Imagery 
+//Areas of Interest | Included within the Ground Truth 
+var chaco = "chaco";
+var caatinga = "caatinga";
+var cerrado = "cerrado";
+var tanzania = "tanzania";
 
-var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
+// Imagery 
+// Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
+
+var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 var  AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
 
 // Ground Truth
 
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
+
+// Chaco Points 
+var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
+var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
+var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
+
+// Chaco Polygons
+var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
+var gtpol_trchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "training"));
+var gtpol_vlchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "validation"));
+
+// Rename the inputs
+var composite = AllChaco_pb;
+var trainingGcp = gtpoint_trchaco;
+var validationGcp = gtpoint_vlchaco;
+
+var training = composite.sampleRegions({
+  collection: trainingGcp,
+  properties: ['visulcrec'], // The points corresponding to visual inspection
+  scale: 10,
+  tileScale: 16
+});
