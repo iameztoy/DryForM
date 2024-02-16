@@ -194,7 +194,7 @@ Export.table.toDrive({
 
 var numTreesList = ee.List.sequence(10, 500, 10);
 var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
-var minLeafPopList = ee.List.sequence(1, 9, 1);
+var minLeafPopList = ee.List.sequence(1, 12, 1);
 var maxNodesList = ee.List.sequence(10, 150, 10);
 var seedList = ee.List.sequence(0, 150, 0);
 
