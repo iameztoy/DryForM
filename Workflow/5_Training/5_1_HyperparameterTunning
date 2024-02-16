@@ -143,8 +143,9 @@ var chart = ui.Chart.array.values({
   });
 print(chart)
 
+
 //************************************************************************** 
-// Hyperparameter Tuning - Multiple Parameter
+// Hyperparameter Tuning - Multiple Parameter x2
 //************************************************************************** 
 
 // We can tune many parameters together using
@@ -186,100 +187,3 @@ Export.table.toDrive({
   folder: 'earthengine',
   fileNamePrefix: 'numtrees_bagfraction',
   fileFormat: 'CSV'}) 
-  
-/*
-From https://gis.stackexchange.com/questions/468360/gee-script-for-hyperparameter-tuning-for-random-forest-regression-with-grid-sear
-var test = bands.sampleRegions({
-  collection: validationData,
-  properties: ['volper30'],
-  scale: 30,
-  tileScale: 16
-});
-
-
-// Tune the numberOfTrees parameter.
-var numTreesList = ee.List.sequence(10, 150, 10);
-
-var accuracies = numTreesList.map(function(numTrees) {
-  var classifier = ee.Classifier.smileRandomForest(numTrees)
-      .train({
-        features: training,
-        classProperty: 'volper30',
-        inputProperties: bands.bandNames()
-      });
-
-// Here we are classifying a table instead of an image
-  // Classifiers work on both images and tables
-  return test
-    .classify(classifier)
-    .errorMatrix('volper30', 'predicted')
-    .accuracy();
-});
-
-var chart = ui.Chart.array.values({
-  array: ee.Array(accuracies),
-  axis: 0,
-  xLabels: numTreesList
-  }).setOptions({
-      title: 'Hyperparameter Tuning for the numberOfTrees Parameters',
-      vAxis: {title: 'Validation Accuracy'},
-      hAxis: {title: 'Number of Tress', gridlines: {count: 15}}
-  });
-print(chart)
-
-// Tuning Multiple Parameters
-// We can tune many parameters together using
-// nested map() functions
-// Let's tune 2 parameters
-// numTrees and bagFraction 
-var numTreesList = ee.List.sequence(10, 150, 10);
-var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
-var minLeafPopList = ee.List.sequence(1,9,1);
-var maxNodesList = ee.List.sequence(10,150,10);
-var seedList = ee.List.sequence(0,150,0);
-
-
-var accuracies = numTreesList.map(function(numTrees) {
-  bagFractionList.map(function(bagFraction) {
-  minLeafPopList.map(function(minLeafPopulation) {
-  maxNodesList.map(function(maxNodes) {
-return seedList.map(function(seed) {
-     var classifier = ee.Classifier.smileRandomForest({
-       numberOfTrees: numTrees,
-       bagFraction: bagFraction,
-       minLeafPopulation:minLeafPopulation,
-       maxNodes:maxNodes,
-       seed:seed 
-     })
-      .train({
-        features: training,
-        classProperty: 'volper30',
-        inputProperties: bands.bandNames()
-      });
-
-    // Here we are classifying a table instead of an image
-    // Classifiers work on both images and tables
-    var accuracy = test
-      .classify(classifier)
-      .errorMatrix('volper30', 'predicted')
-      .accuracy();
-    return ee.Feature(null, {'accuracy': accuracy,
-      'numberOfTrees': numTrees,
-      'bagFraction': bagFraction,
-      'minLeafPopulation':minLeafPopulation,
-      'maxNodes':maxNodes,
-      'seed':seed
-})
-  })
-}).flatten()
-var resultFc = ee.FeatureCollection(accuracies)
-
-// Export the result as CSV
-Export.table.toDrive({
-  collection: resultFc,
-  description: 'Multiple_Parameter_Tuning_Results',
-  folder: 'earthengine',
-  fileNamePrefix: 'hyperparameter_tuning',
-  fileFormat: 'CSV'})
-*/
-
