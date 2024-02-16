@@ -85,3 +85,44 @@ var chart = ui.Chart.feature.byProperty({
   })
 print(chart)
 
+//************************************************************************** 
+// Hyperparameter Tuning
+//************************************************************************** 
+
+var test = composite.sampleRegions({
+  collection: validationGcp,
+  properties: ['visulcrec'],
+  scale: 10,
+  tileScale: 16
+});
+
+// Tune the numberOfTrees parameter.
+var numTreesList = ee.List.sequence(10, 150, 10);
+
+var accuracies = numTreesList.map(function(numTrees) {
+  var classifier = ee.Classifier.smileRandomForest(numTrees)
+      .train({
+        features: training,
+        classProperty: 'visulcrec',
+        inputProperties: composite.bandNames()
+      });
+
+  // Here we are classifying a table instead of an image
+  // Classifiers work on both images and tables
+  return test
+    .classify(classifier)
+    .errorMatrix('visulcrec', 'classification')
+    .accuracy();
+});
+
+var chart = ui.Chart.array.values({
+  array: ee.Array(accuracies),
+  axis: 0,
+  xLabels: numTreesList
+  }).setOptions({
+      title: 'Hyperparameter Tuning for the numberOfTrees Parameters',
+      vAxis: {title: 'Validation Accuracy'},
+      hAxis: {title: 'Number of Tress', gridlines: {count: 15}}
+  });
+print(chart)
+
