@@ -145,7 +145,7 @@ print(chart);
 
 
 //************************************************************************** 
-// Hyperparameter Tuning - Multiple Parameter x2
+// Hyperparameter Tuning - Multiple Parameter x2 | nTrees and Bag Fraction
 //************************************************************************** 
 
 // We can tune many parameters together using
@@ -181,22 +181,24 @@ var accuracies = numTreesList.map(function(numTrees) {
 var resultFc = ee.FeatureCollection(accuracies);
 
 // Export the result as CSV
+/*
 Export.table.toDrive({
   collection: resultFc,
   description: 'Multiple_Parameter_Tuning_Results',
   folder: 'earthengine',
   fileNamePrefix: 'numtrees_bagfraction',
   fileFormat: 'CSV'}) ;
+*/
 
 //************************************************************************** 
 // Hyperparameter Tuning - Multiple Parameter x4
 //************************************************************************** 
 
 var numTreesList = ee.List.sequence(50, 500, 50);
-var bagFractionList = ee.List.sequence(0.1, 0.9, 0.3);
+var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
 var minLeafPopList = ee.List.sequence(1, 24, 4);
 var maxNodesList = ee.List.sequence(10, 150, 30);
-var seedList = ee.List.sequence(0, 150, 0);
+var seedList = ee.List.sequence(0, 150, 0); //Not implemented
 
 /*
 Better to run with fixed number of trees and less iterations to avoid memory issues
