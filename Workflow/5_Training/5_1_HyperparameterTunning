@@ -187,3 +187,61 @@ Export.table.toDrive({
   folder: 'earthengine',
   fileNamePrefix: 'numtrees_bagfraction',
   fileFormat: 'CSV'}) 
+
+//************************************************************************** 
+// Hyperparameter Tuning - Multiple Parameter x4
+//************************************************************************** 
+
+var numTreesList = ee.List.sequence(10, 500, 10);
+var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
+var minLeafPopList = ee.List.sequence(1, 40, 1);
+var maxNodesList = ee.List.sequence(10, 150, 10);
+var seedList = ee.List.sequence(0, 150, 0);
+
+
+//variablesPerSplit default - square root of the number of variables.
+
+var accuracies = numTreesList.map(function(numTrees) {
+    return bagFractionList.map(function(bagFraction) {
+    return minLeafPopList.map(function(minLeafPopulation) {
+    return maxNodesList.map(function(maxNodes) {
+    
+     
+     var classifier = ee.Classifier.smileRandomForest({
+       numberOfTrees: numTrees,
+       bagFraction: bagFraction,
+     })
+      .train({
+        features: training,
+        classProperty: 'landcover',
+        inputProperties: composite.bandNames()
+      });
+
+    // Here we are classifying a table instead of an image
+    // Classifiers work on both images and tables
+    var accuracy = test
+      .classify(classifier)
+      .errorMatrix('landcover', 'classification')
+      .accuracy();
+    return ee.Feature(null, {'accuracy': accuracy,
+      'numberOfTrees': numTrees,
+      'bagFraction': bagFraction,
+      'nimLeafPop': minLeafPopulation,
+      'maxNodesList': maxNodes
+    })
+  })
+  })
+  })
+}).flatten()
+var resultFc = ee.FeatureCollection(accuracies)
+
+  
+
+
+// Export the result as CSV
+Export.table.toDrive({
+  collection: resultFc,
+  description: 'Multiple_Parameter_Tuning_Results',
+  folder: 'earthengine',
+  fileNamePrefix: 'hyperparameter_tuning',
+  fileFormat: 'CSV'})
