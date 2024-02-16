@@ -1,7 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
-    AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //***********************************************************
 // DRYFORM - Step 5.1 -Hyperparameter Tunning
@@ -9,3 +5,13 @@ var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Prepro
 
 // pb = Pixel Based
 // oo = Object Oriented
+
+// Imagery 
+
+var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
+var  AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
+
+// Ground Truth
+
+var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
+var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
