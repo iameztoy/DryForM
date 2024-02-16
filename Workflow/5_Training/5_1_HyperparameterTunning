@@ -210,6 +210,8 @@ var accuracies = numTreesList.map(function(numTrees) {
      var classifier = ee.Classifier.smileRandomForest({
        numberOfTrees: numTrees,
        bagFraction: bagFraction,
+       minLeafPopulation: minLeafPopulation,
+       maxNodes: maxNodes
      })
       .train({
         features: training,
