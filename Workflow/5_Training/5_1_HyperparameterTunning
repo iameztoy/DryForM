@@ -19,7 +19,7 @@ var landcover = "visulcrec"; // or visu_lc
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var  AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
 
 // Ground Truth
 
@@ -227,7 +227,7 @@ var accuracies = numTreesList.map(function(numTrees) {
      })
       .train({
         features: training,
-        classProperty: 'landcover',
+        classProperty: landcover,
         inputProperties: composite.bandNames()
       });
 
@@ -235,7 +235,7 @@ var accuracies = numTreesList.map(function(numTrees) {
     // Classifiers work on both images and tables
     var accuracy = test
       .classify(classifier)
-      .errorMatrix('landcover', 'classification')
+      .errorMatrix(landcover, 'classification')
       .accuracy();
     return ee.Feature(null, {'accuracy': accuracy,
       'numberOfTrees': numTrees,
