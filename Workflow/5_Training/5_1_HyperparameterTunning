@@ -102,7 +102,7 @@ var test = composite.sampleRegions({
 });
 
 // Tune the numberOfTrees parameter.
-var numTreesList = ee.List.sequence(10, 600, 10);
+var numTreesList = ee.List.sequence(10, 500, 10); // More than 500 out of memory
 
 var accuracies = numTreesList.map(function(numTrees) {
   var classifier = ee.Classifier.smileRandomForest(numTrees)
