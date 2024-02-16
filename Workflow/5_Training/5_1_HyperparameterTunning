@@ -12,6 +12,9 @@ var caatinga = "caatinga";
 var cerrado = "cerrado";
 var tanzania = "tanzania";
 
+// Ground Truth attribute to be used:
+var landcover = "visulcrec" // or visu_lc
+
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
@@ -54,7 +57,7 @@ var validationGcp = gtpoint_vlchaco;
 
 var training = composite.sampleRegions({
   collection: trainingGcp,
-  properties: ['visulcrec'], // The points corresponding to visual inspection
+  properties: [landcover], // The points corresponding to visual inspection
   scale: 10,
   tileScale: 16
 });
@@ -63,7 +66,7 @@ print(training);
 var classifier = ee.Classifier.smileRandomForest(50)
 .train({
   features: training,  
-  classProperty: 'visulcrec',
+  classProperty: landcover,
   inputProperties: composite.bandNames()
 });
 
@@ -105,7 +108,7 @@ print(chart)
 
 var test = composite.sampleRegions({
   collection: validationGcp,
-  properties: ['visulcrec'],
+  properties: [landcover],
   scale: 10,
   tileScale: 16
 });
@@ -117,7 +120,7 @@ var accuracies = numTreesList.map(function(numTrees) {
   var classifier = ee.Classifier.smileRandomForest(numTrees)
       .train({
         features: training,
-        classProperty: 'visulcrec',
+        classProperty: landcover,
         inputProperties: composite.bandNames()
       });
 
@@ -125,7 +128,7 @@ var accuracies = numTreesList.map(function(numTrees) {
   // Classifiers work on both images and tables
   return test
     .classify(classifier)
-    .errorMatrix('visulcrec', 'classification')
+    .errorMatrix(landcover, 'classification')
     .accuracy();
 });
 
@@ -159,7 +162,7 @@ var accuracies = numTreesList.map(function(numTrees) {
      })
       .train({
         features: training,
-        classProperty: 'landcover',
+        classProperty: landcover,
         inputProperties: composite.bandNames()
       });
 
@@ -167,7 +170,7 @@ var accuracies = numTreesList.map(function(numTrees) {
     // Classifiers work on both images and tables
     var accuracy = test
       .classify(classifier)
-      .errorMatrix('landcover', 'classification')
+      .errorMatrix(landcover, 'classification')
       .accuracy();
     return ee.Feature(null, {'accuracy': accuracy,
       'numberOfTrees': numTrees,
