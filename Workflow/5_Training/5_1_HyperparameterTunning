@@ -44,3 +44,44 @@ var training = composite.sampleRegions({
   scale: 10,
   tileScale: 16
 });
+
+print(training);
+var classifier = ee.Classifier.smileRandomForest(50)
+.train({
+  features: training,  
+  classProperty: 'visulcrec',
+  inputProperties: composite.bandNames()
+});
+
+//************************************************************************** 
+// Feature Importance
+//************************************************************************** 
+
+// Run .explain() to see what the classifer looks like
+print(classifier.explain())
+
+// Calculate variable importance
+var importance = ee.Dictionary(classifier.explain().get('importance'))
+
+// Calculate relative importance
+var sum = importance.values().reduce(ee.Reducer.sum())
+
+var relativeImportance = importance.map(function(key, val) {
+   return (ee.Number(val).multiply(100)).divide(sum)
+  })
+print(relativeImportance)
+
+// Create a FeatureCollection so we can chart it
+var importanceFc = ee.FeatureCollection([
+  ee.Feature(null, relativeImportance)
+])
+
+var chart = ui.Chart.feature.byProperty({
+  features: importanceFc
+}).setOptions({
+      title: 'Feature Importance',
+      vAxis: {title: 'Importance'},
+      hAxis: {title: 'Feature'}
+  })
+print(chart)
+
