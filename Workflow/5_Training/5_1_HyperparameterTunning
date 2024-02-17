@@ -79,6 +79,9 @@ var classifier = ee.Classifier.smileRandomForest(240)
 // Feature Importance | Accuracies, etc.
 //************************************************************************** 
 
+// Preliminary - Need to re-run with the parameters decided in the
+// hyperparameter tuning phase.
+
 // Run .explain() to see what the classifer looks like
 print("Classifier", classifier.explain());
 
