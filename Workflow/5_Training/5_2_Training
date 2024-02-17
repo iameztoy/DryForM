@@ -78,6 +78,6 @@ var classifier = ee.Classifier.smileRandomForest(200).train({
 // // Classify the image.
 var classified = composite.classify(classifier);
 
-Map.addLayer(classified.clip(geometry), {min: 0, max: 3, palette: palette}, '2019');
+Map.addLayer(classified, null, 'LC 2020');
 
 
