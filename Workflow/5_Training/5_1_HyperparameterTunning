@@ -45,6 +45,7 @@ var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
 var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 
+
 // Chaco Polygons
 var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
 var gtpol_trchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "training"));
@@ -54,6 +55,9 @@ var gtpol_vlchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "validation"));
 var composite = AllChaco_pb;
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
+print("Training GCP", trainingGcp);
+print("Validation GCP", validationGcp);
+
 
 var training = composite.sampleRegions({
   collection: trainingGcp,
@@ -63,19 +67,25 @@ var training = composite.sampleRegions({
 });
 
 print(training);
-var classifier = ee.Classifier.smileRandomForest(50)
+var classifier = ee.Classifier.smileRandomForest(240)
 .train({
   features: training,  
   classProperty: landcover,
   inputProperties: composite.bandNames()
 });
 
+
 //************************************************************************** 
-// Feature Importance
+// Feature Importance | Accuracies, etc.
 //************************************************************************** 
 
 // Run .explain() to see what the classifer looks like
-print(classifier.explain());
+print("Classifier", classifier.explain());
+
+// Get a confusion matrix and overall accuracy for the training sample.
+var trainAccuracy = classifier.confusionMatrix();
+print('Training error matrix', trainAccuracy);
+print('Training overall accuracy', trainAccuracy.accuracy());
 
 // Calculate variable importance
 var importance = ee.Dictionary(classifier.explain().get('importance'));
