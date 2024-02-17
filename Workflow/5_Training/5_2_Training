@@ -1,132 +1,83 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
-    geometry = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-63.738907724963305, -17.09845006239739],
-          [-63.738907724963305, -17.931361776454825],
-          [-62.003067881213305, -17.931361776454825],
-          [-62.003067881213305, -17.09845006239739]]], null, false);
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var img = ic.mosaic().clip(geometry)
-var roi = geometry
-var lc = ee.ImageCollection('ESA/WorldCover/v200').first();
-var visualization = {
-  bands: ['Map'],
-};
+//***********************************************************
+// DRYFORM - Step 5.2 - Training
+//***********************************************************
 
-Map.addLayer(lc, visualization, 'Landcover');
+//From (remove): https://courses.spatialthoughts.com/end-to-end-gee.html
+
+// pb = Pixel Based
+// oo = Object Oriented
+
+//Areas of Interest | Included within the Ground Truth 
+var chaco = "chaco";
+var caatinga = "caatinga";
+var cerrado = "cerrado";
+var tanzania = "tanzania";
+
+// Ground Truth attribute to be used:
+var landcover = "visulcrec"; // or visu_lc
+
+// Imagery 
+// Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
+
+var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
+
+// Ground Truth
+
+// Notes:
+
+// ** visu_lc attribute is the original disaggregated version of the visual interpretation step
+//        
+//        It includes 13 classes:
+//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+// ** visulcrec attribute is the reclassified version of the disaggregated version (visu_lc). 
+//        It includes 9 classes:
+//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+
+var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
+var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
+
+// Chaco Points 
+var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
+var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
+var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 
 
-// ESA WorldCover land cover map, used as label source in classifier training.
-//var lc = ee.Image('ESA/WorldCover/v100/2020');
+// Chaco Polygons
+var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
+var gtpol_trchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "training"));
+var gtpol_vlchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "validation"));
 
-//10 tree cover, 20 shrubland, 30 grassland, 40 cropland, 50 built-up, 60 bare/sparce vegetation, 70 snow and ice, 80 permanent water bodies
-//90 herbaceous wetland, 95 mangroves, 100 moss and linchen
+// Rename the inputs
+var composite = AllChaco_pb;
+var trainingGcp = gtpoint_trchaco;
+var validationGcp = gtpoint_vlchaco;
+print("Training GCP", trainingGcp);
+print("Validation GCP", validationGcp);
 
-// Remap the land cover class values to a 0-based sequential series.
-var classValues = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100];
-var remapValues = ee.List.sequence(0, 10);
-var label = 'lc';
-lc = lc.remap(classValues, remapValues).rename(label).toByte();
-print(lc)
-
-var pixelCount = lc.reduceRegion({
-  geometry: geometry,
-  scale: 10,
-  //crs:PRJ,
-  reducer: ee.Reducer.frequencyHistogram().unweighted(),
-  maxPixels: 70000000000,
-}).get('lc')
-
-print("Overall pixel count", pixelCount)
-
-var scale = function (key, value) {
-  return ee.Number(value).divide(40000).min(500).int() //400 = 0.25% 
-                                                     //if buffer after (10x10)
-                                                    //need to divide by 100pixels
-                                                    //400x100
-};
-//error, expected number and got dictionary
-var pixelCount = ee.Dictionary(pixelCount).map(scale)
-print("Pixel Count", pixelCount)
-
-var cp = ee.List(pixelCount.keys()).map(ee.Number.parse)
-var cv = ee.List(pixelCount.values())
-
-print("cp", cp)
-print("cv", cv)
-
-// Add land cover as a band of the reflectance image and sample 100 pixels at
-// 10 m scale from each land cover class within a region of interest.
-var roi = geometry;
-var sample = img.addBands(lc).stratifiedSample({
-	numPoints:250,
-	classBand:label,
-	region:roi,
-	scale:10,
-//	projection:null,
-//	seed:false,
-	classValues: cv,
-	classPoints: cp,
-//	dropNulls:true,
-	tileScale:4,
-	geometries:true,
-})
-  
-
-// Add a random value field to the sample and use it to approximately split 80%
-// of the features into a training set and 20% into a validation set.
-sample = sample.randomColumn();
-var trainingSample = sample.filter('random <= 0.8');
-var validationSample = sample.filter('random > 0.8');
-
-// Train a 10-tree random forest classifier from the training sample.
-var trainedClassifier = ee.Classifier.smileRandomForest(100).train({
-  features: trainingSample,
-  classProperty: label,
-  inputProperties: img.bandNames()
+// Overlay the point on the image to get training data.
+var training = composite.sampleRegions({
+  collection: trainingGcp, 
+  properties: [landcover], 
+  scale: 10
 });
 
+// Train a classifier.
+// Use here the parameters established in the Hyperparameter Tunning step
+var classifier = ee.Classifier.smileRandomForest(200).train({
+  features: training,  
+  classProperty: landcover, 
+  inputProperties: composite.bandNames()
+});
 
-// Get information about the trained classifier.
-print('Results of trained classifier', trainedClassifier.explain());
+// // Classify the image.
+var classified = composite.classify(classifier);
 
-// Get a confusion matrix and overall accuracy for the training sample.
-var trainAccuracy = trainedClassifier.confusionMatrix();
-print('Training error matrix', trainAccuracy);
-print('Training overall accuracy', trainAccuracy.accuracy());
-
-// Get a confusion matrix and overall accuracy for the validation sample.
-validationSample = validationSample.classify(trainedClassifier);
-var validationAccuracy = validationSample.errorMatrix(label, 'classification');
-print('Validation error matrix', validationAccuracy);
-print('Validation accuracy', validationAccuracy.accuracy());
-
-// Classify the reflectance image from the trained classifier.
-var imgClassified = img.classify(trainedClassifier);
-
-// Add the layers to the map.
-var classVis = {
-  min: 0,
-  max: 10,
-  palette: ['006400' ,'ffbb22', 'ffff4c', 'f096ff', 'fa0000', 'b4b4b4',
-            'f0f0f0', '0064c8', '0096a0', '00cf75', 'fae6a0']
-};
-Map.centerObject(roi);
-Map.addLayer(img, {bands: ['t0_B8', 't0_B4', 't0_B3'], min: 100, max: 3500}, "Multitemp S2 Composite");
-Map.addLayer(imgClassified, classVis, 'Classified');
-Map.addLayer(roi, {color: 'white'}, 'ROI', false, 0.5);
-Map.addLayer(trainingSample, {color: 'black'}, 'Training sample', false);
-Map.addLayer(validationSample, {color: 'white'}, 'Validation sample', false);
-
-
+Map.addLayer(classified.clip(geometry), {min: 0, max: 3, palette: palette}, '2019');
 
 
