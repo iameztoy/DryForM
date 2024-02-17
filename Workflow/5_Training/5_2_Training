@@ -67,6 +67,9 @@ var training = composite.sampleRegions({
   scale: 10
 });
 
+Map.addLayer(composite, null, "S1-S2 Composite")
+Map.addLayer(trainingGcp, null, "Training Points")
+
 // Train a classifier.
 // Use here the parameters established in the Hyperparameter Tunning step
 var classifier = ee.Classifier.smileRandomForest(200).train({
