@@ -204,10 +204,11 @@ Export.table.toDrive({
 */
 
 //************************************************************************** 
-// Hyperparameter Tuning - Multiple Parameter x4
+// Hyperparameter Tuning - Multiple Parameter x4 (or x5)
 //************************************************************************** 
 
 var numTreesList = ee.List.sequence(50, 500, 50);
+var variablesPerSplitList = ee.List.sequence(5, 70, 5);
 var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
 var minLeafPopList = ee.List.sequence(1, 24, 4);
 var maxNodesList = ee.List.sequence(10, 150, 30);
@@ -227,6 +228,7 @@ var seedList = ee.List.sequence(0, 150, 0);
 //variablesPerSplit default - square root of the number of variables.
 
 var accuracies = numTreesList.map(function(numTrees) {
+    return variablesPerSplitList.map(function(variablesPerSplit) {
     return bagFractionList.map(function(bagFraction) {
     return minLeafPopList.map(function(minLeafPopulation) {
     return maxNodesList.map(function(maxNodes) {
@@ -256,6 +258,7 @@ var accuracies = numTreesList.map(function(numTrees) {
       'nimLeafPop': minLeafPopulation,
       'maxNodesList': maxNodes
     });
+  });
   });
   });
   });
