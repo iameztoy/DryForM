@@ -1,3 +1,19 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var table = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var dataset = ee.ImageCollection('ESA/WorldCover/v100').first();
+
+var visualization = {
+  bands: ['Map'],
+};
+
+Map.centerObject(dataset);
+
+Map.addLayer(dataset, visualization, 'Landcover');
+
+var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
+var wri_tree = wri.gte(50);
+Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 1)
 
 //***********************************************************
 // DRYFORM - Step 5.2 - Training
@@ -72,12 +88,27 @@ Map.addLayer(trainingGcp, null, "Training Points")
 
 // Train a classifier.
 // Use here the parameters established in the Hyperparameter Tunning step
-var classifier = ee.Classifier.smileRandomForest(200).train({
+var classifier = ee.Classifier.smileRandomForest({
+		numberOfTrees: 250,
+//	variablesPerSplit: null,
+//	minLeafPopulation: true,
+//	bagFraction :0.5,
+//	maxNodes: null,
+//	seed:false,
+  }).train({
   features: training,  
   classProperty: landcover, 
   inputProperties: composite.bandNames()
 });
 
+ee.Classifier.smileRandomForest({
+		numberOfTrees:null,
+//	variablesPerSplit:null,
+//	minLeafPopulation:true,
+//	bagFraction:0.5,
+//	maxNodes:null,
+//	seed:false,
+})
 // // Classify the image.
 var classified = composite.classify(classifier);
 
@@ -117,3 +148,4 @@ var testConfusionMatrix = test.errorMatrix('landcover', 'classification')
 print('Confusion Matrix', testConfusionMatrix);
 print('Test Accuracy', testConfusionMatrix.accuracy());
 
+Map.addLayer(table, {color: "red"})
