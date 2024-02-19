@@ -193,3 +193,4 @@ print('Confusion Matrix', testConfusionMatrix);
 print('Test Accuracy', testConfusionMatrix.accuracy());
 
 Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0)
+Map.setOptions("SATELLITE")
