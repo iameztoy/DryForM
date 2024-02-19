@@ -171,7 +171,7 @@ var test = classified.sampleRegions({
 var testConfusionMatrix = test.errorMatrix(landcover, 'classification');
 
 print('Confusion Matrix', testConfusionMatrix);
-print('Test Accuracy', testConfusionMatrix.accuracy());
+print('VAL Accuracy', testConfusionMatrix.accuracy());
 
 // Alternate workflow 
 // This is similar to machine learning practice
