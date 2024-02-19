@@ -45,6 +45,26 @@ var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
 var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 
+// For the Pixel Based approach -> Balance classes
+// In order to balance the class respect the other classes, the target column in randomized and merged again with the other classes.
+
+    // Classes TC TC(1) + TC(2) + TC(3)
+    // Total number of the three tree cover classes is 450 (tc1+tc2+tc3). Balanced samples are 150.
+
+var aTC = gtpoint_trchaco.filter(ee.Filter.eq("visu_lc", 1)); // First we select the Tree Cover class from the visu_lc attribute
+var bTC = aTC.randomColumn(); // We create a random values column
+var cTC = bTC.filter('random > 0.60'); //We select a % over the random column. For random > 0 -> 450 classes. For 0.65: 159 samples 0.5: 221 samples
+print("Random Filtered TC class", cTC);
+
+    // Classes Shrub(7 or 2) and OWL(8 or 2). There are different alternatives:
+      // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
+
+
+var gt2 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 1)); // Select all the other classes and merge
+
+
+  // We merge the newly created columns into the final training set
+gtpoint_trchaco = gt2.merge(cTC); 
 
 // Chaco Polygons
 var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
