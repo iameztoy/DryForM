@@ -291,7 +291,8 @@ var accuracies = numTreesList.map(function(numTrees) {
       'numberOfTrees': numTrees,
       'bagFraction': bagFraction,
       'nimLeafPop': minLeafPopulation,
-      'maxNodesList': maxNodes
+      'maxNodesList': maxNodes,
+      'variablesPerSplit': variablesPerSplit
     });
   });
   });
