@@ -12,7 +12,7 @@ var visualization = {
 Map.addLayer(dataset, visualization, 'Landcover', 0);
 
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
-var wri_tree = wri.gte(50);
+var wri_tree = wri.gte(30);
 Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0)
 
 //***********************************************************
@@ -140,15 +140,15 @@ var pwater = classified.eq(7).selfMask();
 var bare = classified.eq(9).selfMask();
 var crop = classified.eq(10).selfMask();
 
-Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water");
-Map.addLayer(tc, {palette: "005200"}, "Tree Cover");
-Map.addLayer(shrub, {palette: "eabe44"}, "Shrubs");
-Map.addLayer(grass, {palette: "ffff4c"}, "Grass");
-Map.addLayer(fveg, {palette: "0096a0"}, "Flooded Vegetation");
-Map.addLayer(built, {palette: "fa0000"}, "Built");
-Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water");
-Map.addLayer(bare,{palette: "b4b4b4"}, "Bare");
-Map.addLayer(crop, {palette: "f096ff"}, "Crops");
+Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
+Map.addLayer(tc, {palette: "005200"}, "Tree Cover", 1);
+Map.addLayer(shrub, {palette: "eabe44"}, "Shrubs", 0);
+Map.addLayer(grass, {palette: "ffff4c"}, "Grass", 0);
+Map.addLayer(fveg, {palette: "0096a0"}, "Flooded Vegetation", 0);
+Map.addLayer(built, {palette: "fa0000"}, "Built", 0);
+Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
+Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
+Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
 
 //************************************************************************** 
 // Accuracy Assessment
