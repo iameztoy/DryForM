@@ -7,7 +7,7 @@ var visualization = {
   bands: ['Map'],
 };
 
-Map.centerObject(dataset);
+
 
 Map.addLayer(dataset, visualization, 'Landcover');
 
@@ -133,6 +133,7 @@ var classifier = ee.Classifier.smileRandomForest({
 
 // // Classify the image.
 var classified = composite.classify(classifier);
+
 
 Map.addLayer(classified, null, 'LC 2020');
 print("Classified", classified)
