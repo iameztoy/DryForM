@@ -136,7 +136,27 @@ var classified = composite.classify(classifier);
 
 
 Map.addLayer(classified, null, 'LC 2020');
-print("Classified", classified)
+var swater = classified.eq(0).selfMask();
+var tc = classified.eq(1).selfMask();
+var shrub = classified.eq(2).selfMask();
+var grass = classified.eq(3).selfMask();
+var fveg = classified.eq(5).selfMask();
+var built = classified.eq(6).selfMask();
+var pwater = classified.eq(7).selfMask();
+var bare = classified.eq(9).selfMask();
+var crop = classified.eq(10).selfMask();
+
+Map.addLayer(swater, null, "Seasonal Water");
+Map.addLayer(tc, null, "Tree Cover");
+Map.addLayer(shrub, null, "Shrubs");
+Map.addLayer(grass, null, "Grass");
+Map.addLayer(fveg, null, "Flooded Vegetation");
+Map.addLayer(built, null, "Built");
+Map.addLayer(pwater, null, "Permanent Water");
+Map.addLayer(bare, null, "Bare");
+Map.addLayer(crop, null, "Crops");
+
+
 
 //************************************************************************** 
 // Accuracy Assessment
