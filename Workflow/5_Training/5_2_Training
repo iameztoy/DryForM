@@ -11,9 +11,7 @@ var visualization = {
 
 Map.addLayer(dataset, visualization, 'Landcover', 0);
 
-var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
-var wri_tree = wri.gte(30);
-Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0)
+
 
 //***********************************************************
 // DRYFORM - Step 5.2 - Training
@@ -124,7 +122,7 @@ var classifier = ee.Classifier.smileRandomForest({
     //variablesPerSplit: 8, // The number of variables per split. If unspecified, uses the square root of the number of variables.
     minLeafPopulation: 2, // Only create nodes whose training set contains at least this many points.
     bagFraction: 0.5, //The fraction of input to bag per tree.
-    maxNodes: 20, //The maximum number of leaf nodes in each tree. If unspecified, defaults to no limit.
+    maxNodes: 50, //The maximum number of leaf nodes in each tree. If unspecified, defaults to no limit.
 //	seed:false, // The randomization seed.
   }).train({
   features: training,  
@@ -217,4 +215,7 @@ Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
 Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
 Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0);
 
+var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
+var wri_tree = wri.gte(30);
+Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0)
 Map.setOptions("SATELLITE")
