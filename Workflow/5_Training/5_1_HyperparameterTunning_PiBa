@@ -79,7 +79,7 @@ var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
 var gtpol_trchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpol_vlchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "validation"));
 
-// Rename the inputs
+// Rename the inputs | Final set for RF
 var composite = AllChaco_pb;
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
@@ -94,8 +94,12 @@ var training = composite.sampleRegions({
   tileScale: 16
 });
 
-print(training);
-var classifier = ee.Classifier.smileRandomForest(240)
+//************************************************************************** 
+// Implement RF
+//************************************************************************** 
+
+print("Training", training);
+var classifier = ee.Classifier.smileRandomForest(80)
 .train({
   features: training,  
   classProperty: landcover,
