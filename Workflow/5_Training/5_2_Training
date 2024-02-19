@@ -99,9 +99,6 @@ var validationGcp = gtpoint_vlchaco;
 print("Training GCP Final", trainingGcp);
 print("Validation GCP Final", validationGcp);
 
-var ttt = gtpoint_trchaco.filter(ee.Filter.eq("visulcrec", 1));
-print("Filter ttt", ttt)
-
 
 // Overlay the point on the image to get training data.
 var training = composite.sampleRegions({
@@ -152,8 +149,6 @@ Map.addLayer(built, {palette: "fa0000"}, "Built");
 Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water");
 Map.addLayer(bare,{palette: "b4b4b4"}, "Bare");
 Map.addLayer(crop, {palette: "f096ff"}, "Crops");
-
-
 
 //************************************************************************** 
 // Accuracy Assessment
