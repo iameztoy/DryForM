@@ -114,10 +114,10 @@ Map.addLayer(trainingGcp, null, "Training Points", 0)
 // Use here the parameters established in the Hyperparameter Tunning step
 var classifier = ee.Classifier.smileRandomForest({
 		numberOfTrees: 80, // The number of decision trees to create.
-//	variablesPerSplit: null, // The number of variables per split. If unspecified, uses the square root of the number of variables.
-//	minLeafPopulation: true, // Only create nodes whose training set contains at least this many points.
-//	bagFraction :0.5, //The fraction of input to bag per tree.
-//	maxNodes: null, //The maximum number of leaf nodes in each tree. If unspecified, defaults to no limit.
+    variablesPerSplit: 8, // The number of variables per split. If unspecified, uses the square root of the number of variables.
+    minLeafPopulation: 2, // Only create nodes whose training set contains at least this many points.
+    bagFraction: 0.5, //The fraction of input to bag per tree.
+    maxNodes: 20, //The maximum number of leaf nodes in each tree. If unspecified, defaults to no limit.
 //	seed:false, // The randomization seed.
   }).train({
   features: training,  
@@ -128,6 +128,65 @@ var classifier = ee.Classifier.smileRandomForest({
 // // Classify the image.
 var classified = composite.classify(classifier);
 
+//************************************************************************** 
+// Feature Importance | Accuracies, etc.
+//************************************************************************** 
+
+// Run .explain() to see what the classifer looks like
+print("Classifier", classifier.explain());
+
+// Get a confusion matrix and overall accuracy for the training sample.
+var trainAccuracy = classifier.confusionMatrix();
+print('Training error matrix', trainAccuracy);
+print('Training overall accuracy', trainAccuracy.accuracy());
+
+// Calculate variable importance
+var importance = ee.Dictionary(classifier.explain().get('importance'));
+
+// Calculate relative importance
+var sum = importance.values().reduce(ee.Reducer.sum());
+
+var relativeImportance = importance.map(function(key, val) {
+   return (ee.Number(val).multiply(100)).divide(sum);
+  });
+print(relativeImportance);
+
+// Create a FeatureCollection so we can chart it
+var importanceFc = ee.FeatureCollection([
+  ee.Feature(null, relativeImportance)
+]);
+
+var chart = ui.Chart.feature.byProperty({
+  features: importanceFc
+}).setOptions({
+      title: 'Feature Importance',
+      vAxis: {title: 'Importance'},
+      hAxis: {title: 'Feature'}
+  });
+print(chart);
+
+
+//************************************************************************** 
+// Accuracy Assessment
+//************************************************************************** 
+
+// Use classification map to assess accuracy using the validation fraction
+// of the overall training set created above.
+var test = classified.sampleRegions({
+  collection: validationGcp,
+  properties: [landcover],
+  tileScale: 16,
+  scale: 10,
+});
+
+var testConfusionMatrix = test.errorMatrix(landcover, 'classification');
+
+print('Confusion Matrix', testConfusionMatrix);
+print('VAL Accuracy', testConfusionMatrix.accuracy());
+
+//************************************************************************** 
+// Visu
+//************************************************************************** 
 
 Map.addLayer(classified, null, 'LC 2020', 0);
 var swater = classified.eq(0).selfMask();
@@ -149,24 +208,6 @@ Map.addLayer(built, {palette: "fa0000"}, "Built", 0);
 Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
 Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
 Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
+Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0);
 
-//************************************************************************** 
-// Accuracy Assessment
-//************************************************************************** 
-
-// Use classification map to assess accuracy using the validation fraction
-// of the overall training set created above.
-var test = classified.sampleRegions({
-  collection: validationGcp,
-  properties: [landcover],
-  tileScale: 16,
-  scale: 10,
-});
-
-var testConfusionMatrix = test.errorMatrix(landcover, 'classification');
-
-print('Confusion Matrix', testConfusionMatrix);
-print('VAL Accuracy', testConfusionMatrix.accuracy());
-
-Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0)
 Map.setOptions("SATELLITE")
