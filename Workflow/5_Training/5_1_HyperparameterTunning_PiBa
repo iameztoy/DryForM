@@ -49,7 +49,7 @@ var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 // In order to balance the class respect the other classes, the target column in randomized and merged again with the other classes.
 
     // Classes TC TC(1) + TC(2) + TC(3)
-    // Total number of the three tree cover classes is 450 (tc1+tc2+tc3). Balanced samples are 150.
+    // Total number of the three tree cover classes is 450 (tc1+tc2+tc3). Balanced samples are 150 approx.
 
 var aTC = gtpoint_trchaco.filter(ee.Filter.lte("visu_lc", 3)); // First we select the Tree Cover class from the visu_lc attribute (Anything below or equal 3)
 var bTC = aTC.randomColumn(); // We create a random values column
@@ -65,13 +65,11 @@ var aSh = gtpoint_trchaco.filter(ee.Filter.eq("visu_lc", 7));
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
 
 var aGr = gtpoint_trchaco.filter(ee.Filter.eq("visu_lc", 9));
-
-
-var gt2 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge
+var gt11 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge 
 
 
   // We merge the newly created columns into the final training set
-gtpoint_trchaco = gt2.merge(cTC).merge(aSh).merge(aGr); 
+gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
 print("Final samples", gtpoint_trchaco)
 
 // Chaco Polygons
