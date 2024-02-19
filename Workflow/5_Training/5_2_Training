@@ -63,6 +63,9 @@ var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
 var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 
+var ttt0 = gtpoint_trchaco.filter(ee.Filter.eq("visulcrec", 1));
+print("ttt0", ttt0.size())
+
 print("Original Training", gtpoint_trchaco.size());
 print("Original Validation", gtpoint_vlchaco.size());
 
@@ -98,6 +101,9 @@ var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
 print("Training GCP Final", trainingGcp);
 print("Validation GCP Final", validationGcp);
+
+var ttt = gtpoint_trchaco.filter(ee.Filter.eq("visulcrec", 12));
+print("Filter ttt", ttt)
 
 
 // Overlay the point on the image to get training data.
