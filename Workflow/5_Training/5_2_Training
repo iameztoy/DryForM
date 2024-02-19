@@ -9,11 +9,11 @@ var visualization = {
 
 
 
-Map.addLayer(dataset, visualization, 'Landcover');
+Map.addLayer(dataset, visualization, 'Landcover', 0);
 
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var wri_tree = wri.gte(50);
-Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 1)
+Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0)
 
 //***********************************************************
 // DRYFORM - Step 5.2 - Training
@@ -113,8 +113,8 @@ var training = composite.sampleRegions({
   scale: 10
 });
 
-Map.addLayer(composite, null, "S1-S2 Composite")
-Map.addLayer(trainingGcp, null, "Training Points")
+Map.addLayer(composite, null, "S1-S2 Composite", 0)
+Map.addLayer(trainingGcp, null, "Training Points", 0)
 
 // Train a classifier.
 // Use here the parameters established in the Hyperparameter Tunning step
@@ -135,7 +135,7 @@ var classifier = ee.Classifier.smileRandomForest({
 var classified = composite.classify(classifier);
 
 
-Map.addLayer(classified, null, 'LC 2020');
+Map.addLayer(classified, null, 'LC 2020', 0);
 var swater = classified.eq(0).selfMask();
 var tc = classified.eq(1).selfMask();
 var shrub = classified.eq(2).selfMask();
@@ -146,7 +146,7 @@ var pwater = classified.eq(7).selfMask();
 var bare = classified.eq(9).selfMask();
 var crop = classified.eq(10).selfMask();
 
-Map.addLayer(swater, null, "Seasonal Water");
+Map.addLayer(swater, {color: "8ff0ff"}, "Seasonal Water");
 Map.addLayer(tc, null, "Tree Cover");
 Map.addLayer(shrub, null, "Shrubs");
 Map.addLayer(grass, null, "Grass");
@@ -192,4 +192,4 @@ var testConfusionMatrix = test.errorMatrix('landcover', 'classification')
 print('Confusion Matrix', testConfusionMatrix);
 print('Test Accuracy', testConfusionMatrix.accuracy());
 
-Map.addLayer(table, {color: "red"})
+Map.addLayer(table, {color: "red"}, 0)
