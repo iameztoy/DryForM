@@ -146,7 +146,7 @@ var pwater = classified.eq(7).selfMask();
 var bare = classified.eq(9).selfMask();
 var crop = classified.eq(10).selfMask();
 
-Map.addLayer(swater, {color: "8ff0ff"}, "Seasonal Water");
+Map.addLayer(swater, {palete: "8ff0ff"}, "Seasonal Water");
 Map.addLayer(tc, null, "Tree Cover");
 Map.addLayer(shrub, null, "Shrubs");
 Map.addLayer(grass, null, "Grass");
