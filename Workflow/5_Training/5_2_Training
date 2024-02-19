@@ -63,6 +63,10 @@ var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
 var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 
+print("Original Training", gtpoint_trchaco.size());
+print("Original Validation", gtpoint_vlchaco.size());
+
+
 // For the Pixel Based approach -> Balance classes
 // In order to balance the class respect the other classes, the target column in randomized and merged again with the other classes.
 
@@ -72,7 +76,6 @@ var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 var aTC = gtpoint_trchaco.filter(ee.Filter.lte("visu_lc", 3)); // First we select the Tree Cover class from the visu_lc attribute (Anything below or equal 3)
 var bTC = aTC.randomColumn(); // We create a random values column
 var cTC = bTC.filter('random > 0.60'); //We select a % over the random column. For random > 0 -> 450 classes. For 0.65: 159 samples 0.5: 221 samples
-print("Random Filtered TC class", cTC);
 
     // Classes Shrub(7 or 2) and OWL(8 or 2). There are different alternatives:
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
@@ -88,14 +91,13 @@ var gt11 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all t
 
   // We merge the newly created columns into the final training set
 gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
-print("Final samples", gtpoint_trchaco);
 
 // Rename the inputs | Final set for RF
 var composite = AllChaco_pb;
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
-print("Training GCP", trainingGcp);
-print("Validation GCP", validationGcp);
+print("Training GCP Final", trainingGcp);
+print("Validation GCP Final", validationGcp);
 
 
 // Overlay the point on the image to get training data.
@@ -127,6 +129,7 @@ var classifier = ee.Classifier.smileRandomForest({
 var classified = composite.classify(classifier);
 
 Map.addLayer(classified, null, 'LC 2020');
+print("Classified", classified)
 
 //************************************************************************** 
 // Accuracy Assessment
