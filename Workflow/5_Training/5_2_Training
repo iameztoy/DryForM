@@ -78,7 +78,7 @@ print("Original Validation", gtpoint_vlchaco.size());
 
 var aTC = gtpoint_trchaco.filter(ee.Filter.lte("visu_lc", 3)); // First we select the Tree Cover class from the visu_lc attribute (Anything below or equal 3)
 var bTC = aTC.randomColumn(); // We create a random values column
-var cTC = bTC.filter('random > 0.60'); //We select a % over the random column. For random > 0 -> 450 classes. For 0.65: 159 samples 0.5: 221 samples
+var cTC = bTC.filter('random > 0.6'); //We select a % over the random column. For random > 0 -> 450 classes. For 0.65: 159 samples 0.5: 221 samples
 
     // Classes Shrub(7 or 2) and OWL(8 or 2). There are different alternatives:
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
@@ -102,7 +102,7 @@ var validationGcp = gtpoint_vlchaco;
 print("Training GCP Final", trainingGcp);
 print("Validation GCP Final", validationGcp);
 
-var ttt = gtpoint_trchaco.filter(ee.Filter.eq("visulcrec", 12));
+var ttt = gtpoint_trchaco.filter(ee.Filter.eq("visulcrec", 1));
 print("Filter ttt", ttt)
 
 
