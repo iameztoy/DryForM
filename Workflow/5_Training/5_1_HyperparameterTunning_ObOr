@@ -217,7 +217,7 @@ Export.table.toDrive({
 */
 
 //var numTreesList = ee.List.sequence(50, 500, 50);
-var numTreesList = ee.List(50, 200, 50);
+var numTreesList = ee.List([50, 200, 50]);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
 var variablesPerSplitList = ee.List([8, 16, 24]);
 //var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
@@ -268,7 +268,9 @@ var accuracies = numTreesList.map(function(numTrees) {
       'numberOfTrees': numTrees,
       'bagFraction': bagFraction,
       'nimLeafPop': minLeafPopulation,
-      'maxNodesList': maxNodes
+      'maxNodes': maxNodes,
+      'variablesPerSplit': variablesPerSplit
+      
     });
   });
   });
