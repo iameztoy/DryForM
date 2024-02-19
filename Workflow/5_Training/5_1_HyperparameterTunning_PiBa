@@ -72,11 +72,6 @@ var gt11 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all t
 gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
 print("Final samples", gtpoint_trchaco)
 
-// Chaco Polygons
-var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
-var gtpol_trchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "training"));
-var gtpol_vlchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "validation"));
-
 // Rename the inputs | Final set for RF
 var composite = AllChaco_pb;
 var trainingGcp = gtpoint_trchaco;
@@ -247,7 +242,7 @@ Export.table.toDrive({
 */
 
 //var numTreesList = ee.List.sequence(50, 500, 50);
-var numTreesList = ee.List([50, 80, 100, 120]); // Based on previous section. Highest accuracy is for nTree 70 or 80
+var numTreesList = ee.List([50, 80, 100, 120]);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
 var variablesPerSplitList = ee.List([8, 16, 24]);
 //var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
