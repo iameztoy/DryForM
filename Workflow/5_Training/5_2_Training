@@ -93,6 +93,7 @@ var gt11 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all t
 gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
 
 // Rename the inputs | Final set for RF
+AllChaco_pb = AllChaco_pb.select("t.*");
 var composite = AllChaco_pb;
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
@@ -101,7 +102,7 @@ print("Validation GCP Final", validationGcp);
 
 var buffer = function(feature) {
 return feature.buffer(20)};
-trainingGcp = trainingGcp.map(buffer);
+trainingGcp = validationGcp.map(buffer);
 
 // Overlay the point on the image to get training data.
 var training = composite.sampleRegions({
@@ -113,7 +114,10 @@ var training = composite.sampleRegions({
 Map.addLayer(composite, null, "S1-S2 Composite", 0)
 Map.addLayer(trainingGcp, null, "Training Points", 0)
 
+//**********************
 // Train a classifier.
+//**********************
+
 // Use here the parameters established in the Hyperparameter Tunning step
 var classifier = ee.Classifier.smileRandomForest({
 		numberOfTrees: 80, // The number of decision trees to create.
