@@ -146,15 +146,15 @@ var pwater = classified.eq(7).selfMask();
 var bare = classified.eq(9).selfMask();
 var crop = classified.eq(10).selfMask();
 
-Map.addLayer(swater, {palete: "8ff0ff"}, "Seasonal Water");
-Map.addLayer(tc, null, "Tree Cover");
-Map.addLayer(shrub, null, "Shrubs");
-Map.addLayer(grass, null, "Grass");
-Map.addLayer(fveg, null, "Flooded Vegetation");
-Map.addLayer(built, null, "Built");
-Map.addLayer(pwater, null, "Permanent Water");
-Map.addLayer(bare, null, "Bare");
-Map.addLayer(crop, null, "Crops");
+Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water");
+Map.addLayer(tc, {palette: "005200"}, "Tree Cover");
+Map.addLayer(shrub, {palette: "eabe44"}, "Shrubs");
+Map.addLayer(grass, {palette: "ffff4c"}, "Grass");
+Map.addLayer(fveg, {palette: "0096a0"}, "Flooded Vegetation");
+Map.addLayer(built, {palette: "fa0000"}, "Built");
+Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water");
+Map.addLayer(bare,{palette: "b4b4b4"}, "Bare");
+Map.addLayer(crop, {palette: "f096ff"}, "Crops");
 
 
 
@@ -192,4 +192,4 @@ var testConfusionMatrix = test.errorMatrix('landcover', 'classification')
 print('Confusion Matrix', testConfusionMatrix);
 print('Test Accuracy', testConfusionMatrix.accuracy());
 
-Map.addLayer(table, {color: "red"}, 0)
+Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0)
