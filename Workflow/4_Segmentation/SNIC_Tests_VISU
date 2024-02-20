@@ -1,52 +1,48 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_s49c0c8n256se49"),
-    image2 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_s49oc0c8n256se24"),
-    image3 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_sNoc0c8n256se24"),
-    image4 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_sNoc0c8n256se49"),
-    image5 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_s24oc0c8n256se49"),
-    imagevp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":23.414012908935547,"max":113.30961608886719,"gamma":1},
-    image2vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.91302490234375,"max":116.6225357055664,"gamma":1},
-    image3vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.91302490234375,"max":116.6225357055664,"gamma":1},
-    image4vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.290254592895508,"max":122.29492950439453,"gamma":1},
-    image5vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":19.290254592895508,"max":124.27131652832031,"gamma":1},
-    Clustersvp_image = {"opacity":1,"bands":["clusters"],"min":-2138732190,"max":2144614549,"gamma":1},
-    Clustersvp_image2 = {"opacity":1,"bands":["clusters"],"min":-2137402703,"max":2146688858,"gamma":1},
-    image6 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/test_sNoc0c8n256se12"),
-    image6vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":25.24362564086914,"max":125.9674301147461,"gamma":1},
-    GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF"),
+var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF"),
     GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF"),
-    image7 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/SNICTests/SNICTest_seed12_GT"),
-    image7vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":23.503469467163086,"max":125.30455017089844,"gamma":1};
+    image7vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":23.503469467163086,"max":125.30455017089844,"gamma":1},
+    image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12"),
+    image2 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_s12c0c8n256se18"),
+    image3 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se18"),
+    image4 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se24"),
+    image5 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se30"),
+    image6 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se36"),
+    image7 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_s32c0c8n256se36"),
+    image8 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se42"),
+    image9 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se49");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(image, imagevp, "test_s49c0c8n256se49", 0)
-Map.addLayer(image2, image2vp, "test_s49oc0c8n256se24", 0)
-Map.addLayer(image3, image3vp, "test_sNoc0c8n256se24", 0)
-Map.addLayer(image4, image4vp, "test_sNoc0c8n256se49", 0)
-Map.addLayer(image5, image5vp, "test_s24oc0c8n256se49", 0)
-Map.addLayer(image6, image6vp, "test_sNoc0c8n256se12", 0)
-Map.addLayer(image7,  image7vp, "test_Clusters Image7 seeds 12 - GT") 
+
+
+Map.addLayer(image, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se12", 0);
+Map.addLayer(image2, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "s12c0c8n256se18", 0);
+Map.addLayer(image3, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "sNAc0c8n256se18", 0);
+Map.addLayer(image4, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "sNAc0c8n256se24", 0);
+Map.addLayer(image5, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "sNAc0c8n256se30", 0);
+Map.addLayer(image6, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "sNAc0c8n256se36", 0);
+Map.addLayer(image7, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "s32c0c8n256se36", 0);
+Map.addLayer(image8, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "sNAc0c8n256se42", 0);
+Map.addLayer(image8, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"]}, "sNAc0c8n256se49", 0);
 
 //Only 1 and 2 clusters
-Map.addLayer(image.randomVisualizer(), null, "Clusters Image seeds 49") //Clustersvp_image
-Map.addLayer(image2.randomVisualizer(), null, "Clusters Image2 seeds 24") //Clustersvp_image2
-Map.addLayer(image6.randomVisualizer(), null, "Clusters Image2 seeds 12") //Clustersvp_image6
-
-
+Map.addLayer(image.randomVisualizer(), null, "Clusters Image seeds 49", 0) //Clustersvp_image
+Map.addLayer(image4.randomVisualizer(), null, "Clusters Image2 seeds 24", 0) //Clustersvp_image2
+Map.addLayer(image9.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) //Clustersvp_image6
 
 // Areas
 
 var area_image = ee.Image.pixelArea().addBands(image.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256) 
-var area_image2 = ee.Image.pixelArea().addBands(image2.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
-var area_image6 = ee.Image.pixelArea().addBands(image6.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
+var area_image4 = ee.Image.pixelArea().addBands(image2.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
+var area_image9 = ee.Image.pixelArea().addBands(image6.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
 //256: Size of the neighborhood to consider when aggregating values.
 //Any objects larger than maxSize in either the horizontal or vertical dimension will be masked, since portions of the object might be outside of the neighborhood.
 
 Map.addLayer(area_image, {}, "Cluster Area Image 49", 0) //min:50000, max: 500000
-Map.addLayer(area_image2, {}, "Cluster Area Image 24", 0) //min:50000, max: 500000
-Map.addLayer(area_image6, {}, "Cluster Area Image 12", 0) //min:50000, max: 500000
+Map.addLayer(area_image4, {}, "Cluster Area Image 24", 0) //min:50000, max: 500000
+Map.addLayer(area_image9, {}, "Cluster Area Image 12", 0) //min:50000, max: 500000
 
-Map.addLayer(GroundTruthPol_DF, null, "Ground Truth POL")
-Map.addLayer(GroundTruthPoint_DF, null, "Ground Truth Point")
+Map.addLayer(GroundTruthPol_DF, null, "Ground Truth POL", 0)
+Map.addLayer(GroundTruthPoint_DF, null, "Ground Truth Point", 0)
 
 //Export Area
 
