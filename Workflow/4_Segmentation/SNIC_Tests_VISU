@@ -25,21 +25,24 @@ Map.addLayer(image8, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],
 Map.addLayer(image8, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se49", 0);
 
 //Only 1 and 2 clusters
-Map.addLayer(image.randomVisualizer(), null, "Clusters Image seeds 49", 0) //Clustersvp_image
-Map.addLayer(image4.randomVisualizer(), null, "Clusters Image2 seeds 24", 0) //Clustersvp_image2
-Map.addLayer(image9.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) //Clustersvp_image6
+Map.addLayer(image.randomVisualizer(), null, "Clusters Image seeds 49", 0);
+Map.addLayer(image6.randomVisualizer(), null, "Clusters Image seeds 36", 0); 
+Map.addLayer(image4.randomVisualizer(), null, "Clusters Image2 seeds 24", 0); 
+Map.addLayer(image9.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) ;
 
 // Areas
 
 var area_image = ee.Image.pixelArea().addBands(image.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256) 
-var area_image4 = ee.Image.pixelArea().addBands(image2.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
-var area_image9 = ee.Image.pixelArea().addBands(image6.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
+var area_image4 = ee.Image.pixelArea().addBands(image4.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
+var area_image6 = ee.Image.pixelArea().addBands(image6.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
+var area_image9 = ee.Image.pixelArea().addBands(image9.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
 //256: Size of the neighborhood to consider when aggregating values.
 //Any objects larger than maxSize in either the horizontal or vertical dimension will be masked, since portions of the object might be outside of the neighborhood.
 
-Map.addLayer(area_image, {}, "Cluster Area Image 49", 0) //min:50000, max: 500000
+Map.addLayer(area_image9, {}, "Cluster Area Image 49", 0) //min:50000, max: 500000
+Map.addLayer(area_image6, {}, "Cluster Area Image 36", 0) //min:50000, max: 500000
 Map.addLayer(area_image4, {}, "Cluster Area Image 24", 0) //min:50000, max: 500000
-Map.addLayer(area_image9, {}, "Cluster Area Image 12", 0) //min:50000, max: 500000
+Map.addLayer(area_image, {}, "Cluster Area Image 12", 0) //min:50000, max: 500000
 
 Map.addLayer(GroundTruthPol_DF, null, "Ground Truth POL", 0)
 Map.addLayer(GroundTruthPoint_DF, null, "Ground Truth Point", 0)
