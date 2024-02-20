@@ -16,6 +16,14 @@
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 
 // Image Collection S1 + S2 + Indexes + GLCM variables
+
+/*
+// Bands based on Importance Table for RF: 80, default, 2, 0.5, 50 | First 30 features/bands
+var bands = ("t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
+             "t3_VH", "t1_gray_savg_glcm", "t3_gray_savg_glcm", "t3_gNDVI", "t1_B12", "t1_VH", "t0_MSAVI", "t3_MSAVI", "t3_VV", "t2_gray_savg_glcm",
+              "t2_MSAVI", "t0_B3", "t2_gNDVI", "t2_VV", "t0_gray_idm_glcm", "t1_gNDVI", "t2_SI", "t3_gray_contrast_glcm");
+*/
+
 var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
 chaco = chaco.geometry().buffer(300)
 chaco_ic = chaco_ic.mosaic().clip(chaco)
