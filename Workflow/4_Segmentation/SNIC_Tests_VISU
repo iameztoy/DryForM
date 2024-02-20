@@ -44,6 +44,8 @@ Map.addLayer(area_image9, {}, "Cluster Area Image 12", 0) //min:50000, max: 5000
 Map.addLayer(GroundTruthPol_DF, null, "Ground Truth POL", 0)
 Map.addLayer(GroundTruthPoint_DF, null, "Ground Truth Point", 0)
 
+Map.setOptions("SATELLITE")
+
 //Export Area
 
 Export.image.toAsset({
