@@ -11,6 +11,7 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
     image9 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se49");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
+// Visualize SNIC outcomes for different size parameters
 
 Map.addLayer(image, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se12", 0);
 Map.addLayer(image2, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "s12c0c8n256se18", 0);
@@ -30,26 +31,26 @@ Map.addLayer(image.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) ;
 
 // Areas
 
-var area_image = ee.Image.pixelArea().addBands(image.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256) 
-var area_image4 = ee.Image.pixelArea().addBands(image4.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
-var area_image7 = ee.Image.pixelArea().addBands(image7.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
-var area_image9 = ee.Image.pixelArea().addBands(image9.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256)
+var area_image = ee.Image.pixelArea().addBands(image.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256);
+var area_image4 = ee.Image.pixelArea().addBands(image4.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256);
+var area_image7 = ee.Image.pixelArea().addBands(image7.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256);
+var area_image9 = ee.Image.pixelArea().addBands(image9.select("clusters")).reduceConnectedComponents(ee.Reducer.sum(), "clusters", 256);
 //256: Size of the neighborhood to consider when aggregating values.
 //Any objects larger than maxSize in either the horizontal or vertical dimension will be masked, since portions of the object might be outside of the neighborhood.
 
-Map.addLayer(area_image9, {}, "Cluster Area Image 49", 0) //min:50000, max: 500000
-Map.addLayer(area_image7, {}, "Cluster Area Image 36", 0) //min:50000, max: 500000
-Map.addLayer(area_image4, {}, "Cluster Area Image 24", 0) //min:50000, max: 500000
-Map.addLayer(area_image, {}, "Cluster Area Image 12", 0) //min:50000, max: 500000
+Map.addLayer(area_image9, {}, "Cluster Area Image 49", 0); //min:50000, max: 500000
+Map.addLayer(area_image7, {}, "Cluster Area Image 36", 0); //min:50000, max: 500000
+Map.addLayer(area_image4, {}, "Cluster Area Image 24", 0); //min:50000, max: 500000
+Map.addLayer(area_image, {}, "Cluster Area Image 12", 0); //min:50000, max: 500000
 
-Map.addLayer(GroundTruthPol_DF, null, "Ground Truth POL", 0)
-Map.addLayer(GroundTruthPoint_DF, null, "Ground Truth Point", 0)
+Map.addLayer(GroundTruthPol_DF, null, "Ground Truth POL", 0);
+Map.addLayer(GroundTruthPoint_DF, null, "Ground Truth Point", 0);
 
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var wri_tree = wri.gte(30);
-Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0)
+Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0);
 
-Map.setOptions("SATELLITE")
+Map.setOptions("SATELLITE");
 
 //Export Area
 
