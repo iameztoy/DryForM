@@ -26,9 +26,10 @@ Map.addLayer(image9, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],
 Map.addLayer(image10, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":19,"max":113}, "sNAc0c8n256se24 SBands", 0);
 
 //Only 1 and 2 clusters
-Map.addLayer(image9.randomVisualizer(), null, "Clusters Image seeds 49", 0);
-Map.addLayer(image7.randomVisualizer(), null, "Clusters Image seeds 36", 0); 
-Map.addLayer(image4.randomVisualizer(), null, "Clusters Image2 seeds 24", 0); 
+Map.addLayer(image9.randomVisualizer(), null, "Clusters Image9 seeds 49", 0);
+Map.addLayer(image7.randomVisualizer(), null, "Clusters Image7 seeds 36", 0); 
+Map.addLayer(image10.randomVisualizer(), null, "Clusters Image10 seeds 24 Sbands", 0); 
+Map.addLayer(image4.randomVisualizer(), null, "Clusters Image4 seeds 24", 0); 
 Map.addLayer(image.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) ;
 
 // Areas
