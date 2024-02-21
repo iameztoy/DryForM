@@ -77,7 +77,7 @@ gtpoint_trchaco = gtpoint_trchaco.map(buffer);
 validationGcp = gtpoint_vlchaco.map(buffer);
 
 // Rename the inputs | Final set for RF
-var composite = AllChaco_oo;
+var composite = AllChaco_pb;
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
 print("Training GCP", trainingGcp);
