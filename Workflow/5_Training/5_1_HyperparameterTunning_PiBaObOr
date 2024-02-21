@@ -19,6 +19,8 @@ var caatinga = "caatinga";
 var cerrado = "cerrado";
 var tanzania = "tanzania";
 
+var aoi = chaco
+
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
 var buffer = 20 // To buffer the training and validation points
@@ -27,7 +29,7 @@ var buffer = 20 // To buffer the training and validation points
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_s32c0c8n256se36");
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se30");
 
 // Select Bands if necessary | These are the 30 first bands of the optimal RF (pixel based) output
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
@@ -58,8 +60,8 @@ var composite = AllChaco_oo.select("t.*"); //.select(bands), otherwise .select("
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
-// Chaco Points 
-var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
+// Point filtering | change aoi for other biomes
+var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi));
 var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 
@@ -339,6 +341,7 @@ Export.table.toDrive({
   
   
 // Train the RF with the parameters with highers accuracy
+// If needed we can also add here minLeafPopulation and maxNodes
 var resultFcSorted = resultFc.sort('accuracy', false);
 var highestAccuracyFeature = resultFcSorted.first();
 var highestAccuracy = highestAccuracyFeature.getNumber('accuracy');
@@ -356,6 +359,7 @@ var optimalModel = ee.Classifier.smileRandomForest({
 });
 
 var finalClassification = composite.classify(optimalModel);
+print(optimalModel.explain())
 
 // Printing or Displaying the image may time out as it requires
 // extensive computation to find the optimal parameters
