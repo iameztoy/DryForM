@@ -44,7 +44,7 @@ var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = AllChaco_oo.select(bands) 
+var composite = AllChaco_oo; //.select(bands) 
 
 // Ground Truth
 
