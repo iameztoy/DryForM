@@ -6,6 +6,13 @@
 // pb = Pixel Based
 // oo = Object Oriented
 
+// Variables that need to be changed. Some are optional:
+// Area of Interest | landcover | bands | composite | buffer
+
+// The code contains different sections:
+// Fine tuning of number of Trees, Feature Importance and accuracies, tuning of different hyperparameters and
+// selection of optimal parameters and implementation of RF based on the previous.
+
 //Areas of Interest | Included within the Ground Truth 
 var chaco = "chaco";
 var caatinga = "caatinga";
@@ -14,6 +21,7 @@ var tanzania = "tanzania";
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
+var buffer = 20
 
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
@@ -87,7 +95,7 @@ var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
 
 var buffer = function(feature) {
-return feature.buffer(20)};
+return feature.buffer(buffer)};
 trainingGcp = trainingGcp.map(buffer);
 validationGcp = validationGcp.map(buffer);
 
