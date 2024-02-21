@@ -34,7 +34,7 @@ var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "
              "t3_VH", "t1_gray_savg_glcm", "t3_gray_savg_glcm", "t3_gNDVI", "t1_B12", "t1_VH", "t0_MSAVI", "t3_MSAVI", "t3_VV", "t2_gray_savg_glcm",
               "t2_MSAVI", "t0_B3", "t2_gNDVI", "t2_VV", "t0_gray_idm_glcm", "t1_gNDVI", "t2_SI", "t3_gray_contrast_glcm"];
 
-// Select target imager | pb = pixel based, oo = object oriented
+// Select target image | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
 var composite = AllChaco_oo.select("t.*"); //.select(bands), otherwise .select("t.*") to remove "clusters" band
 
