@@ -19,7 +19,7 @@ var landcover = "visulcrec"; // or visu_lc
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se24_sBands");
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se49");
 
 // Select Bands if necessary
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
@@ -324,3 +324,33 @@ Export.table.toDrive({
   folder: 'earthengine',
   fileNamePrefix: 'hyperparameter_tuning',
   fileFormat: 'CSV'});
+  
+//************************************************************************** 
+// Hyperparameter Tuning - Pick up parameters
+//**************************************************************************   
+  
+  
+// Train the RF with the parameters with highers accuracy
+var resultFcSorted = resultFc.sort('accuracy', false);
+var highestAccuracyFeature = resultFcSorted.first();
+var highestAccuracy = highestAccuracyFeature.getNumber('accuracy');
+var optimalNumTrees = highestAccuracyFeature.getNumber('numberOfTrees');
+var optimalBagFraction = highestAccuracyFeature.getNumber('bagFraction');
+
+// Use the optimal parameters in a model and perform final classification
+var optimalModel = ee.Classifier.smileRandomForest({
+  numberOfTrees: optimalNumTrees,
+  bagFraction: optimalBagFraction
+}).train({
+  features: training,  
+  classProperty: landcover,
+  inputProperties: composite.bandNames()
+});
+
+var finalClassification = composite.classify(optimalModel);
+
+// Printing or Displaying the image may time out as it requires
+// extensive computation to find the optimal parameters
+
+// Export the 'finalClassification' to Asset and import the
+// result to view it.
