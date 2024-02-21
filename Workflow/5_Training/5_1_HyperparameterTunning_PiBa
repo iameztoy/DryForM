@@ -19,7 +19,7 @@ var landcover = "visulcrec"; // or visu_lc
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se24_sBands");
 
 // Ground Truth
 
@@ -67,13 +67,17 @@ var aSh = gtpoint_trchaco.filter(ee.Filter.eq("visu_lc", 7));
 var aGr = gtpoint_trchaco.filter(ee.Filter.eq("visu_lc", 9));
 var gt11 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge 
 
-
   // We merge the newly created columns into the final training set
 gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
-print("Final samples", gtpoint_trchaco)
+print("Final samples", gtpoint_trchaco);
+
+var buffer = function(feature) {
+return feature.buffer(20)};
+gtpoint_trchaco = gtpoint_trchaco.map(buffer);
+validationGcp = gtpoint_vlchaco.map(buffer);
 
 // Rename the inputs | Final set for RF
-var composite = AllChaco_pb;
+var composite = AllChaco_oo;
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
 print("Training GCP", trainingGcp);
