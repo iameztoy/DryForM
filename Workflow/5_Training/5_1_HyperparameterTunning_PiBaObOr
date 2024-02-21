@@ -267,6 +267,7 @@ Export.table.toDrive({
 ** seed (Integer, default: 0): The randomization seed.
 */
 
+//Set the hyperparameters list for iterative retrieval.
 //var numTreesList = ee.List.sequence(50, 500, 50);
 var numTreesList = ee.List([50, 80, 100, 120]);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
