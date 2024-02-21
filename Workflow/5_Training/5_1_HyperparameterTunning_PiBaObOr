@@ -244,7 +244,7 @@ var accuracies = numTreesList.map(function(numTrees) {
 }).flatten();
 var resultFc = ee.FeatureCollection(accuracies);
 
-// Export the result as CSV
+// Export the result as CSV | Uncoment to run
 /*
 Export.table.toDrive({
   collection: resultFc,
