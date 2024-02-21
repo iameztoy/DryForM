@@ -72,7 +72,7 @@ gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr);
 print("Final samples", gtpoint_trchaco);
 
 // Rename the inputs | Final set for RF
-var composite = AllChaco_oo;
+var composite = AllChaco_pb; // Select the source image or image collection | pb = pixel based, oo = object oriented
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
 print("Training GCP", trainingGcp);
