@@ -360,7 +360,7 @@ var optimalModel = ee.Classifier.smileRandomForest({
 });
 
 var finalClassification = composite.classify(optimalModel);
-print(optimalModel.explain())
+print(optimalModel.explain()) // This probably returns a dictionary error - "User memory limit exceeded".
 
 // Printing or Displaying the image may time out as it requires
 // extensive computation to find the optimal parameters
