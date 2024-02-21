@@ -102,13 +102,15 @@ gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr);
 // Rename the inputs | Final set for RF
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
-print("Training GCP Final", trainingGcp);
-print("Validation GCP Final", validationGcp);
+
 
 var buffer = function(feature) {
 return feature.buffer(20)};
 trainingGcp = trainingGcp.map(buffer);
-validationGcp = validationGcp.map(buffer)
+validationGcp = validationGcp.map(buffer);
+
+print("Training GCP Final", trainingGcp);
+print("Validation GCP Final", validationGcp);
 
 // Overlay the point on the image to get training data.
 var training = composite.sampleRegions({
