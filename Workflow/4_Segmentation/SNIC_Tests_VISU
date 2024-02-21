@@ -9,7 +9,9 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
     image7 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_s32c0c8n256se36"),
     image8 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se42"),
     image9 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se49"),
-    image10 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se24_sBands");
+    image10 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se24_sBands"),
+    image11 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se30_sBands"),
+    image12 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se36_sBands");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // Visualize SNIC outcomes for different size parameters
@@ -23,7 +25,9 @@ Map.addLayer(image5, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],
 Map.addLayer(image7, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "s32c0c8n256se36", 0);
 Map.addLayer(image8, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se42", 0);
 Map.addLayer(image9, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se49", 0);
-Map.addLayer(image10, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":19,"max":113}, "sNAc0c8n256se24 SBands", 0);
+Map.addLayer(image10, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se24 SBands", 0);
+Map.addLayer(image11, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se30 SBands", 0);
+Map.addLayer(image12, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se36 SBands", 0);
 
 //Only 1 and 2 clusters
 Map.addLayer(image9.randomVisualizer(), null, "Clusters Image9 seeds 49", 0);
