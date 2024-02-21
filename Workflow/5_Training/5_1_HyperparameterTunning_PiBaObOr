@@ -27,7 +27,7 @@ var buffer = 20 // To buffer the training and validation points
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12_sBands");
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_s32c0c8n256se36");
 
 // Select Bands if necessary
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
@@ -36,7 +36,7 @@ var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = AllChaco_oo; //.select(bands) 
+var composite = AllChaco_oo.select("t.*"); //.select(bands), otherwise .select("t.*") to remove "clusters" band
 
 
 // Ground Truth
