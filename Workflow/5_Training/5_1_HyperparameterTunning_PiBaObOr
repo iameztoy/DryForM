@@ -325,9 +325,9 @@ Export.table.toDrive({
   fileNamePrefix: 'hyperparameter_tuning',
   fileFormat: 'CSV'});
   
-//************************************************************************** 
-// Hyperparameter Tuning - Pick up parameters
-//**************************************************************************   
+//******************************************************************************* 
+// Hyperparameter Tuning - Pick up parameters for Optimal/Fine tunned model
+//*******************************************************************************    
   
   
 // Train the RF with the parameters with highers accuracy
