@@ -71,17 +71,17 @@ var gt11 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all t
 gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
 print("Final samples", gtpoint_trchaco);
 
-var buffer = function(feature) {
-return feature.buffer(20)};
-gtpoint_trchaco = gtpoint_trchaco.map(buffer);
-validationGcp = gtpoint_vlchaco.map(buffer);
-
 // Rename the inputs | Final set for RF
 var composite = AllChaco_oo;
 var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
 print("Training GCP", trainingGcp);
 print("Validation GCP", validationGcp);
+
+var buffer = function(feature) {
+return feature.buffer(20)};
+trainingGcp = trainingGcp.map(buffer);
+validationGcp = validationGcp.map(buffer);
 
 
 var training = composite.sampleRegions({
