@@ -218,14 +218,20 @@ print('VAL Accuracy', testConfusionMatrix.accuracy());
 
 Map.addLayer(classified, null, 'LC 2020', 0);
 var swater = classified.eq(0).selfMask();
-var tc = classified.eq(1).selfMask();
-var shrub = classified.eq(2).selfMask();
-var grass = classified.eq(3).selfMask();
-var fveg = classified.eq(5).selfMask();
-var built = classified.eq(6).selfMask();
-var pwater = classified.eq(7).selfMask();
-var bare = classified.eq(9).selfMask();
-var crop = classified.eq(10).selfMask();
+var tc1 = classified.eq(1).selfMask();
+var tc2 = classified.eq(2).selfMask();
+var tc3 = classified.eq(3).selfMask();
+var shrub = classified.eq(7).selfMask();
+var owl = classified.eq(8).selfMask();
+var grass = classified.eq(9).selfMask();
+var grasstree = classified.eq(10).selfMask();
+var floodv = classified.eq(12).selfMask();
+var built = classified.eq(13).selfMask();
+var pwater = classified.eq(14).selfMask();
+var swater = classified.eq(15).selfMask();
+var bare = classified.eq(17).selfMask();
+var crops = classified.eq(19).selfMask();
+
 
 Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
 Map.addLayer(tc, {palette: "005200"}, "Tree Cover", 1);
