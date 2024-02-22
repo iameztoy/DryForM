@@ -103,8 +103,8 @@ var validationGcp = gtp_vl;
 
 var applybuffer = function(feature) {
 return feature.buffer(buffer)};
-trainingGcp = trainingGcp //.map(applybuffer);
-validationGcp = validationGcp //.map(applybuffer);
+trainingGcp = trainingGcp.map(applybuffer);
+validationGcp = validationGcp.map(applybuffer);
 
 print("Training Filtered", trainingGcp.size());
 print("Validation Filtered", validationGcp.size());
