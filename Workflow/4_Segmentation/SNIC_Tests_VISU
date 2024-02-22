@@ -3,7 +3,6 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
     GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF"),
     image7vp = {"opacity":1,"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],"min":23.503469467163086,"max":125.30455017089844,"gamma":1},
     image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12"),
-    image2 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_s12c0c8n256se18"),
     image4 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se24"),
     image5 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se30"),
     image7 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_s32c0c8n256se36"),
@@ -35,6 +34,7 @@ Map.addLayer(image12, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"]
 //Only 1 and 2 clusters
 //Map.addLayer(image9.randomVisualizer(), null, "Clusters Image9 seeds 49", 0);
 Map.addLayer(image7.randomVisualizer(), null, "Clusters Image7 seeds 36", 0); 
+Map.addLayer(image13.randomVisualizer(), null, "Clusters Image2 seeds 28", 0) ;
 Map.addLayer(image10.randomVisualizer(), null, "Clusters Image10 seeds 24 Sbands", 0); 
 Map.addLayer(image4.randomVisualizer(), null, "Clusters Image4 seeds 24", 0); 
 Map.addLayer(image.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) ;
