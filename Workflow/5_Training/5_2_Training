@@ -28,8 +28,11 @@ var caatinga = "caatinga";
 var cerrado = "cerrado";
 var tanzania = "tanzania";
 
+var aoi = chaco;
+
 // Ground Truth attribute to be used:
-var landcover = "visulcrec"; // or visu_lc / visulcrec
+var landcover = "visulcrec"; // or visu_lc
+var buffer = 20; // To buffer the training and validation points
 
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
@@ -62,8 +65,6 @@ var composite = AllChaco_oo; //.select(bands)
 //          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
 //          Not Included: tc4, tc5, tc67, Snow, moss/lichen
 
-// Apply a buffer over the points if necessary | Both for training and validation
-var buffer = 20
 
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
