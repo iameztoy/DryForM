@@ -30,7 +30,7 @@ var buffer = 20 // To buffer the training and validation points | Take into acco
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28");
 
 // Select Bands if necessary | These are the 30 first bands of the optimal RF (pixel based) output
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
@@ -61,8 +61,8 @@ var composite = AllChaco_oo.select("t.*"); //.select(bands), otherwise .select("
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
-// Point filtering | change variable aoi to run on a different biome
-var gtp_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', aoi)); // Select either points or polygons
+// Point or polygon filtering | change variable aoi to run on a different biome
+var gtp_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi)); // Select either points or polygons
 var gtp_trchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtp_vlchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "validation"));
 
