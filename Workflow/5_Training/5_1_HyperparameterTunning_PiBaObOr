@@ -62,9 +62,9 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
 // Point filtering | change variable aoi to run on a different biome
-var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi));
-var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
-var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
+var gtp_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', aoi)); // Select either points or polygons
+var gtp_trchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "training"));
+var gtp_vlchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "validation"));
 
 // For the Pixel Based approach -> Balance classes
 // In order to balance the class respect the other classes, the target column in randomized and merged again with the other classes.
@@ -72,30 +72,30 @@ var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
     // Classes TC TC(1) + TC(2) + TC(3)
     // Total number of the three tree cover classes is 450 (tc1+tc2+tc3). Balanced samples are 150 approx.
 
-var aTC = gtpoint_trchaco.filter(ee.Filter.lte("visu_lc", 3)); // First we select the Tree Cover class from the visu_lc attribute (Anything below or equal 3)
+var aTC = gtp_trchaco.filter(ee.Filter.lte("visu_lc", 3)); // First we select the Tree Cover class from the visu_lc attribute (Anything below or equal 3)
 var bTC = aTC.randomColumn(); // We create a random values column
 var cTC = bTC.filter('random > 0.65'); //We select a % over the random column. For random > 0 -> 450 classes. For 0.65: 159 samples 0.5: 221 samples
-print("Random Filtered TC class", cTC);
 
     // Classes Shrub(7 or 2) and OWL(8 or 2). There are different alternatives:
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
       
-var aSh = gtpoint_trchaco.filter(ee.Filter.eq("visu_lc", 7));
+var aSh = gtp_trchaco.filter(ee.Filter.eq("visu_lc", 7));
 
     // Class Grass(9 or 3) and GrassTree (10 or 3). There are different alternatives
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
 
-var aGr = gtpoint_trchaco.filter(ee.Filter.eq("visu_lc", 9));
-var gt11 =  gtpoint_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge 
+var aGr = gtp_trchaco.filter(ee.Filter.eq("visu_lc", 9));
+var gt11 =  gtp_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge 
+
 
   // We merge the newly created columns into the final training set
-gtpoint_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
-print("Final samples", gtpoint_trchaco);
+gtp_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
+
+print("Final samples", gtp_trchaco);
 
 // Rename the inputs | Final set for RF
-
-var trainingGcp = gtpoint_trchaco;
-var validationGcp = gtpoint_vlchaco;
+var trainingGcp = gtp_trchaco;
+var validationGcp = gtp_vlchaco;
 
 var applybuffer = function(feature) {
 return feature.buffer(buffer)};
