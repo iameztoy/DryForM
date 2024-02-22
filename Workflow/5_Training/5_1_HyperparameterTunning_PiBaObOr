@@ -106,8 +106,8 @@ return feature.buffer(buffer)};
 trainingGcp = trainingGcp //.map(applybuffer);
 validationGcp = validationGcp //.map(applybuffer);
 
-print("Training GCP", trainingGcp);
-print("Validation GCP", validationGcp);
+print("Training Filtered", trainingGcp.size());
+print("Validation Filtered", validationGcp.size());
 
 
 var training = composite.sampleRegions({
