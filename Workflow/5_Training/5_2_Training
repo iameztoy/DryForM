@@ -32,7 +32,7 @@ var aoi = chaco
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
-var buffer = 0 // To buffer the training and validation points
+var buffer = 0 // To buffer the training and validation points | Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
 
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
