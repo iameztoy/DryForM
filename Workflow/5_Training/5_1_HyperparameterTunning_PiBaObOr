@@ -69,6 +69,9 @@ var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi));
 var gtp_tr =  gtp_f.filter(ee.Filter.eq('purp', "training"));
 var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
+print("Original Training", gtp_tr.size());
+print("Original Validation", gtp_vl.size());
+
 // For the Pixel Based approach -> Balance classes
 // In order to balance the class respect the other classes, the target column in randomized and merged again with the other classes.
 
