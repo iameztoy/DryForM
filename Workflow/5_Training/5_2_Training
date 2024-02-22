@@ -40,6 +40,7 @@ var buffer = 0 // To buffer the training and validation points | Take into accou
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28_sBands");
 
+
 // Select Bands if necessary
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
              "t3_VH", "t1_gray_savg_glcm", "t3_gray_savg_glcm", "t3_gNDVI", "t1_B12", "t1_VH", "t0_MSAVI", "t3_MSAVI", "t3_VV", "t2_gray_savg_glcm",
@@ -73,13 +74,16 @@ var composite = AllChaco_oo.select(bandsc); // or (bands)
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
-// Chaco Points or Polygons
-var gtp_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', aoi)); // Select either points or polygons
-var gtp_trchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "training"));
-var gtp_vlchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "validation"));
+// Select either points or polygons
+var Gtp = GroundTruthPoint_DF 
 
-print("Original Training", gtp_trchaco.size());
-print("Original Validation", gtp_vlchaco.size());
+// Point or polygon filtering | change variable aoi to run on a different biome
+var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi)); 
+var gtp_tr =  gtp_f.filter(ee.Filter.eq('purp', "training"));
+var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
+
+print("Original Training", gtp_tr.size());
+print("Original Validation", gtp_vl.size());
 
 
 // For the Pixel Based approach -> Balance classes
@@ -88,28 +92,28 @@ print("Original Validation", gtp_vlchaco.size());
     // Classes TC TC(1) + TC(2) + TC(3)
     // Total number of the three tree cover classes is 450 (tc1+tc2+tc3). Balanced samples are 150 approx.
 
-var aTC = gtp_trchaco.filter(ee.Filter.lte("visu_lc", 3)); // First we select the Tree Cover class from the visu_lc attribute (Anything below or equal 3)
+var aTC = gtp_tr.filter(ee.Filter.lte("visu_lc", 3)); // First we select the Tree Cover class from the visu_lc attribute (Anything below or equal 3)
 var bTC = aTC.randomColumn(); // We create a random values column
 var cTC = bTC.filter('random > 0.65'); //We select a % over the random column. For random > 0 -> 450 classes. For 0.65: 159 samples 0.5: 221 samples
 
     // Classes Shrub(7 or 2) and OWL(8 or 2). There are different alternatives:
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
       
-var aSh = gtp_trchaco.filter(ee.Filter.eq("visu_lc", 7));
+var aSh = gtp_tr.filter(ee.Filter.eq("visu_lc", 7));
 
     // Class Grass(9 or 3) and GrassTree (10 or 3). There are different alternatives
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
 
-var aGr = gtp_trchaco.filter(ee.Filter.eq("visu_lc", 9));
-var gt11 =  gtp_trchaco.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge 
+var aGr = gtp_tr.filter(ee.Filter.eq("visu_lc", 9));
+var gt11 =  gtp_tr.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge 
 
 
   // We merge the newly created columns into the final training set
-gtp_trchaco = gt11.merge(cTC).merge(aSh).merge(aGr); 
+gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr); 
 
 // Rename the inputs | Final set for RF
-var trainingGcp = gtp_trchaco;
-var validationGcp = gtp_vlchaco;
+var trainingGcp = gtp_tr;
+var validationGcp = gtp_vl;
 
 
 var applybuffer = function(feature) {
