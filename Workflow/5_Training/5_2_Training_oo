@@ -221,7 +221,7 @@ Map.addLayer(built, {palette: "fa0000"}, "Built", 0);
 Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
 Map.addLayer(swater, {palette: "0064c8"}, "Seasonal", 0);
 Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
-Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
+Map.addLayer(crops, {palette: "f096ff"}, "Crops", 0);
 Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0);
 
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
