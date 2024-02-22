@@ -70,7 +70,7 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
 // Chaco Points 
-var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
+var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi));
 var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
 
