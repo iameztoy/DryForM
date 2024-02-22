@@ -12,7 +12,8 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
     image11 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se30_sBands"),
     image12 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se36_sBands"),
     image13 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28_sBands"),
-    image2 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12_sBands");
+    image2 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12_sBands"),
+    image3 = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 // Visualize SNIC outcomes for different size parameters
@@ -30,6 +31,7 @@ Map.addLayer(image10, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"]
 Map.addLayer(image13, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se28 SBands", 0);
 //Map.addLayer(image11, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se30 SBands", 0);
 //Map.addLayer(image12, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":17,"max":197}, "sNAc0c8n256se36 SBands", 0);
+Map.addLayer(image3, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":21,"max":173}, "sNAc0c8n256se28 SBands", 0);
 
 
 //Only clusters
