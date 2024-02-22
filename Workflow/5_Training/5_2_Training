@@ -35,7 +35,7 @@ var landcover = "visulcrec"; // or visu_lc / visulcrec
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se24_sBands");
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28_sBands");
 
 // Select Bands if necessary
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
@@ -61,6 +61,9 @@ var composite = AllChaco_oo; //.select(bands)
 //          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
 //          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
 //          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+
+// Apply a buffer over the points if necessary | Both for training and validation
+var buffer = 20
 
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
@@ -104,10 +107,10 @@ var trainingGcp = gtpoint_trchaco;
 var validationGcp = gtpoint_vlchaco;
 
 
-var buffer = function(feature) {
+var applybuffer = function(feature) {
 return feature.buffer(20)};
-trainingGcp = trainingGcp.map(buffer);
-validationGcp = validationGcp.map(buffer);
+trainingGcp = trainingGcp.map(applybuffer);
+validationGcp = validationGcp.map(applybuffer);
 
 print("Training GCP Final", trainingGcp);
 print("Validation GCP Final", validationGcp);
