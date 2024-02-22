@@ -20,7 +20,7 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
 
 Map.addLayer(image, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se12", 0);
 //Map.addLayer(image3, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se18", 0);
-Map.addLayer(image4, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t3_MSAVI_mean"], "min":17,"max":110}, "sNAc0c8n256se24", 0);
+//Map.addLayer(image4, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t3_MSAVI_mean"], "min":17,"max":110}, "sNAc0c8n256se24", 0);
 Map.addLayer(image3, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":21,"max":173}, "sNAc0c8n256se28", 0);
 //Map.addLayer(image5, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se30", 0);
 //Map.addLayer(image6, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se36", 0);
@@ -28,7 +28,7 @@ Map.addLayer(image3, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"],
 //Map.addLayer(image8, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se42", 0);
 //Map.addLayer(image9, {"bands":["t0_MSAVI_mean","t1_MSAVI_mean","t2_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se49", 0);
 Map.addLayer(image2, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":10,"max":137}, "sNAc0c8n256se12 SBands", 0);
-Map.addLayer(image10, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se24 SBands", 0);
+//Map.addLayer(image10, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se24 SBands", 0);
 Map.addLayer(image13, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se28 SBands", 0);
 //Map.addLayer(image11, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":2,"max":141}, "sNAc0c8n256se30 SBands", 0);
 //Map.addLayer(image12, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"], "min":17,"max":197}, "sNAc0c8n256se36 SBands", 0);
@@ -39,8 +39,8 @@ Map.addLayer(image13, {"bands":["t0_MSAVI_mean","t2_MSAVI_mean","t3_MSAVI_mean"]
 //Map.addLayer(image9.randomVisualizer(), null, "Clusters Image9 seeds 49", 0);
 //Map.addLayer(image7.randomVisualizer(), null, "Clusters Image7 seeds 36", 0); 
 Map.addLayer(image13.randomVisualizer(), null, "Clusters Image2 seeds 28 Sbands", 0) ;
-Map.addLayer(image10.randomVisualizer(), null, "Clusters Image10 seeds 24 Sbands", 0); 
-Map.addLayer(image4.randomVisualizer(), null, "Clusters Image4 seeds 24", 0); 
+//Map.addLayer(image10.randomVisualizer(), null, "Clusters Image10 seeds 24 Sbands", 0); 
+//Map.addLayer(image4.randomVisualizer(), null, "Clusters Image4 seeds 24", 0); 
 Map.addLayer(image2.randomVisualizer(), null, "Clusters Image7 seeds 12 Sbands", 0); 
 Map.addLayer(image.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) ;
 
