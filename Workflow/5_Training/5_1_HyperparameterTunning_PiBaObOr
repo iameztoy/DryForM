@@ -60,9 +60,10 @@ var composite = AllChaco_oo.select("t.*"); //.select(bands), otherwise .select("
 
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
+var Gtp = GroundTruthPoint_DF // Select either points or polygons
 
 // Point or polygon filtering | change variable aoi to run on a different biome
-var gtp_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi)); // Select either points or polygons
+var gtp_chaco = Gtp.filter(ee.Filter.eq('aoiname', aoi)); 
 var gtp_trchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtp_vlchaco =  gtp_chaco.filter(ee.Filter.eq('purp', "validation"));
 
