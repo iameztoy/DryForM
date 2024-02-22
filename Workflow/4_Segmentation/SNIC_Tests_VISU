@@ -38,6 +38,7 @@ Map.addLayer(image7.randomVisualizer(), null, "Clusters Image7 seeds 36", 0);
 Map.addLayer(image13.randomVisualizer(), null, "Clusters Image2 seeds 28 Sbands", 0) ;
 Map.addLayer(image10.randomVisualizer(), null, "Clusters Image10 seeds 24 Sbands", 0); 
 Map.addLayer(image4.randomVisualizer(), null, "Clusters Image4 seeds 24", 0); 
+Map.addLayer(image2.randomVisualizer(), null, "Clusters Image7 seeds 12 Sbands", 0); 
 Map.addLayer(image.randomVisualizer(), null, "Clusters Image2 seeds 12", 0) ;
 
 // Areas
