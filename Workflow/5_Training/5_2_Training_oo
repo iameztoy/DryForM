@@ -213,10 +213,10 @@ Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
 Map.addLayer(crops, {palette: "f096ff"}, "Crops", 0);
 Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0);
 
+// Other sources to compare with
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var wri_tree = wri.gte(30);
 Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0);
-
 var dataset = ee.ImageCollection('ESA/WorldCover/v100').first();
 var visualization = {bands: ['Map']};
 Map.addLayer(dataset, visualization, 'Landcover', 0);
