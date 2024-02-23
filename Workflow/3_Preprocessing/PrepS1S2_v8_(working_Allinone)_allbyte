@@ -1,5 +1,7 @@
 
-// Preprocessing of imagery
+//***********************************************************
+// DRYFORM - Step 3 - Data/Imagery preprocessing
+//***********************************************************
 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
