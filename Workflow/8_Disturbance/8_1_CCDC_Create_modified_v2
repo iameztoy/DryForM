@@ -6,14 +6,14 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var expname = "Chaco"
-var aoi = chaco.geometry()
-var region = aoi
-var cg_scale = 200000
+var expname = "Chaco";
+var aoi = chaco.geometry();
+var region = aoi;
+var cg_scale = 200000;
 
 var Zones = aoi.coveringGrid({
-  	proj: "EPSG:4326", //EPSG:32720
-  	scale: cg_scale
+    proj: "EPSG:4326", //EPSG:32720
+    scale: cg_scale
 });
 
 // make a list of length of features
@@ -45,13 +45,11 @@ tilelist = tilelist.filter(ee.Filter.lte('item', ns));
 var tilelist = tilelist.getInfo();
 //print("NSC", nsc)
 
-
 Map.addLayer(zonesID, null, "Covering grid: " + cg_scale.toString());
 
-//*****************************
-// Temporal Segmentation CCDC
-
-
+//*********************************************
+// Temporal Segmentation CCDC per tiles
+//*********************************************
 
 
 var processTiles = function(tile){
@@ -59,25 +57,25 @@ var processTiles = function(tile){
   var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
   
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
-  print("interm aoi fx", interm_aoi)
+  print("interm aoi fx", interm_aoi);
   
   var collection = createLandsatCollection({
   region: interm_aoi,
   start: '1984-01-01',
   end: '2024-01-01', 
   mapImage: function(image) { return image.addBands(toNdfi(image)) },
-})
+});
 
-print("Collection", collection)
+print("Collection", collection);
 
 var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
   collection: collection,
   breakpointBands: ['ndfi']
-})
-print("CCDC", ccdc)
+});
+print("CCDC", ccdc);
 
-var segments = temporalSegmentation.Segments(ccdc)
-print("Segments", segments)
+var segments = temporalSegmentation.Segments(ccdc);
+print("Segments", segments);
   
     //No need for loop here. Need to optimize, but it works so far. 
   var featlist = interm_aoi.getInfo()["features"];
@@ -101,7 +99,6 @@ print("Segments", segments)
   
   return segments;
 
-
 };
 
 var results = tilelist.map(processTiles);
@@ -114,11 +111,11 @@ var results = tilelist.map(processTiles);
 // Generic utility functions to create ImageCollection //
 /////////////////////////////////////////////////////////
 function toNdfi(image) {
-  var gv = [500, 900, 400, 6100, 3000, 1000]
-  var shade = [0, 0, 0, 0, 0, 0]
-  var npv = [1400, 1700, 2200, 3000, 5500, 3000]
-  var soil = [2000, 3000, 3400, 5800, 6000, 5800]
-  var cloud = [9000, 9600, 8000, 7800, 7200, 6500]
+  var gv = [500, 900, 400, 6100, 3000, 1000];
+  var shade = [0, 0, 0, 0, 0, 0];
+  var npv = [1400, 1700, 2200, 3000, 5500, 3000];
+  var soil = [2000, 3000, 3400, 5800, 6000, 5800];
+  var cloud = [9000, 9600, 8000, 7800, 7200, 6500];
   var unmixed = image
     .select(['blue', 'green', 'red', 'nir', 'swir1', 'swir2'])
     .unmix({
@@ -126,14 +123,14 @@ function toNdfi(image) {
       sumToOne: true,
       nonNegative: true
     })
-    .rename(['gv', 'shade', 'npv', 'soil', 'cloud'])
+    .rename(['gv', 'shade', 'npv', 'soil', 'cloud']);
   return unmixed
     .expression(
       '((i.gv / (1 - i.shade)) - (i.npv + i.soil)) / ((i.gv / (1 - i.shade)) + i.npv + i.soil)',
       {i: unmixed}
     ) 
     .multiply(10000)
-    .rename('ndfi')
+    .rename('ndfi');
 }
 
 function createLandsatCollection(params) {
@@ -142,88 +139,88 @@ function createLandsatCollection(params) {
     start: '1982-01-01', 
     end: formatDate(new Date()), 
     mapImage: function (image) { return image }
-  }
-  params = mergeObjects([defaultParams, params])
+  };
+  params = mergeObjects([defaultParams, params]);
   
   var filter = ee.Filter.and(
       ee.Filter.bounds(params.region),
       ee.Filter.date(params.start, params.end  )
-  )
+  );
   var l4 = ee.ImageCollection('LANDSAT/LT04/C01/T1_SR')
     .merge(ee.ImageCollection('LANDSAT/LT04/C01/T2_SR'))
     .filter(filter)
     .select(
       ['B1', 'B2', 'B3', 'B4', 'B5', 'B7', 'pixel_qa'], 
       ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'pixel_qa']
-    )
+    );
   var l5 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
     .merge(ee.ImageCollection('LANDSAT/LT05/C01/T2_SR'))
     .filter(filter)
     .select(
       ['B1', 'B2', 'B3', 'B4', 'B5', 'B7', 'pixel_qa'], 
       ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'pixel_qa']
-    )
+    );
   var l7 = ee.ImageCollection('LANDSAT/LE07/C01/T1_SR')
     .merge(ee.ImageCollection('LANDSAT/LE07/C01/T2_SR'))
     .filter(filter)
     .select(
       ['B1', 'B2', 'B3', 'B4', 'B5', 'B7', 'pixel_qa'], 
       ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'pixel_qa']
-    )
+    );
   var l8 = ee.ImageCollection('LANDSAT/LC08/C01/T1_SR')
     .merge(ee.ImageCollection('LANDSAT/LC08/C01/T2_SR'))
     .filter(filter)
     .select(
       ['B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'pixel_qa'], 
       ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'pixel_qa']
-    )
+    );
 
   return l4.merge(l5).merge(l7).merge(l8)
     .map(mapImage)
-    .sort('system:time_start')
+    .sort('system:time_start');
   
   function mapImage(image) {
     return excludeBand('pixel_qa',
       mask(
         params.mapImage(image)
       ).clip(params.region)
-    )
+    );
   }
   
   function mask(image) {
-    var free = image.select('pixel_qa').bitwiseAnd(2)
-    var water = image.select('pixel_qa').bitwiseAnd(4)
+    var free = image.select('pixel_qa').bitwiseAnd(2);
+    var water = image.select('pixel_qa').bitwiseAnd(4);
     return image
-      .updateMask(free.or(water))
+      .updateMask(free.or(water));
   }
   
   function excludeBand(bandName, image) {
-    var bandNames = image.bandNames()
+    var bandNames = image.bandNames();
     var bandIndexes = ee.List.sequence(0, bandNames.size().subtract(1))
       .filter(
         ee.Filter.neq('item', bandNames.indexOf(bandName))
-      )
-    return image.select(bandIndexes)
+      );
+    return image.select(bandIndexes);
   }
 
   function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
-        year = d.getFullYear()
+        year = d.getFullYear();
   
     if (month.length < 2) 
-        month = '0' + month
-    if (day.length < 2) 
-        day = '0' + day
+        month = '0' + month;
+    if (day.length < 2) ;
+        day = '0' + day;
   
-    return [year, month, day].join('-')
+    return [year, month, day].join('-');
   }
 
   function mergeObjects(objects) {
     return objects.reduce(function (acc, o) {
       for (var a in o) { acc[a] = o[a] }
-      return acc
-      }, {})
+      return acc;
+      }, {});
   }
 }  
