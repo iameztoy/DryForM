@@ -177,6 +177,25 @@ print('Confusion Matrix', testConfusionMatrix);
 print('VAL Accuracy', testConfusionMatrix.accuracy());
 
 //************************************************************************** 
+// Export
+//**************************************************************************
+
+Export.image.toAsset({
+		image: classified,
+    description: "Chaco_pb_buff15",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/classfied_chaco_pb_buf15",
+    pyramidingPolicy: "mode",
+//	dimensions:,
+//	region:,
+    scale: 10,
+    crs: "EPGS:4326",
+//	crsTransform:,
+    maxPixels: 1e13
+//	shardSize:,
+})
+
+
+//************************************************************************** 
 // Visu
 //************************************************************************** 
 
