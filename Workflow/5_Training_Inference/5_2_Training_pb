@@ -1,6 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var table = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //***********************************************************
 // DRYFORM - Step 5.2 - Training
