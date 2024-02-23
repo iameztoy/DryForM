@@ -1,16 +1,12 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga"),
-    cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado"),
-    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
-    s2grid = ee.FeatureCollection("projects/hardy-tenure-383607/assets/Uploaded/S2_TGrid"),
-    geometry = 
-    /* color: #98ff00 */
-    /* shown: false */
-    ee.Geometry.MultiPoint(
-        [[-43.638429775663745, -13.929773533661459],
-         [-42.852907314726245, -13.948433444190474]]);
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+//***********************************************************
+// DRYFORM - Step 3 - Data/Imagery preprocessing
+//***********************************************************
+
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
 //---------------------------------------------------------------------------//
 // REQUIRE
