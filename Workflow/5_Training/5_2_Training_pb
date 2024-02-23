@@ -207,8 +207,8 @@ print('VAL Accuracy', testConfusionMatrix.accuracy());
 
 Export.image.toAsset({
 		image: classified,
-    description: "Chaco_pb",
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/classfied_chaco_pb",
+    description: "Chaco_pb_buff15",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/classfied_chaco_pb_buf15",
     pyramidingPolicy: "mode",
 //	dimensions:,
 //	region:,
