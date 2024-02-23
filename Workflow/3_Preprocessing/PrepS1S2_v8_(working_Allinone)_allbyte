@@ -3,12 +3,6 @@
 // DRYFORM - Step 3 - Data/Imagery preprocessing
 //***********************************************************
 
-var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
-var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
-var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
-var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
-
-
 //---------------------------------------------------------------------------//
 // REQUIRE
 //---------------------------------------------------------------------------//
@@ -20,6 +14,11 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code
 //---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
+
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
 var aoisel = chaco; var expname = "Chaco"
 var aoi = aoisel.geometry() //.buffer(100000);
