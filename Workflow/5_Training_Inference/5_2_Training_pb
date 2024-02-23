@@ -3,10 +3,7 @@
 // DRYFORM - Step 5.2 - Training
 //***********************************************************
 
-//From (remove): https://courses.spatialthoughts.com/end-to-end-gee.html
-
 // pb = Pixel Based
-// oo = Object Oriented
 
 //Areas of Interest | Included within the Ground Truth 
 var chaco = "chaco";
