@@ -6,16 +6,23 @@
 // pb = Pixel Based
 
 //Areas of Interest | Included within the Ground Truth 
-var chaco = "chaco";
-var caatinga = "caatinga";
-var cerrado = "cerrado";
-var tanzania = "tanzania";
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var aoi = chaco
+var aoi = chaco; //target aoi
+
+var chaco_n = "chaco";
+var caatinga_n = "caatinga";
+var cerrado_n = "cerrado";
+var tanzania_n = "tanzania";
+
+var aoi_n = chaco_n;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
-var buffer = 15 // To buffer the training and validation points | Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
+var buffer = 15; // To buffer the training and validation points | Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
 
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
@@ -58,7 +65,7 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
 var Gtp = GroundTruthPoint_DF 
 
 // Point or polygon filtering | change variable aoi to run on a different biome
-var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi)); 
+var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi_n)); 
 var gtp_tr =  gtp_f.filter(ee.Filter.eq('purp', "training"));
 var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
@@ -97,7 +104,7 @@ var validationGcp = gtp_vl;
 
 
 var applybuffer = function(feature) {
-return feature.buffer(20)};
+return feature.buffer(buffer)};
 trainingGcp = trainingGcp.map(applybuffer);
 validationGcp = validationGcp.map(applybuffer);
 
@@ -199,7 +206,7 @@ print('VAL Accuracy', testConfusionMatrix.accuracy());
 Export.image.toAsset({
 		image: classified,
     description: "Chaco_pb_buff15",
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/classfied_chaco_pb_buf15",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Classfied"+ aoi_n +,
     pyramidingPolicy: "mode",
 //	dimensions:,
 //	region:,
