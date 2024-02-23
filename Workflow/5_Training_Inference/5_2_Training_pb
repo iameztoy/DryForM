@@ -206,7 +206,7 @@ print('VAL Accuracy', testConfusionMatrix.accuracy());
 Export.image.toAsset({
 		image: classified,
     description: "Chaco_pb_buff15",
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Classfied"+ aoi_n +,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class"+ aoi_n + "_buf" + buffer.toString(),
     pyramidingPolicy: "mode",
 //	dimensions:,
 //	region:,
@@ -241,7 +241,7 @@ Map.addLayer(built, {palette: "fa0000"}, "Built", 0);
 Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
 Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
 Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
-Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0);
+Map.addLayer(aoi, {color: "red"}, "AOI Boundary", 0);
 
 // Other sources to compare with
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
