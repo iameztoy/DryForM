@@ -1,17 +1,6 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var table = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-var dataset = ee.ImageCollection('ESA/WorldCover/v100').first();
-
-var visualization = {
-  bands: ['Map'],
-};
-
-
-
-Map.addLayer(dataset, visualization, 'Landcover', 0);
-
-
 
 //***********************************************************
 // DRYFORM - Step 5.2 - Training
@@ -241,4 +230,7 @@ Map.addLayer(table, {color: "red"}, "Chaco Boundary", 0);
 var wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
 var wri_tree = wri.gte(30);
 Map.addLayer(wri_tree.selfMask(), {color: "green"}, "WRI", 0)
+var dataset = ee.ImageCollection('ESA/WorldCover/v100').first();
+var visualization = {bands: ['Map']};
+Map.addLayer(dataset, visualization, 'Landcover', 0);
 Map.setOptions("SATELLITE")
