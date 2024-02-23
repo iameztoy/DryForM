@@ -6,12 +6,19 @@
 // oo = Object Oriented
 
 //Areas of Interest | Included within the Ground Truth 
-var chaco = "chaco";
-var caatinga = "caatinga";
-var cerrado = "cerrado";
-var tanzania = "tanzania";
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var aoi = chaco
+var aoi = chaco //target aoi
+
+var chaco_n = "chaco";
+var caatinga_n = "caatinga";
+var cerrado_n = "cerrado";
+var tanzania_n = "tanzania";
+
+var aoi_n = chaco_n
 
 // Ground Truth attribute to be used:
 var landcover = "visu_lc"; // or visu_lc
@@ -61,7 +68,7 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
 var Gtp = GroundTruthPol_DF 
 
 // Point or polygon filtering | change variable aoi to run on a different biome
-var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi)); 
+var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi_n)); 
 var gtp_tr =  gtp_f.filter(ee.Filter.eq('purp', "training"));
 var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
@@ -113,6 +120,7 @@ var classifier = ee.Classifier.smileRandomForest({
 
 // // Classify the image.
 var classified = composite.classify(classifier);
+classified = classified.clip(aoi)
 
 //************************************************************************** 
 // Feature Importance | Accuracies, etc.
