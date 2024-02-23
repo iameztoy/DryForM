@@ -196,8 +196,6 @@ var swater = classified.eq(15).selfMask();
 var bare = classified.eq(17).selfMask();
 var crops = classified.eq(19).selfMask();
 
-
-
 Map.addLayer(tc1, {palette: "005200"}, "Tree Cover 1", 0);
 Map.addLayer(tc2, {palette: "009700"}, "Tree Cover 2", 0);
 Map.addLayer(tc3, {palette: "00cc00"}, "Tree Cover 3", 0);
