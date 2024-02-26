@@ -375,7 +375,7 @@ var resultFc = ee.FeatureCollection(accuracies);
 // Export the result as CSV
 Export.table.toDrive({
   collection: resultFc,
-  description: 'Multiple_Parameter_Tuning_Results',
+  description: 'MTP',
   folder: 'earthengine',
   fileNamePrefix: 'hyperparameter_tuning',
   fileFormat: 'CSV'});
@@ -384,9 +384,11 @@ Export.table.toDrive({
 // Hyperparameter Tuning - Pick up parameters for Optimal/Fine tunned model
 //*******************************************************************************    
   
-  
+/*  
 // Train the RF with the parameters with highers accuracy
 // If needed we can also add here minLeafPopulation and maxNodes
+// This has not been implemented in the current processing workflow. The training is carried out in a separate script.
+
 var resultFcSorted = resultFc.sort('accuracy', false);
 var highestAccuracyFeature = resultFcSorted.first();
 var highestAccuracy = highestAccuracyFeature.getNumber('accuracy');
@@ -411,3 +413,4 @@ print(optimalModel.explain()) // This probably returns a dictionary error - "Use
 
 // Export the 'finalClassification' to Asset and import the
 // result to view it.
+*/
