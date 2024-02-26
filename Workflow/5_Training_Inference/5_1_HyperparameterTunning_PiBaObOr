@@ -167,45 +167,6 @@ var classifier = ee.Classifier.smileRandomForest({
 });
 
 
-//************************************************************************** 
-// Feature Importance | Accuracies, etc.
-//************************************************************************** 
-
-// Preliminary - Need to re-run with the parameters decided in the
-// hyperparameter tuning phase.
-
-// Run .explain() to see what the classifer looks like
-print("Classifier", classifier.explain());
-
-// Get a confusion matrix and overall accuracy for the training sample.
-var trainAccuracy = classifier.confusionMatrix();
-print('Training error matrix', trainAccuracy);
-print('Training overall accuracy', trainAccuracy.accuracy());
-
-// Calculate variable importance
-var importance = ee.Dictionary(classifier.explain().get('importance'));
-
-// Calculate relative importance
-var sum = importance.values().reduce(ee.Reducer.sum());
-
-var relativeImportance = importance.map(function(key, val) {
-   return (ee.Number(val).multiply(100)).divide(sum);
-  });
-print(relativeImportance);
-
-// Create a FeatureCollection so we can chart it
-var importanceFc = ee.FeatureCollection([
-  ee.Feature(null, relativeImportance)
-]);
-
-var chart = ui.Chart.feature.byProperty({
-  features: importanceFc
-}).setOptions({
-      title: 'Feature Importance',
-      vAxis: {title: 'Importance'},
-      hAxis: {title: 'Feature'}
-  });
-print(chart);
 
 //************************************************************************** 
 // Hyperparameter Tuning - Only Number of Trees
