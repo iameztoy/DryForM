@@ -386,8 +386,9 @@ Export.table.toDrive({
   
 /*  
 // Train the RF with the parameters with highers accuracy
-// If needed we can also add here minLeafPopulation and maxNodes
-// This has not been implemented in the current processing workflow. The training is carried out in a separate script.
+  // If needed we can also add here minLeafPopulation and maxNodes
+  // This has not been implemented in the current processing workflow:
+  // The training is carried out in a separate script.
 
 var resultFcSorted = resultFc.sort('accuracy', false);
 var highestAccuracyFeature = resultFcSorted.first();
