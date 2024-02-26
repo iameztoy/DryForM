@@ -27,7 +27,8 @@ var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = caatinga_n;
+// Change this to filter the points in the target AOI
+var aoi_n = tanzania_n;
 
 // Imported Ground Truth - Original set
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
