@@ -62,8 +62,9 @@ var composite = AllChaco_pb //.select(bandsc); // or (bands)
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
-// Already Balanced sample sets
+// Training set | Already Balanced sample sets.
     // Points
+
 var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco");
 var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
 var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
@@ -75,10 +76,15 @@ var GTPol_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383
 var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_cerrado");
 var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
-// Select either points or polygons
-var Gtp =  GTPoint_DF_Balanced_chaco;
+
+// Validation set - Filtering the set to be used for validation purposes - From the original set
+
+var gtp_f = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi_n)); 
+var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
 // ***
+
+/*
 // This section is only necessary if Ground Truth has not been filtered before.
 // However, should be taken into account that it will select randomly the points every time the script is run. Thus, it is better to run the random selection on a separate step and save it as an asset (see section 2.2 BalanceGT)
 
@@ -116,6 +122,7 @@ var gt11 =  gtp_tr.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other 
   // We merge the newly created columns into the final training set
 gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr); 
 
+*/
 // ***
 
 // Rename the inputs | Final set for RF
