@@ -198,7 +198,7 @@ print(chart);
 // Remember to add the outcome of the previous step within this the list.
 
 var numTreesList = ee.List.sequence(50, 70, 10);
-var bagFractionList = ee.List([0.5, 0.7, 0.9]);
+var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
 
 var accuracies = numTreesList.map(function(numTrees) {
   return bagFractionList.map(function(bagFraction) {
@@ -229,9 +229,9 @@ var resultFc = ee.FeatureCollection(accuracies);
 
 Export.table.toDrive({
   collection: resultFc,
-  description: 'Multiple_Parameter_Tuning_Results',
+  description: 'MTP'+aoi+"_"+"buf"+buffer.toString()+"_nTbF",
   folder: 'earthengine',
-  fileNamePrefix: 'numtrees_bagfraction',
+  fileNamePrefix: 'MTP'+aoi+"_"+"buf"+buffer.toString()+"_nTbF",
   fileFormat: 'CSV'}) ;
 
 
@@ -251,12 +251,13 @@ Export.table.toDrive({
 //Set the hyperparameters list for iterative retrieval.
 // Number of trees computed in the previous step should be included in the numTreesList
 // e.g. for Chaco pixel based the highest accuracy is for nTrees: 60
+
 //var numTreesList = ee.List.sequence(50, 500, 50);
-var numTreesList = ee.List([60, 80, 100, 120]);
+var numTreesList = ee.List([50, 60]);
+//var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
+var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
 var variablesPerSplitList = ee.List([8, 16, 24]);
-//var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
-var bagFractionList = ee.List([0.5, 0.7, 0.9]);
 var minLeafPopList = ee.List.sequence(1, 24, 4);
 var maxNodesList = ee.List.sequence(2, 10, 2);
 //var seedList = ee.List.sequence(0, 150, 0); //Not implemented
