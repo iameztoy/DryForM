@@ -1,6 +1,7 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF"),
-    GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
+    GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF"),
+    GTPoint_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //***********************************************************
@@ -28,6 +29,7 @@ var tanzania = "tanzania";
 var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
 var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
 var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
+
 
 // Chaco Polygons
 var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
@@ -84,14 +86,19 @@ Map.addLayer(gtpoint_trchaco, {color: "green"}, "Training Points Chaco", 0);
 Map.addLayer(gtpoint_vlchaco, {color: "red"}, "Validation Points Chaco", 0);
 Map.addLayer(gtpol_trchaco, {color: "green"}, "Training Polygons Chaco", 0);
 Map.addLayer(gtpol_vlchaco, {color: "red"}, "Validation Polygons Chaco", 0);
+
+Map.addLayer(GTPoint_Balanced_chaco, {color: "red"}, "Training Polygons Chaco Balanced", 0);
+
 Map.addLayer(gtpoint_trcaatinga, {color: "green"}, "Training Points Caatinga", 0);
 Map.addLayer(gtpoint_vlcaatinga, {color: "red"}, "Validation Points Caatinga", 0);
 Map.addLayer(gtpol_trcaatinga, {color: "green"}, "Training Polygons Caatinga", 0);
 Map.addLayer(gtpol_vlcaatinga, {color: "red"}, "Validation Polygons Caatinga", 0);
+
 Map.addLayer(gtpoint_trcerrado, {color: "green"}, "Training Points Cerrado", 0);
 Map.addLayer(gtpoint_vlcerrado, {color: "red"}, "Validation Points Cerrado", 0);
 Map.addLayer(gtpol_trcerrado, {color: "green"}, "Training Polygons Cerrado", 0);
 Map.addLayer(gtpol_vlcerrado, {color: "red"}, "Validation Polygons Cerrado", 0);
+
 Map.addLayer(gtpoint_trtanzania, {color: "green"}, "Training Points Tanzania", 0);
 Map.addLayer(gtpoint_vltanzania, {color: "red"}, "Validation Points Tanzania", 0);
 Map.addLayer(gtpol_trtanzania, {color: "green"}, "Training Polygons Tanzania", 0);
