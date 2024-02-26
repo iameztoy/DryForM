@@ -255,9 +255,9 @@ Export.table.toDrive({
 //var numTreesList = ee.List.sequence(50, 500, 50);
 var numTreesList = ee.List([60]);
 //var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
-var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
+var bagFractionList = ee.List([0.5]);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
-var variablesPerSplitList = ee.List([8, 16, 24]);
+var variablesPerSplitList = ee.List([6,8,10]);
 var minLeafPopList = ee.List.sequence(1, 24, 4);
 var maxNodesList = ee.List.sequence(2, 10, 2);
 //var seedList = ee.List.sequence(0, 150, 0); //Not implemented
@@ -316,9 +316,9 @@ var resultFc = ee.FeatureCollection(accuracies);
 // Export the result as CSV
 Export.table.toDrive({
   collection: resultFc,
-  description: 'MTP' + aoi + "_buf"+ buffer.toString(),
+  description: 'MTP' + aoi + "_buf"+ buffer.toString()+"_multi",
   folder: 'earthengine',
-  fileNamePrefix: 'MTP_' + aoi + "_buf"+ buffer.toString(),
+  fileNamePrefix: 'MTP_' + aoi + "_buf"+ buffer.toString()+"_multi",
   fileFormat: 'CSV'});
   
 
