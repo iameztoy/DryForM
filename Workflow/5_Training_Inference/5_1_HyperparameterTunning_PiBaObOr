@@ -316,10 +316,12 @@ var resultFc = ee.FeatureCollection(accuracies);
 // Export the result as CSV
 Export.table.toDrive({
   collection: resultFc,
-  description: 'MTP',
+  description: 'MTP' + aoi + "_buf"+ buffer.toString(),
   folder: 'earthengine',
-  fileNamePrefix: 'hyperparameter_tuning',
+  fileNamePrefix: 'MTP_' + aoi + "_buf"+ buffer.toString(),
   fileFormat: 'CSV'});
+  
+
   
 //******************************************************************************* 
 // Hyperparameter Tuning - Pick up parameters for Optimal/Fine tunned model
