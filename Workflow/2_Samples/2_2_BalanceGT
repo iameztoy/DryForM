@@ -45,7 +45,6 @@ var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation")); // Validation do
 print("Original Training", gtp_tr.size());
 print("Original Validation", gtp_vl.size());
 
-// For the Pixel Based approach -> Balance classes
 // In order to balance the class respect the other classes, the target column in randomized and merged again with the other classes.
 
     // Classes TC TC(1) + TC(2) + TC(3)
