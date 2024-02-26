@@ -81,7 +81,7 @@ print("Validation GCP Final", validationGcp);
 
 Export.table.toAsset({
 		collection: trainingGcp,
-    description: "TrainingGCP_Balanced",
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Samples/" + "GTPoint_DF_Balanced" + aoi_n,
+    description: "TrainingGCP_Balanced_" + aoi_n,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Samples/" + "GTPoint_DF_Balanced_" + aoi_n,
 //	maxVertices:,
 })
