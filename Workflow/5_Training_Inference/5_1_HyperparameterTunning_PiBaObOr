@@ -152,7 +152,14 @@ var training = composite.sampleRegions({
 // This is the classifier used to get the Importance Table. 
 // This IT shall be only considered once we get the final set of hyperparameters -> Values should be replaced.
 print("Training", training);
-var classifier = ee.Classifier.smileRandomForest(80) 
+var classifier = ee.Classifier.smileRandomForest({
+		numberOfTrees: 80,
+//	variablesPerSplit:null,
+//	minLeafPopulation:true,
+//	bagFraction:0.5,
+//	maxNodes:null,
+//	seed:false,
+  }) 
 .train({
   features: training,  
   classProperty: landcover,
@@ -302,8 +309,10 @@ Export.table.toDrive({
 */
 
 //Set the hyperparameters list for iterative retrieval.
+// Number of trees computed in the previous step should be included in the numTreesList
+// e.g. for Chaco pixel based the highest accuracy is for nTrees: 60
 //var numTreesList = ee.List.sequence(50, 500, 50);
-var numTreesList = ee.List([50, 80, 100, 120]);
+var numTreesList = ee.List([60, 80, 100, 120]);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
 var variablesPerSplitList = ee.List([8, 16, 24]);
 //var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
