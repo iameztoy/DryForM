@@ -27,10 +27,7 @@ var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = chaco_n;
-
-// Ground Truth attribute to be used:
-var landcover = "visulcrec"; // or visu_lc
+var aoi_n = tanzania_n;
 
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
