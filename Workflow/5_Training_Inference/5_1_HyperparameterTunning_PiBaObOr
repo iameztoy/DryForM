@@ -146,7 +146,7 @@ var training = composite.sampleRegions({
 });
 
 //************************************************************************** 
-// Hyperparameter Tuning - Only Number of Trees
+// 1.- Hyperparameter Tuning - Only Number of Trees
 //************************************************************************** 
 
 // Iteration 1 - The idea is to get a preliminary idea of the optimal number of trees.
@@ -190,14 +190,14 @@ var chart = ui.Chart.array.values({
 print(chart);
 
 
-//************************************************************************** 
-// Hyperparameter Tuning - Multiple Parameter x2 | nTrees and Bag Fraction
-//************************************************************************** 
+//*******************************************************************************  
+// w.- Hyperparameter Tuning - Multiple Parameter x2 | nTrees and Bag Fraction
+//*******************************************************************************  
 
-// We can tune many parameters together using
-// nested map() functions
-// Let's tune 2 parameters
-// numTrees and bagFraction 
+// Example of running the same but with 2 hyperparamenters.
+// We can do this by nestinga map() functions
+// example for: numTrees and bagFraction 
+
 var numTreesList = ee.List.sequence(10, 500, 10);
 var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
 
