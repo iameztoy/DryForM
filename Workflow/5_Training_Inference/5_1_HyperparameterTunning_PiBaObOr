@@ -195,9 +195,9 @@ print(chart);
 //*******************************************************************************  
 
 // Once we have narrowed the number of Trees, we can run the tuning with 2 parameters.
-// Remember to add the outcome of the previous step within this the list.
+// Remember to add the outcome of the previous step within this the list of values or just add it alone.
 
-var numTreesList = ee.List([60]); // This corresponds to the outcome of the previous step | Highest accuracy
+var numTreesList = ee.List([60]); 
 var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
 
 var accuracies = numTreesList.map(function(numTrees) {
