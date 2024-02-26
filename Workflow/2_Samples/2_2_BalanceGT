@@ -27,14 +27,14 @@ var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = tanzania_n;
+var aoi_n = chaco_n;
 
 // Imported Ground Truth - Original set
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
 // Select either points or polygons
-var Gtp = GroundTruthPol_DF 
+var Gtp = GroundTruthPoint_DF 
 
 // Point or polygon filtering | change variable aoi to run on a different biome
 var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi_n)); 
@@ -64,7 +64,7 @@ var aSh = gtp_tr.filter(ee.Filter.eq("visu_lc", 7));
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
 
 var aGr = gtp_tr.filter(ee.Filter.eq("visu_lc", 9));
-var gt11 =  gtp_tr.filter(ee.Filter.gte("visu_lc", 11)); // Select all the other classes and merge | 
+var gt11 =  gtp_tr.filter(ee.Filter.gte("visu_lc", 11)); // Select all the other classes and merge
 
 
   // We merge the newly created columns into the final training set
