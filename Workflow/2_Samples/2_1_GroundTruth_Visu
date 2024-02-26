@@ -87,7 +87,7 @@ Map.addLayer(gtpoint_vlchaco, {color: "red"}, "Validation Points Chaco", 0);
 Map.addLayer(gtpol_trchaco, {color: "green"}, "Training Polygons Chaco", 0);
 Map.addLayer(gtpol_vlchaco, {color: "red"}, "Validation Polygons Chaco", 0);
 
-Map.addLayer(GTPoint_Balanced_chaco, {color: "red"}, "Training Polygons Chaco Balanced", 0);
+Map.addLayer(GTPoint_Balanced_chaco, {color: "red"}, "Training Points Chaco Balanced", 0);
 
 Map.addLayer(gtpoint_trcaatinga, {color: "green"}, "Training Points Caatinga", 0);
 Map.addLayer(gtpoint_vlcaatinga, {color: "red"}, "Validation Points Caatinga", 0);
