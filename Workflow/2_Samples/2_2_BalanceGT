@@ -19,6 +19,9 @@
 //          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
 //          Not Included: tc4, tc5, tc67, Snow, moss/lichen
 
+// For pixel based classification considering the TC class as a single set (TC1 + TC2 + TC3), we should downsample the sample.
+
+
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
