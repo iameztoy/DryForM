@@ -146,31 +146,11 @@ var training = composite.sampleRegions({
 });
 
 //************************************************************************** 
-// Implement RF
-//************************************************************************** 
-
-// This is the classifier used to get the Importance Table. 
-// This IT shall be only considered once we get the final set of hyperparameters -> Values should be replaced.
-print("Training", training);
-var classifier = ee.Classifier.smileRandomForest({
-		numberOfTrees: 80,
-//	variablesPerSplit:null,
-//	minLeafPopulation:true,
-//	bagFraction:0.5,
-//	maxNodes:null,
-//	seed:false,
-  }) 
-.train({
-  features: training,  
-  classProperty: landcover,
-  inputProperties: composite.bandNames()
-});
-
-
-
-//************************************************************************** 
 // Hyperparameter Tuning - Only Number of Trees
 //************************************************************************** 
+
+// Iteration 1 - The idea is to get a preliminary idea of the optimal number of trees.
+// Once we get this, we can re-run the script by including this value within the values list on the multiple parameter fine tunning step. See below.
 
 var test = composite.sampleRegions({
   collection: validationGcp,
