@@ -86,3 +86,14 @@ Export.table.toAsset({
     assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/" + "GTPol_DF_Balanced_" + aoi_n,
 //	maxVertices:,
 })
+
+
+Export.table.toDrive({
+		collection: trainingGcp,
+    description: "TrainingGCP_toDrive",
+    folder: "exportGEE",
+//	fileNamePrefix:,
+    fileFormat: "SHP",
+//	selectors:,
+//	maxVertices:,
+})
