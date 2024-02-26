@@ -194,12 +194,11 @@ print(chart);
 // w.- Hyperparameter Tuning - Multiple Parameter x2 | nTrees and Bag Fraction
 //*******************************************************************************  
 
-// Example of running the same but with 2 hyperparamenters.
-// We can do this by nestinga map() functions
-// example for: numTrees and bagFraction 
+// Once we have narrowed the number of Trees, we can run the tuning with 2 parameters.
+// Remember to add the outcome of the previous step within this the list.
 
-var numTreesList = ee.List.sequence(10, 500, 10);
-var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
+var numTreesList = ee.List.sequence(50, 70, 10);
+var bagFractionList = ee.List([0.5, 0.7, 0.9]);
 
 var accuracies = numTreesList.map(function(numTrees) {
   return bagFractionList.map(function(bagFraction) {
@@ -227,14 +226,14 @@ var accuracies = numTreesList.map(function(numTrees) {
 var resultFc = ee.FeatureCollection(accuracies);
 
 // Export the result as CSV | Uncoment to run. It exports a CSV file with the tuning outcomes.
-/*
+
 Export.table.toDrive({
   collection: resultFc,
   description: 'Multiple_Parameter_Tuning_Results',
   folder: 'earthengine',
   fileNamePrefix: 'numtrees_bagfraction',
   fileFormat: 'CSV'}) ;
-*/
+
 
 //************************************************************************** 
 // Hyperparameter Tuning - Multiple Parameter x4  (or x5)
