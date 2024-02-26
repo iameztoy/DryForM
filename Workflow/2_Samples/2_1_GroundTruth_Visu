@@ -3,9 +3,13 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
     GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-//*****************************
-// GROUND TRUTH - DRYFORM
-//*****************************
+//***********************************************************
+// DRYFORM - Step 2.1 - Ground Truth visualization
+//***********************************************************
+
+// This features have been directly imported as an asset in GEE.
+// They have been created through visual inspection in ArcGIS Pro 3.2
+// Stratified Random Sampling has been applied using AcaTaMa plugin in QGIS.
 
 //Areas of Interest
 var chaco = "chaco";
