@@ -20,7 +20,7 @@ var caatinga = "caatinga";
 var cerrado = "cerrado";
 var tanzania = "tanzania";
 
-var aoi = chaco
+var aoi = chaco;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
@@ -58,19 +58,44 @@ var composite = AllChaco_oo.select("t.*"); //.select(bands), otherwise .select("
 //          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
 //          Not Included: tc4, tc5, tc67, Snow, moss/lichen
 
+// Original sample sets
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
-// Select either points or polygons
-var Gtp = GroundTruthPoint_DF 
+// Training set | Already Balanced sample sets.
+    // Points
+
+var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco");
+var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
+var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
+var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
+
+    // Polygons
+var GTPol_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_chaco");
+var GTPol_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_caatinga");
+var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_cerrado");
+var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
+
+
+// Validation set - Filtering the set to be used for validation purposes - From the original set
+
+var gtp_f = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi)); 
+var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
+
+// ***
+
+/*
+// This section is only necessary if Ground Truth has not been filtered before.
+// However, should be taken into account that it will select randomly the points every time the script is run. Thus, it is better to run the random selection on a separate step and save it as an asset (see section 2.2 BalanceGT)
 
 // Point or polygon filtering | change variable aoi to run on a different biome
-var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi)); 
+var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi_n)); 
 var gtp_tr =  gtp_f.filter(ee.Filter.eq('purp', "training"));
 var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
 print("Original Training", gtp_tr.size());
 print("Original Validation", gtp_vl.size());
+
 
 // For the Pixel Based approach -> Balance classes
 // In order to balance the class respect the other classes, the target column in randomized and merged again with the other classes.
@@ -97,8 +122,11 @@ var gt11 =  gtp_tr.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other 
   // We merge the newly created columns into the final training set
 gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr); 
 
+*/
+// ***
+
 // Rename the inputs | Final set for RF
-var trainingGcp = gtp_tr;
+var trainingGcp = GTPoint_DF_Balanced_chaco;
 var validationGcp = gtp_vl;
 
 var applybuffer = function(feature) {
