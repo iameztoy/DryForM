@@ -21,7 +21,6 @@
 
 // For pixel based classification considering the TC class as a single set (TC1 + TC2 + TC3), we should downsample the sample.
 
-
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
