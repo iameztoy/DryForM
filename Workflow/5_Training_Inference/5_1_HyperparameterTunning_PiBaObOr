@@ -149,8 +149,10 @@ var training = composite.sampleRegions({
 // Implement RF
 //************************************************************************** 
 
+// This is the classifier used to get the Importance Table. 
+// This IT shall be only considered once we get the final set of hyperparameters -> Values should be replaced.
 print("Training", training);
-var classifier = ee.Classifier.smileRandomForest(80)
+var classifier = ee.Classifier.smileRandomForest(80) 
 .train({
   features: training,  
   classProperty: landcover,
