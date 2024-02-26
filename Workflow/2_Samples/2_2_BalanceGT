@@ -27,7 +27,7 @@ var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = chaco_n;
+var aoi_n = caatinga_n;
 
 // Imported Ground Truth - Original set
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
@@ -82,8 +82,8 @@ print("Validation GCP Final", validationGcp);
 
 Export.table.toAsset({
 		collection: trainingGcp,
-    description: "TrainingGCP_Balanced_" + aoi_n,
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/" + "GTPol_DF_Balanced_" + aoi_n,
+    description: "GTPoint_DF_Balanced_" + aoi_n,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/" + "GTPoint_DF_Balanced_" + aoi_n,
 //	maxVertices:,
 })
 
