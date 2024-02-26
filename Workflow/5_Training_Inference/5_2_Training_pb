@@ -164,8 +164,8 @@ var classifier = ee.Classifier.smileRandomForest({
     variablesPerSplit: 8, // The number of variables per split. If unspecified, uses the square root of the number of variables.
     minLeafPopulation: 2, // Only create nodes whose training set contains at least this many points.
     bagFraction: 0.5, //The fraction of input to bag per tree.
-    maxNodes: 20, //The maximum number of leaf nodes in each tree. If unspecified, defaults to no limit.
-//	seed:false, // The randomization seed.
+    //maxNodes: 100, //The maximum number of leaf nodes in each tree. If unspecified, defaults to no limit.
+    seed: 5757 // The randomization seed.
   }).train({
   features: training,  
   classProperty: landcover, 
@@ -238,7 +238,7 @@ print('VAL Accuracy', testConfusionMatrix.accuracy());
 Export.image.toAsset({
 		image: classified,
     description: "Class"+ aoi_n + "_buf" + buffer.toString(),
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class"+ aoi_n + "_buf" + buffer.toString(),
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class_"+ aoi_n + "_buf" + buffer.toString(),
     pyramidingPolicy: "mode",
 //	dimensions:,
 //	region:,
