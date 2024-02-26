@@ -7,9 +7,11 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 // DRYFORM - Step 2.1 - Ground Truth visualization
 //***********************************************************
 
-// This features have been directly imported as an asset in GEE.
+// These features have been directly imported as an asset in GEE.
 // They have been created through visual inspection in ArcGIS Pro 3.2
-// Stratified Random Sampling has been applied using AcaTaMa plugin in QGIS.
+// Stratified Random Sampling has been previously applied using AcATaMa plugin in QGIS.
+    // See: https://plugins.qgis.org/plugins/AcATaMa/
+    // Samples has been preliminarilly allocated using as a basis the Sampling Framework layer calculated in GEE (see step 1)
 
 //Areas of Interest
 var chaco = "chaco";
