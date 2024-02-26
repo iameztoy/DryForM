@@ -37,10 +37,10 @@ var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/asset
 // Select either points or polygons
 var Gtp = GroundTruthPoint_DF 
 
-// Point or polygon filtering | change variable aoi to run on a different biome
+// Point or polygon filtering | change variable aoi_n to run on a different biome
 var gtp_f = Gtp.filter(ee.Filter.eq('aoiname', aoi_n)); 
 var gtp_tr =  gtp_f.filter(ee.Filter.eq('purp', "training"));
-var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
+var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation")); // Validation does not need to be balanced
 
 print("Original Training", gtp_tr.size());
 print("Original Validation", gtp_vl.size());
