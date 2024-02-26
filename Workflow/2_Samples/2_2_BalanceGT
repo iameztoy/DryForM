@@ -64,7 +64,7 @@ var aSh = gtp_tr.filter(ee.Filter.eq("visu_lc", 7));
       // 1. Keep them separated (not very convenient for the pixel based approach), 2. Merge them, 3. Keep only shrub class 
 
 var aGr = gtp_tr.filter(ee.Filter.eq("visu_lc", 9));
-var gt11 =  gtp_tr.filter(ee.Filter.gt("visu_lc", 11)); // Select all the other classes and merge 
+var gt11 =  gtp_tr.filter(ee.Filter.gte("visu_lc", 11)); // Select all the other classes and merge | 
 
 
   // We merge the newly created columns into the final training set
