@@ -17,10 +17,10 @@
 //          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
 //          Not Included: tc4, tc5, tc67, Snow, moss/lichen
 
-// For pixel based classification considering the TC class as a single set (TC1 + TC2 + TC3), we should downsample the sample.
+// For pixel based classification: We consider the TC class as a single set (TC1 + TC2 + TC3) -> Therefore, we should downsample the sample set.
 // Exporting the filtered features as assets avoids to implement this repetitively in the Training phase. Thus, getting a consistent 
 // and unique sample set and avoiding iterative randomness in the filtering process. This is needed to use always the same set while 
-// implementing the hyperparameter tuning and training phases.
+// implementing the hyperparameter tuning and training phase.
 
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
