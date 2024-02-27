@@ -190,7 +190,7 @@ var nTrees = 60
 var vps = 8
 var mlp = 2
 var bf = 0.5
-var seed = 5760
+var seed = 5768
 
 // Use here the parameters established in the Hyperparameter Tunning step
 // Hyperparameters may be different for pixel based or object oriented approach. Check within the Hyperparameter Tunning step
@@ -293,7 +293,7 @@ var bf = 0.5;
 var seed = 5757;
 
 var bfp = bf * 100; //Only to avoid the point (0.5) in the model name
-var model_name = "Class_"+ aoi_n + "_buf" + buffer.toString() + "_" + "nT" + nTrees.toString() + "vps" + vps.toString() + "mlp" + mlp.toString() + "bfp" + bfp.toString() + "se" + seed.toString();
+var model_name = "ClassPB_"+ aoi_n + "_b" + buffer.toString() + "_" + "nT" + nTrees.toString() + "vps" + vps.toString() + "mlp" + mlp.toString() + "bfp" + bfp.toString() + "se" + seed.toString();
 print("Model name", model_name);
 
 Export.classifier.toAsset({
