@@ -44,8 +44,7 @@ var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
              "t0_B11", "t1_B11", "t2_B11", "t3_B11",
              "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI",
              "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",
-             "t0_SI", "t1_SI", "t2_SI", "t3_SI",
-             "t0_iBI", "t1_iBI", "t2_iBI", "t3_iBI"];
+             "t0_SI", "t1_SI", "t2_SI", "t3_SI"];
 
 // "t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI"
 // "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI"
