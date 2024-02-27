@@ -35,7 +35,6 @@ var buffer = 20;
 var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28_sBands");
 
-
 // Select Bands if necessary
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
              "t3_VH", "t1_gray_savg_glcm", "t3_gray_savg_glcm", "t3_gNDVI", "t1_B12", "t1_VH", "t0_MSAVI", "t3_MSAVI", "t3_VV", "t2_gray_savg_glcm",
@@ -134,23 +133,19 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 var trainingGcp = GTPoint_DF_Balanced_chaco;
 var validationGcp = gtp_vl;
 
-print(trainingGcp)
-
 // Reclassify the classes if necessary to get consecutive integers
-// 0-based sequential series
+// 0-based sequential series. 
 
 var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues = [7, 1, 2, 3, 4, 5, 6, 8, 9];
 
+// For visulrec column (defined in landcover variable):
+// 1: TC, 2: Shrub, 3: Grass, 4: Flooded Veg., 5: Built, 6: P.Water, 7: S.Water, 8: Bare, 9: Crops
+
 trainingGcp = trainingGcp.remap(classValues, remapValues, landcover);
 validationGcp = validationGcp.remap(classValues, remapValues, landcover);
 
-
-print("Reclass training", trainingGcp)
-print("Reclass validation", validationGcp)
-
-
-
+// Buffer function
 var applybuffer = function(feature) {
 return feature.buffer(buffer)};
 trainingGcp = trainingGcp.map(applybuffer);
