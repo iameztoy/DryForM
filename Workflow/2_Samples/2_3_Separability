@@ -1,0 +1,116 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco"),
+    labels = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+//***********************************************************
+// DRYFORM - Step 2.3 - Separability | Distances
+//*********************************************************** 
+
+composite = composite.mosaic()
+var bands = composite.bandNames()
+print("Band names", bands)
+
+var training = composite.sampleRegions({
+  collection: labels, 
+  properties: ["visulcrec"], 
+  scale: 10
+});
+
+// First, turn the prediction bands into vectors.
+training = training.map(function(f) {
+  // return f.set('vec', f.toArray(bands));
+  return f.set('vec', f.toDictionary(bands).values(bands));
+})
+
+// Make a list of objects where each object corresponds to a class.
+// Each object stores its label and a list of all the spectral
+// vectors that belong to that class.
+var lists = ee.List(training.reduceColumns({
+  reducer: ee.Reducer.toList().group(0, 'class'), 
+  selectors: ["visulcrec", 'vec']
+}).get('groups'));
+
+// Map over the lists to compute means and covariances.
+// Note that the mean reducer works on arrays, and the 
+// covariance reducer works on a list of 1D arrays.
+lists = lists.map(function(obj) {
+  var array = ee.Array(ee.Dictionary(obj).get('list'));
+  var list = ee.List(ee.Dictionary(obj).get('list')).map(function(l) {
+    return ee.Array(l)
+  });
+  var mean = array.reduce(ee.Reducer.mean(), [0]);
+  // Watch out with this reducer.  It is an approximate solution.
+  var covariance = list.reduce(ee.Reducer.covariance());
+  return ee.Dictionary(obj).combine({
+    mean: mean.transpose(),
+    covariance: covariance
+  })
+});
+print(lists)
+
+// Implement distance measures.
+var classes = ee.List.sequence(0, 8);
+
+var block = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    return mean_i.subtract(mean_j).reduce('sum', [0]).project([0])
+  })
+})
+print('block', block)
+
+var euclidean = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    var diff = mean_i.subtract(mean_j).project([0]);
+    return diff.dotProduct(diff).sqrt();
+  })
+})
+print('euclidean', euclidean)
+
+
+var mahalanobis = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    var sigma_i = ee.Array(ee.Dictionary(lists.get(i)).get('covariance'));
+    var sigma_j = ee.Array(ee.Dictionary(lists.get(j)).get('covariance'));
+    return mean_i.subtract(mean_j).transpose() // 1x6
+        .matrixMultiply(sigma_i.add(sigma_j).divide(2).matrixInverse()) // 6x6
+        .matrixMultiply(mean_i.subtract(mean_j))
+        .sqrt()
+        .get([0, 0])
+  })
+})
+print('mahalanobis', mahalanobis)
+
+
+var bhattacharyya = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    var sigma_i = ee.Array(ee.Dictionary(lists.get(i)).get('covariance'));
+    var sigma_j = ee.Array(ee.Dictionary(lists.get(j)).get('covariance'));
+    var mh = mean_i.subtract(mean_j).transpose()
+        .matrixMultiply(sigma_i.add(sigma_j).divide(2).matrixInverse())
+        .matrixMultiply(mean_i.subtract(mean_j))
+        .get([0, 0])
+        .sqrt();
+    var t2 = sigma_i.add(sigma_j).divide(2).matrixDeterminant()
+        .divide(sigma_i.matrixDeterminant().sqrt())
+        .divide(sigma_j.matrixDeterminant().sqrt())
+        .log()
+        .divide(2);
+    return mh.divide(8).add(t2)
+  })
+})
+print('bhattacharyya', bhattacharyya)
+
+var jm = ee.Array(bhattacharyya).multiply(-1).exp()
+    .multiply(-1).add(1).multiply(2).sqrt();
+print('jm', jm)
+
+// Notes: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
