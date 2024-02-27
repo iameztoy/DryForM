@@ -36,7 +36,7 @@ labels = labels.remap(classValues, remapValues, landcover);
 var bands = composite.bandNames()
 print("Band names", bands)
 
-var bands = ["t0_VV"]
+var bands = ["t3_VH"]
 
 var training = composite.sampleRegions({
   collection: labels, 
