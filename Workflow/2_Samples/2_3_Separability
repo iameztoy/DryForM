@@ -24,9 +24,19 @@ var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383
 // Target - Ground truth
 var labels = GTPoint_DF_Balanced_chaco
 
+// Reclass ground truth from 0 to the number of classes
+// For visulcrec:
+var landcover = "visulcrec"
+var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
+var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+
+labels = labels.remap(classValues, remapValues, landcover);
+
 // Image Collection Band Names
 var bands = composite.bandNames()
 print("Band names", bands)
+
+var bands = ["t0_VV"]
 
 var training = composite.sampleRegions({
   collection: labels, 
