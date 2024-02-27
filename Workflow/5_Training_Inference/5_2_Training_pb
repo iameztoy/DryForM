@@ -36,14 +36,17 @@ var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Prepro
 var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28_sBands");
 
 // Select Bands if necessary
+/*
 var bands = ["t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "t0_gNDVI", "t3_B11", "t1_B11", "t0_gray_savg_glcm", "t3_B12",
              "t3_VH", "t1_gray_savg_glcm", "t3_gray_savg_glcm", "t3_gNDVI", "t1_B12", "t1_VH", "t0_MSAVI", "t3_MSAVI", "t3_VV", "t2_gray_savg_glcm",
               "t2_MSAVI", "t0_B3", "t2_gNDVI", "t2_VV", "t0_gray_idm_glcm", "t1_gNDVI", "t2_SI", "t3_gray_contrast_glcm"];
-              
+*/
+
+var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",]
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = AllChaco_pb //.select(bandsc); // or (bands)
+var composite = AllChaco_pb.select(bands); // or (bands)
 
 // Ground Truth
 
@@ -290,15 +293,16 @@ Export.classifier.toAsset({
 //************************************************************************** 
 
 Map.addLayer(classified, null, 'LC 2020', 0);
-var swater = classified.eq(0).selfMask();
-var tc = classified.eq(1).selfMask();
-var shrub = classified.eq(2).selfMask();
-var grass = classified.eq(3).selfMask();
-var fveg = classified.eq(5).selfMask();
-var built = classified.eq(6).selfMask();
-var pwater = classified.eq(7).selfMask();
-var bare = classified.eq(9).selfMask();
-var crop = classified.eq(10).selfMask();
+
+var tc = classified.eq(0).selfMask();
+var shrub = classified.eq(1).selfMask();
+var grass = classified.eq(2).selfMask();
+var fveg = classified.eq(3).selfMask();
+var built = classified.eq(4).selfMask();
+var pwater = classified.eq(5).selfMask();
+var swater = classified.eq(6).selfMask();
+var bare = classified.eq(7).selfMask();
+var crop = classified.eq(8).selfMask();
 
 Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
 Map.addLayer(tc, {palette: "005200"}, "Tree Cover", 1);
