@@ -235,6 +235,7 @@ print('VAL Accuracy', testConfusionMatrix.accuracy());
 // Export
 //**************************************************************************
 
+// Export as an asset the classified image
 Export.image.toAsset({
 		image: classified,
     description: "Class"+ aoi_n + "_buf" + buffer.toString(),
@@ -247,6 +248,13 @@ Export.image.toAsset({
 //	crsTransform:,
     maxPixels: 1e13
 //	shardSize:,
+})
+
+// Export as an asset the classified defined beofre
+Export.classifier.toAsset({
+		classifier: classifier,
+    description: "Save classifier to Asset",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/"+"Class_"+ aoi_n + "_buf" + buffer.toString(),
 })
 
 //************************************************************************** 
