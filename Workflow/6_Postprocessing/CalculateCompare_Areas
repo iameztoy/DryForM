@@ -2,6 +2,7 @@
 var myc = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chaco_buf20"),
     SCo = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+print("myc", myc)
 
 ////GFC20 v1
 var GFC20 = ee.ImageCollection('JRC/GFC2020/V1').mosaic();
@@ -17,7 +18,7 @@ var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic
 var TC_wri_map = TC_wri.gte(10).rename(['Trees']).selfMask();
 
 //// My Classification
-var myc_f = myc.eq(0).selfMask();
+var myc_f = myc.eq(1).selfMask();
 
 
 ////Admin Boundaries
@@ -85,3 +86,4 @@ var vp_wri = {"opacity":1,"bands":["Trees"],"palette":["ffe66e"]};
 Map.addLayer(WRI_cl, vp_wri,'TC_wri_map');
 Map.addLayer(WC2021_cl, vp_wc2021, "WC 2021 TC" );
 Map.addLayer(GFC20_cl, vp_gfc2020, "GFC 2020" );
+Map.addLayer(myc_cl, null, "My Classification" );
