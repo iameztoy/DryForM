@@ -74,10 +74,10 @@ var area_GFC20_sqkm = ee.Number(area_GFC20.get('Map')).divide(1e6).round(); //sq
 var area_WRI_sqkm = ee.Number(area_WRI.get('Trees')).divide(1e6).round(); //sqKm
 var area_myc_sqkm = ee.Number(area_myc.get('classification')).divide(1e6).round(); //sqKm
 
-print(area_WC2021_sqkm);
-print(area_GFC20_sqkm);
-print(area_WRI_sqkm);
-print(area_myc_sqkm);
+print("WC2021", area_WC2021_sqkm);
+print("GFC20", area_GFC20_sqkm);
+print("WRI", area_WRI_sqkm);
+print("My Classif", area_myc_sqkm);
 
 var vp_wc2021 = {"opacity":1,"bands":["Map"],"palette":["ff0a0a"]};
 var vp_gfc2020 = {"opacity":1,"bands":["Map"],"max":1,"palette":["31b319"]};
