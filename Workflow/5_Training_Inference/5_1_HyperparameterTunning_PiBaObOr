@@ -49,7 +49,7 @@ var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_
 
 // Select target image | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = AllChaco_pb.select(bands); //.select(bands), otherwise .select("t.*") to remove "clusters" band
+var composite = AllChaco_pb //.select(bands), otherwise .select("t.*") to remove "clusters" band
 
 
 // Ground Truth
@@ -67,6 +67,9 @@ var composite = AllChaco_pb.select(bands); //.select(bands), otherwise .select("
 //          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
 //          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
 //          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+//
+// ** The Balanced version contains the TC class already merged. 
+//        
 
 // Original sample sets
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
@@ -135,14 +138,24 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 */
 // ***
 
-// Rename the inputs | Final set for RF
+
+// Rename and reclass the inputs | Final set for RF
 var trainingGcp = GTPoint_DF_Balanced_chaco;
 var validationGcp = gtp_vl;
 
+var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10]; // 0 is seasonal water that was reclassfied outside.
+var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+
+// For visulrec column (defined in landcover variable):
+// 1: TC, 2: Shrub, 3: Grass, 4: Flooded Veg., 5: Built, 6: P.Water, 7: S.Water, 8: Bare, 9: Crops
+
+trainingGcp = trainingGcp.remap(classValues, remapValues, landcover);
+validationGcp = validationGcp.remap(classValues, remapValues, landcover);
+
 var applybuffer = function(feature) {
 return feature.buffer(buffer)};
-trainingGcp = trainingGcp.map(applybuffer);
-validationGcp = validationGcp.map(applybuffer);
+trainingGcp = trainingGcp //.map(applybuffer);
+validationGcp = validationGcp //.map(applybuffer);
 
 print("Training Filtered", trainingGcp.size());
 print("Validation Filtered", validationGcp.size());
@@ -169,7 +182,6 @@ var test = composite.sampleRegions({
 
 // Iteration 1 - The idea is to get a preliminary idea of the optimal number of trees.
 // Once we get this, we can re-run the script by including this value within the values list on the multiple parameter fine tunning step. See below.
-
 
 
 // Tune the numberOfTrees parameter.
