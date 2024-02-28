@@ -399,7 +399,7 @@ var processTiles = function(tile){
             .unmix([gv, shade, npv, soil, cloud], true, true)
             .rename(['GV', 'Shade', 'NPV', 'Soil','Cloud']);
             
-    // Calculate Normalized Difference Fraction Index.+
+    // Calculate Normalized Difference Fraction Index.
     var ndfi = unmixed.expression(
         '10000 * ((GV / (1 - SHADE)) - (NPV + SOIL)) / ' +
         '((GV / (1 - SHADE)) + (NPV + SOIL))', {
