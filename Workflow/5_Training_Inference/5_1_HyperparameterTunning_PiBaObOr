@@ -24,7 +24,7 @@ var aoi = chaco;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
-var buffer = 1 // To buffer the training and validation points | Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
+var buffer = 20 // To buffer the training and validation points | Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
 
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
@@ -49,7 +49,7 @@ var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_
 
 // Select target image | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = AllChaco_pb //.select(bands), otherwise .select("t.*") to remove "clusters" band
+var composite = AllChaco_pb.select(bands);  //otherwise .select("t.*") to remove "clusters" band
 
 
 // Ground Truth
@@ -154,8 +154,8 @@ validationGcp = validationGcp.remap(classValues, remapValues, landcover);
 
 var applybuffer = function(feature) {
 return feature.buffer(buffer)};
-trainingGcp = trainingGcp //.map(applybuffer);
-validationGcp = validationGcp //.map(applybuffer);
+trainingGcp = trainingGcp.map(applybuffer);
+validationGcp = validationGcp.map(applybuffer);
 
 print("Training Filtered", trainingGcp.size());
 print("Validation Filtered", validationGcp.size());
@@ -185,7 +185,7 @@ var test = composite.sampleRegions({
 
 
 // Tune the numberOfTrees parameter.
-var numTreesList = ee.List.sequence(10, 500, 10); // More than 500 out of memory
+var numTreesList = ee.List.sequence(10, 200, 10); // More than 500 out of memory
 
 var accuracies = numTreesList.map(function(numTrees) {
   var classifier = ee.Classifier.smileRandomForest(numTrees)
