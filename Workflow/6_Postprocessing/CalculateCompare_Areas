@@ -2,7 +2,7 @@
 var myc = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chaco_buf20"),
     SCo = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-print("myc", myc)
+
 ////GFC20 v1
 var GFC20 = ee.ImageCollection('JRC/GFC2020/V1').mosaic();
 
