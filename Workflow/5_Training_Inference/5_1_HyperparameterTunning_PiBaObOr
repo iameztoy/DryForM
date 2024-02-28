@@ -24,7 +24,7 @@ var aoi = chaco;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
-var buffer = 20 // To buffer the training and validation points | Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
+var buffer = 1 // To buffer the training and validation points | Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
 
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
@@ -148,9 +148,17 @@ print("Training Filtered", trainingGcp.size());
 print("Validation Filtered", validationGcp.size());
 
 
+// Sample Ground Truth
 var training = composite.sampleRegions({
   collection: trainingGcp,
   properties: [landcover], // The points corresponding to visual inspection
+  scale: 10,
+  tileScale: 16
+});
+
+var test = composite.sampleRegions({
+  collection: validationGcp,
+  properties: [landcover],
   scale: 10,
   tileScale: 16
 });
@@ -162,12 +170,7 @@ var training = composite.sampleRegions({
 // Iteration 1 - The idea is to get a preliminary idea of the optimal number of trees.
 // Once we get this, we can re-run the script by including this value within the values list on the multiple parameter fine tunning step. See below.
 
-var test = composite.sampleRegions({
-  collection: validationGcp,
-  properties: [landcover],
-  scale: 10,
-  tileScale: 16
-});
+
 
 // Tune the numberOfTrees parameter.
 var numTreesList = ee.List.sequence(10, 500, 10); // More than 500 out of memory
