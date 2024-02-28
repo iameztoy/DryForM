@@ -138,8 +138,7 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 */
 // ***
 
-
-// Rename and reclass the inputs | Final set for RF
+// Rename and reclass (not really necessary in this step) the inputs | Final set for RF
 var trainingGcp = GTPoint_DF_Balanced_chaco;
 var validationGcp = gtp_vl;
 
