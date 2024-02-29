@@ -1,3 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var vp_cl14 = {"opacity":1,"bands":["classification"],"min":0,"max":14,"palette":["006400","00b500","00ce00","ffbb22","b38318","ffff4c","bebe39","000000","0096a0","fa0000","000000","0064c8","00c8b5","b4b4b4","f096ff"]};
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //***********************************************************
 // DRYFORM - Step 5.2 - Training - Object based
@@ -285,7 +288,9 @@ Export.classifier.toAsset({
 // Visu
 //**************************************************************************** 
 
+var vp_cl14 = {"opacity":1,"bands":["classification"],"min":0,"max":14,"palette":["006400","00b500","00ce00","ffbb22","b38318","ffff4c","bebe39","000000","0096a0","fa0000","000000","0064c8","00c8b5","b4b4b4","f096ff"]};
+
 Map.addLayer(target_clgt, null, "Cliped s1s2")
 Map.addLayer(target_mean , null, "Cliped s1s2 Object Mean")
 Map.addLayer(gtp_tr, null, "Points for reference")
-Map.addLayer(classified, null, "Classified Objects: TC")
+Map.addLayer(classified, vp_cl14, "Classified Objects: TC")
