@@ -153,7 +153,7 @@ var training = target_mean.sampleRegions({
   collection: trainingGcp, 
   properties: [landcover], 
   scale: 10,
-  tileScale: 8 // Need to set this otherwise the classifier throws an error | The alternative is to export the target_mean collection as an asset.
+  tileScale: 4 // Need to set this otherwise the classifier throws an error | The alternative is to export the target_mean collection as an asset.
 });
 
 //**********************
@@ -161,7 +161,9 @@ var training = target_mean.sampleRegions({
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 100
+var nTrees = 200
+
+// This might be used or not. If used: activated them within the classifier
 var vps = 8
 var mlp = 2
 var bf = 0.5
