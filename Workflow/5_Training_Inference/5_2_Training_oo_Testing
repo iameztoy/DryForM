@@ -71,6 +71,15 @@ var target_mean = mean_obid.reduceConnectedComponents({
 });
 
 
+// Input band names should be renamed to be aligned with the target image band names (the one to be classified, i.e. The segmented image)
+var blist = target_mean.bandNames();
+var cat = function(ele){return ee.String(ele).cat("_mean")};
+var ren = blist.map(cat);
+
+target_mean = target_mean.select(blist).rename(ren);
+print("Renamed", target_mean.bandNames())
+
+
 var trainingGcp = GTPoint_DF_Balanced_chaco;
 var validationGcp = gtp_vl;
 
