@@ -28,7 +28,7 @@ var landcover = "visu_lc"; // or visu_lc
 var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 // Imagery | Target for classification (Previously computed in Module 4)
 var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28").clip(aoi);
-target_c = target_c.select("t.*");
+target_c = target_c.select("t.*"); // To remove cluster band
 
 // Band selection
 
@@ -81,7 +81,8 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 // Validation set - Filtering the set to be used for validation purposes - From the original set
 
 var gtp_f = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', aoi_n)); 
-var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
+var gtp_tr = gtp_f.filter(ee.Filter.eq('purp', "training"));
+var gtp_vl = gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
 // Process objects
 
@@ -96,7 +97,7 @@ var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 //      These are the values that will be crossed with the Ground Truth point data set and will be used for training.
 //      Doing so we avoid "sampling regions", which would not be fully representative of classes like OWL.
 
-var target_clgt = target.clip(GroundTruthPol_DF);
+var target_clgt = target.clip(gtp_tr);
 var dummy_mask = target_clgt.select("t0_B8").gte(0);
 var objectId =  dummy_mask.connectedComponents({
   connectedness: ee.Kernel.plus(1),
@@ -287,5 +288,5 @@ Export.classifier.toAsset({
 
 Map.addLayer(target_clgt, null, "Cliped s1s2")
 Map.addLayer(target_mean , null, "Cliped s1s2 Object Mean")
-Map.addLayer(GTPoint_DF_Balanced_chaco, null, "Points for reference")
+Map.addLayer(gtp_tr, null, "Points for reference")
 Map.addLayer(classified, null, "Classified Objects: TC")
