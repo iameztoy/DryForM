@@ -73,7 +73,7 @@ var applybuffer = function(feature) {
 return feature.buffer(buffer).bounds()}; // Bounds return a rectangle over the buffer.
 
 // Target - Ground truth
-var labels = GTPoint_DF_Balanced_chaco
+var labels = GTPoint_DF_Balanced_chaco;
 
 // Reclass ground truth from 0 to the number of classes
 // For visulcrec:
@@ -89,10 +89,10 @@ var remapValues_all = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 labels = labels.remap(classValues, remapValues, landcover);
 
 // Image Collection Band Names
-var bands = composite.bandNames()
-print("Band names", bands)
+var bands = composite.bandNames();
+print("Band names", bands);
 
-var bands = ["t0_B3_mean"]
+var bands = ["t3_B12_mean"];
 
 var training = target_mean.sampleRegions({
   collection: labels, 
