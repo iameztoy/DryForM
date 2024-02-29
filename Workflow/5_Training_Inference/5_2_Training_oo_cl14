@@ -160,7 +160,7 @@ var training = target_mean.sampleRegions({
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 200
+var nTrees = 100
 
 // This might be used or not. If used: activated them within the classifier
 var vps = 8
