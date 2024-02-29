@@ -1,4 +1,77 @@
-//Ground truth
+
+//***********************************************************
+// DRYFORM - Step 5.2 - Training - Object based
+//***********************************************************
+
+// oo = Object Based
+
+//Areas of Interest | Included within the Ground Truth 
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+
+// Areas of Interest
+var aoi = GTPol_DF_Balanced_chaco; //target aoi
+
+var chaco_n = "chaco";
+var caatinga_n = "caatinga";
+var cerrado_n = "cerrado";
+var tanzania_n = "tanzania";
+
+var aoi_n = chaco_n;
+
+// Ground Truth attribute to be used:
+var landcover = "visulcrec"; // or visu_lc
+
+// Imagery | Target for training
+var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+// Imagery | Target for classification (Previously computed in Module 4)
+var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28");
+target_c = target_c.select("t.*");
+
+// Band selection
+
+
+var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
+             "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI",
+             "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",
+             "t0_B12", "t1_B12", "t2_B12", "t3_B12",
+             "t0_B11", "t1_B11", "t2_B11", "t3_B11"];
+
+// "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH"
+// "t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI"
+// "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI"
+// "t0_SI", "t1_SI", "t2_SI", "t3_SI"
+// "t0_iBI", "t1_iBI", "t2_iBI", "t3_iBI"
+// "t0_B11", "t1_B11", "t2_B11", "t3_B11"
+// "t0_B12", "t1_B12", "t2_B12", "t3_B12"
+// "t0_B8", "t1_B8", "t2_B8", "t3_B8"
+// "t0_B4", "t1_B4", "t2_B4", "t3_B4"
+// "t0_B3", "t1_B3", "t2_B3", "t3_B3"
+// "t0_gray_savg_glcm", "t1_gray_savg_glcm", "t2_gray_savg_glcm", "t3_gray_savg_glcm"
+
+// Select target image | pb = pixel based, oo = object oriented
+// Apply band selection if necessary (for testing purposes)
+var composite = target_c //.select(bands); // or (bands)
+
+// Ground Truth
+
+// Notes:
+
+// ** visu_lc attribute is the original disaggregated version of the visual interpretation step
+//        
+//        It includes 13 classes:
+//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+// ** visulcrec attribute is the reclassified version of the disaggregated version (visu_lc). 
+//        It includes 9 classes:
+//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+
+
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
 
@@ -17,34 +90,13 @@ var GTPol_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383
 var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_cerrado");
 var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
-// Imagery | Target for training
-var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-// Imagery | Target for classification
-var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28");
-target_c = target_c.select("t.*")
-
-
-
-// Areas of Interest
-var aoi = GTPol_DF_Balanced_chaco; //target aoi
-
-var chaco_n = "chaco";
-var caatinga_n = "caatinga";
-var cerrado_n = "cerrado";
-var tanzania_n = "tanzania";
-
-var aoi_n = chaco_n;
-
-// Ground Truth attribute to be used:
-var landcover = "visulcrec"; // or visu_lc
-
 // Validation set - Filtering the set to be used for validation purposes - From the original set
 
-var gtp_f = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', aoi_n)); 
+var gtp_f = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', aoi_n)); 
 var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
-
 // Process objects
+
 // These are cliped from the original imagery. 
 //    Connected components are calculated based on the ground truth polygons
 //    To do so:
@@ -104,6 +156,10 @@ var training = target_mean.sampleRegions({
   tileScale: 16 // Need to set this otherwise the classifier throws an error
 });
 
+//**********************
+// Train a classifier.
+//**********************
+
 // Set the optimal hyperparameters derived from previous step
 var nTrees = 60
 var vps = 8
@@ -126,14 +182,108 @@ var classifier = ee.Classifier.smileRandomForest({
   inputProperties:  target_mean.bandNames()
 });
 
-print("Classfier", classifier)
-
 
 // Classify the image.
 var classified = target_c.classify(classifier); // Need to add here the target for classification (not for training)
-print("Classified", classified)
+print("Classified", classified);
 
+//************************************************************************** 
+// Feature Importance | Accuracies, etc.
+//************************************************************************** 
+
+// Run .explain() to see what the classifer looks like
+print("Classifier", classifier.explain());
+
+// Get a confusion matrix and overall accuracy for the training sample.
+var trainAccuracy = classifier.confusionMatrix();
+print('Training error matrix', trainAccuracy);
+print('Training overall accuracy', trainAccuracy.accuracy());
+
+// Calculate variable importance
+var importance = ee.Dictionary(classifier.explain().get('importance'));
+
+// Calculate relative importance
+var sum = importance.values().reduce(ee.Reducer.sum());
+
+var relativeImportance = importance.map(function(key, val) {
+   return (ee.Number(val).multiply(100)).divide(sum);
+  });
+print(relativeImportance);
+
+// Create a FeatureCollection so we can chart it
+var importanceFc = ee.FeatureCollection([
+  ee.Feature(null, relativeImportance)
+]);
+
+var chart = ui.Chart.feature.byProperty({
+  features: importanceFc
+}).setOptions({
+      title: 'Feature Importance',
+      vAxis: {title: 'Importance'},
+      hAxis: {title: 'Feature'}
+  });
+print(chart);
+
+//************************************************************************** 
+// Accuracy Assessment
+//************************************************************************** 
+
+// Use classification map to assess accuracy using the validation fraction
+// of the overall training set created above.
+var test = classified.sampleRegions({
+  collection: validationGcp,
+  properties: [landcover],
+  tileScale: 16,
+  scale: 10,
+});
+
+var testConfusionMatrix = test.errorMatrix(landcover, 'classification');
+
+print('Confusion Matrix', testConfusionMatrix);
+print('VAL Accuracy', testConfusionMatrix.accuracy());
+
+//************************************************************************** 
+// Export
+//**************************************************************************
+
+// Export as an asset the classified image
+Export.image.toAsset({
+		image: classified,
+    description: "Class_00"+ aoi_n,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class_OO"+ aoi_n,
+    pyramidingPolicy: "mode",
+//	dimensions:,
+//	region:,
+    scale: 10,
+    crs: "EPSG:4326",
+//	crsTransform:,
+    maxPixels: 1e13
+//	shardSize:,
+});
+
+// Export as an asset the classified defined before
+var nTrees = 60;
+var vps = 8;
+var mlp = 2;
+var bf = 0.5; 
+var seed = 5757;
+
+var bfp = bf * 100; //Only to avoid the point (0.5) in the model name
+var model_name = "ClassOO_"+ aoi_n + "_" + "nT" + nTrees.toString() + "vps" + vps.toString() + "mlp" + mlp.toString() + "bfp" + bfp.toString() + "se" + seed.toString();
+print("Model name", model_name);
+
+Export.classifier.toAsset({
+		classifier: classifier,
+    description: "Save_classifier",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/" + model_name
+});
+
+
+
+//****************************************************************************
 // Visu
+//**************************************************************************** 
+
 Map.addLayer(target_clgt, null, "Cliped s1s2")
 Map.addLayer(target_mean , null, "Cliped s1s2 Object Mean")
 Map.addLayer(GTPoint_DF_Balanced_chaco, null, "Points for reference")
