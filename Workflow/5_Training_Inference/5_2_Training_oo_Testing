@@ -153,7 +153,7 @@ var training = target_mean.sampleRegions({
   collection: trainingGcp, 
   properties: [landcover], 
   scale: 10,
-  tileScale: 16 // Need to set this otherwise the classifier throws an error | The alternative is to export the target_mean collection as an asset.
+  tileScale: 8 // Need to set this otherwise the classifier throws an error | The alternative is to export the target_mean collection as an asset.
 });
 
 //**********************
@@ -269,7 +269,7 @@ var bf = 0.5;
 var seed = 5757;
 
 var bfp = bf * 100; //Only to avoid the point (0.5) in the model name
-var model_name = "ClassOO_"+ aoi_n + "_" + "nT" + nTrees.toString() + "vps" + vps.toString() + "mlp" + mlp.toString() + "bfp" + bfp.toString() + "se" + seed.toString();
+var model_name = "ClassObOb_"+ aoi_n + "_" + "nT" + nTrees.toString() + "vps" + vps.toString() + "mlp" + mlp.toString() + "bfp" + bfp.toString() + "se" + seed.toString();
 print("Model name", model_name);
 
 Export.classifier.toAsset({
