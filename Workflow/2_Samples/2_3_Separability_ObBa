@@ -81,6 +81,11 @@ var landcover = "visulcrec"
 var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 
+// For visu_lc
+var landcover_all = "visu_lc"
+var classValues_all = [1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 14, 17, 19]; 
+var remapValues_all = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
 labels = labels.remap(classValues, remapValues, landcover);
 
 // Image Collection Band Names
