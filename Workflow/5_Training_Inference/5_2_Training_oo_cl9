@@ -31,8 +31,6 @@ var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Seg
 target_c = target_c.select("t.*");
 
 // Band selection
-
-
 var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
              "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI",
              "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",
@@ -84,15 +82,11 @@ var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-3
 var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
 var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
-    // Polygons
-var GTPol_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_chaco");
-var GTPol_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_caatinga");
-var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_cerrado");
-var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
 // Validation set - Filtering the set to be used for validation purposes - From the original set
 
 var gtp_f = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', aoi_n)); 
+var gtp_trc = gtp_f.filter(ee.Filter.eq('purp', "training")); 
 var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
 // Process objects
@@ -108,8 +102,8 @@ var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 //      These are the values that will be crossed with the Ground Truth point data set and will be used for training.
 //      Doing so we avoid "sampling regions", which would not be fully representative of classes like OWL.
 
-var target_clgt = target.clip(GroundTruthPol_DF)
-var dummy_mask = target_clgt.select("t0_B8").gte(0)
+var target_clgt = target.clip(gtp_trc); // Otherwise directly use GroundTruthPol_DF
+var dummy_mask = target_clgt.select("t0_B8").gte(0);
 var objectId =  dummy_mask.connectedComponents({
   connectedness: ee.Kernel.plus(1),
   maxSize: 80
