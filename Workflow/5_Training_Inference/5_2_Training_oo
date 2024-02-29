@@ -11,7 +11,7 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-// Areas of Interest
+// Areas of Interest | We use this to 
 var aoi = GTPol_DF_Balanced_chaco; //target aoi
 
 var chaco_n = "chaco";
@@ -255,7 +255,7 @@ Export.image.toAsset({
     assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class_OO"+ aoi_n,
     pyramidingPolicy: "mode",
 //	dimensions:,
-//	region:,
+    region: aoi,
     scale: 10,
     crs: "EPSG:4326",
 //	crsTransform:,
