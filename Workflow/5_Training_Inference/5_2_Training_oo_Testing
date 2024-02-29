@@ -153,7 +153,7 @@ var training = target_mean.sampleRegions({
   collection: trainingGcp, 
   properties: [landcover], 
   scale: 10,
-  tileScale: 16 // Need to set this otherwise the classifier throws an error
+  tileScale: 16 // Need to set this otherwise the classifier throws an error | The alternative is to export the target_mean collection as an asset.
 });
 
 //**********************
@@ -161,7 +161,7 @@ var training = target_mean.sampleRegions({
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 60
+var nTrees = 100
 var vps = 8
 var mlp = 2
 var bf = 0.5
@@ -171,9 +171,9 @@ var seed = 5768
 // Hyperparameters may be different for pixel based or object oriented approach. Check within the Hyperparameter Tunning step
 var classifier = ee.Classifier.smileRandomForest({
 		numberOfTrees: nTrees, // The number of decision trees to create.
-    variablesPerSplit: vps, // The number of variables per split. If unspecified, uses the square root of the number of variables.
-    minLeafPopulation: mlp, // Only create nodes whose training set contains at least this many points.
-    bagFraction: bf, //The fraction of input to bag per tree.
+    //variablesPerSplit: vps, // The number of variables per split. If unspecified, uses the square root of the number of variables.
+    //minLeafPopulation: mlp, // Only create nodes whose training set contains at least this many points.
+    //bagFraction: bf, //The fraction of input to bag per tree.
     //maxNodes: 100, //The maximum number of leaf nodes in each tree. If unspecified, defaults to no limit.
     seed: seed // The randomization seed.
   }).train({
