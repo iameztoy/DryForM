@@ -133,7 +133,7 @@ lists = lists.map(function(obj) {
 });
 print(lists)
 
-// Implement distance measures.
+// Implement distance measures. | This need to be equal to the number of classes.
 var classes = ee.List.sequence(0, 8);
 
 /*
