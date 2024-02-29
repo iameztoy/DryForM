@@ -3,8 +3,52 @@
 // DRYFORM - Step 2.3 - Separability | Distances
 //***********************************************************  
 
+//Areas of Interest | Included within the Ground Truth 
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+
+var aoi = chaco
+
 // Image collection
-var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic().clip(chaco);
+
+// Process objects
+
+// These are cliped from the original imagery. 
+//    Connected components are calculated based on the ground truth polygons
+//    To do so:
+//      1/ Imagery is cliped with the GT Pol
+//      2/ A random dummy band is selected. This will be used to calculate different the mean values of the different objects or segments.
+//          Each has its own id.
+//      3/ Mean values per object per band are calculated 
+//      The outcome is a new Image Collection where each cliped image represents the mean values of an object.
+//      These are the values that will be crossed with the Ground Truth point data set and will be used for training.
+//      Doing so we avoid "sampling regions", which would not be fully representative of classes like OWL.
+
+var target_clgt =composite.clip(GroundTruthPol_DF)
+var dummy_mask = target_clgt.select("t0_B8").gte(0)
+var objectId =  dummy_mask.connectedComponents({
+  connectedness: ee.Kernel.plus(1),
+  maxSize: 80
+});
+
+var mean_obid = target_clgt.addBands(objectId.select('labels'));
+
+var target_mean = mean_obid.reduceConnectedComponents({
+  reducer: ee.Reducer.mean(),
+  labelBand: 'labels'
+});
+
+// Input band names should be renamed to be aligned with the target image band names (the one to be classified, i.e. The segmented image)
+    // Note that when segments are created, these are averaged and a suffix "_mean" is added to each band.
+var blist = target_mean.bandNames();
+var cat = function(ele){return ee.String(ele).cat("_mean")};
+var ren = blist.map(cat);
+
+target_mean = target_mean.select(blist).rename(ren);
+print("Renamed", target_mean.bandNames())
 
 
 // Training set | Already Balanced sample sets.
@@ -38,7 +82,7 @@ print("Band names", bands)
 
 var bands = ["t3_VH"]
 
-var training = composite.sampleRegions({
+var training = target_mean.sampleRegions({
   collection: labels, 
   properties: ["visulcrec"], // Target column
   scale: 10
