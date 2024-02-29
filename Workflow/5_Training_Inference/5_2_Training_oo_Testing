@@ -72,6 +72,7 @@ var target_mean = mean_obid.reduceConnectedComponents({
 
 
 // Input band names should be renamed to be aligned with the target image band names (the one to be classified, i.e. The segmented image)
+    // Note that when segments are created, these are averaged and a suffix "_mean" is added to each band.
 var blist = target_mean.bandNames();
 var cat = function(ele){return ee.String(ele).cat("_mean")};
 var ren = blist.map(cat);
