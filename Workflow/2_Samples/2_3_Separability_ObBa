@@ -85,7 +85,7 @@ labels = labels.remap(classValues, remapValues, landcover);
 var bands = composite.bandNames()
 print("Band names", bands)
 
-var bands = ["t3_VH"]
+var bands = ["t3_VH_mean"]
 
 var training = target_mean.sampleRegions({
   collection: labels, 
@@ -129,6 +129,8 @@ print(lists)
 // Implement distance measures.
 var classes = ee.List.sequence(0, 8);
 
+/*
+
 var block = classes.map(function(i) {
   return classes.map(function(j) {
     var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
@@ -163,7 +165,7 @@ var mahalanobis = classes.map(function(i) {
   })
 })
 print('mahalanobis', mahalanobis)
-
+*/
 
 var bhattacharyya = classes.map(function(i) {
   return classes.map(function(j) {
@@ -184,7 +186,7 @@ var bhattacharyya = classes.map(function(i) {
     return mh.divide(8).add(t2)
   })
 })
-print('bhattacharyya', bhattacharyya)
+//print('bhattacharyya', bhattacharyya)
 
 var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
