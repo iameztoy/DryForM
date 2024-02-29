@@ -90,7 +90,8 @@ validationGcp = validationGcp.remap(classValues, remapValues, landcover);
 var training = target_mean.sampleRegions({
   collection: trainingGcp, 
   properties: [landcover], 
-  scale: 10
+  scale: 10,
+  tileScale: 16 // Need to set this otherwise the classifier throws an error
 });
 
 // Set the optimal hyperparameters derived from previous step
@@ -115,7 +116,10 @@ var classifier = ee.Classifier.smileRandomForest({
   inputProperties:  target_mean.bandNames()
 });
 
-// // Classify the image.
+print("Classfier", classifier)
+
+
+// Classify the image.
 var classified = target_c.classify(classifier); // Need to add here the target for classification (not for training)
 print("Classified", classified)
 
@@ -123,4 +127,4 @@ print("Classified", classified)
 Map.addLayer(target_clgt, null, "Cliped s1s2")
 Map.addLayer(target_mean , null, "Cliped s1s2 Object Mean")
 Map.addLayer(GTPoint_DF_Balanced_chaco, null, "Points for reference")
-//Map.addLayer(classified, null, "Classified Objects")
+Map.addLayer(classified.eq(0).selfMask(), null, "Classified Objects: TC")
