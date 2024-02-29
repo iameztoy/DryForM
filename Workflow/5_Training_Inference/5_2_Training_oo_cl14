@@ -127,7 +127,7 @@ var applybuffer = function(feature) {
 return feature.buffer(buffer).bounds()}; // Bounds return a rectangle over the buffer.
 */
 
-var trainingGcp =  GroundTruthPoint_DF;
+var trainingGcp =  gtp_tr;
 var validationGcp = gtp_vl;
 
 // Reclassify the classes if necessary to get consecutive integers
@@ -135,24 +135,21 @@ var validationGcp = gtp_vl;
 // For visulrec column (defined in landcover variable):
 
 
-var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
-var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+// For visu_lc - 14 classes
 
-// For visu_lc
-var landcover_all = "visu_lc"
-var classValues_all = [1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 14, 17, 19]; 
-var remapValues_all = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+var classValues = [1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 14, 17, 19]; 
+var remapValues = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
 
-trainingGcp = trainingGcp.remap(classValues, remapValues, landcover_all);
-validationGcp = validationGcp.remap(classValues, remapValues, landcover_all);
+trainingGcp = trainingGcp.remap(classValues, remapValues, landcover);
+validationGcp = validationGcp.remap(classValues, remapValues, landcover);
 
 // Overlay the point on the image to get training data.
 var training = target_mean.sampleRegions({
   collection: trainingGcp, 
   properties: [landcover], 
   scale: 10,
-  tileScale: 4 // Need to set this otherwise the classifier throws an error | The alternative is to export the target_mean collection as an asset.
+  tileScale: 16 // Need to set this otherwise the classifier throws an error | The alternative is to export the target_mean collection as an asset.
 });
 
 //**********************
