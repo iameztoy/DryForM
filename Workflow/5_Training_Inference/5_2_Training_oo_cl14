@@ -108,8 +108,8 @@ var gtp_vl =  gtp_f.filter(ee.Filter.eq('purp', "validation"));
 //      These are the values that will be crossed with the Ground Truth point data set and will be used for training.
 //      Doing so we avoid "sampling regions", which would not be fully representative of classes like OWL.
 
-var target_clgt = target.clip(GroundTruthPol_DF)
-var dummy_mask = target_clgt.select("t0_B8").gte(0)
+var target_clgt = target.clip(GroundTruthPol_DF);
+var dummy_mask = target_clgt.select("t0_B8").gte(0);
 var objectId =  dummy_mask.connectedComponents({
   connectedness: ee.Kernel.plus(1),
   maxSize: 80
@@ -132,8 +132,14 @@ var ren = blist.map(cat);
 target_mean = target_mean.select(blist).rename(ren);
 print("Renamed", target_mean.bandNames())
 
+// Buffer function
+var buffer = 25
 
-var trainingGcp = GTPoint_DF_Balanced_chaco;
+var applybuffer = function(feature) {
+return feature.buffer(buffer).bounds()}; // Bounds return a rectangle over the buffer.
+
+
+var trainingGcp =  GroundTruthPoint_DF;
 var validationGcp = gtp_vl;
 
 // Reclassify the classes if necessary to get consecutive integers
@@ -294,4 +300,4 @@ Export.classifier.toAsset({
 Map.addLayer(target_clgt, null, "Cliped s1s2")
 Map.addLayer(target_mean , null, "Cliped s1s2 Object Mean")
 Map.addLayer(GTPoint_DF_Balanced_chaco, null, "Points for reference")
-Map.addLayer(classified.eq(0).selfMask(), null, "Classified Objects: TC")
+Map.addLayer(classified, null, "Classified Objects: TC")
