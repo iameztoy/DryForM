@@ -64,7 +64,7 @@ var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-3836
 var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
 var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
 var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
-Map.addLayer(GTPoint_DF_Balanced_chaco,  null, "Ground Truth")
+Map.addLayer(GTPoint_DF_Balanced_chaco,  {color: "red"}, "Ground Truth")
 
 // Buffer function
 var buffer = 25
