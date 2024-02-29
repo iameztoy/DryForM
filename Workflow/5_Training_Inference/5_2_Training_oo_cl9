@@ -246,7 +246,7 @@ print('VAL Accuracy', testConfusionMatrix.accuracy());
 Export.image.toAsset({
 		image: classified,
     description: "Class_00" + aoi_n,
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class_OO"+ aoi_n,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class_ObOr_"+ aoi_n,
     pyramidingPolicy: "mode",
 //	dimensions:,
     region: aoi,
