@@ -49,7 +49,7 @@ var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
 // "t0_B3", "t1_B3", "t2_B3", "t3_B3"
 // "t0_gray_savg_glcm", "t1_gray_savg_glcm", "t2_gray_savg_glcm", "t3_gray_savg_glcm"
 
-// Select target image | pb = pixel based, oo = object oriented
+// Select target image | oo = object oriented
 // Apply band selection if necessary (for testing purposes)
 var composite = target_c //.select(bands); // or (bands)
 
