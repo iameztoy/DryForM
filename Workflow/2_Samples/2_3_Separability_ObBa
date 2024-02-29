@@ -11,6 +11,9 @@ var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania")
 
 var aoi = chaco
 
+//We use this only for clipping purposes
+var GroundTruthPol_DF =  ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
+
 // Image collection
 var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic().clip(chaco);
 
@@ -53,17 +56,19 @@ print("Renamed", target_mean.bandNames())
 
 // Training set | Already Balanced sample sets.
     // Points
+    // These are used to compute the separability over the object averaged values
 
 var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco");
 var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
 var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
 var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
-    // Polygons
-var GTPol_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_chaco");
-var GTPol_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_caatinga");
-var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_cerrado");
-var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
+
+// Buffer function
+var buffer = 25
+
+var applybuffer = function(feature) {
+return feature.buffer(buffer).bounds()}; // Bounds return a rectangle over the buffer.
 
 // Target - Ground truth
 var labels = GTPoint_DF_Balanced_chaco
@@ -85,6 +90,7 @@ var bands = ["t3_VH"]
 var training = target_mean.sampleRegions({
   collection: labels, 
   properties: ["visulcrec"], // Target column
+  tileScale: 16,
   scale: 10
 });
 
