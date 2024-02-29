@@ -22,7 +22,7 @@ var tanzania_n = "tanzania";
 var aoi_n = chaco_n;
 
 // Ground Truth attribute to be used:
-var landcover = "visu_lc"; // or visu_lc
+var landcover = "visu_lc"; // 14 classes
 
 // Imagery | Target for training
 var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
@@ -31,8 +31,6 @@ var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Seg
 target_c = target_c.select("t.*"); // To remove cluster band
 
 // Band selection
-
-
 var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
              "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI",
              "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",
