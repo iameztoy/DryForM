@@ -72,7 +72,7 @@ var buffer = 25
 var applybuffer = function(feature) {
 return feature.buffer(buffer).bounds()}; // Bounds return a rectangle over the buffer.
 
-GTPoint_DF_Balanced_chaco = GTPoint_DF_Balanced_chaco.map(applybuffer)
+
 Map.addLayer(GTPoint_DF_Balanced_chaco, null, "Buffer Bounds GT")
 
 // Target - Ground truth
