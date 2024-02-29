@@ -79,7 +79,7 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 // Validation set - Filtering the set to be used for validation purposes - From the original set
 
 var gtp_f = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', aoi_n)); 
-var gtp_tr = gtp_f.filter(ee.Filter.eq('purp', "training"));
+var gtp_tr = GroundTruthPoint_DF.filter(ee.Filter.eq('purp', "training"));
 var gtp_vl = gtp_f.filter(ee.Filter.eq('purp', "validation"));
 
 // Process objects
@@ -95,7 +95,7 @@ var gtp_vl = gtp_f.filter(ee.Filter.eq('purp', "validation"));
 //      These are the values that will be crossed with the Ground Truth point data set and will be used for training.
 //      Doing so we avoid "sampling regions", which would not be fully representative of classes like OWL.
 
-var target_clgt = target.clip(gtp_tr);
+var target_clgt = target.clip(GroundTruthPol_DF);
 var dummy_mask = target_clgt.select("t0_B8").gte(0);
 var objectId =  dummy_mask.connectedComponents({
   connectedness: ee.Kernel.plus(1),
@@ -120,11 +120,12 @@ target_mean = target_mean.select(blist).rename(ren);
 print("Renamed", target_mean.bandNames())
 
 // Buffer function
+/*
 var buffer = 25
 
 var applybuffer = function(feature) {
 return feature.buffer(buffer).bounds()}; // Bounds return a rectangle over the buffer.
-
+*/
 
 var trainingGcp =  GroundTruthPoint_DF;
 var validationGcp = gtp_vl;
