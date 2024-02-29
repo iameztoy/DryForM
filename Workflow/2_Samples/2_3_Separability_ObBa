@@ -85,7 +85,7 @@ labels = labels.remap(classValues, remapValues, landcover);
 var bands = composite.bandNames()
 print("Band names", bands)
 
-var bands = ["t3_VH_mean"]
+var bands = ["t0_B3_mean"]
 
 var training = target_mean.sampleRegions({
   collection: labels, 
