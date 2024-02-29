@@ -11,8 +11,8 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-// Areas of Interest | We use this to 
-var aoi = GTPol_DF_Balanced_chaco; //target aoi
+// Areas of Interest
+var aoi = chaco; //target aoi
 
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
@@ -27,7 +27,7 @@ var landcover = "visulcrec"; // or visu_lc
 // Imagery | Target for training
 var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 // Imagery | Target for classification (Previously computed in Module 4)
-var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28");
+var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28").clip(aoi);
 target_c = target_c.select("t.*");
 
 // Band selection
