@@ -30,8 +30,9 @@ var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preproce
 //      These are the values that will be crossed with the Ground Truth point data set and will be used for training.
 //      Doing so we avoid "sampling regions", which would not be fully representative of classes like OWL.
 
-var target_clgt =composite.clip(GroundTruthPol_DF)
-var dummy_mask = target_clgt.select("t0_B8").gte(0)
+var target_clgt = composite.clip(GroundTruthPol_DF);
+var dummy_mask = target_clgt.select("t0_B8").gte(0);
+Map.addLayer(dummy_mask, null, "Dummy Mask")
 var objectId =  dummy_mask.connectedComponents({
   connectedness: ee.Kernel.plus(1),
   maxSize: 80
@@ -43,6 +44,7 @@ var target_mean = mean_obid.reduceConnectedComponents({
   reducer: ee.Reducer.mean(),
   labelBand: 'labels'
 });
+Map.addLayer(target_mean, null, "Object Means")
 
 // Input band names should be renamed to be aligned with the target image band names (the one to be classified, i.e. The segmented image)
     // Note that when segments are created, these are averaged and a suffix "_mean" is added to each band.
@@ -62,7 +64,7 @@ var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-3836
 var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
 var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
 var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
-
+Map.addLayer(GTPoint_DF_Balanced_chaco,  null, "Ground Truth")
 
 // Buffer function
 var buffer = 25
