@@ -120,7 +120,7 @@ function createLandsatCollection(params) {
   }
   
   function mask(image) {
-    var cloudFree = bitwiseExtract(image.select('QA_PIXEL'), 0, 5).eq(0)
+    var cloudFree = bitwiseExtract(image.select('QA_PIXEL'), 0, 5).eq(0) //See end of script bitwiseExtract function
     return image
       .updateMask(cloudFree)
   }
