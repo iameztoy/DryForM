@@ -19,6 +19,12 @@ var geometry =
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation')
 
+var region = ee.Geometry.Polygon(
+        [[[-60.398063283673, -21.693699313007425],
+          [-60.398063283673, -22.068359892610026],
+          [-59.87895927976675, -22.068359892610026],
+          [-59.87895927976675, -21.693699313007425]]], null, false);
+
 var collection = createLandsatCollection({
   region: region,
   start: '2013-01-01',
@@ -37,7 +43,7 @@ var segments = temporalSegmentation.Segments(ccdc)
 // Skip the image and pyramidingPolicy though, which gets defaulted.
 segments.toAsset({
   description: 'my_test_segments',
-  region: geometry,
+  region: region,
   scale: 30,
   crs: 'EPSG:4326'
 })
@@ -113,8 +119,10 @@ function createLandsatCollection(params) {
   function mask(image) {
     var free = image.select('QA_PIXEL').bitwiseAnd(5)
     var water = image.select('QA_PIXEL').bitwiseAnd(7)
+    var clouds = image.select('QA_PIXEL').bitwiseAnd(3)
+    var shadow = image.select('QA_PIXEL').bitwiseAnd(5)
     return image
-      .updateMask(free.or(water))
+      .updateMask(free.or(water).or(clouds).or(shadow))
   }
   
   function excludeBand(bandName, image) {
