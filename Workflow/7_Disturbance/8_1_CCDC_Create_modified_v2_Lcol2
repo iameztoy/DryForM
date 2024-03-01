@@ -164,3 +164,56 @@ function bitwiseExtract(value, fromBit, toBit) {
   var mask = ee.Number(1).leftShift(maskSize).subtract(1)
   return value.rightShift(fromBit).bitwiseAnd(mask)
   }
+
+/*
+
+Tile per covering grid
+
+var collection = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2')
+  .filterBounds(aoi)
+  .map(function (image) {
+    var cloudFree = bitwiseExtract(image.select('QA_PIXEL'), 0, 5).eq(0)
+    return image.updateMask(cloudFree)
+  })
+
+var segments = ee.Algorithms.TemporalSegmentation.Ccdc({
+  collection: collection, 
+  breakpointBands: ['SR_B3', 'SR_B4', 'SR_B5', 'SR_B6', 'SR_B7'],
+  tmaskBands: ['SR_B3', 'SR_B6'],
+  dateFormat: 1, 
+}).clip(aoi)
+
+var grid = aoi.coveringGrid(aoi.projection(), 45000)
+grid.aggregate_array('system:index').evaluate(function (indexes) {
+  indexes.map(function (index, i) {
+    var tile = grid
+      .filter(ee.Filter.eq('system:index', index))
+      .geometry()
+    Export.image.toAsset({
+      image: segments, 
+      description: 'tile-' + i, 
+      assetId: 'projects/daniel-wiell/assets/segments-test-tiles/tile-' + i,
+      pyramidingPolicy: {'.default': 'sample'}, 
+      region: tile, 
+      scale: 30,
+      maxPixels: 1e13
+    })    
+  })
+})
+
+// Map.addLayer(segments, null, 'segments', false)
+// Map.addLayer(segments.select('tStart').arrayLength(0), {min: 1, max: 4, palette: 'green,yellow,orange,red'}, 'segmentCount')
+// Map.addLayer(collection.select(0).reduce(ee.Reducer.count()), {min: 0, max: 500, palette: 'green,yellow,orange,red'}, 'observationCount')
+// Map.addLayer(grid)
+Map.centerObject(aoi)
+
+  function bitwiseExtract(value, fromBit, toBit) {
+    if (toBit === undefined)
+      toBit = fromBit
+    var maskSize = ee.Number(1).add(toBit).subtract(fromBit)
+    var mask = ee.Number(1).leftShift(maskSize).subtract(1)
+    return value.rightShift(fromBit).bitwiseAnd(mask)
+  }
+
+
+*/
