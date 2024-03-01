@@ -34,8 +34,8 @@ var collection = createLandsatCollection({
 
 var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
   collection: collection,
-  breakpointBands: ['ndfi']
-  //tmaskBands: ['SR_B3', 'SR_B6'],
+  breakpointBands: ['ndfi', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B6', 'SR_B7'],
+  tmaskBands: ['SR_B3', 'SR_B6'],
   //dateFormat: 1, 
   
 })
