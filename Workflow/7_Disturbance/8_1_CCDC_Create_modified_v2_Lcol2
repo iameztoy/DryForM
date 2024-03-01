@@ -35,6 +35,9 @@ var collection = createLandsatCollection({
 var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
   collection: collection,
   breakpointBands: ['ndfi']
+  //tmaskBands: ['SR_B3', 'SR_B6'],
+  //dateFormat: 1, 
+  
 })
 
 var segments = temporalSegmentation.Segments(ccdc)
