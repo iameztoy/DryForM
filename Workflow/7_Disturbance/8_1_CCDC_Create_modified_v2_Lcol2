@@ -154,4 +154,13 @@ function createLandsatCollection(params) {
       return acc
       }, {})
   }
-}  
+} 
+
+// Function to select a range of bitmasks for cloud masking while building the collection
+function bitwiseExtract(value, fromBit, toBit) {
+  if (toBit === undefined)
+    toBit = fromBit
+  var maskSize = ee.Number(1).add(toBit).subtract(fromBit)
+  var mask = ee.Number(1).leftShift(maskSize).subtract(1)
+  return value.rightShift(fromBit).bitwiseAnd(mask)
+  }
