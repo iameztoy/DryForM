@@ -10,7 +10,7 @@ var region = Map.getBounds(true)
 
 var collection = createLandsatCollection({
   region: region,
-  start: '1984-01-01',
+  start: '2013-01-01',
   end: '2024-01-01', 
   mapImage: function(image) { return image.addBands(toNdfi(image)) },
 })
@@ -61,7 +61,7 @@ function toNdfi(image) {
 function createLandsatCollection(params) {
   var defaultParams = {
     region: Map.getBounds(true), 
-    start: '1982-01-01', 
+    start: '2013-01-01', 
     end: formatDate(new Date()), 
     mapImage: function (image) { return image }
   }
@@ -87,12 +87,12 @@ function createLandsatCollection(params) {
       ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'QA_PIXEL']
     )
 
-  return l4.merge(l5).merge(l7).merge(l8).merge(l9)
+  return l8.merge(l9)
     .map(mapImage)
     .sort('system:time_start')
   
   function mapImage(image) {
-    return excludeBand('pixel_qa',
+    return excludeBand('QA_PIXEL',
       mask(
         params.mapImage(image)
       ).clip(params.region)
@@ -100,8 +100,8 @@ function createLandsatCollection(params) {
   }
   
   function mask(image) {
-    var free = image.select('pixel_qa').bitwiseAnd(2)
-    var water = image.select('pixel_qa').bitwiseAnd(4)
+    var free = image.select('QA_PIXEL').bitwiseAnd(5)
+    var water = image.select('QA_PIXEL').bitwiseAnd(7)
     return image
       .updateMask(free.or(water))
   }
