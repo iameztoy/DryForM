@@ -117,12 +117,9 @@ function createLandsatCollection(params) {
   }
   
   function mask(image) {
-    var free = image.select('QA_PIXEL').bitwiseAnd(5)
-    var water = image.select('QA_PIXEL').bitwiseAnd(7)
-    var clouds = image.select('QA_PIXEL').bitwiseAnd(3) // Double check whether if this is removed afterwards through NDFI
-    var shadow = image.select('QA_PIXEL').bitwiseAnd(5)
+    var cloudFree = bitwiseExtract(image.select('QA_PIXEL'), 0, 5).eq(0)
     return image
-      .updateMask(free.or(water).or(clouds).or(shadow))
+      .updateMask(cloudFree)
   }
   
   function excludeBand(bandName, image) {
