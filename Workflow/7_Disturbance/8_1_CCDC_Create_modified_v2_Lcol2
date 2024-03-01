@@ -1,12 +1,23 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = 
+    /* color: #98ff00 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-60.398063283673, -21.693699313007425],
+          [-60.398063283673, -22.068359892610026],
+          [-59.87895927976675, -22.068359892610026],
+          [-59.87895927976675, -21.693699313007425]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Creates an ImageCollection of Landsat scenes, runs CCDC, then exports the results.
 
 // Update the collection creation code and CCDC configuration to what you used when
 // inspecting individual pixels. Then run the script and finally the task.
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation')
-
-Map.centerObject(ee.Geometry.Point([-59.01369, -9.03734]), 12)
-var region = Map.getBounds(true)
 
 var collection = createLandsatCollection({
   region: region,
@@ -26,7 +37,7 @@ var segments = temporalSegmentation.Segments(ccdc)
 // Skip the image and pyramidingPolicy though, which gets defaulted.
 segments.toAsset({
   description: 'my_test_segments',
-  region: region,
+  region: geometry,
   scale: 30,
   crs: 'EPSG:4326'
 })
