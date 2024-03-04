@@ -27,7 +27,7 @@ var landcover = "visulcrec"; // or visu_lc
 // Imagery | Target for training
 var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 // Imagery | Target for classification (Previously computed in Module 4)
-var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28").clip(aoi);
+var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12").clip(aoi);
 target_c = target_c.select("t.*");
 
 // Band selection
@@ -155,7 +155,7 @@ var training = target_mean.sampleRegions({
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 200
+var nTrees = 100
 
 // This might be used or not. If used: activated them within the classifier
 var vps = 8
