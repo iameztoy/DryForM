@@ -666,7 +666,7 @@ Export.image.toAsset({
 //	dimensions:,
 //	region:,
     scale: 10,
-//	crs:,
+    crs: "EPSG:4326",
 //	crsTransform:,
     maxPixels: 1e13,
 //	shardSize:,
