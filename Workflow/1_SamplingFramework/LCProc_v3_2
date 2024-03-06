@@ -660,8 +660,8 @@ Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 lc_final_img2 = lc_final_img2.clip(aoi);
 Export.image.toAsset({
 		image: lc_final_img2,
-//	description:,
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Framework/" + "Fr_" + aoi_n,
+    description: "Framework_" + aoi_n,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Framework/" + "Framework_" + aoi_n,
     pyramidingPolicy: "mode",
 //	dimensions:,
 //	region:,
