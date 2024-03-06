@@ -27,8 +27,8 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
 // Target AOI for export
-var aoi = chaco
-var aoi_n = "chaco"
+var aoi = chaco;
+var aoi_n = "chaco";
 
 /* 
 // Alternatively
@@ -234,7 +234,7 @@ var glclc19_floodv = glclc19.gte(126).and(glclc19.lte(211)).rename(['glclc219_fl
 var umd_crop = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2019);
 
 // 10. JRC Water (2020) - Seasonal
-var jrc_waterse = jrc_water.eq(2).unmask()
+var jrc_waterse = jrc_water.eq(2).unmask();
 
 // 11. RANDOLPH-GLACIER-INVENTORY
 
@@ -287,7 +287,7 @@ var built_maj = built.gte(2).rename(['built']); // Built layer (overall 4 produc
 built_maj = built_maj.or(ghsl); //GHSL might be more accurate even than the majority of the previous, so we include with an .or statement
 var bare_maj = bare.gt(2).rename(['bare']); // Bare majority (overall 4 products). Majority: >2
 var snow_maj = snow.gt(3).rename(['snow']); // Snow Majority (overall 6 products). Majority: >3
-snow_maj = snow_maj.or(glacier_binary) // Snow Majority or glaciers
+snow_maj = snow_maj.or(glacier_binary); // Snow Majority or glaciers
 var water_maj = water.gt(2); // Water majority (overall 4 products) Majority: >2. If being more flexible (e.g. gte(2) -> Shadows included
 var floodv_maj = floodv.gt(2).rename(['floodv']); // Flooded vegetation: (Overall 4 products) Majority: >2
 var mang_maj = mang.rename(['mang']); // Only 1 class available. Eventually cross with flooded vegetation.
@@ -617,7 +617,7 @@ var lc_final_img = tree_maj1.add(tree_maj2).add(tree_maj3).add(tree_maj4).add(tr
 
 
 lc_final_img = lc_final_img.byte();
-var nodata = lc_final_img.unmask().eq(0) //The values are between 0 and masked -> all should be 0, 
+var nodata = lc_final_img.unmask().eq(0); //The values are between 0 and masked -> all should be 0, 
                                           //therefore we need to apply ummask or discover where the error is coming from
 
 // ------------------------
@@ -657,13 +657,11 @@ Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 0);
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 0);
 Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
-
-
 // ------------------------
 // *** EXPORT *** 
 // ------------------------
 
-lc_final_img2 = lc_final_img2.clip(aoi)
+lc_final_img2 = lc_final_img2.clip(aoi);
 Export.image.toAsset({
 		image: lc_final_img2,
 //	description:,
@@ -677,7 +675,7 @@ Export.image.toAsset({
     maxPixels: 1e13,
 //	shardSize:,
 //	priority:,
-})
+});
 
 
 
