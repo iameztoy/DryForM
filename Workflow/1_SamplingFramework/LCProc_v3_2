@@ -659,7 +659,9 @@ Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
 
 
-// EXPORT
+// ------------------------
+// *** EXPORT *** 
+// ------------------------
 
 lc_final_img2 = lc_final_img2.clip(aoi)
 Export.image.toAsset({
