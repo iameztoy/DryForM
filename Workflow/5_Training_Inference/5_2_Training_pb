@@ -32,9 +32,9 @@ var buffer = 20;
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
-var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se28_sBands");
-print("Image Collection", AllChaco_pb)
+print("Image Collection", target_image)
 
 // Band selection
 
@@ -60,7 +60,7 @@ var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = AllChaco_pb.select(bands); // or (bands)
+var composite = target_image.select(bands); // or (bands)
 
 // Ground Truth
 
