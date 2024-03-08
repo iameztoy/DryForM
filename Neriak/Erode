@@ -1,0 +1,31 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var image = ee.Image("projects/ee-subhamnanda700/assets/u_wsf_1985");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+// var kernel = ee.Kernel.square({
+//   radius: 1,
+//   units: 'pixels'
+// });
+
+
+function erode(img, distance) {
+  var d = img.not().unmask(1)
+       .fastDistanceTransform(10).sqrt()
+       .multiply(ee.Image.pixelArea().sqrt()); 
+  return img.updateMask(d.gt(distance));
+}
+
+
+var core = erode(image, 10);
+var outline = image.updateMask(core.unmask(0).not())
+
+// var abc = image.reduceNeighborhood({
+//   reducer: 'sum',
+//   kernel: kernel
+// });
+
+Map.addLayer(image, {}, 'image');
+// Map.addLayer(core, {}, 'core');
+Map.addLayer(outline, {}, 'outline');
+
+
+
