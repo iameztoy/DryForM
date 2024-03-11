@@ -220,7 +220,7 @@ print(chart);
 // Once we have narrowed the number of Trees, we can run the tuning with 2 parameters.
 // Remember to add the outcome of the previous step within this the list of values or just add it alone.
 
-var numTreesList = ee.List([60]); 
+var numTreesList = ee.List([60, 140]); 
 var bagFractionList = ee.List.sequence(0.1, 0.9, 0.1);
 
 var accuracies = numTreesList.map(function(numTrees) {
@@ -276,12 +276,12 @@ Export.table.toDrive({
 // e.g. for Chaco pixel based the highest accuracy is for nTrees: 60
 
 //var numTreesList = ee.List.sequence(50, 500, 50);
-var numTreesList = ee.List([60, 180]);
+var numTreesList = ee.List([60, 140]);
 //var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
-var bagFractionList = ee.List([0.5]);
+var bagFractionList = ee.List([0.5, 0.7]);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
-var variablesPerSplitList = ee.List([6,8,10]);
-var minLeafPopList = ee.List.sequence(1, 4, 1);
+var variablesPerSplitList = ee.List([4,8,15, 20]);
+var minLeafPopList = ee.List.sequence(1, 50, 5);
 var maxNodesList = ee.List.sequence(20, 120, 20);
 //var seedList = ee.List.sequence(0, 150, 0); //Not implemented
 
