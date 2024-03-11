@@ -57,7 +57,7 @@ var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = target_image.select(bands); // or (bands)
+var composite = target_image //.select(bands); // or (bands)
 
 // Ground Truth
 
@@ -188,7 +188,7 @@ Map.addLayer(trainingGcp, null, "Training Points", 0)
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 140
+var nTrees = 180
 var vps = 8
 var mlp = 2
 var bf = 0.7
@@ -288,10 +288,10 @@ Export.image.toAsset({
 });
 
 // Export as an asset the classified defined before
-var nTrees = 140
+var nTrees = 180
 var vps = "def"
 var mlp = "def"
-var bf = 0.7
+var bf = "def"
 var seed = 6768
 
 var bfp = bf * 100; //Only to avoid the point (0.5) in the model name
