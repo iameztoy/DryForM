@@ -141,8 +141,14 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 var trainingGcp = GTPoint_DF_Balanced_tanzania;
 var validationGcp = gtp_vl;
 
-var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10]; // 0 is seasonal water that was reclassfied outside.
+// Including Mangroves
+var classValues = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10];
+var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8, 9];
+
+/* Chaco - No Mangroves
+var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+*/
 
 // For visulrec column (defined in landcover variable):
 // 1: TC, 2: Shrub, 3: Grass, 4: Flooded Veg., 5: Built, 6: P.Water, 7: S.Water, 8: Bare, 9: Crops
@@ -183,7 +189,7 @@ var test = composite.sampleRegions({
 
 
 // Tune the numberOfTrees parameter.
-var numTreesList = ee.List.sequence(10, 200, 10); // More than 500 out of memory
+var numTreesList = ee.List.sequence(1, 200, 2); // More than 500 out of memory
 
 var accuracies = numTreesList.map(function(numTrees) {
   var classifier = ee.Classifier.smileRandomForest(numTrees)
@@ -280,9 +286,9 @@ var numTreesList = ee.List([60, 140]);
 //var bagFractionList = ee.List.sequence(0.1, 0.9, 0.2);
 var bagFractionList = ee.List([0.5, 0.7]);
 //var variablesPerSplitList = ee.List.sequence(5, 70, 5);
-var variablesPerSplitList = ee.List([4,8,15, 20]);
-var minLeafPopList = ee.List.sequence(1, 50, 5);
-var maxNodesList = ee.List.sequence(20, 120, 20);
+var variablesPerSplitList = ee.List([4, 8, 15, 20]);
+var minLeafPopList = ee.List.sequence(20, 50, 10);
+var maxNodesList = ee.List.sequence(100, 300, 50);
 //var seedList = ee.List.sequence(0, 150, 0); //Not implemented
 
 /*
