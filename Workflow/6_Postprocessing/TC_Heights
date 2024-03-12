@@ -1,0 +1,23 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones"),
+    image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_tanzania_ID1");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+
+image = image.eq(0).selfMask()
+Map.addLayer(image, null, "TC")
+
+var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
+
+var h = image.multiply(gedil)
+
+var palettes = require('users/gena/packages:palettes');
+var palette = palettes.colorbrewer.YlGn[7];
+
+Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights")
+
+var m5 = h.lt(5).selfMask()
+Map.addLayer(m5)
+
+
+
