@@ -13,7 +13,8 @@
 //    However, I want to use them all as to run a RF training step and check the importance table values. 
 
 // Area of Interest
-var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Tanzania");
+aoib = aoi.geometry().buffer(300)
 
 // Image Collection S1 + S2 + Indexes + GLCM variables
 
@@ -24,9 +25,9 @@ var bands = ("t0_B11", "t2_VH","t0_B12", "t2_B11", "t2_B12", "t0_VH", "t2_B8", "
               "t2_MSAVI", "t0_B3", "t2_gNDVI", "t2_VV", "t0_gray_idm_glcm", "t1_gNDVI", "t2_SI", "t3_gray_contrast_glcm");
 */
 
-var chaco_ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco");
-chaco = chaco.geometry().buffer(300)
-chaco_ic = chaco_ic.mosaic().clip(chaco)
+var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania");
+
+target_image = target_image.mosaic().clip(aoib)
 //var bands = (["t0_B4", "t1_MSAVI"]) //e.g. "t0_B4", "t1_MSAVI"
 //chao_ic = chao_ic.select(bands);
 
@@ -50,7 +51,7 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
 Export.image.toAsset({
   image: snic,
   description: 'Chaco_SNIC_sNAc0c8n256se12',
-  assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12',
+  assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Tanzania_SNIC_sNAc0c8n256se12',
   crs: "EPSG:4326",
   //crsTransform: proj_obj.transform,
     scale: 10,
