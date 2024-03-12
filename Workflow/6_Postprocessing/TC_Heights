@@ -6,18 +6,15 @@ var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Pr
 
 
 image = image.eq(0).selfMask().clip(tanzania)
-Map.addLayer(image, null, "TC")
 
 var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
-
 var h = image.multiply(gedil)
-
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.colorbrewer.YlGn[7];
-
-Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights")
-
 var m5 = h.lt(5).selfMask()
+
+Map.addLayer(image, null, "TC")
+Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights")
 Map.addLayer(m5, null, "Mask height <5")
 
 
