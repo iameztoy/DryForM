@@ -13,7 +13,7 @@
 //    However, I want to use them all as to run a RF training step and check the importance table values. 
 
 // Area of Interest
-var aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Tanzania");
+var aoi = var table = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 var aoib = aoi.geometry().buffer(300)
 
 // Image Collection S1 + S2 + Indexes + GLCM variables
