@@ -40,7 +40,7 @@ var nbsize = 256;
 var seeds = ee.Algorithms.Image.Segmentation.seedGrid(segsize);
 
 var snic = ee.Algorithms.Image.Segmentation.SNIC({
-  image: chaco_ic, 
+  image: target_image, 
   //size: 12,
   compactness: comp,  
   connectivity: conn, 
@@ -50,7 +50,7 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
 
 Export.image.toAsset({
   image: snic,
-  description: 'Chaco_SNIC_sNAc0c8n256se12',
+  description: 'Tanzania_SNIC_sNAc0c8n256se12',
   assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Tanzania_SNIC_sNAc0c8n256se12',
   crs: "EPSG:4326",
   //crsTransform: proj_obj.transform,
