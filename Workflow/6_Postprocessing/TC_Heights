@@ -1,10 +1,11 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones"),
-    image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_tanzania_ID1");
+    image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_tanzania_ID1"),
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
-image = image.eq(0).selfMask()
+image = image.eq(0).selfMask().clip(tanzania)
 Map.addLayer(image, null, "TC")
 
 var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
