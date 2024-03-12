@@ -18,7 +18,7 @@ var palette = palettes.colorbrewer.YlGn[7];
 Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights")
 
 var m5 = h.lt(5).selfMask()
-Map.addLayer(m5)
+Map.addLayer(m5, null, "Mask height <5")
 
 
 
