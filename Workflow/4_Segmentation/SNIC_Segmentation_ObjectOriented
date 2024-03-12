@@ -50,8 +50,8 @@ var snic = ee.Algorithms.Image.Segmentation.SNIC({
 
 Export.image.toAsset({
   image: snic,
-  description: 'Tanzania_SNIC_sNAc0c8n256se28',
-  assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Tanzania_SNIC_sNAc0c8n256se28',
+  description: 'Tanzania_SNIC_sNAc0c8n256se' +  segsize.toString(),
+  assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Tanzania_SNIC_sNAc0c8n256se' +  segsize.toString(),
   crs: "EPSG:4326",
   //crsTransform: proj_obj.transform,
     scale: 10,
