@@ -18,7 +18,7 @@ var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = tanzania_n;
+var aoi_n = caatinga_n;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
@@ -32,7 +32,7 @@ var buffer = 20;
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
-var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania").mosaic();
+var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
 print("Image Collection", target_image)
 
 // Band selection
@@ -144,7 +144,7 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 // ***
 
 // Rename the inputs | Final set for RF
-var trainingGcp = GTPoint_DF_Balanced_tanzania;
+var trainingGcp = GTPoint_DF_Balanced_caatinga;
 var validationGcp = gtp_vl;
 
 // Reclassify the classes if necessary to get consecutive integers
@@ -188,7 +188,7 @@ Map.addLayer(trainingGcp, null, "Training Points", 0)
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 180
+var nTrees = 130
 var vps = 8
 var mlp = 2
 var bf = 0.7
@@ -288,7 +288,7 @@ Export.image.toAsset({
 });
 
 // Export as an asset the classified defined before
-var nTrees = 180
+var nTrees = 130
 var vps = "def"
 var mlp = "def"
 var bf = "def"
@@ -310,6 +310,7 @@ Export.classifier.toAsset({
 
 Map.addLayer(classified, null, 'LC 2020', 0);
 
+/* Chaco
 var tc = classified.eq(0).selfMask();
 var shrub = classified.eq(1).selfMask();
 var grass = classified.eq(2).selfMask();
@@ -319,11 +320,25 @@ var pwater = classified.eq(5).selfMask();
 var swater = classified.eq(6).selfMask();
 var bare = classified.eq(7).selfMask();
 var crop = classified.eq(8).selfMask();
+*/
+
+// If mangroves are included:
+var tc = classified.eq(0).selfMask();
+var shrub = classified.eq(1).selfMask();
+var grass = classified.eq(2).selfMask();
+var mangroves = classified.eq(3).selfMask();
+var fveg = classified.eq(4).selfMask();
+var built = classified.eq(5).selfMask();
+var pwater = classified.eq(6).selfMask();
+var swater = classified.eq(7).selfMask();
+var bare = classified.eq(8).selfMask();
+var crop = classified.eq(9).selfMask();
 
 Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
 Map.addLayer(tc, {palette: "005200"}, "Tree Cover", 1);
 Map.addLayer(shrub, {palette: "eabe44"}, "Shrubs", 0);
 Map.addLayer(grass, {palette: "ffff4c"}, "Grass", 0);
+Map.addLayer(mangroves, {palette: "00cf75"}, "Mangroves", 0);
 Map.addLayer(fveg, {palette: "0096a0"}, "Flooded Vegetation", 0);
 Map.addLayer(built, {palette: "fa0000"}, "Built", 0);
 Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
