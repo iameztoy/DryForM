@@ -20,7 +20,7 @@ var caatinga = "caatinga";
 var cerrado = "cerrado";
 var tanzania = "tanzania";
 
-var aoi = tanzania;
+var aoi = caatinga;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
@@ -29,7 +29,7 @@ var buffer = 20 // To buffer the training and validation points | Take into acco
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
-var target_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania").mosaic();
+var target_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
 
 // Select Bands if necessary | These are the 30 first bands of the optimal RF (pixel based) output
 var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH"];
@@ -138,7 +138,7 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 // ***
 
 // Rename and reclass (not really necessary in this step) the inputs | Final set for RF
-var trainingGcp = GTPoint_DF_Balanced_tanzania;
+var trainingGcp = GTPoint_DF_Balanced_caatinga;
 var validationGcp = gtp_vl;
 
 // Including Mangroves
