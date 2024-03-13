@@ -133,8 +133,15 @@ var validationGcp = gtp_vl;
 // Reclassify the classes if necessary to get consecutive integers
 // 0-based sequential series. 
 
+/* Considering additional class of mangroves
+var classValues = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10];
+var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8, 9];
+*/
+
+// Chaco - No Mangroves
 var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+
 
 // For visulrec column (defined in landcover variable):
 // 1: TC, 2: Shrub, 3: Grass, 4: Flooded Veg., 5: Built, 6: P.Water, 7: S.Water, 8: Bare, 9: Crops
