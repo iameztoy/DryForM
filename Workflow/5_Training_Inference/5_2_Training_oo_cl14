@@ -244,7 +244,6 @@ var test = classified.sampleRegions({
 var testConfusionMatrix = test.errorMatrix(landcover, 'classification');
 
 print('Confusion Matrix', testConfusionMatrix);
-print('Validation error matrix: ', testConfusionMatrix);
 print('Validation overall accuracy: ', testConfusionMatrix.accuracy());
 print('Validation consumer accuracy: ', testConfusionMatrix.consumersAccuracy());
 print('Validation producer accuracy: ', testConfusionMatrix.producersAccuracy());
