@@ -188,7 +188,7 @@ Map.addLayer(trainingGcp, null, "Training Points", 0)
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 130
+var nTrees = 60
 var vps = 8
 var mlp = 2
 var bf = 0.7
