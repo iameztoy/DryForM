@@ -1,11 +1,12 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones"),
-    image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_tanzania_ID1"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
+    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
+    image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_PiBa_cl9_chaco_buf20");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 
-image = image.eq(0).selfMask().clip(tanzania)
+image = image.eq(1).selfMask().clip(chaco)
 
 var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var h = image.multiply(gedil)
@@ -15,7 +16,7 @@ var m5 = h.lt(5).selfMask()
 
 Map.addLayer(image, null, "TC")
 Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights")
-Map.addLayer(m5, null, "Mask height <5")
+Map.addLayer(m5, {palette: "orange"}, "Mask height <5")
 
 
 
