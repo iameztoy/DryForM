@@ -18,5 +18,11 @@ Map.addLayer(image, null, "TC")
 Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights")
 Map.addLayer(m5, {palette: "orange"}, "Mask height <5")
 
+// World Cover
+
+var dataset = ee.ImageCollection('ESA/WorldCover/v200').first();
+var visualization = {bands: ['Map']};
+Map.addLayer(dataset, visualization, 'Landcover', 0);
+
 
 
