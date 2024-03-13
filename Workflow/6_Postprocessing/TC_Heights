@@ -5,7 +5,7 @@ var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Pr
     image = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_PiBa_cl9_chaco_buf20");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-
+var aoi = chaco
 image = image.eq(1).selfMask().clip(chaco)
 
 var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
@@ -22,7 +22,7 @@ Map.addLayer(m5, {palette: "orange"}, "Mask height <5")
 
 var dataset = ee.ImageCollection('ESA/WorldCover/v200').first();
 var visualization = {bands: ['Map']};
-Map.addLayer(dataset, visualization, 'World Cover v200', 0);
+Map.addLayer(dataset.clip(aoi), visualization, 'World Cover v200', 0);
 
 Map.setOptions("SATELLITE")
 
