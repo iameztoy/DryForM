@@ -11,7 +11,7 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var aoi = tanzania; //target aoi
+var aoi = caatinga; //target aoi
 
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
@@ -267,7 +267,7 @@ var testConfusionMatrix = test.errorMatrix(landcover, 'classification');
 
 print('Confusion Matrix', testConfusionMatrix);
 print('Validation overall accuracy: ', testConfusionMatrix.accuracy());
-print('Validation consumer accuracy: ', testConfusionMatrix.consumersAccuracy());
+print('Validation user accuracy: ', testConfusionMatrix.consumersAccuracy());
 print('Validation producer accuracy: ', testConfusionMatrix.producersAccuracy());
 print('Kappa Coefficient: ', testConfusionMatrix.kappa());
 
