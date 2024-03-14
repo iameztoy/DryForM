@@ -272,6 +272,7 @@ print('Validation overall accuracy: ', testConfusionMatrix.accuracy());
 print('Validation user accuracy: ', testConfusionMatrix.consumersAccuracy());
 print('Validation producer accuracy: ', testConfusionMatrix.producersAccuracy());
 print('Kappa Coefficient: ', testConfusionMatrix.kappa());
+print('F1-Score: ', testConfusionMatrix.fscore());
 
 //************************************************************************** 
 // Export
