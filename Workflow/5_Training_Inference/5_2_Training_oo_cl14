@@ -259,7 +259,7 @@ print('F1-Score: ', testConfusionMatrix.fscore());
 Export.image.toAsset({
 		image: classified,
     description: "Class_ObOr_14cl" + aoi_n,
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class_ObOr_cl14_"+ aoi_n,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/" + "Class_ObOr_cl4_"+ aoi_n,
     pyramidingPolicy: "mode",
 //	dimensions:,
     region: aoi,
