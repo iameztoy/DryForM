@@ -95,7 +95,7 @@ labels = labels.remap(classValues, remapValues, landcover);
 var bands = composite.bandNames();
 print("Band names", bands);
 
-var bands = ["t3_B12_mean"];
+var bands = ["t0_B3_mean"];
 
 var training = target_mean.sampleRegions({
   collection: labels, 
@@ -137,7 +137,7 @@ lists = lists.map(function(obj) {
 print(lists)
 
 // Implement distance measures. | This need to be equal to the number of classes.
-var classes = ee.List.sequence(0, 8);
+var classes = ee.List.sequence(0, 8); //8 for 9 classes visulrec
 
 /*
 
@@ -201,5 +201,18 @@ var bhattacharyya = classes.map(function(i) {
 var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
 print('jm', jm)
+
+/* //Need to convert to FC beforehand
+Export.table.toDrive({
+		collection: jm,
+    description: "t0_B3_mean_sep",
+    folder: "GEE_separability",
+//	fileNamePrefix:,
+//	fileFormat:,
+//	selectors:,
+//	maxVertices:,
+//	priority:,
+})
+*/
 
 // Notes: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
