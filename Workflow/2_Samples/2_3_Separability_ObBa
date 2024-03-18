@@ -210,6 +210,4 @@ var jm = ee.Array(bhattacharyya).multiply(-1).exp()
 print('jm', jm)
 
 
-
-
 // Notes: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
