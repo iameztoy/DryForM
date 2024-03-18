@@ -160,6 +160,15 @@ var fc = ee.FeatureCollection(list
 
 print(fc)
 
-
+Export.table.toDrive({
+		collection:fc,
+//	description:,
+//	folder:,
+//	fileNamePrefix:,
+//	fileFormat:,
+//	selectors:,
+//	maxVertices:,
+//	priority:,
+})
 
 // Notes: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
