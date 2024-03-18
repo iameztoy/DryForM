@@ -85,11 +85,16 @@ var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 
 // For visu_lc
+// TC1, TC2, TC3, Shrub7, owl8, grass9, grasstree10, mangroves11, floodveg12
+// built13, pwater14, swater15, bare17, crops19
 var landcover_all = "visu_lc"
-var classValues_all = [1, 2, 3, 7, 8, 9, 10, 11, 12, 13, 14, 14, 17, 19]; 
-var remapValues_all = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
-labels = labels.remap(classValues, remapValues, landcover);
+// Chaco
+var classValues_all = [1, 2, 3, 7, 9, 12, 13, 14, 15, 17, 19]; 
+var remapValues_all = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8];
+
+labels = labels.remap(classValues_all, remapValues_all, landcover_all);
+print("labels", labels)
 
 // Image Collection Band Names
 var bands = composite.bandNames();
@@ -99,10 +104,12 @@ var bands = ["t0_B3_mean"];
 
 var training = target_mean.sampleRegions({
   collection: labels, 
-  properties: ["visulcrec"], // Target column
+  properties: ["visu_lc"], // Target column
   tileScale: 16,
   scale: 10
 });
+
+print(training)
 
 // First, turn the prediction bands into vectors.
 training = training.map(function(f) {
@@ -115,7 +122,7 @@ training = training.map(function(f) {
 // vectors that belong to that class.
 var lists = ee.List(training.reduceColumns({
   reducer: ee.Reducer.toList().group(0, 'class'), 
-  selectors: ["visulcrec", 'vec']
+  selectors: ["visu_lc", 'vec']
 }).get('groups'));
 
 // Map over the lists to compute means and covariances.
@@ -202,17 +209,7 @@ var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
 print('jm', jm)
 
-/* //Need to convert to FC beforehand
-Export.table.toDrive({
-		collection: jm,
-    description: "t0_B3_mean_sep",
-    folder: "GEE_separability",
-//	fileNamePrefix:,
-//	fileFormat:,
-//	selectors:,
-//	maxVertices:,
-//	priority:,
-})
-*/
+
+
 
 // Notes: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
