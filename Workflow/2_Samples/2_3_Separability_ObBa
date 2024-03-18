@@ -64,6 +64,7 @@ var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-3836
 var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
 var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
 var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
+var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF").filterBounds(aoi);
 Map.addLayer(GTPoint_DF_Balanced_chaco,  {color: "red"}, "Ground Truth")
 
 // Buffer function
@@ -73,10 +74,10 @@ var applybuffer = function(feature) {
 return feature.buffer(buffer).bounds()}; // Bounds return a rectangle over the buffer.
 
 
-Map.addLayer(GTPoint_DF_Balanced_chaco, null, "Buffer Bounds GT")
+Map.addLayer(GroundTruthPoint_DF, null, "Buffer Bounds GT")
 
 // Target - Ground truth
-var labels = GTPoint_DF_Balanced_chaco;
+var labels = GroundTruthPoint_DF;
 
 // Reclass ground truth from 0 to the number of classes
 // For visulcrec:
@@ -90,8 +91,8 @@ var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 var landcover_all = "visu_lc"
 
 // Chaco
-var classValues_all = [1, 2, 3, 7, 9, 12, 13, 14, 15, 17, 19]; 
-var remapValues_all = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8];
+var classValues_all = [1, 2, 3, 7, 8, 9, 10, 12, 13, 14, 15, 17, 19]; //11: NA Chaco
+var remapValues_all = [0, 0, 0, 1, 2, 3, 3, 4, 5, 6, 7, 8, 9];
 
 labels = labels.remap(classValues_all, remapValues_all, landcover_all);
 print("labels", labels)
@@ -144,7 +145,7 @@ lists = lists.map(function(obj) {
 print(lists)
 
 // Implement distance measures. | This need to be equal to the number of classes.
-var classes = ee.List.sequence(0, 8); //8 for 9 classes visulrec
+var classes = ee.List.sequence(0, 9); //8 for 9 classes visulrec
 
 /*
 
