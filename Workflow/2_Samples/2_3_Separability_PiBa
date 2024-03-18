@@ -141,7 +141,7 @@ var jm = ee.Array(bhattacharyya).multiply(-1).exp()
 print('jm', jm)
 
 print(jm.length());
-var line1 = jm.slice({axis: 0, start: 1, end: 10, step: 1});
+var line1 = jm.slice({axis: 1, start: 0, end: 10, step: 1});
 print("line1", line1)
 
 
