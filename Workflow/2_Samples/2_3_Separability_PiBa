@@ -140,10 +140,19 @@ var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
 print('jm', jm)
 
+
+// Testing
 print(jm.length());
 var line1 = jm.slice({axis: 1, start: 0, end: 10, step: 1});
 print("line1", line1)
 
+
+var list = jm.toList()
+print(list)
+
+print(list.map(function (innerList) {
+  return ee.List(innerList).get(0);
+}));
 
 
 
