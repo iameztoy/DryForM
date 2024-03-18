@@ -138,7 +138,7 @@ print('bhattacharyya', bhattacharyya)
 
 var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
-print('jm', jm)
+print('Jef-Mat', jm)
 
 
 // slice array
