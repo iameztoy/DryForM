@@ -138,7 +138,7 @@ print('bhattacharyya', bhattacharyya)
 
 var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
-print('Jef-Mat', jm)
+print('Jeffries-Matusita'+"_"+bands, jm)
 
 
 // slice array
@@ -159,7 +159,7 @@ print(fc)
 
 Export.table.toDrive({
 		collection:fc,
-    description: "Separability",
+    description: "Separability"+"_"+bands,
     folder: "GEE_Separability",
 //	fileNamePrefix:,
 //	fileFormat:,
