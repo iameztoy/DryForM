@@ -22,21 +22,21 @@ var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-3836
 var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
 // Target - Ground truth
-var labels = GTPoint_DF_Balanced_chaco
+var labels = GTPoint_DF_Balanced_chaco;
 
 // Reclass ground truth from 0 to the number of classes
 // For visulcrec:
-var landcover = "visulcrec"
+var landcover = "visulcrec";
 var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 
 labels = labels.remap(classValues, remapValues, landcover);
 
 // Image Collection Band Names
-var bands = composite.bandNames()
-print("Band names", bands)
+var bands = composite.bandNames();
+print("Band names", bands);
 
-var bands = ["t0_B3"]
+var bands = ["t0_B3"];
 
 var training = composite.sampleRegions({
   collection: labels, 
@@ -48,9 +48,9 @@ var training = composite.sampleRegions({
 training = training.map(function(f) {
   // return f.set('vec', f.toArray(bands));
   return f.set('vec', f.toDictionary(bands).values(bands));
-})
+});
 
-print("Training Samples", training)
+print("Training Samples", training);
 
 // Make a list of objects where each object corresponds to a class.
 // Each object stores its label and a list of all the spectral
@@ -66,7 +66,7 @@ var lists = ee.List(training.reduceColumns({
 lists = lists.map(function(obj) {
   var array = ee.Array(ee.Dictionary(obj).get('list'));
   var list = ee.List(ee.Dictionary(obj).get('list')).map(function(l) {
-    return ee.Array(l)
+    return ee.Array(l);
   });
   var mean = array.reduce(ee.Reducer.mean(), [0]);
   // Watch out with this reducer.  It is an approximate solution.
@@ -74,9 +74,10 @@ lists = lists.map(function(obj) {
   return ee.Dictionary(obj).combine({
     mean: mean.transpose(),
     covariance: covariance
-  })
+  });
 });
-print(lists)
+
+print("DISTANCE MEASURES FOR " +bands+ "--->");
 
 // Implement distance measures.
 var classes = ee.List.sequence(0, 8);
@@ -85,10 +86,10 @@ var block = classes.map(function(i) {
   return classes.map(function(j) {
     var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
     var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
-    return mean_i.subtract(mean_j).reduce('sum', [0]).project([0])
-  })
-})
-print('Block', block)
+    return mean_i.subtract(mean_j).reduce('sum', [0]).project([0]);
+  });
+});
+print('Block', block);
 
 var euclidean = classes.map(function(i) {
   return classes.map(function(j) {
@@ -96,9 +97,9 @@ var euclidean = classes.map(function(i) {
     var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
     var diff = mean_i.subtract(mean_j).project([0]);
     return diff.dotProduct(diff).sqrt();
-  })
-})
-print('Euclidean', euclidean)
+  });
+});
+print('Euclidean', euclidean);
 
 
 var mahalanobis = classes.map(function(i) {
@@ -111,10 +112,10 @@ var mahalanobis = classes.map(function(i) {
         .matrixMultiply(sigma_i.add(sigma_j).divide(2).matrixInverse()) // 6x6
         .matrixMultiply(mean_i.subtract(mean_j))
         .sqrt()
-        .get([0, 0])
-  })
-})
-print('Mahalanobis', mahalanobis)
+        .get([0, 0]);
+  });
+});
+print('Mahalanobis', mahalanobis);
 
 
 var bhattacharyya = classes.map(function(i) {
@@ -133,15 +134,15 @@ var bhattacharyya = classes.map(function(i) {
         .divide(sigma_j.matrixDeterminant().sqrt())
         .log()
         .divide(2);
-    return mh.divide(8).add(t2)
-  })
-})
+    return mh.divide(8).add(t2);
+  });
+});
 
-print('Bhattacharyya', bhattacharyya)
+print('Bhattacharyya', bhattacharyya);
 
 var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
-print('Jeffries-Matusita'+"_"+bands, jm)
+print('Jeffries-Matusita', jm);
 
 
 // slice array
@@ -154,9 +155,9 @@ print(list.map(function (innerList) {
   return ee.List(innerList).get(0);
 }));*/
 
-var list = jm.toList()
+var list = jm.toList();
 var fc = ee.FeatureCollection(list.map(function(element){
-            return ee.Feature(null,{prop:element})}))
+            return ee.Feature(null,{prop:element})}));
 
 
 Export.table.toDrive({
@@ -168,7 +169,7 @@ Export.table.toDrive({
 //	selectors:,
 //	maxVertices:,
 //	priority:,
-})
+});
 
 Export.table.toDrive({
 		collection: training, 
@@ -179,6 +180,6 @@ Export.table.toDrive({
 //	selectors:,
 //	maxVertices:,
 //	priority:,
-})
+});
 
 // Notes: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
