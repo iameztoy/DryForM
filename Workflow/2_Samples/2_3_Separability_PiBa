@@ -50,7 +50,7 @@ training = training.map(function(f) {
   return f.set('vec', f.toDictionary(bands).values(bands));
 })
 
-print("training", training)
+print("Training Samples", training)
 
 // Make a list of objects where each object corresponds to a class.
 // Each object stores its label and a list of all the spectral
