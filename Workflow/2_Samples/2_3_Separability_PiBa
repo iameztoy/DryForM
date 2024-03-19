@@ -1,7 +1,7 @@
 
-//***********************************************************
-// DRYFORM - Step 2.3 - Separability | Distances
-//*********************************************************** 
+//*******************************************************************
+// DRYFORM - Step 2.3 - Separability | Distances and sample values
+//*******************************************************************
 
 // Image collection
 var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
@@ -36,7 +36,7 @@ labels = labels.remap(classValues, remapValues, landcover);
 var bands = composite.bandNames()
 print("Band names", bands)
 
-var bands = ["t3_VH"]
+var bands = ["t0_B3"]
 
 var training = composite.sampleRegions({
   collection: labels, 
@@ -49,6 +49,8 @@ training = training.map(function(f) {
   // return f.set('vec', f.toArray(bands));
   return f.set('vec', f.toDictionary(bands).values(bands));
 })
+
+print("training", training)
 
 // Make a list of objects where each object corresponds to a class.
 // Each object stores its label and a list of all the spectral
@@ -134,6 +136,7 @@ var bhattacharyya = classes.map(function(i) {
     return mh.divide(8).add(t2)
   })
 })
+
 print('bhattacharyya', bhattacharyya)
 
 var jm = ee.Array(bhattacharyya).multiply(-1).exp()
@@ -158,10 +161,21 @@ var fc = ee.FeatureCollection(list.map(function(element){
 print(fc)
 
 Export.table.toDrive({
-		collection:fc,
+		collection:fc, 
     description: "Separability"+"_"+bands,
     folder: "GEE_Separability",
-//	fileNamePrefix:,
+    fileNamePrefix: "Sample_Separability"+"_"+bands,
+//	fileFormat:,
+//	selectors:,
+//	maxVertices:,
+//	priority:,
+})
+
+Export.table.toDrive({
+		collection: training, 
+    description: "Sample_values",
+    folder: "GEE_Separability",
+    fileNamePrefix: "SampleValues",
 //	fileFormat:,
 //	selectors:,
 //	maxVertices:,
