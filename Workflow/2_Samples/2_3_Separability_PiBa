@@ -158,7 +158,6 @@ var list = jm.toList()
 var fc = ee.FeatureCollection(list.map(function(element){
             return ee.Feature(null,{prop:element})}))
 
-print(fc)
 
 Export.table.toDrive({
 		collection:fc, 
