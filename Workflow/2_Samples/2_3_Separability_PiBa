@@ -159,8 +159,8 @@ print(fc)
 
 Export.table.toDrive({
 		collection:fc,
-//	description:,
-//	folder:,
+    description: "Separability" + aoi_n,
+    folder: "GEE_Separability",
 //	fileNamePrefix:,
 //	fileFormat:,
 //	selectors:,
