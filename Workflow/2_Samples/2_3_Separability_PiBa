@@ -88,7 +88,7 @@ var block = classes.map(function(i) {
     return mean_i.subtract(mean_j).reduce('sum', [0]).project([0])
   })
 })
-print('block', block)
+print('Block', block)
 
 var euclidean = classes.map(function(i) {
   return classes.map(function(j) {
@@ -98,7 +98,7 @@ var euclidean = classes.map(function(i) {
     return diff.dotProduct(diff).sqrt();
   })
 })
-print('euclidean', euclidean)
+print('Euclidean', euclidean)
 
 
 var mahalanobis = classes.map(function(i) {
@@ -114,7 +114,7 @@ var mahalanobis = classes.map(function(i) {
         .get([0, 0])
   })
 })
-print('mahalanobis', mahalanobis)
+print('Mahalanobis', mahalanobis)
 
 
 var bhattacharyya = classes.map(function(i) {
