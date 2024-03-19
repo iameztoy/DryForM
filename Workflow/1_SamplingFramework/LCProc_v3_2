@@ -65,7 +65,7 @@ var cropmask_UMD_2003=ee.ImageCollection('users/potapovpeter/Global_cropland_200
 var cropmask_UMD_2007=ee.ImageCollection('users/potapovpeter/Global_cropland_2007').mosaic().unmask(); 
 var cropmask_UMD_2011=ee.ImageCollection('users/potapovpeter/Global_cropland_2011').mosaic().unmask(); 
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2015').mosaic().unmask(); 
-var cropmask_UMD_2019=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // Janvier 2019 !!
+var cropmask_UMD_2019=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); 
 
 //--------------
 // VARIABLES GENERAL
