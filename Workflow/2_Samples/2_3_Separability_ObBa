@@ -210,7 +210,7 @@ var bhattacharyya = classes.map(function(i) {
 
 var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
-print('jm', jm)
+print('Jeffries-Matusita', jm)
 
 // slice array
 //print(jm.length());
