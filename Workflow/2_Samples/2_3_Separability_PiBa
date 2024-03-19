@@ -77,7 +77,7 @@ lists = lists.map(function(obj) {
   });
 });
 
-print("DISTANCE MEASURES FOR " +bands+ "--->");
+print("DISTANCE MEASURES FOR " +bands+ " --->");
 
 // Implement distance measures.
 var classes = ee.List.sequence(0, 8);
