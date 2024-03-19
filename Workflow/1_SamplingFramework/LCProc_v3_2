@@ -8,7 +8,8 @@
 This code was developed under the Exploratory Research Project (JRC-EC S.4/D1) and it aims at stablishing a 
 preliminary framework to extract samples to be used in Supervised Classification activities. 
 A number of global coverage Land Cover products are used and mixed different rules. The outcome is a new
-LC map containing overall 19 classes for different Areas of Interest; currently Chaco, Caatinga, Cerrado and Tanzania.
+LC map containing overall 19 classes at global scale.
+Data extraction is prepared for different Areas of Interest; currently Chaco, Caatinga, Cerrado and Tanzania.
 Note that not all the regions contain the same number of classes.
 
 The outcome of this procedure is exported both as an asset and to drive so it can be used to get samples using a
