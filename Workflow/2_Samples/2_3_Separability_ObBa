@@ -144,6 +144,8 @@ lists = lists.map(function(obj) {
 });
 print(lists)
 
+print("DISTANCE MEASURES FOR " +bands+ " --->");
+
 // Implement distance measures. | This need to be equal to the number of classes.
 var classes = ee.List.sequence(0, 9); //8 for 9 classes visulrec
 
@@ -210,5 +212,41 @@ var jm = ee.Array(bhattacharyya).multiply(-1).exp()
     .multiply(-1).add(1).multiply(2).sqrt();
 print('jm', jm)
 
+// slice array
+//print(jm.length());
+//var line1 = jm.slice({axis: 1, start: 0, end: 10, step: 1});
+//print("line1", line1)
+
+/*
+print(list.map(function (innerList) {
+  return ee.List(innerList).get(0);
+}));*/
+
+var list = jm.toList();
+var fc = ee.FeatureCollection(list.map(function(element){
+            return ee.Feature(null,{prop:element})}));
+
+
+Export.table.toDrive({
+		collection:fc, 
+    description: "Separability"+"_"+bands,
+    folder: "GEE_Separability",
+    fileNamePrefix: "Sample_Separability"+"_"+bands,
+    fileFormat: "CSV",
+//	selectors:,
+//	maxVertices:,
+//	priority:,
+});
+
+Export.table.toDrive({
+		collection: training, 
+    description: "Sample_values",
+    folder: "GEE_Separability",
+    fileNamePrefix: "SampleValues",
+    fileFormat: "CSV",
+//	selectors:,
+//	maxVertices:,
+//	priority:,
+});
 
 // Notes: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
