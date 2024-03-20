@@ -183,6 +183,9 @@ Export.table.toDrive({
 });
 
 /* 
+
+Processing outside GEE:
+
 The fc export option generates a file on Drive that can be further processed e.g. in Excel.
  If JF is calculated for different bands, the following code is useful to merge all the outcomes together 
   and get a unique table with all the values. The steps are as follows:
