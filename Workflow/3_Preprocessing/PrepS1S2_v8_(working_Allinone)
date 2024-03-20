@@ -8,8 +8,8 @@
 //---------------------------------------------------------------------------//
 
 //var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
-var helper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code/utilities');
-var wrapper = require('users/iameztoy/DryForest:Workflow/0_Preprocessing/s1_code/wrapper');
+var helper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/utilities');
+var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/wrapper');
 
 //---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
@@ -162,7 +162,7 @@ var processTiles = function(tile){
   
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
-  var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
+  
   //print("interm aoi fx", interm_aoi)
   Map.addLayer(interm_aoi, {color: 'red'}, "Intermediate AOI/tile")
 
