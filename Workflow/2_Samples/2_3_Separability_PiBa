@@ -192,7 +192,7 @@ The fc export option generates a file on Drive that can be further processed e.g
   
   - Data -> From File -> From folder (where all the files are located) -> select folder
   - Combine -> Combine and transfor data -> ok
-  - Open the Advanced Editor ->
+  - Open the Advanced Editor -> Paste the code below ->
   - Note that:
       * the source folder will be different. 
       * you may not want to combine files
