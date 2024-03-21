@@ -29,7 +29,7 @@ var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-3836
 var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
 // Target - Ground truth
-var labels = GTPoint_DF_Balanced_caatinga;
+var labels = GTPoint_DF_Balanced_tanzania;
 
 // Reclass ground truth from 0 to the number of classes
 // For visulcrec:
