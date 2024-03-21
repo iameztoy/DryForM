@@ -5,7 +5,7 @@
 
 // Image collection
 var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var aio_n = "chaco"
+var aoi_n = "chaco"
 
 
 
@@ -33,6 +33,10 @@ var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 
 labels = labels.remap(classValues, remapValues, landcover);
+
+var applybuffer = function(feature) {
+return feature.buffer(20)};
+labels = labels.map(applybuffer);
 
 // Image Collection Band Names
 var bands = composite.bandNames();
@@ -164,7 +168,7 @@ var fc = ee.FeatureCollection(list.map(function(element){
 
 Export.table.toDrive({
 		collection:fc, 
-    description: "Separ_pb"+"_"+aoi_n+bands,
+    description: "Separ_pb"+"_"+ aoi_n +bands,
     folder: "GEE_samples",
     fileNamePrefix: "Sample_Separ_pb"+"_" + aoi_n + bands,
     fileFormat: "CSV",
