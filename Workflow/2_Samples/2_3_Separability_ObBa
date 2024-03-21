@@ -241,9 +241,9 @@ Export.table.toDrive({
 
 Export.table.toDrive({
 		collection: training, 
-    description: "Sample_values_oo_" + aoi_n + "_" + bands,
+    description: "Sample_values_oo_" + aoi_n,
     folder: "GEE_samples",
-    fileNamePrefix: "SampleValues_oo_" + aoi_n + "_" + bands,
+    fileNamePrefix: "SampleValues_oo_" + aoi_n,
     fileFormat: "CSV",
 //	selectors:,
 //	maxVertices:,
