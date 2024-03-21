@@ -1,11 +1,15 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var imageCollection = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //*******************************************************************
 // DRYFORM - Step 2.3 - Separability | Distances and sample values
 //*******************************************************************
 
 // Image collection
-var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var aoi_n = "chaco"
+//var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
+var aoi_n = "caatinga"
 
 
 
@@ -24,7 +28,7 @@ var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-3836
 var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
 
 // Target - Ground truth
-var labels = GTPoint_DF_Balanced_chaco;
+var labels = GTPoint_DF_Balanced_caatinga;
 
 // Reclass ground truth from 0 to the number of classes
 // For visulcrec:
@@ -42,7 +46,7 @@ labels = labels //.map(applybuffer);
 var bands = composite.bandNames();
 print("Band names", bands);
 
-var bands = ["t0_B3"];
+var bands = ["t3_gray_savg_glcm"];
 
 var training = composite.sampleRegions({
   collection: labels, 
@@ -179,9 +183,9 @@ Export.table.toDrive({
 
 Export.table.toDrive({
 		collection: training, 
-    description: "Sample_values_pb_" + aoi_n + "_" + bands,
+    description: "Sample_values_pb_" + aoi_n,
     folder: "GEE_samples",
-    fileNamePrefix: "SampleValues_pb_" + aoi_n + "_" + bands,
+    fileNamePrefix: "SampleValues_pb_" + aoi_n,
     fileFormat: "CSV",
 //	selectors:,
 //	maxVertices:,
