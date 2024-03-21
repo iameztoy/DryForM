@@ -36,7 +36,7 @@ labels = labels.remap(classValues, remapValues, landcover);
 
 var applybuffer = function(feature) {
 return feature.buffer(20)};
-labels = labels.map(applybuffer);
+labels = labels //.map(applybuffer);
 
 // Image Collection Band Names
 var bands = composite.bandNames();
