@@ -181,7 +181,7 @@ Export.table.toDrive({
 		collection: training, 
     description: "Sample_values_pb" + aoi_n + bands,
     folder: "GEE_samples",
-    fileNamePrefix: "SampleValues" + aoi_n + bands,
+    fileNamePrefix: "SampleValues_pb" + aoi_n + bands,
     fileFormat: "CSV",
 //	selectors:,
 //	maxVertices:,
