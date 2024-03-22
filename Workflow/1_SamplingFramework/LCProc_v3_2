@@ -26,6 +26,8 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
+Map.addLayer(chaco.merge(caatinga).merge(cerrado))
+
 // Target AOI for export
 var aoi = chaco;
 var aoi_n = "chaco";
