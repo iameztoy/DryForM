@@ -662,6 +662,7 @@ Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 // ------------------------
 
 lc_final_img2 = lc_final_img2.clip(aoi);
+/*
 Export.image.toAsset({
 		image: lc_final_img2,
     description: "Framework_" + aoi_n,
@@ -679,7 +680,7 @@ Export.image.toAsset({
 
 
 
-/*
+
 
 var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
 //Set 30° N/S Aoi
@@ -730,7 +731,30 @@ for (var f in featlist) {
 // Get samples from FINAL
 // Target: lc_final_im
 
-var mask1 = lc_final_img.gte(4).or(lc_final_img.lte(6))
-lc_final_img = lc_final_img.updateMask(mask1)
+//First remove tc between 4 and 6, then GrassTree (class 10)
+var mask1 = lc_final_img.gte(4).and(lc_final_img.lte(6))
+lc_final_img = lc_final_img.updateMask(mask1.not()).selfMask()
+var mask2 = lc_final_img.eq(10)
+lc_final_img = lc_final_img.updateMask(mask2.not()).selfMask()
 
-Map.addLayer(lc_final_img)
+lc_final_img = lc_final_img.clip(aoi)
+
+Map.addLayer(lc_final_img, {min: 0, max: 19, palette: lc_Palette}, "test points", 1);
+
+
+
+Export.image.toAsset({
+		image: lc_final_img2,
+    description: "Framework_" + aoi_n,
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Framework/" + "Framework_" + aoi_n,
+    pyramidingPolicy: "mode",
+//	dimensions:,
+//	region:,
+    scale: 10,
+    crs: "EPSG:4326",
+//	crsTransform:,
+    maxPixels: 1e13,
+//	shardSize:,
+//	priority:,
+});
+
