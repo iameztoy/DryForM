@@ -771,7 +771,7 @@ for (var f in featlist) {
     assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine/' + name+disS+"_"+"chaco", //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
-    region: chaco,
+    region: feat,
     scale: 10,
     maxPixels: 1e13
     });
