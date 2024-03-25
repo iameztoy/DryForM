@@ -692,7 +692,7 @@ for (var f in featlist) {
 // ---------------------------------
 
 // Get samples from FINAL
-// Target: lc_final_im
+// Target: lc_final_img
 
 //First remove non desired labels
 var mask1 = lc_final_img.gte(4).and(lc_final_img.lte(6))
