@@ -739,7 +739,7 @@ Map.addLayer(chaco)
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("id");
+  var dis = feat.get("ID");
   var disS = dis.getInfo();
   var name = "tile";  
   Export.image.toAsset({
