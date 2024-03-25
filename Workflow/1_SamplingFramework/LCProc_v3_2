@@ -761,23 +761,14 @@ var samples = img.addBands(lc).stratifiedSample({
   geometries: true
 });
 
-Map.addLayer(samples, null, "Samples")
+print(samples)
+//Map.addLayer(samples, null, "Samples")
 
-
-
-
-Export.image.toAsset({
-		image: lc_final_img2,
-    description: "Framework_" + aoi_n,
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Framework/" + "Framework_" + aoi_n,
-    pyramidingPolicy: "mode",
-//	dimensions:,
-//	region:,
-    scale: 10,
-    crs: "EPSG:4326",
-//	crsTransform:,
-    maxPixels: 1e13,
-//	shardSize:,
+Export.table.toAsset({
+		collection: samples,
+    description: "AutoSamples_chaco",
+//	assetId:,
+//	maxVertices:,
 //	priority:,
-});
+})
 
