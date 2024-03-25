@@ -719,7 +719,7 @@ for (var f in featlist) {
 
 //First remove tc between 4 and 6, then GrassTree (class 10)
 var mask1 = (lc_final_img.gte(4).and(lc_final_img.lte(6))).or(lc_final_img.eq(10)).or(lc_final_img.eq(16)).or(lc_final_img.eq(18));
-lc_final_img = lc_final_img.updateMask(mask1.not()).selfMask().clip(aoi)
+lc_final_img = lc_final_img.updateMask(mask1.not()).selfMask().clip(aoi);
 
 
 var classValues = [1, 2, 3, 7, 8, 9, 11, 13, 14, 15, 17, 19];
