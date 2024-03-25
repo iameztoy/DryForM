@@ -753,7 +753,7 @@ Map.addLayer(lc_final_img, {min: 0, max: 14}, "Final Framework", 1);
 
 var img = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 
-var sample = img.addBands(lc).stratifiedSample({
+var samples = img.addBands(lc).stratifiedSample({
   numPoints: 150,
   classBand: label,
   region: aoi,
@@ -761,7 +761,7 @@ var sample = img.addBands(lc).stratifiedSample({
   geometries: true
 });
 
-Map.addLayer(sample, null, "Samples")
+Map.addLayer(samples, null, "Samples")
 
 
 
