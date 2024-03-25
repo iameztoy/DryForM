@@ -726,6 +726,8 @@ var classValues = [1, 2, 3, 7, 8, 9, 11, 13, 14, 15, 17, 19];
 var remapValues = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 var label = 'lc';
 
+lc_final_img = lc_final_img.remap(classValues, remapValues).rename(label).toByte();
+
 Export.image.toAsset({
 		image: lc_final_img,
     description: "Framework_" + aoi_n,
@@ -742,7 +744,7 @@ Export.image.toAsset({
 });
 
 
-var lc = lc_final_img.remap(classValues, remapValues).rename(label).toByte();
+
 
 Map.addLayer(lc_final_img, {min: 0, max: 14}, "Final Framework", 1);
 
