@@ -724,7 +724,7 @@ var mask_lte = area.lte(mmu);
 lc_final_img = lc_final_img.updateMask(mask_lte.not())
 
 
-Map.addLayer(lc_final_img, null, "FINAL to export")
+//Map.addLayer(lc_final_img, null, "FINAL to export")
 
 
 
