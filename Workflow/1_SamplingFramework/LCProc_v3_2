@@ -663,32 +663,7 @@ Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
 lc_final_img2 = lc_final_img2.clip(aoi);
 
-
 /*
-
-var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
-//Set 30° N/S Aoi
-var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
-Zones = Zones.filterBounds(tropic)
-
-var featlist = Zones.getInfo()["features"];
-for (var f in featlist) {
-  var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("id");
-  var disS = dis.getInfo();
-  var name = "tile";  
-  Export.image.toDrive({
-    image: lc_final_img,
-    description: name+disS.toString(), //(only if integer ID)
-    folder: "Zones_test",
-    fileNamePrefix: name+disS.toString(), //(only if integer ID)
-    region: feat.geometry().bounds(),
-    scale: 10,
-    maxPixels: 1e13
-  });
-}
-
-
 
 // Loop to export
 var featlist = Zones.getInfo()["features"];
@@ -730,6 +705,32 @@ var label = 'lc';
 
 lc_final_img = lc_final_img.remap(classValues, remapValues).rename(label).toByte();
 
+
+var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
+//Set 30° N/S Aoi
+//var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
+Zones = Zones.filterBounds(chaco)
+
+var featlist = Zones.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "tile";  
+  Export.image.toAsset({
+    image: lc_final_img,
+    description: name+disS+"_"+"chaco", //"test", //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine/' + name+disS+"_"+"chaco", //.toString(),
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    //region: interm_aoi,
+    scale: 10,
+    maxPixels: 1e13
+    });
+  }
+
+
+/*
 Export.image.toAsset({
 		image: lc_final_img,
     description: "Framework_" + aoi_n,
@@ -744,6 +745,7 @@ Export.image.toAsset({
 //	shardSize:,
 //	priority:,
 });
+*/
 
 
 
