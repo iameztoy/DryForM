@@ -26,7 +26,7 @@ var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatin
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-Map.addLayer(chaco.merge(caatinga).merge(cerrado))
+//Map.addLayer(chaco.merge(caatinga).merge(cerrado))
 
 // Target AOI for export
 var aoi = chaco;
@@ -726,3 +726,11 @@ for (var f in featlist) {
   });
 }
 */
+
+// Get samples from FINAL
+// Target: lc_final_im
+
+var mask1 = lc_final_img.gte(4).or(lc_final_img.lte(6))
+lc_final_img = lc_final_img.updateMask(mask1)
+
+Map.addLayer(lc_final_img)
