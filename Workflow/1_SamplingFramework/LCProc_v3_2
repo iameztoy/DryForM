@@ -692,7 +692,7 @@ for (var f in featlist) {
 // ---------------------------------
 
 // Get samples from FINAL
-// Target: lc_final_img
+// Target: lc_final_im
 
 //First remove non desired labels
 var mask1 = lc_final_img.gte(4).and(lc_final_img.lte(6))
@@ -714,17 +714,17 @@ print(lc_final_img)
 
 
 
-var proj = lc_final_img.projection();
+
 var mmu = 20000;
-var fcount = lc_final_img.connectedPixelCount({maxSize: 250, eightConnected:true}).reproject({crs:proj});
-var farea = ee.Image.pixelArea().reproject({crs:proj});
+var fcount = lc_final_img.connectedPixelCount({maxSize: 250, eightConnected:true});
+var farea = ee.Image.pixelArea()
 var area = fcount.multiply(farea);
 var mask_lte = area.lte(mmu);
 
 lc_final_img = lc_final_img.updateMask(mask_lte.not())
 
 
-//Map.addLayer(lc_final_img, null, "FINAL to export")
+Map.addLayer(lc_final_img, null, "FINAL to export")
 
 
 
@@ -880,12 +880,6 @@ Export.image.toAsset({
 //	priority:,
 });
 */
-
-
-
-
-
-
 
 
 
