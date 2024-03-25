@@ -711,7 +711,22 @@ var label = 'lc';
 
 lc_final_img = lc_final_img.remap(classValues, remapValues).rename(label).toByte();
 print(lc_final_img)
+
+
+
+var proj = lc_final_img.projection();
+var mmu = 20000;
+var fcount = lc_final_img.connectedPixelCount({maxSize: 250, eightConnected:true}).reproject({crs:proj});
+var farea = ee.Image.pixelArea().reproject({crs:proj});
+var area = fcount.multiply(farea);
+var mask_lte = area.lte(mmu);
+
+lc_final_img = lc_final_img.updateMask(mask_lte.not())
+
+
 Map.addLayer(lc_final_img, null, "FINAL to export")
+
+
 
 chaco = chaco.geometry()
 var Zones = chaco.coveringGrid({
