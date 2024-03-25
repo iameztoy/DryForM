@@ -740,8 +740,8 @@ lc_final_img = lc_final_img.updateMask(mask2.not()).selfMask()
 lc_final_img = lc_final_img.clip(aoi)
 
 var classValues = [1, 2, 3, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19];
-var remapValues = [1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
-var label = 'lc';
+var remapValues = [1, 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+
 var lc = lc_final_img.remap(classValues, remapValues).rename(label).toByte();
 
 Map.addLayer(lc_final_img, {min: 0, max: 14}, "Final Framework", 1);
