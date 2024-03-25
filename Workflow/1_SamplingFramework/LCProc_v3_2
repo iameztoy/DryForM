@@ -695,8 +695,14 @@ for (var f in featlist) {
 // Target: lc_final_im
 
 //First remove non desired labels
-var mask1 = (lc_final_img.gte(4).and(lc_final_img.lte(6))).or(lc_final_img.eq(10)).or(lc_final_img.eq(16)).or(lc_final_img.eq(18));
-lc_final_img = lc_final_img.updateMask(mask1.not()).selfMask().clip(aoi);
+var mask1 = lc_final_img.gte(4).and(lc_final_img.lte(6))
+lc_final_img = lc_final_img.updateMask(mask1.not())
+var mask2 = lc_final_img.eq(10)
+lc_final_img = lc_final_img.updateMask(mask2.not())
+var mask3 = lc_final_img.eq(16)
+lc_final_img = lc_final_img.updateMask(mask3.not())
+var mask4 = lc_final_img.eq(18)
+lc_final_img = lc_final_img.updateMask(mask4.not()).selfMask().clip(aoi);
 
 
 var classValues = [1, 2, 3, 7, 8, 9, 11, 13, 14, 15, 17, 19];
