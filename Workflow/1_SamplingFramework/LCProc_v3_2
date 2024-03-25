@@ -664,8 +664,6 @@ Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 lc_final_img2 = lc_final_img2.clip(aoi);
 
 
-
-
 /*
 
 var Zones=ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal_WithoutOcean');
@@ -713,6 +711,10 @@ for (var f in featlist) {
   });
 }
 */
+
+// ---------------------------------
+// *** EXPORT for AUTO SAMPLES *** 
+// ---------------------------------
 
 // Get samples from FINAL
 // Target: lc_final_im
