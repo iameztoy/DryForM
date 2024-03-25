@@ -710,6 +710,8 @@ var remapValues = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 var label = 'lc';
 
 lc_final_img = lc_final_img.remap(classValues, remapValues).rename(label).toByte();
+print(lc_final_img)
+Map.addLayer(lc_final_img, null, "FINAL to export")
 
 chaco = chaco.geometry()
 var Zones = chaco.coveringGrid({
