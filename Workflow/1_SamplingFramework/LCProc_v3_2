@@ -766,7 +766,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "tile";  
   Export.image.toAsset({
-    image: lc_final_img.clip(feat),
+    image: lc_final_img,
     description: name+disS+"_"+"chaco", //"test", //.toString(), Now the ID is already a string
     assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine/' + name+disS+"_"+"chaco", //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
