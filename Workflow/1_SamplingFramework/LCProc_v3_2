@@ -711,6 +711,9 @@ var Zones = ee.FeatureCollection('users/bourgoinclement2/Harvest/10degGridGlobal
 //var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
 Zones = Zones.filterBounds(chaco)
 
+Map.addLayer(Zones)
+Map.addLayer(chaco)
+
 var featlist = Zones.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
@@ -723,7 +726,7 @@ for (var f in featlist) {
     assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine/' + name+disS+"_"+"chaco", //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
     crs: 'EPSG:4326',
-    //region: interm_aoi,
+    region: chaco,
     scale: 10,
     maxPixels: 1e13
     });
