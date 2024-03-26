@@ -1,0 +1,87 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var aoi = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-66.00915825165262, -32.35661891946061],
+          [-66.00915825165262, -33.22016492034472],
+          [-64.90503227509012, -33.22016492034472],
+          [-64.90503227509012, -32.35661891946061]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var lc = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine/tile000_chaco");
+var img = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+
+
+
+var sample = img.addBands(lc).stratifiedSample({
+  numPoints: 150,
+  classBand: "lc",
+  region: aoi,
+  scale: 10,
+  geometries: true
+});
+
+Map.addLayer(sample)
+print(sample)
+
+sample = sample.randomColumn();
+var trainingSample = sample.filter('random <= 0.8');
+var validationSample = sample.filter('random > 0.8');
+
+// Train a 10-tree random forest classifier from the training sample.
+var trainedClassifier = ee.Classifier.smileRandomForest(100).train({
+  features: trainingSample,
+  classProperty: "lc",
+  inputProperties: img.bandNames()
+});
+
+
+
+// Get information about the trained classifier.
+print('Results of trained classifier', trainedClassifier.explain());
+
+// Get a confusion matrix and overall accuracy for the training sample.
+var trainAccuracy = trainedClassifier.confusionMatrix();
+print('Training error matrix', trainAccuracy);
+print('Training overall accuracy', trainAccuracy.accuracy());
+
+// Get a confusion matrix and overall accuracy for the validation sample.
+validationSample = validationSample.classify(trainedClassifier);
+var validationAccuracy = validationSample.errorMatrix("lc", 'classification');
+print('Validation error matrix', validationAccuracy);
+print('Validation accuracy', validationAccuracy.accuracy());
+
+// Classify the reflectance image from the trained classifier.
+var classified = img.classify(trainedClassifier);
+
+
+
+// If mangroves are included:
+var tc = classified.eq(0).selfMask();
+var shrub = classified.eq(1).selfMask();
+var owl = classified.eq(2).selfMask();
+var grass = classified.eq(3).selfMask();
+var fveg = classified.eq(4).selfMask();
+var built = classified.eq(5).selfMask();
+var pwater = classified.eq(6).selfMask();
+var swater = classified.eq(7).selfMask();
+var bare = classified.eq(8).selfMask();
+var crop = classified.eq(9).selfMask();
+
+
+Map.addLayer(tc, {palette: "005200"}, "Tree Cover", 1);
+Map.addLayer(shrub, {palette: "eabe44"}, "Shrubs", 0);
+Map.addLayer(owl, {palette: "b39134"}, "OWL", 0);
+Map.addLayer(grass, {palette: "ffff4c"}, "Grass", 0);
+Map.addLayer(fveg, {palette: "0096a0"}, "Flooded Vegetation", 0);
+Map.addLayer(built, {palette: "fa0000"}, "Built", 0);
+Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
+Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
+Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
+Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
+Map.addLayer(aoi, {color: "red"}, "AOI Boundary", 0);
