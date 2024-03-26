@@ -29,8 +29,8 @@ var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania")
 //Map.addLayer(chaco.merge(caatinga).merge(cerrado))
 
 // Target AOI for export
-var aoi = chaco;
-var aoi_n = "chaco";
+var aoi = tanzania;
+var aoi_n = "tanzania";
 
 /* 
 // Alternatively
@@ -705,12 +705,12 @@ var mask4 = lc_final_img.eq(18);
 lc_final_img = lc_final_img.updateMask(mask4.not()).selfMask().clip(aoi);
 
 // For Caatinga, Cerrado, Tanzania
-//var classValues = [1, 2, 3, 7, 8, 9, 11, 13, 14, 15, 17, 19];
-//var remapValues = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+var classValues = [1, 2, 3, 7, 8, 9, 11, 13, 14, 15, 17, 19];
+var remapValues = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 //For Chaco | No mangroves
-var classValues = [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 17, 19];
-var remapValues = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+//var classValues = [1, 2, 3, 7, 8, 9, 12, 13, 14, 15, 17, 19];
+//var remapValues = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 var label = 'lc';
 
@@ -756,6 +756,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 
 Map.addLayer(zonesID, null, "Zones ID");
 Map.addLayer(aoi, null, "AOI Boundary");
+Map.centerObject(aoi)
 
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
