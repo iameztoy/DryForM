@@ -695,13 +695,13 @@ for (var f in featlist) {
 // Target: lc_final_im
 
 //First remove non desired labels
-var mask1 = lc_final_img.gte(4).and(lc_final_img.lte(6))
-lc_final_img = lc_final_img.updateMask(mask1.not())
-var mask2 = lc_final_img.eq(10)
-lc_final_img = lc_final_img.updateMask(mask2.not())
-var mask3 = lc_final_img.eq(16)
-lc_final_img = lc_final_img.updateMask(mask3.not())
-var mask4 = lc_final_img.eq(18)
+var mask1 = lc_final_img.gte(4).and(lc_final_img.lte(6));
+lc_final_img = lc_final_img.updateMask(mask1.not());
+var mask2 = lc_final_img.eq(10);
+lc_final_img = lc_final_img.updateMask(mask2.not());
+var mask3 = lc_final_img.eq(16);
+lc_final_img = lc_final_img.updateMask(mask3.not());
+var mask4 = lc_final_img.eq(18);
 lc_final_img = lc_final_img.updateMask(mask4.not()).selfMask().clip(aoi);
 
 // For Caatinga, Cerrado, Tanzania
@@ -715,30 +715,23 @@ var remapValues = [0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 var label = 'lc';
 
 lc_final_img = lc_final_img.remap(classValues, remapValues).rename(label).toByte();
-print(lc_final_img)
-
-
-
+print(lc_final_img);
 
 var mmu = 20000;
 var fcount = lc_final_img.connectedPixelCount({maxSize: 250, eightConnected:true});
-var farea = ee.Image.pixelArea()
+var farea = ee.Image.pixelArea();
 var area = fcount.multiply(farea);
 var mask_lte = area.lte(mmu);
 
-lc_final_img = lc_final_img.updateMask(mask_lte.not())
+lc_final_img = lc_final_img.updateMask(mask_lte.not());
 
+//Map.addLayer(lc_final_img, null, "FINAL to export");
 
-Map.addLayer(lc_final_img, null, "FINAL to export")
-
-
-
-aoi = aoi.geometry()
+aoi = aoi.geometry();
 var Zones = aoi.coveringGrid({
   	proj: "EPSG:4326", //EPSG:32720
   	scale: 300000
 });
-
 
 // CoveringGrid produces a strange ID so I make a new fc with proper
 // unique id. This way we can parse them to the name while running the Export Loop.
@@ -761,8 +754,8 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 //var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
 
 
-Map.addLayer(zonesID, null, "Zones ID")
-Map.addLayer(aoi, null, "AOI Boundary")
+Map.addLayer(zonesID, null, "Zones ID");
+Map.addLayer(aoi, null, "AOI Boundary");
 
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
