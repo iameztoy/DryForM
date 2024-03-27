@@ -272,7 +272,7 @@ var test = classified.sampleRegions({
   scale: 10,
 });
 
-var testConfusionMatrix = test.errorMatrix(landcover, 'classification');
+var testConfusionMatrix = test.errorMatrix(landcoverval, 'classification');
 
 print('Confusion Matrix', testConfusionMatrix);
 print('Validation overall accuracy: ', testConfusionMatrix.accuracy());
@@ -338,8 +338,8 @@ var crop = classified.eq(8).selfMask();
 // If mangroves are included:
 var tc = classified.eq(0).selfMask();
 var shrub = classified.eq(1).selfMask();
-var grass = classified.eq(2).selfMask();
-var mangroves = classified.eq(3).selfMask();
+var grass = classified.eq(3).selfMask();
+//var mangroves = classified.eq(3).selfMask();
 var fveg = classified.eq(4).selfMask();
 var built = classified.eq(5).selfMask();
 var pwater = classified.eq(6).selfMask();
@@ -351,7 +351,7 @@ Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
 Map.addLayer(tc, {palette: "005200"}, "Tree Cover", 1);
 Map.addLayer(shrub, {palette: "eabe44"}, "Shrubs", 0);
 Map.addLayer(grass, {palette: "ffff4c"}, "Grass", 0);
-Map.addLayer(mangroves, {palette: "00cf75"}, "Mangroves", 0);
+//Map.addLayer(mangroves, {palette: "00cf75"}, "Mangroves", 0);
 Map.addLayer(fveg, {palette: "0096a0"}, "Flooded Vegetation", 0);
 Map.addLayer(built, {palette: "fa0000"}, "Built", 0);
 Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
