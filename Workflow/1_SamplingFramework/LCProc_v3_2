@@ -691,7 +691,7 @@ for (var f in featlist) {
 // *** EXPORT for AUTO SAMPLES *** 
 // ---------------------------------
 
-// Get samples from FINAL
+// Prepare the sampling framework to get samples automatically in step 2_0
 // Target: lc_final_im
 
 //First remove non desired labels
