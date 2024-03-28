@@ -657,35 +657,7 @@ Map.addLayer(crop_maj.selfMask(), vp_crop, "Crop Majority masked by water", 0);
 Map.addLayer(snow_maj.selfMask(), vp_snow, "Snow sum", 0);
 Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 
-// ------------------------
-// *** EXPORT *** 
-// ------------------------
 
-lc_final_img2 = lc_final_img2.clip(aoi);
-
-/*
-
-// Loop to export
-var featlist = Zones.getInfo()["features"];
-//print(featlist)
-for (var f in featlist) {
-  var feat = ee.Feature(featlist[f]);
-  var dis = feat.get("id");
-  var disS = dis.getInfo();
-  var name = "tile";  
-  Export.image.toAsset({
-    image: lc_final_img2, //lc_final_img
-    description: name+disS.toString(),
-    assetId: 'projects/dryform-383607/assets/MajorityVote_LC/' + name+disS.toString(), //Change to correct IC
-    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
-    crs: 'EPSG:4326',
-    //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
-    region: feat.geometry().bounds(),
-    scale: 10,
-    maxPixels: 1e13
-  });
-}
-*/
 
 // ---------------------------------
 // *** EXPORT for AUTO SAMPLES *** 
@@ -775,4 +747,33 @@ for (var f in featlist) {
     maxPixels: 1e13
     });
   }
+  
+// ------------------------
+// *** EXPORT *** 
+// ------------------------
+
+
+/*
+
+// Loop to export
+var featlist = Zones.getInfo()["features"];
+//print(featlist)
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("id");
+  var disS = dis.getInfo();
+  var name = "tile";  
+  Export.image.toAsset({
+    image: lc_final_img2, //lc_final_img
+    description: name+disS.toString(),
+    assetId: 'projects/dryform-383607/assets/MajorityVote_LC/' + name+disS.toString(), //Change to correct IC
+    pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
+    crs: 'EPSG:4326',
+    //fileNamePrefix: name+disS.toString(), //only available in Export to Drive
+    region: feat.geometry().bounds(),
+    scale: 10,
+    maxPixels: 1e13
+  });
+}
+*/
 
