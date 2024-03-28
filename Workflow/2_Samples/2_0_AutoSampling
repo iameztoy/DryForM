@@ -1,6 +1,6 @@
 
 //***********************************************************
-// DRYFORM - Step 2_2 - Ground Truth Auto-sampling
+// DRYFORM - Step 2_0 - Ground Truth Auto-sampling
 //***********************************************************
 
 // This scripts generates ground sampling points automatically based on the sampling framework
