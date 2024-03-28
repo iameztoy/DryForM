@@ -40,9 +40,17 @@ print("Image Collection", target_image)
 // Band selection
 
 
-var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
+var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",
+"t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
+"t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI",
+"t0_SI", "t1_SI", "t2_SI", "t3_SI",
+"t0_iBI", "t1_iBI", "t2_iBI", "t3_iBI",
+"t0_B11", "t1_B11", "t2_B11", "t3_B11",
 "t0_B12", "t1_B12", "t2_B12", "t3_B12",
-"t0_B11", "t1_B11", "t2_B11", "t3_B11"];
+"t0_B8", "t1_B8", "t2_B8", "t3_B8",
+"t0_B4", "t1_B4", "t2_B4", "t3_B4",
+"t0_B3", "t1_B3", "t2_B3", "t3_B3",
+"t0_gray_savg_glcm", "t1_gray_savg_glcm", "t2_gray_savg_glcm", "t3_gray_savg_glcm"];
 
 // "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH"
 // "t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI"
@@ -59,7 +67,7 @@ var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = target_image //.select(bands); // or (bands)
+var composite = target_image.select(bands); // or (bands)
 
 // Ground Truth
 
@@ -83,7 +91,7 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
 //AutoSamples
-var auto_gtp = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/AutoSamples_chaco300");
+var auto_gtp = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/AutoSamples_chaco100");
 
 // Training set | Already Balanced sample sets.
     // Points
