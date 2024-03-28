@@ -3,8 +3,16 @@
 // DRYFORM - Step 2_0 - Ground Truth Auto-sampling
 //***********************************************************
 
-// This scripts generates ground sampling points automatically based on the sampling framework
-// created in Step 1.
+/*
+ This scripts generates ground sampling points automatically based on the sampling framework
+    created in Step 1. Point 2 below. The idea of the sampling framework is twofold:
+      1/ To generate a preliminary land cover proxy layer that is used to extract preliminary sampling points. These are visually interpreted afterwards
+          in a GIS environment using VHR (basempas and Planet via NICFI). These sampling points are used to train the RF model implemented in step 5.
+         The idea here is to boost productivity.
+      2/ To generate the points automatically with no visual supervision and see how the classification performs
+          compared to the classification carried out with the sampling points generated in 1/
+          It is only created for experimental purposes. 
+*/
 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
