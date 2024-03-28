@@ -14,36 +14,37 @@
           It is only created for experimental purposes. 
 */
 
+// Areas of Interest
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var aoi = chaco
-var aoi_n = "chaco"
-var npoints = 150
+var aoi = chaco;
+var aoi_n = "chaco";
+var npoints = 150; // Number of samples to be generated
 
-var lc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine").mosaic().clip(aoi);
-var img = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania").mosaic();
-//ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga");
-//ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania");
+//Sampling Framework created in step 1
+var lc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine").mosaic().clip(aoi); 
 
-var sample2 = lc.stratifiedSample({
-		numPoints:npoints,
-    classBand:"lc",
-    region:aoi,
-    scale:10,
+// Allocate the sampling points with Stratified Random Sampling (equal/balanced number of points for Random Forest)
+var samples = lc.stratifiedSample({
+		numPoints: npoints,
+    classBand: "lc",
+    region: aoi,
+    scale: 10,
 //	projection:null,
 //	seed:false,
 //	classValues:null,
 //	classPoints:null,
 //	dropNulls:true,
-    tileScale:16,
-    geometries:true,
+    tileScale: 16, // This can be probably lowered to make the process faster. 
+    geometries: true,
 })
 
+// Export the samples to asset
 Export.table.toAsset({
-		collection: sample2,
+		collection: samples,
     description: "AutoSamples_" + aoi_n + npoints.toString(),
     assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/"+"AutoSamples_" + aoi_n + npoints.toString(),
 //	maxVertices:,
