@@ -40,7 +40,7 @@ var samples = lc.stratifiedSample({
 //	dropNulls:true,
     tileScale: 16, // This can be probably lowered to make the process faster. 
     geometries: true,
-})
+});
 
 // Export the samples to asset
 Export.table.toAsset({
