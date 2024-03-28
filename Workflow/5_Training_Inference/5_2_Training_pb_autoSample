@@ -18,7 +18,7 @@ var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = chaco
+var aoi_n = chaco_n
 
 // Ground Truth attribute to be used:
 var landcover = "lc"; // or visu_lc
