@@ -1,0 +1,321 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var Studyarea3 = 
+    /* color: #98ff00 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[22.526047545555024, -33.49747564282843],
+          [22.526047545555024, -35.62341240177692],
+          [26.887619811179942, -35.62341240177692],
+          [26.887619811179942, -33.49747564282843]]], null, false),
+    target_p = 
+    /* color: #0b4a8b */
+    /* shown: false */
+    ee.Geometry.Polygon(
+        [[[25.251711211989857, -33.9689590080015],
+          [24.96066490139115, -33.93464894234079],
+          [24.83981529201615, -34.189488250413554],
+          [24.32345787014115, -34.0985621977839],
+          [23.97189537014115, -35.35361288343113],
+          [24.87826744045365, -35.50132425467354],
+          [25.49437188296685, -35.59425820575328],
+          [25.560517517026653, -35.362055941562524],
+          [24.965485971947363, -35.269828385592625],
+          [25.33969322170365, -34.016645131759645]]]),
+    reference_p = 
+    /* color: #00ffff */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[25.723069029929942, -34.47172890769129],
+          [25.723069029929942, -34.7520288935884],
+          [26.173508483054942, -34.7520288935884],
+          [26.173508483054942, -34.47172890769129]]], null, false);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+//https://www.mdpi.com/2072-4292/14/20/5154
+//ee-palette
+//https://github.com/gee-community/ee-palettes#gennadii-donchyts-fedor-baart--justin-braaten
+var palettes = require('users/gena/packages:palettes');
+var palette = palettes.colorbrewer.YlGnBu[9];
+//var palette = palettes.colorbrewer.RdBu[7];
+//var palette = palettes.colorbrewer.PRGn[9];
+
+//Remove cloud
+//Landsat SR remove cloud function 
+function rmCloud_SR(image) {  
+  var cloudShadowBitMask = (1 << 3);  
+  var cloudsBitMask = (1 << 5);  
+  var qa = image.select("pixel_qa");  
+  var mask = qa.bitwiseAnd(cloudShadowBitMask).eq(0)  
+                 .and(qa.bitwiseAnd(cloudsBitMask).eq(0));  
+  return image.updateMask(mask);  
+} 
+//Landsat TOA remove cloud function  
+function rmCloud_TOA(image) {
+  var CloudScore = ee.Algorithms.Landsat.simpleCloudScore(image);
+  var image_rm =CloudScore.select("cloud").lte(30);
+  return image.updateMask(image_rm);
+}
+ 
+//landsat 5/7
+//NDWI  
+function NDWI(image) {  
+  return image.addBands(  
+    image.normalizedDifference(["B2", "B4"])  
+         .rename("NDWI"));  
+}  
+//MNDWI  
+function MNDWI(image) {  
+  return image.addBands(  
+    image.normalizedDifference(["B2", "B5"])  
+         .rename("MNDWI"));  
+}
+// Data 
+var start = ee.Date.fromYMD(1998,1,1);
+var end = ee.Date.fromYMD(1998,12,31);
+
+
+// Image pre-processing
+//LANDSAT/LT05/C01/T1_TOA
+var imagecol = ee.ImageCollection("LANDSAT/LT05/C01/T1_TOA")
+          .filterBounds(Studyarea3)
+          .filterDate(start,end)
+          .map(ee.Algorithms.Landsat.simpleCloudScore)//TOA数据专用去云
+          .map(function(image){
+             return image.updateMask(image.select("cloud").lte(30));
+           })
+          //.map(rmCloud_SR)
+          .map(MNDWI)
+;
+print("Studyarea_image",imagecol);
+
+// Image quality mosaic and study area clip
+var mndvi_before = imagecol.qualityMosaic('MNDWI').clip(Studyarea3);
+print("mndvi_before", mndvi_before);
+
+// Define the new bands name
+var bandNames = ['blue', 'green', 'red','nir',"swir",'MNDWI'];
+
+// Reference image 
+var reference =  mndvi_before.select(['B1','B2','B3','B4',"B5",'MNDWI']).rename(bandNames).clip(reference_p);
+Map.addLayer(reference, {bands:['red','green','blue'],min:0, max:3000}, 'Reference Image',false);
+
+// Original Target image
+var target =  mndvi_before.select(['B1','B2','B3','B4',"B5",'MNDWI']).rename(bandNames).clip(target_p);
+Map.addLayer(target, {bands:['red','green','blue'],min:0, max:3000}, 'Target Image',false);
+
+
+
+// Histogram function
+function showHistogram (image, name, band) {
+  var options = {
+	title: 'Histogram of ' + name,
+	fontSize: 16,
+	hAxis: {title: 'DN value'},
+	vAxis: {title: 'count of DN'},
+	series: {0: {color: 'blue'},
+  }};
+    
+  var histogram = ui.Chart.image.histogram({
+	image: image.select(band),
+	region: image.geometry(),
+	maxBuckets: Math.pow(2, 8),
+	scale: 100,
+	maxPixels: 1e9
+  });
+  
+  var histogram1 = histogram.setSeriesNames([band]).setOptions(options);
+  print(histogram1);
+}
+// Show Reference and Target histograms
+showHistogram(reference, 'Reference Image', 'MNDWI');
+showHistogram(target, 'Target Image', 'MNDWI');
+
+// Cumulative distribution function
+// Define the function to generate the set of elements of [DN value, probability] for the specified band
+function getHistData (image, band) {
+  var histogram = image.reduceRegion({
+    reducer: ee.Reducer.histogram({
+      maxBuckets: Math.pow(2, 9), 
+    }), 
+    geometry: image.geometry(), 
+    scale: 100, 
+    maxPixels: 1e13, 
+  });
+
+  var dnList = ee.List(ee.Dictionary(histogram.get(band)).get('bucketMeans'));
+  var countsList = ee.List(ee.Dictionary(histogram.get(band)).get('histogram'));
+  var cumulativeCountsArray = ee.Array(countsList).accum({axis:0});
+  var totalCount = cumulativeCountsArray.get([-1]);
+  var cumulativeProbabilities = cumulativeCountsArray.divide(totalCount);
+  var array = ee.Array.cat({arrays: [dnList, cumulativeProbabilities], axis:1});
+  
+  var fc = ee.FeatureCollection(array.toList().map(function(list) {
+    return ee.Feature(null, {
+      dn: ee.List(list).get(0), 
+      probability: ee.List(list).get(1)});
+  }));
+  return fc;
+}
+
+// Cumulative Distribution chart
+function showCdf (image, name, band) {
+	var cdf = getHistData(image, band);
+  
+	var options = {
+		title: 'Cumulative Distribution Function of ' + name ,
+		fontSize: 20,
+		hAxis: {title: 'DN'},
+		vAxis: {title: 'Cumulative Probability'},
+		series: {
+			0: {color: 'red'},
+		}
+	}; 
+  
+	var cdfChart = ui.Chart.feature.byFeature({
+		features: cdf,
+		xProperty: 'dn',
+		yProperties: ['probability']
+			}).setOptions(options);
+	print(cdfChart);
+}
+showCdf(reference, 'Reference Image', 'MNDWI');
+showCdf(target, 'Target Image', 'MNDWI');
+
+// Histogram mapping function
+function equalize (referenceImage, targetImage, band) {
+	var referenceHistData = getHistData(referenceImage, band);
+	var targetHistData = getHistData(targetImage, band);
+  
+  //Random Forest Algorithm
+  var probToDn = ee.Classifier.smileRandomForest(100)
+    .setOutputMode('REGRESSION')
+    .train({
+      features: referenceHistData, 
+      classProperty: 'dn', 
+      inputProperties: ['probability']
+  });
+	var dnToProb = ee.Classifier.smileRandomForest(100)
+      .setOutputMode('REGRESSION')
+      .train({
+        features: targetHistData, 
+        classProperty: 'probability', 
+        inputProperties: ['dn']
+    });
+    var targetImageProb = targetImage.select(band).rename('dn').classify(dnToProb, 'probability');
+    var targetImageDn = targetImageProb.classify(probToDn, band);
+    return targetImageDn;
+}
+
+//Studyarea
+//Image Matching Function 
+var match = function(referenceImage, targetImage, bandNames) {
+	var matchedBands = bandNames.map(function(band)
+	{
+		return equalize(referenceImage, targetImage, band);
+  });
+	return ee.Image.cat(matchedBands);
+};
+var matched = match(reference, target, bandNames);
+print("matched",matched)
+
+
+// Matched Histogram and Cumulative Distribution chart
+showHistogram(matched, 'Matched Image', 'MNDWI');
+showCdf(matched, 'Matched Image', 'MNDWI');
+
+var matched = matched.select("MNDWI").rename("MNDWI").toDouble();
+print("matched",matched)
+
+// MNDWI statistics 
+// Matched Target image MNDWI value
+var mndvivalue = matched.reduceRegion({
+        reducer: ee.Reducer.mean()
+    .combine(ee.Reducer.min(),null, true)
+    .combine(ee.Reducer.max(),null, true)
+    .combine(ee.Reducer.stdDev(),null, true)
+    .combine(ee.Reducer.variance(),null, true),
+    geometry: Studyarea3,
+    scale: 30,
+    maxPixels: 1e13
+  });
+print("Matched Target image mndvi value", mndvivalue);
+
+// matched Image mosaic
+var imgAB1 = ee.ImageCollection.fromImages([mndvi_before.select("MNDWI").toFloat(), matched.select("MNDWI").toFloat()]);
+var result_mndvi1 = imgAB1.mosaic();
+
+// Matched image mndvi value for the study area
+var mndvivalue_2 = result_mndvi1.toFloat().reduceRegion({
+        reducer: ee.Reducer.mean()
+    .combine(ee.Reducer.min(),null, true)
+    .combine(ee.Reducer.max(),null, true)
+    .combine(ee.Reducer.stdDev(),null, true)
+    .combine(ee.Reducer.variance(),null, true),
+    geometry: Studyarea3,
+    scale: 30,
+    maxPixels: 1e13
+  });
+print("1Matched image mndvi value for the study area", mndvivalue_2);
+
+// mndvi value
+// Original image mndvi values for the study area 
+var Original_mndvi = mndvi_before.select("MNDWI").reduceRegion({
+      reducer: ee.Reducer.mean()
+    .combine(ee.Reducer.min(),null, true)
+    .combine(ee.Reducer.max(),null, true)
+    .combine(ee.Reducer.stdDev(),null, true)
+    .combine(ee.Reducer.variance(),null, true),
+  geometry: Studyarea3,
+  scale: 30,
+  maxPixels: 1e13
+});
+print("Original image mndvi values for the study area", Original_mndvi);
+
+var mndvi_beforearrayImage = mndvi_before.select('MNDWI').toArray().arrayFlatten([['MNDWI']]);
+print("mndvi_beforearrayImage",mndvi_beforearrayImage);
+
+// Original Target image mndvi value 
+var Original_target_mndvi = target.reduceRegion({
+    reducer: ee.Reducer.mean()
+    .combine(ee.Reducer.min(),null, true)
+    .combine(ee.Reducer.max(),null, true)
+    .combine(ee.Reducer.stdDev(),null, true)
+    .combine(ee.Reducer.variance(),null, true),
+    geometry: target_p,
+    scale: 30,
+    maxPixels: 1e13
+  });
+print("Original Target image mndvi value", Original_target_mndvi);
+
+var targetarrayImage = target.toArray().arrayFlatten([['MNDWI']])//.toArray(1);
+print("targetarrayImage",targetarrayImage);    
+    
+//Original_Reference_mndvi
+
+Export.image.toDrive({
+  image:result_mndvi1.select("MNDWI"),
+  description: '1995_matched_studyarea_MNDWI_toa',
+  folder: 'MEXICO',
+  scale: 30,
+  region:Studyarea3,
+maxPixels:1e13  
+});
+       
+// Add Layers
+Map.centerObject(imagecol, 7);  
+
+Map.addLayer(imagecol, {bands:['B4','B3','B2'],min:0, max:3000}, 'study area RGB Image',false);
+Map.addLayer(mndvi_before.select('MNDWI'),{min:0,max:1,palette:palette} ,'Original study area mndvi image '); 
+Map.addLayer(matched, {min:0,max:1,palette:palette}, 'Matched Image');
+Map.addLayer(result_mndvi1, {min:0,max:1,palette:palette}, 'Matched_studyarea Image');
+
