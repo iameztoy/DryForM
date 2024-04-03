@@ -67,13 +67,9 @@
 // ### IMPORT MODULES ###
 // #############################################################################
 
-
 // RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
-var rgbTs = require(
-  //'users/iameztoy/ScriptFolder:rgb-timeseries.js');
-  'users/jstnbraaten/modules:rgb-timeseries/rgb-timeseries.js'); 
-
-
+var rgbTs = require('users/iameztoy/DryForest:Workflow/9_App/req/rgb-timeseries'); 
+  
 // #############################################################################
 // ### IMPORT DATASETS ###
 // #############################################################################
