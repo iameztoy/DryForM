@@ -1,3 +1,6 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.Point([-48.36466577863614, -8.598574344266773]);
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Click on the map to inspect the CCDC results for a single pixel (in the console).
 
 // Tweak the collection creation as you want (add additional bands or use Sentinel 1?).
@@ -12,7 +15,7 @@ Map.style().set('cursor', 'crosshair')
 Map.onClick(chartPoint)
 Map.setOptions('HYBRID')
 
-Map.centerObject(ee.Geometry.Point([-59.01369, -9.03734]), 12)
+Map.centerObject(ee.Geometry.Point([-48.36648, -8.59744]), 17)
 
 function chartPoint(latLon) {
   var point = ee.Geometry.Point([latLon.lon, latLon.lat])
@@ -23,11 +26,23 @@ function chartPoint(latLon) {
     end: '2024-04-01', 
     mapImage: function(image) { return image.addBands(toNdfi(image)) }
   })
-  
+  /*
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
     collection: collection,
     breakpointBands: ["ndfi"]
   })
+  */
+  var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
+		collection:collection,
+    breakpointBands:["ndfi"],
+//	tmaskBands:null,
+    minObservations:6,
+//	chiSquareProbability:0.99,
+//	minNumOfYearsScaler:1.33,
+//	dateFormat:false,
+//	lambda:20,
+//	maxIterations:25000,
+})
   
   temporalSegmentation.chartPoint({
     image: ccdc,
