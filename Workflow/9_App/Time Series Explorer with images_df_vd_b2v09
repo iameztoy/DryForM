@@ -69,7 +69,9 @@
 
 
 // RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
-var rgbTs = require('users/iameztoy/DryForest:Workflow/9_App/req/rgb-timeseries'); 
+var rgbTs = require('users/iameztoy/DryForest:Workflow/9_App/req/rgb-timeseries');
+// By Wiell
+var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/9_App/req/temporalSegmentation');
 
 // #############################################################################
 // ### IMPORT DATASETS ###
