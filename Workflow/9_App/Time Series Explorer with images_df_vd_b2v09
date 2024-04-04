@@ -362,7 +362,7 @@ var map = ui.Map();
 var mapChartSplitPanel = ui.Panel(ui.SplitPanel({
   firstPanel: map, //
   secondPanel: chartPanel,
-  orientation: 'vertical',
+  orientation: 'horizontal',
   wipe: false,
 }));
 
@@ -851,6 +851,49 @@ function renderGraphics(coords) {
 
 }
 
+// for CCD chart rendering
+
+var chartpoint = function(coords) {
+  var point = ee.Geometry.Point(coords.lon, coords.lat)
+  
+  var collection = createLandsatCollection({
+    region: point,
+    start: '2013-01-01',
+    end: '2024-04-01', 
+    mapImage: function(image) { return image.addBands(toNdfi(image)) }
+  })
+  /*
+  var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
+    collection: collection,
+    breakpointBands: ["ndfi"]
+  })
+  */
+  var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
+		collection:collection,
+    breakpointBands:["ndfi"],
+//	tmaskBands:null,
+//  minObservations:6,
+//  chiSquareProbability:0.95,
+//	minNumOfYearsScaler:1.33,
+//	dateFormat:false,
+//	lambda:20,
+//	maxIterations:25000,
+})
+  
+  temporalSegmentation.chartPoint({
+    image: ccdc,
+    point: point,
+    bandName: 'ndfi',
+    // If you don't plot the raw collection, this will be faster.
+    // Just comment it out if you want
+    collection: collection,
+    callback: function (chart) {
+      //chartPanel.clear(); //It is already cleared by previous piece of code
+      chartPanel.add(chart)
+    }
+  })  
+}
+
 /**
  * Handles map clicks.
  */
@@ -1330,6 +1373,7 @@ cloudSlider.onChange(optionChange);
 regionWidthSlider.onChange(optionChange);
 submitButton.onClick(handleSubmitClick);
 map.onClick(handleMapClick);
+map.onClick(chartpoint)
 
 map.style().set('cursor', 'crosshair');
 map.setOptions('SATELLITE');
