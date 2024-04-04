@@ -1,5 +1,5 @@
 
-// This script counts and exports the valid observations for the Majority Vote Layer
+// This script counts and exports the valid observations for the Majority Vote Layer version 0.
 // The max. number of valid observations in this case is 8. It is afterwards ingested
 // in the Application as a layer and is also queried to retrieve the information contained within.
 // The purpose is to have additional information compared to the majority vote layer.
