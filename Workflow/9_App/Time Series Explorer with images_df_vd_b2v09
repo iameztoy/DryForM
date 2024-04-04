@@ -102,6 +102,10 @@ var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_201
 var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_2019').mosaic().unmask(); // January 2019 !!
 var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
 
+// Global Fires
+
+var gabam = ee.ImageCollection("projects/sat-io/open-datasets/GABAM"); //30m Global Annual Burned Area Maps (GABAM)
+
 
 // #############################################################################
 // ### GET URL PARAMS ###
@@ -762,6 +766,7 @@ function renderGraphics(coords) {
   map.addLayer(glc10Loss.selfMask(), {}, "GLC 10 with Hansen Loss", 0);
   map.addLayer(RefineStep2.selfMask(), {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":'4D9221'}, 'EC JRC Global forest cover 2020 – V1', 1);
   map.addLayer(TotTF_c, VisParam10cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
+  map.addLayer(Fires2020, {palette:"red"}, "GABAM Fires 2020", 0);
 
   
   // Add new point to the Map.
@@ -1299,6 +1304,9 @@ var TotalGrass2020sr = TotalGrass2020s.remap({
 
 var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
+
+// GAMAB Fires
+var Fires2020 = gabam.filterDate('2020-01-01','2021-01-01')
 
 
 // #############################################################################
