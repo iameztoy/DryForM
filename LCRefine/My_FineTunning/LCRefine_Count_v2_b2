@@ -89,8 +89,8 @@ Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0)
 
 Export.image.toAsset({
     image: count,
-    description: 'CountValid',
-    assetId: 'projects/ee-dryforestia/assets/Global_forest_step1',
+    description: 'CountValid8cl',
+    assetId: 'projects/ee-dryforestia/DryFrom_Project/App/CountValid8cl',
     scale: 10,
     maxPixels: 1e13
   });
