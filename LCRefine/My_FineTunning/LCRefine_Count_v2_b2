@@ -90,7 +90,7 @@ Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0)
 Export.image.toAsset({
     image: count,
     description: 'CountValid8cl',
-    assetId: 'projects/ee-dryforestia/DryFrom_Project/App/CountValid8cl',
+    assetId: 'projects/hardy-tenure-383607/DryFrom_Project/App/CountValid8cl',
     scale: 10,
     maxPixels: 1e13
   });
