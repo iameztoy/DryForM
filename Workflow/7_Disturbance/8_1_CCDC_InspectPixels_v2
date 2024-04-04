@@ -22,7 +22,7 @@ function chartPoint(latLon) {
   
   var collection = createLandsatCollection({
     region: point,
-    start: '1913-01-01',
+    start: '2013-01-01',
     end: '2024-04-01', 
     mapImage: function(image) { return image.addBands(toNdfi(image)) }
   })
