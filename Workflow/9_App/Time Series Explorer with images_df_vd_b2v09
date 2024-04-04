@@ -757,12 +757,12 @@ function renderGraphics(coords) {
   map.addLayer(gedi5Llt5 , {}, "GEDI Lang < 5", 0);
   map.addLayer(dwM_Tree, {}, "DW Trees", 0);
   map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
-  map.addLayer(wri_Tree, {}, "WRI Tree => 80", 0);
+  map.addLayer(wri_Tree, {}, "WRI Tree => 10", 0); //Changed from 80 to 10
   map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
   map.addLayer(esa_Tree, {}, "ESA Tree", 0);
   map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
   map.addLayer(RefineStep2, {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":"orange"}, "JRC Baseline Map 2020", 0);
-  map.addLayer(TotTF_c, VisParam10cl, "Total Tree/Forest", 0); //Range 0-7
+  map.addLayer(TotTF_c, VisParam10cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
 
   
   // Add new point to the Map.
@@ -1166,11 +1166,18 @@ var esa_grass = esawc2020.eq(30);
 // 4. WRI Tree Cover 2020
 
 var wrimax = TC_wri.max();
-var wri_gt10 = wrimax.gte(10);
+
+var wri10 = wrimax.eq(10);
+var wri20 = wrimax.eq(20);
+var wri30 = wrimax.eq(30);
+var wri40 = wrimax.eq(40);
+var wri50 = wrimax.eq(50);
+var wri60 = wrimax.eq(60);
+var wri70 = wrimax.eq(70);
 var wri80 = wrimax.eq(80);
 var wri90 = wrimax.eq(90);
 var wri100 = wrimax.eq(100);
-var wri_Tree3 =  wri_gt10; //wri80.add(wri90).add(wri100); outcome ranges between 1 and 3 or | greater or equal 10
+var wri_Tree3 =  wri10.add(wri20).add(wri30).add(wri40).add(wri50).add(wri60).add(wri70).add(wri80).add(wri90).add(wri100); //outcome ranges between 1 and 7
 var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
 var wri_Tree = wri_Treeu.gte(1);
 
@@ -1231,7 +1238,7 @@ var RefineStep2 = RefineStep2.updateMask(RefineStep2);
 
 // n. Overall Trees 2020
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5).add(RefineStep2);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5) //.add(RefineStep2);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 //Stack Tree/Forest
@@ -1245,7 +1252,7 @@ var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_Potapov_gte5']);
 var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5']);
 var RefineStep2_r = RefineStep2.rename(['JRC_BaselineM_2020']);
-var TotTC_c_r = TotTF_c.rename(['Total_TreeForest']);
+var TotTC_c_r = TotTreeFor.rename(['Total_TreeForest']); //TotTF_c.rename(['Total_TreeForest']);
 
 
 
