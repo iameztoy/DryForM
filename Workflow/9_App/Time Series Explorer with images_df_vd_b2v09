@@ -760,7 +760,7 @@ function renderGraphics(coords) {
   map.addLayer(HTC_2020.selfMask(), {min:0, max:1},"Hansen Tree Cover 2020", 0);
   map.addLayer(esa_Tree.selfMask(), {}, "ESA Tree", 0);
   map.addLayer(glc10Loss.selfMask(), {}, "GLC 10 with Hansen Loss", 0);
-  map.addLayer(RefineStep2.selfMask(), {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":"orange"}, "JRC Baseline Map 2020", 0);
+  map.addLayer(RefineStep2.selfMask(), {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":'4D9221'}, 'EC JRC Global forest cover 2020 – V1', 1);
   map.addLayer(TotTF_c, VisParam10cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
 
   
