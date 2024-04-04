@@ -77,8 +77,9 @@ var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/9_App/req/
 // ### IMPORT DATASETS ###
 // #############################################################################
 
-var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
-var RefineStep2 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Our second processing Sept/Oct 2023
+//var RefineStep1 = ee.Image("projects/ee-dryforestia/assets/Global_forest_step1"); //Our first processing step
+//var RefineStep2 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); //Our second processing Sept/Oct 2023
+var RefineStep2 = ee.ImageCollection('users/bourgoinclement2/ForestReferenceMap/EUFO_Forest2020_v0_post').mosaic(); // Published - Third processing released in December 2024
 
 //var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first(); //review! even remove and use esawc2020
 var dw = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1"); //+Info: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_DYNAMICWORLD_V1#bands
@@ -745,23 +746,21 @@ function renderGraphics(coords) {
     map.layers().remove(el);
   });
 
-
-  
   //Add all Tree/Cover layers + shrub/scrub and grass
-  map.addLayer(validCount, vcVis, "Valid observations", 0) //Needs to be updated to include GEDI Lang (new max value is 8)
+  map.addLayer(validCount, vcVis, "Valid observations", 0); //Needs to be updated to include GEDI Lang (new max value is 8)
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
-  map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0);
-  map.addLayer(gedilt5, {}, "GEDI Potapov < 5", 0);  
-  map.addLayer(gedi5L_gte5 , {}, "GEDI Lang => 5", 0);
-  map.addLayer(gedi5Llt5 , {}, "GEDI Lang < 5", 0);
-  map.addLayer(dwM_Tree, {}, "DW Trees", 0);
-  map.addLayer(esri_Tree, {}, "ESRI Tree", 0);
-  map.addLayer(wri_Tree, {}, "WRI Tree => 10", 0); //Changed from 80 to 10
-  map.addLayer(HTC_2020, {min:0, max:1},"Hansen Tree Cover 2020", 0);
-  map.addLayer(esa_Tree, {}, "ESA Tree", 0);
-  map.addLayer(glc10Loss, {}, "GLC 10 with Hansen Loss", 0);
-  map.addLayer(RefineStep2, {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":"orange"}, "JRC Baseline Map 2020", 0);
+  map.addLayer(gedi5.selfMask(), {}, "GEDI Potapov => 5", 0);
+  map.addLayer(gedilt5.selfMask(), {}, "GEDI Potapov < 5", 0);  
+  map.addLayer(gedi5L_gte5.selfMask(), {}, "GEDI Lang => 5", 0);
+  map.addLayer(gedi5Llt5.selfMask(), {}, "GEDI Lang < 5", 0);
+  map.addLayer(dwM_Tree.selfMask(), {}, "DW Trees", 0);
+  map.addLayer(esri_Tree.selfMask(), {}, "ESRI Tree", 0);
+  map.addLayer(wri_Tree.selfMask(), {}, "WRI Tree => 10", 0); //Changed from 80 to 10
+  map.addLayer(HTC_2020.selfMask(), {min:0, max:1},"Hansen Tree Cover 2020", 0);
+  map.addLayer(esa_Tree.selfMask(), {}, "ESA Tree", 0);
+  map.addLayer(glc10Loss.selfMask(), {}, "GLC 10 with Hansen Loss", 0);
+  map.addLayer(RefineStep2.selfMask(), {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":"orange"}, "JRC Baseline Map 2020", 0);
   map.addLayer(TotTF_c, VisParam10cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
 
   
@@ -772,7 +771,7 @@ function renderGraphics(coords) {
   // Get collection options.
 
   var cloudThresh = cloudSlider.getValue();
-  var datasetId = sensorInfo[sensor]['id'];
+  var datasetId = sensorInfo[sensor]['id']
   var endDate = new Date();
   var startDate = ee.Date(endDate)
     .advance(-parseInt(durationSlider.getValue()), 'months');
