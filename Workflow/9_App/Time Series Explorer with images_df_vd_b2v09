@@ -1166,10 +1166,11 @@ var esa_grass = esawc2020.eq(30);
 // 4. WRI Tree Cover 2020
 
 var wrimax = TC_wri.max();
+var wri_gt10 = wrimax.gte(10);
 var wri80 = wrimax.eq(80);
 var wri90 = wrimax.eq(90);
 var wri100 = wrimax.eq(100);
-var wri_Tree3 = wri80.add(wri90).add(wri100); //outcome ranges between 1 and 3
+var wri_Tree3 =  wri_gt10; //wri80.add(wri90).add(wri100); outcome ranges between 1 and 3 or | greater or equal 10
 var wri_Treeu = wri_Tree3.unmask(0); //Reclass mask to zero so the calculation can go beyond the boundaries of the WRI dataset
 var wri_Tree = wri_Treeu.gte(1);
 
