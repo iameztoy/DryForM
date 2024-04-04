@@ -1,3 +1,8 @@
+
+// This script counts and exports the valid observations for the Majority Vote Layer
+// The max. number of valid observations in this case is 8. It is afterwards ingested
+// in the Application
+
 var imageVisParam = {"opacity":1,"bands":["f"],"max":5,"palette":["ff2005","ff907b","ffe81c","a9ff6f","3ceeff","0e64ff"]},
     imageVisParam2 = {"opacity":1,"bands":["f"],"max":6,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff"]},
     imageVisParam3 = {"opacity":1,"bands":["f"],"max":7,"palette":["ff0808","ffcc70","e9ff33","b1ff6a","31f5ff","56b1ff","bb7eff","fd22ff"]};
