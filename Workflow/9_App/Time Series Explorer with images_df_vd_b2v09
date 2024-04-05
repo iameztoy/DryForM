@@ -863,9 +863,9 @@ var chartpoint = function(coords) {
   var collection = createLandsatCollection({
     region: point,
     start: '2013-01-01',
-    end: '2024-04-01', 
+    end: '2024-08-01', 
     mapImage: function(image) { return image.addBands(toNdfi(image)) }
-  })
+  });
   /*
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
     collection: collection,
@@ -882,7 +882,7 @@ var chartpoint = function(coords) {
 //	dateFormat:false,
 //	lambda:20,
 //	maxIterations:25000,
-})
+});
   
   temporalSegmentation.chartPoint({
     image: ccdc,
@@ -893,10 +893,10 @@ var chartpoint = function(coords) {
     collection: collection,
     callback: function (chart) {
       //chartPanel.clear(); //It is already cleared by previous piece of code
-      chartPanel.add(chart)
+      chartPanel.add(chart);
     }
-  })  
-}
+  });  
+};
 
 /**
  * Handles map clicks.
