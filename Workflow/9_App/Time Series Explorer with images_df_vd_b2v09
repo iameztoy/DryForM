@@ -103,9 +103,10 @@ var cropmask_UMD_2015=ee.ImageCollection('users/potapovpeter/Global_cropland_201
 var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011).or(cropmask_UMD_2015).or(cropmask_UMD_2015);
 
 // Global Fires
-
 var gabam = ee.ImageCollection("projects/sat-io/open-datasets/GABAM"); //30m Global Annual Burned Area Maps (GABAM)
 
+// Tree Cover Loss - Hansen Global Forest Change
+var gfc2022 = ee.Image('UMD/hansen/global_forest_change_2022_v1_10');
 
 // #############################################################################
 // ### GET URL PARAMS ###
@@ -767,6 +768,7 @@ function renderGraphics(coords) {
   map.addLayer(RefineStep2.selfMask(), {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":'4D9221'}, 'EC JRC Global forest cover 2020 – V1', 1);
   map.addLayer(TotTF_c, VisParam10cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
   map.addLayer(Fires2020, {palette:"red"}, "GABAM Fires 2020", 0);
+  map.addLayer(lossYear, lossYearVis, 'Loss Year Hansen (2000-2022)', 0);
 
   
   // Add new point to the Map.
@@ -858,7 +860,7 @@ function renderGraphics(coords) {
 // for CCD chart rendering
 
 var chartpoint = function(coords) {
-  var point = ee.Geometry.Point(coords.lon, coords.lat)
+  var point = ee.Geometry.Point(coords.lon, coords.lat);
   
   var collection = createLandsatCollection({
     region: point,
@@ -1306,7 +1308,26 @@ var TotalShrub2020sr = TotalShrub2020sr.unmask();
 var TotalGrass2020sr = TotalGrass2020sr.unmask();
 
 // GAMAB Fires
-var Fires2020 = gabam.filterDate('2020-01-01','2021-01-01')
+var Fires2020 = gabam.filterDate('2020-01-01','2021-01-01');
+
+//Hansen Loss
+var lossYear = gfc2022.select(['lossyear']);
+
+// The lossYear image contains pixel values from 0 to 22
+// indicating the year in which the loss occurred
+// We visualize this layer on the map.
+var palette_HL = [
+  '0083ba', '#4394b6', '#5ca5b2', '#74b6ad', '#8dc8a9',
+  '#a5d9a5', '#b7e2a8', '#c7e8ad', '#d7efb2', '#e7f5b7',
+  '#f7fcbc', '#fff7b6', '#fee8a4', '#fed890', '#fec980',
+  '#fdba6e', '#fba75e', '#f48b51', '#ed6e43', '#e5522a',
+  '#de3519', '#d7191c'];
+
+var lossYearVis = {
+  min: 0,
+  max: 22,
+  palette: palette_HL
+}
 
 
 // #############################################################################
