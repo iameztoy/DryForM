@@ -11,7 +11,7 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var aoi = chaco; //target aoi
+var aoi = caatinga; //target aoi
 
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
@@ -32,9 +32,10 @@ var buffer = 20;
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
-var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
 //projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania
 //projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco
+//projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga
 print("Image Collection", target_image)
 
 // Band selection
@@ -68,7 +69,7 @@ var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = target_image.select(bands); // or (bands)
+var composite = target_image //.select(bands); // or (bands)
 
 // Ground Truth
 
@@ -92,7 +93,7 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
 //AutoSamples
-var auto_gtp = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/AutoSamples_chaco100");
+var auto_gtp = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/AutoSamples_caatinga150");
 
 // Training set | Already Balanced sample sets.
     // Points
