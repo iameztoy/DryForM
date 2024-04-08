@@ -32,7 +32,7 @@ var buffer = 20;
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
-var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
+var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 //projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania
 //projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco
 //projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga
@@ -93,7 +93,7 @@ var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/ass
 var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
 
 //AutoSamples
-var auto_gtp = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/AutoSamples_caatinga150");
+var auto_gtp = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/AutoSamples_chaco150");
 
 // Training set | Already Balanced sample sets.
     // Points
@@ -170,11 +170,17 @@ var classValues = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8, 9];
 */
 
+// AutoSampling
 // Chaco - No Mangroves and we need to filter OWL (not present in the val set)
 trainingGcp = trainingGcp.filter(ee.Filter.eq('lc', 2).not()); 
 
 var classValues_val = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues_val = [7, 0, 1, 3, 4, 5, 6, 8, 9];
+
+// Others with mangrooves
+
+//var classValues_val = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+//var remapValues_val = [7, 0, 1, 3, 4, 5, 6, 8, 9, 10, 11];
 
 // For visulrec column (defined in landcover variable):
 // 1: TC, 2: Shrub, 3: Grass, 4: Flooded Veg., 5: Built, 6: P.Water, 7: S.Water, 8: Bare, 9: Crops
