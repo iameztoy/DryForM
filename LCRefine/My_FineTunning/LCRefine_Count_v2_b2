@@ -86,7 +86,7 @@ Map.addLayer(gedi5, {}, "GEDI Potapov => 5", 0)
 Map.addLayer(HTC_2020, {}, "Hansen", 0)
 Map.addLayer(gedi5L,  {}, "GEDI Lang => 5", 0)
 
-
+/*
 Export.image.toAsset({
     image: count,
     description: 'CountValid8cl',
@@ -94,3 +94,4 @@ Export.image.toAsset({
     scale: 10,
     maxPixels: 1e13
   });
+*/
