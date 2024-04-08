@@ -27,7 +27,7 @@ var landcover = "lc"; // or visu_lc
 // Take into account whether if you select points or polygons. If POL are selected, there is no need to buffer
 // This shall be the same value used in the hyperparameter fine tuning step
 
-var buffer = 2; 
+var buffer = 20; 
 
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
