@@ -1,0 +1,55 @@
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga"),
+    gt = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga"),
+    geometry = 
+    /* color: #d63000 */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-40.55535934484398, -11.392601727019823],
+          [-40.55535934484398, -11.437023929212279],
+          [-40.5084099582473, -11.437023929212279],
+          [-40.5084099582473, -11.392601727019823]]], null, false);
+
+a = a.mosaic()
+Map.addLayer(a)
+
+gt = gt.filter(ee.Filter.eq('visulcrec', 1)); 
+Map.addLayer(gt, {color: "red"})
+
+Map.addLayer(geometry)
+
+
+
+// "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH"
+// "t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI"
+// "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI"
+// "t0_SI", "t1_SI", "t2_SI", "t3_SI"
+// "t0_iBI", "t1_iBI", "t2_iBI", "t3_iBI"
+// "t0_B11", "t1_B11", "t2_B11", "t3_B11"
+// "t0_B12", "t1_B12", "t2_B12", "t3_B12"
+// "t0_B8", "t1_B8", "t2_B8", "t3_B8"
+// "t0_B4", "t1_B4", "t2_B4", "t3_B4"
+// "t0_B3", "t1_B3", "t2_B3", "t3_B3"
+// "t0_gray_savg_glcm", "t1_gray_savg_glcm", "t2_gray_savg_glcm", "t3_gray_savg_glcm"
+
+Export.image.toDrive({
+		image: a.clip(geometry),
+    description: "Export_bands",
+    folder: "GEE",
+//	fileNamePrefix:,
+//	dimensions:,
+//	region:,
+    scale: 10,
+    crs: "EPSG:4326",
+//	crsTransform:,
+    maxPixels:1e13,
+//	shardSize:,
+//	fileDimensions:,
+//	skipEmptyTiles:,
+//	fileFormat:,
+//	formatOptions:,
+//	priority:,
+})
