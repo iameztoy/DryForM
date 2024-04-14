@@ -20,7 +20,7 @@ var caatinga = "caatinga";
 var cerrado = "cerrado";
 var tanzania = "tanzania";
 
-var aoi = chaco;
+var aoi = tanzania;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
@@ -29,8 +29,10 @@ var buffer = 20 // To buffer the training and validation points | Take into acco
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
-var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
-var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12");
+var AllChaco_pb = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania").mosaic();
+//projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga
+//projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco
+var AllChaco_oo = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Tanzania_SNIC_sNAc0c8n256se28");
 
 // Select Bands if necessary | These are the 30 first bands of the optimal RF (pixel based) output
 var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH"];
@@ -49,7 +51,7 @@ var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_
 
 // Select target image | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = AllChaco_pb //.select(bands);  //otherwise .select("t.*") to remove "clusters" band
+var composite = AllChaco_oo //.select(bands);  //otherwise .select("t.*") to remove "clusters" band
 
 
 // Ground Truth
@@ -139,11 +141,11 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 // ***
 
 // Rename and reclass (not really necessary in this step) the inputs | Final set for RF
-var trainingGcp = GTPoint_DF_Balanced_chaco;
+var trainingGcp = GTPoint_DF_Balanced_tanzania
 var validationGcp = gtp_vl;
 
-var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10]; // 0 is seasonal water that was reclassfied outside.
-var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+var classValues = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10]; // 0 is seasonal water that was reclassfied outside.
+var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8, 9];
 
 // For visulrec column (defined in landcover variable):
 // 1: TC, 2: Shrub, 3: Grass, 4: Flooded Veg., 5: Built, 6: P.Water, 7: S.Water, 8: Bare, 9: Crops
