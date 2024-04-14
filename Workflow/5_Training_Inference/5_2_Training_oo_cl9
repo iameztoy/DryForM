@@ -34,8 +34,11 @@ var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Seg
 target_c = target_c.select("t.*");
 
 // Band selection
-var bands = ["t0_VV_mean", "t0_VH_mean", "t1_VV_mean", "t1_VH_mean", "t2_VV_mean", "t2_VH_mean", "t3_VV_mean", "t3_VH_mean",
-"t0_SI_mean", "t1_SI_mean", "t2_SI_mean", "t3_SI_mean"];
+var bands = [
+"t0_MSAVI_mean", "t1_MSAVI_mean", "t2_MSAVI_mean", "t3_MSAVI_mean",
+"t0_gNDVI_mean", "t1_gNDVI_mean", "t2_gNDVI_mean", "t3_gNDVI_mean",
+"t0_VV_mean", "t0_VH_mean", "t1_VV_mean", "t1_VH_mean", "t2_VV_mean", "t2_VH_mean", "t3_VV_mean", "t3_VH_mean"
+];
 
 // "t0_VV_mean", "t0_VH_mean", "t1_VV_mean", "t1_VH_mean", "t2_VV_mean", "t2_VH_mean", "t3_VV_mean", "t3_VH_mean"
 // "t0_MSAVI_mean", "t1_MSAVI_mean", "t2_MSAVI_mean", "t3_MSAVI_mean"
@@ -132,7 +135,7 @@ target_mean = target_mean.select(blist).rename(ren);
 print("Renamed", target_mean.bandNames())
 print("Target Mean")
 
-target_mean = target_mean //.select(bands)
+target_mean = target_mean.select(bands)
 
 
 var trainingGcp = GTPoint_DF_Balanced_caatinga;
