@@ -12,22 +12,25 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
 // Areas of Interest
-var aoi = chaco; //target aoi
+var aoi = caatinga; //target aoi
 
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = chaco_n;
+var aoi_n = caatinga_n;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
 
 // Imagery | Target for training
-var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
+
 // Imagery | Target for classification (Previously computed in Module 4)
-var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Chaco_SNIC_sNAc0c8n256se12").clip(aoi);
+var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Caatinga_SNIC_sNAc0c8n256se28").clip(aoi);
+//projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Caatinga_SNIC_sNAc0c8n256se28
+//projects/hardy-tenure-383607/assets/DryForm_Project/Segmentation/Tanzania_SNIC_sNAc0c8n256se28
 target_c = target_c.select("t.*");
 
 // Band selection
@@ -51,7 +54,8 @@ var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
 
 // Select target image | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = target_c //.select(bands); // or (bands)
+var composite = target_c.select("t.*") //.select(bands); // or (bands)
+print(composite)
 
 // Ground Truth
 
@@ -127,20 +131,20 @@ target_mean = target_mean.select(blist).rename(ren);
 print("Renamed", target_mean.bandNames())
 
 
-var trainingGcp = GTPoint_DF_Balanced_chaco;
+var trainingGcp = GTPoint_DF_Balanced_caatinga;
 var validationGcp = gtp_vl;
 
 // Reclassify the classes if necessary to get consecutive integers
 // 0-based sequential series. 
 
-/* Considering additional class of mangroves
+//Considering additional class of mangroves
 var classValues = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10];
 var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8, 9];
-*/
+
 
 // Chaco - No Mangroves
-var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
-var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+//var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
+//var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 
 
 // For visulrec column (defined in landcover variable):
@@ -162,7 +166,7 @@ var training = target_mean.sampleRegions({
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 100
+var nTrees = 90
 
 // This might be used or not. If used: activated them within the classifier
 var vps = 8
