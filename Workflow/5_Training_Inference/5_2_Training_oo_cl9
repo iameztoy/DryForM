@@ -34,27 +34,25 @@ var target_c = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Seg
 target_c = target_c.select("t.*");
 
 // Band selection
-var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
-             "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI",
-             "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",
-             "t0_B12", "t1_B12", "t2_B12", "t3_B12",
-             "t0_B11", "t1_B11", "t2_B11", "t3_B11"];
+var bands = ["t0_VV_mean", "t0_VH_mean", "t1_VV_mean", "t1_VH_mean", "t2_VV_mean", "t2_VH_mean", "t3_VV_mean", "t3_VH_mean"];
 
-// "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH"
-// "t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI"
-// "t0_gNDVI", "t1_gNDVI", "t2_gNDVI", "t3_gNDVI"
-// "t0_SI", "t1_SI", "t2_SI", "t3_SI"
-// "t0_iBI", "t1_iBI", "t2_iBI", "t3_iBI"
-// "t0_B11", "t1_B11", "t2_B11", "t3_B11"
-// "t0_B12", "t1_B12", "t2_B12", "t3_B12"
-// "t0_B8", "t1_B8", "t2_B8", "t3_B8"
-// "t0_B4", "t1_B4", "t2_B4", "t3_B4"
-// "t0_B3", "t1_B3", "t2_B3", "t3_B3"
-// "t0_gray_savg_glcm", "t1_gray_savg_glcm", "t2_gray_savg_glcm", "t3_gray_savg_glcm"
+// "t0_VV_mean", "t0_VH_mean", "t1_VV_mean", "t1_VH_mean", "t2_VV_mean", "t2_VH_mean", "t3_VV_mean", "t3_VH_mean"
+// "t0_MSAVI_mean", "t1_MSAVI_mean", "t2_MSAVI_mean", "t3_MSAVI_mean"
+// "t0_gNDVI_mean", "t1_gNDVI_mean", "t2_gNDVI_mean", "t3_gNDVI_mean"
+// "t0_SI_mean", "t1_SI_mean", "t2_SI_mean", "t3_SI_mean"
+// "t0_iBI_mean", "t1_iBI_mean", "t2_iBI_mean", "t3_iBI_mean"
+// "t0_B11_mean", "t1_B11_mean", "t2_B11_mean", "t3_B11_mean"
+// "t0_B12_mean", "t1_B12_mean", "t2_B12_mean", "t3_B12_mean"
+// "t0_B8_mean", "t1_B8_mean", "t2_B8_mean", "t3_B8_mean"
+// "t0_B4_mean", "t1_B4_mean", "t2_B4_mean", "t3_B4_mean"
+// "t0_B3_mean", "t1_B3_mean", "t2_B3_mean", "t3_B3_mean"
+// "t0_gray_savg_glcm_mean", "t1_gray_savg_glcm_mean", "t2_gray_savg_glcm_mean", "t3_gray_savg_glcm_mean"
 
 // Select target image | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = target_c.select("t.*") //.select(bands); // or (bands)
+var composite = target_c.select("t.*")//.select(bands); // or (bands)
+composite = composite //.select(bands)
+
 print(composite)
 
 // Ground Truth
