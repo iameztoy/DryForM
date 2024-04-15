@@ -714,7 +714,7 @@ print(lc_final_img2);
 
 // Prepare post-processing
 //    MMU filter
-var mmu = 10000;
+var mmu = 20000;
 var fcount = lc_final_img2.connectedPixelCount({maxSize: 250, eightConnected:true});
 var farea = ee.Image.pixelArea();
 var area = fcount.multiply(farea);
@@ -725,12 +725,6 @@ lc_final_img2 = lc_final_img2.updateMask(mask_lte.not());
 //    Apply a kernel to erode the raster so that the auto-sample does not fall in a transition area.
 var uniformKernel = ee.Kernel.square({radius: 25, units: 'meters'});
 lc_final_img2 = lc_final_img2.reduceNeighborhood({reducer: ee.Reducer.min(), kernel: uniformKernel});
-
-//We need to apply the MMU and the erosion to each class individually
-
-
-
-
 
 Map.addLayer(lc_final_img2, null, "FINAL to export");
 
