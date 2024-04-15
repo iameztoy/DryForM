@@ -1,0 +1,20 @@
+
+//***********************************************************
+// DRYFORM - Step 5.3 - Apply Saved Model
+//***********************************************************
+
+
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Cerrado").mosaic();
+
+Map.addLayer(a)
+
+var classifierAssetId = 'projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/ClassPB_chaco_caatinga_b20_nT130';
+
+// Once the classifier export finishes, we can load our saved classifier.
+var savedClassifier = ee.Classifier.load(classifierAssetId);
+// We can perform classification just as before with the saved classifier now.
+var classified = a.classify(savedClassifier);
+
+// Select Only Tree Cover
+classified = classified.eq(0).selfMask();
+Map.addLayer(classified, {palette:"green"}, "LC from Saved Model")
