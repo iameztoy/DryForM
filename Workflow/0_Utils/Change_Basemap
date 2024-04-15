@@ -1,0 +1,31 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine"),
+    b = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Cerrado");
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
+Map.addLayer(b.mosaic())
+
+var GRAYMAP = [
+{   // Dial down the map saturation.
+stylers: [ { saturation: -100 } ]
+},{ // Dial down the label darkness.
+elementType: 'labels',
+stylers: [ { lightness: 20 } ]
+},{ // Simplify the road geometries.
+featureType: 'road',
+elementType: 'geometry',
+stylers: [ { visibility: 'simplified' } ]
+},{ // Turn off road labels.
+featureType: 'road',
+elementType: 'labels',
+stylers: [ { visibility: 'off' } ]
+},{ // Turn off all icons.
+elementType: 'labels.icon',
+stylers: [ { visibility: 'off' } ]
+},{ // Turn off all POIs.
+featureType: 'poi',
+elementType: 'all',
+stylers: [ { visibility: 'off' }]
+}
+];
+ 
+Map.setOptions('Gray', {'Gray': GRAYMAP});
