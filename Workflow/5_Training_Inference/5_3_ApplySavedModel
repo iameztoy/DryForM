@@ -3,21 +3,21 @@
 // DRYFORM - Step 5.3 - Apply Saved Model
 //***********************************************************
 
+// Target imagery preprocessed in a previous step
+var s1s2_Cerrado = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Cerrado").mosaic();
 
-var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Cerrado").mosaic();
 
-Map.addLayer(a)
+// Prepare the classifier
+var RF_ChacCaat = 'projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/ClassPB_chaco_caatinga_b20_nT130';
+var savedClassifier = ee.Classifier.load(RF_ChacCaat); // Load the classifier
+var classified = s1s2_Cerrado.classify(savedClassifier); // Classify with saved classifier
 
-var classifierAssetId = 'projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/ClassPB_chaco_caatinga_b20_nT130';
+// Apply masks for classes of interest
+var classified_TC = classified.eq(0).selfMask(); // Select Only Tree Cover
+var classified_shrubs = classified.eq(1).selfMask(); // Select Only Shrubs
 
-// Once the classifier export finishes, we can load our saved classifier.
-var savedClassifier = ee.Classifier.load(classifierAssetId);
-// We can perform classification just as before with the saved classifier now.
-var classified = a.classify(savedClassifier);
-
-// Select Only Tree Cover
-var classified_TC = classified.eq(0).selfMask();
-// Select Only Shrubs
-var classified_shrubs = classified.eq(1).selfMask();
+// Visualization
+var vp_s1s2 = {"opacity":1,"bands":["t0_B8","t1_B8","t2_B8"],"min":1,"max":144,"gamma":1};
+Map.addLayer(s1s2_Cerrado, vp_s1s2, "Multitemporal Imagery")
 Map.addLayer(classified_TC, {palette:"green"}, "LC from Saved Model - Tree Cover");
 Map.addLayer(classified_shrubs, {palette:"orange"}, "LC from Saved Model - Shrubs");
