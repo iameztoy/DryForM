@@ -16,5 +16,8 @@ var savedClassifier = ee.Classifier.load(classifierAssetId);
 var classified = a.classify(savedClassifier);
 
 // Select Only Tree Cover
-classified = classified.eq(0).selfMask();
-Map.addLayer(classified, {palette:"green"}, "LC from Saved Model")
+var classified_TC = classified.eq(0).selfMask();
+// Select Only Shrubs
+var classified_shrubs = classified.eq(1).selfMask();
+Map.addLayer(classified_TC, {palette:"green"}, "LC from Saved Model - Tree Cover");
+Map.addLayer(classified_shrubs, {palette:"orange"}, "LC from Saved Model - Shrubs");
