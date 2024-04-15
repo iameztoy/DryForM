@@ -625,8 +625,21 @@ var nodata = lc_final_img.unmask().eq(0); //The values are between 0 and masked 
 // ------------------------
 
 //Filling only with ESA WC | Alternativelly use intermediate scores (currently this has not been developed)
-var esawc_nd = esawc.updateMask(nodata).unmask();
-var lc_final_img2 = lc_final_img.unmask().add(esawc_nd).byte();
+var esawc_nd = esawc.updateMask(nodata).unmask(); // These are the areas left outside in iteration 1
+// We need to adequate these values into the lc classification system of our current legend
+    // ESA WC legend is as follows:
+    // 10: Tree Cover, 20: Shrubland, 30: Grassland, 40: Cropland, 50: Built-up, 60: Bare/Sparse Vegetation
+    // 70: Snow/Ice, 80: Permanent water bodies, 90: Herbaceous wetland, 95: Mangroves, 100: Moss and lichen
+
+    // We reclassify as follows:
+    // 10: 1, 20: 7, 30: 9, 40: 19, 50: 13, 60: 17, 70: 16, 80: 14, 90: 12, 95: 11, 100:18
+
+
+var classValues_wc_it2 = [10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100];
+var remapValues_wc_it2 = [1, 7, 9, 19, 13, 17, 16, 14, 12, 11, 18];
+
+esawc_nd = esawc_nd.remap(classValues_wc_it2, remapValues_wc_it2)
+var lc_final_img2 = lc_final_img.unmask().add(esawc_nd.unmask()).byte();
 
 
 // ADD LAYERS
