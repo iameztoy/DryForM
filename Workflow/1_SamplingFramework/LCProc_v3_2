@@ -720,7 +720,7 @@ var mask_lte = area.lte(mmu);
 
 lc_final_img2 = lc_final_img2.updateMask(mask_lte.not());
 
-//Apply a kernel to erode the raster
+//Apply a kernel to erode the raster so that the auto-sample does not fall in a transition area.
 var uniformKernel = ee.Kernel.square({radius: 25, units: 'meters'});
 lc_final_img2 = lc_final_img2.reduceNeighborhood({reducer: ee.Reducer.min(), kernel: uniformKernel});
 
