@@ -679,8 +679,23 @@ Map.addLayer(mossl_maj.selfMask(), vp_snow, "Mosch/Lichen", 0);
 // Prepare the sampling framework to get samples automatically in step 2_0
 // Target: lc_final_img 2 (Iteration 2)
 
+// Final Legend
+// 0 nodata  1 TC-1 | 2 TC-2 | 3 TC-3 | 4 TC-4  --->                 0
+// 5  TC-5 | 6 TC-67                            ---> MASK
+// 7 Shrub | 8 OWL                              ---> Only take 7 --> 1
+// 9 Grass | 10 Grass-Tree                      ---> Only take 9 --> 2
+// 11 Mangroves                                 --->             --> 3
+// 12 Herbaceous Veg.                           --->             --> 4
+// 13 Built-up                                  --->             --> 5
+// 14 Permanent Water | 15 Seasonal Water       --->             --> 6 and 7
+// 16 Snow                                      ---> MASK
+// 17 Bare                                      --->             --> 8
+// 18 Mosch/Lin                                 ---> MASK        
+// 19 Crops                                     --->             --> 9
+
+
 //First remove non desired labels
-var mask1 = lc_final_img2.gte(4).and(lc_final_img2.lte(6));
+var mask1 = lc_final_img2.gt(4).and(lc_final_img2.lte(6));
 lc_final_img = lc_final_img2.updateMask(mask1.not());
 var mask2 = lc_final_img2.eq(10);
 lc_final_img = lc_final_img2.updateMask(mask2.not());
