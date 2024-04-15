@@ -624,7 +624,7 @@ var nodata = lc_final_img.unmask().eq(0); //The values are between 0 and masked 
 // *** ITERATION - 2 *** 
 // ------------------------
 
-//Filling only with ESA WC | Alternativelly use intermediate scores (currently this has not been developed)
+// Filling only with ESA WC | Alternativelly use intermediate scores (currently this has not been developed)
 var esawc_nd = esawc.updateMask(nodata).unmask(); // These are the areas left outside in iteration 1
 // We need to adequate these values into the lc classification system of our current legend
     // ESA WC legend is as follows:
@@ -719,6 +719,10 @@ var area = fcount.multiply(farea);
 var mask_lte = area.lte(mmu);
 
 lc_final_img2 = lc_final_img2.updateMask(mask_lte.not());
+
+//Apply a kernel to erode the raster
+var uniformKernel = ee.Kernel.square({radius: 25, units: 'meters'});
+lc_final_img2 = lc_final_img2.reduceNeighborhood({reducer: ee.Reducer.min(), kernel: uniformKernel});
 
 Map.addLayer(lc_final_img2, null, "FINAL to export");
 
