@@ -55,7 +55,7 @@ for (var f in featlist) {
   var dis = feat.get("ID");
   var disS = dis.getInfo();
   var name = "tile";  
-  Export.image.toAsset({
+  Export.image.toDrive({
       description: "AutoSamples_" + aoi_n,
       folder: "GEE_forAutoSamples",
       fileNamePrefix: name+disS+"_"+aoi_n,
