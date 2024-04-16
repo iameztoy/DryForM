@@ -12,6 +12,7 @@
       2/ To generate the points automatically with no visual supervision and see how the classification performs
           compared to the classification carried out with the sampling points generated in 1/
           It is only created for experimental purposes. 
+      3/ If there is any computation time out, it is also possible to run the sampling out of GEE and import after the features created.
 */
 
 // Areas of Interest
