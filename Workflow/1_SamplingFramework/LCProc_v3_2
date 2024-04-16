@@ -808,6 +808,4 @@ for (var f in featlist) {
 }
 */
 
-var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine");
-Map.addLayer(a.mosaic())
 
