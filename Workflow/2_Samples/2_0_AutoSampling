@@ -23,7 +23,7 @@ var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania")
 
 var aoi = caatinga;
 var aoi_n = "caatinga";
-var npoints = 150; // Number of samples to be generated
+var npoints = 150; // Number of samples to be generated (per strata)
 
 //Sampling Framework created in step 1
 var lc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine").mosaic().clip(aoi); 
