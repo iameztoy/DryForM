@@ -8,8 +8,6 @@
 // Alternativelly, export to drive can be directly executed within the same script used to derive the layer (step 1)
 
 
-var lcrefine = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine").mosaic().clip(aoi);
-
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
@@ -17,6 +15,10 @@ var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania")
 
 var aoi = caatinga;
 var aoi_n = "caatinga";
+
+var lcrefine = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine").mosaic().clip(aoi);
+
+//
 
 aoi = aoi.geometry();
 var Zones = aoi.coveringGrid({
