@@ -39,7 +39,7 @@ var samples = lc.stratifiedSample({
 //	seed:false,
 //	classValues:null,
 //	classPoints:null,
-//	dropNulls:true,
+    dropNulls:true,
     tileScale: 16, // This can be probably lowered to make the process faster. 
     geometries: true,
 });
