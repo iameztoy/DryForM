@@ -808,4 +808,15 @@ for (var f in featlist) {
 }
 */
 
+var a = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chacoCaatinga_pb_nt130_b20");
+
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+
+var b = a.eq(0).selfMask().clip(caatinga)
+var c = a.eq(1).selfMask().clip(caatinga)
+
+Map.addLayer(b, {"palette":["005200"]}, "Tree Cover")
+Map.addLayer(c, {"palette":["ffbb22"]}, "Shrubs")
+
+
 
