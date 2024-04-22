@@ -11,14 +11,14 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var aoi = caatinga; //target aoi
+var aoi = cerrado; //target aoi
 
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
-var aoi_n = caatinga_n;
+var aoi_n = cerrado_n;
 
 // Ground Truth attribute to be used:
 var landcover = "visulcrec"; // or visu_lc
@@ -32,7 +32,7 @@ var buffer = 20;
 // Imagery 
 // Pixel based is an Image Collection (needs mosaicing) while Object Oriented image is an Image
 
-var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
+var target_image = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Cerrado").mosaic();
 //projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania
 //projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco
 print("Image Collection", target_image)
@@ -146,7 +146,7 @@ gtp_tr = gt11.merge(cTC).merge(aSh).merge(aGr);
 // ***
 
 // Rename the inputs | Final set for RF
-var trainingGcp = GTPoint_DF_Balanced_caatinga;
+var trainingGcp = GTPoint_DF_Balanced_cerrado;
 var validationGcp = gtp_vl;
 
 // Reclassify the classes if necessary to get consecutive integers
@@ -190,7 +190,7 @@ Map.addLayer(trainingGcp, null, "Training Points", 0)
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 60
+var nTrees = 130
 var vps = 8
 var mlp = 2
 var bf = 0.7
@@ -329,6 +329,8 @@ var crop = classified.eq(8).selfMask();
 */
 
 // If mangroves are included:
+Map.addLayer(classified, null, "Classified")
+
 var tc = classified.eq(0).selfMask();
 var shrub = classified.eq(1).selfMask();
 var grass = classified.eq(2).selfMask();
