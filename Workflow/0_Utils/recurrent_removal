@@ -1,10 +1,11 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var ic = ee.ImageCollection("projects/hardy-tenure-383607/assets/DistanceForestEdge3_1");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
+var asset = "projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania"
+
+var ic = ee.ImageCollection(asset);
+
 function deleteChildren(ImgCollection){
 var n = ImgCollection.size().getInfo();
   var colList = ImgCollection.toList(n);
-  var assetFolder = 'projects/hardy-tenure-383607/assets/DistanceForestEdge3_1/';
+  var assetFolder = asset +"/";
   
   for (var i = 0; i < n; i++) {
     var img = ee.Image(colList.get(i));
