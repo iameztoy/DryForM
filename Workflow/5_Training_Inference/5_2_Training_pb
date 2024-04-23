@@ -40,9 +40,10 @@ print("Image Collection", target_image)
 // Band selection
 
 
-var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
-"t0_B12", "t1_B12", "t2_B12", "t3_B12",
-"t0_B11", "t1_B11", "t2_B11", "t3_B11"];
+var bands = [
+"t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH",
+
+];
 
 // "t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_VH"
 // "t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI"
@@ -59,7 +60,7 @@ var bands = ["t0_MSAVI", "t1_MSAVI", "t2_MSAVI", "t3_MSAVI",
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
-var composite = target_image //.select(bands); // or (bands)
+var composite = target_image.select(bands); // or (bands)
 
 // Ground Truth
 
@@ -190,7 +191,7 @@ Map.addLayer(trainingGcp, null, "Training Points", 0)
 //**********************
 
 // Set the optimal hyperparameters derived from previous step
-var nTrees = 130
+var nTrees = 90
 var vps = 8
 var mlp = 2
 var bf = 0.7
@@ -274,6 +275,64 @@ print('Validation producer accuracy: ', testConfusionMatrix.producersAccuracy())
 print('Kappa Coefficient: ', testConfusionMatrix.kappa());
 print('F1-Score: ', testConfusionMatrix.fscore());
 
+/*
+var cm = testConfusionMatrix;
+var oa = testConfusionMatrix.accuracy();
+var ua = testConfusionMatrix.consumersAccuracy();
+var pa = testConfusionMatrix.producersAccuracy();
+var kappa = testConfusionMatrix.kappa();
+var f1 = testConfusionMatrix.fscore();
+
+Export.table.toDrive({
+		collection: cm, 
+    description: "CM",
+    folder: "VHVV_acc",
+    fileNamePrefix: "CM",
+    fileFormat: "CSV",
+});
+
+Export.table.toDrive({
+		collection: oa, 
+    description: "OA",
+    folder: "VHVV_acc",
+    fileNamePrefix: "OA",
+    fileFormat: "CSV",
+});
+
+Export.table.toDrive({
+		collection: ua, 
+    description: "UA",
+    folder: "VHVV_acc",
+    fileNamePrefix: "UA",
+    fileFormat: "CSV",
+});
+
+
+Export.table.toDrive({
+		collection: pa, 
+    description: "PA",
+    folder: "VHVV_acc",
+    fileNamePrefix: "PA",
+    fileFormat: "CSV",
+});
+
+Export.table.toDrive({
+		collection: kappa, 
+    description: "Kappa",
+    folder: "VHVV_acc",
+    fileNamePrefix: "Kappa",
+    fileFormat: "CSV",
+});
+
+Export.table.toDrive({
+		collection: f1, 
+    description: "f1",
+    folder: "VHVV_acc",
+    fileNamePrefix: "f1",
+    fileFormat: "CSV",
+});
+*/
+
 //************************************************************************** 
 // Export
 //**************************************************************************
@@ -309,6 +368,7 @@ Export.classifier.toAsset({
     description: "Save_classifier",
     assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/" + model_name
 });
+
 
 //****************************************************************************
 // Visu
@@ -362,3 +422,4 @@ var dataset = ee.ImageCollection('ESA/WorldCover/v200').first();
 var visualization = {bands: ['Map']};
 Map.addLayer(dataset, visualization, 'Landcover', 0);
 Map.setOptions("SATELLITE")
+
