@@ -275,63 +275,7 @@ print('Validation producer accuracy: ', testConfusionMatrix.producersAccuracy())
 print('Kappa Coefficient: ', testConfusionMatrix.kappa());
 print('F1-Score: ', testConfusionMatrix.fscore());
 
-/*
-var cm = testConfusionMatrix;
-var oa = testConfusionMatrix.accuracy();
-var ua = testConfusionMatrix.consumersAccuracy();
-var pa = testConfusionMatrix.producersAccuracy();
-var kappa = testConfusionMatrix.kappa();
-var f1 = testConfusionMatrix.fscore();
 
-Export.table.toDrive({
-		collection: cm, 
-    description: "CM",
-    folder: "VHVV_acc",
-    fileNamePrefix: "CM",
-    fileFormat: "CSV",
-});
-
-Export.table.toDrive({
-		collection: oa, 
-    description: "OA",
-    folder: "VHVV_acc",
-    fileNamePrefix: "OA",
-    fileFormat: "CSV",
-});
-
-Export.table.toDrive({
-		collection: ua, 
-    description: "UA",
-    folder: "VHVV_acc",
-    fileNamePrefix: "UA",
-    fileFormat: "CSV",
-});
-
-
-Export.table.toDrive({
-		collection: pa, 
-    description: "PA",
-    folder: "VHVV_acc",
-    fileNamePrefix: "PA",
-    fileFormat: "CSV",
-});
-
-Export.table.toDrive({
-		collection: kappa, 
-    description: "Kappa",
-    folder: "VHVV_acc",
-    fileNamePrefix: "Kappa",
-    fileFormat: "CSV",
-});
-
-Export.table.toDrive({
-		collection: f1, 
-    description: "f1",
-    folder: "VHVV_acc",
-    fileNamePrefix: "f1",
-    fileFormat: "CSV",
-});
-*/
 
 //************************************************************************** 
 // Export
