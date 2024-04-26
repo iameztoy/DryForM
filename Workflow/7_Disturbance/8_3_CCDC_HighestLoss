@@ -10,7 +10,7 @@ Map.centerObject(segmentsImage)
 
 var segments = temporalSegmentation.Segments(segmentsImage) // Create temporal segments
 var fromDate = '2021-01-01'
-var toDate = '2024-04-01'
+var toDate = '2024-05-01'
 
 
 // Example 1: Calculate change in linear model from start to end of the reporting period
