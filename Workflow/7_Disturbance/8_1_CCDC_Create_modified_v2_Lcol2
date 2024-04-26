@@ -24,7 +24,7 @@ var region = geometry
 var collection = createLandsatCollection({
   region: region,
   start: '2013-01-01',
-  end: '2024-04-01', 
+  end: '2024-05-01', 
   mapImage: function(image) { return image.addBands(toNdfi(image)) },
 })
 
