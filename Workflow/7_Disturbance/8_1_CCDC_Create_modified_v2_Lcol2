@@ -1,16 +1,16 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
 var geometry = 
-    /* color: #98ff00 */
+    /* color: #d63000 */
     /* displayProperties: [
       {
         "type": "rectangle"
       }
     ] */
     ee.Geometry.Polygon(
-        [[[-60.398063283673, -21.693699313007425],
-          [-60.398063283673, -22.068359892610026],
-          [-59.87895927976675, -22.068359892610026],
-          [-59.87895927976675, -21.693699313007425]]], null, false);
+        [[[-47.23734332333527, -7.6381676611159985],
+          [-47.23734332333527, -8.127879014320373],
+          [-46.70587970028839, -8.127879014320373],
+          [-46.70587970028839, -7.6381676611159985]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 // Creates an ImageCollection of Landsat scenes, runs CCDC, then exports the results.
 
@@ -19,16 +19,12 @@ var geometry =
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation')
 
-var region = ee.Geometry.Polygon(
-        [[[-60.398063283673, -21.693699313007425],
-          [-60.398063283673, -22.068359892610026],
-          [-59.87895927976675, -22.068359892610026],
-          [-59.87895927976675, -21.693699313007425]]], null, false);
+var region = geometry
 
 var collection = createLandsatCollection({
   region: region,
   start: '2013-01-01',
-  end: '2024-01-01', 
+  end: '2024-04-01', 
   mapImage: function(image) { return image.addBands(toNdfi(image)) },
 })
 
