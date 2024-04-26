@@ -61,7 +61,6 @@ var change_chaco = chaco_tc.multiply(largestLoss);
 
 //VISUALIZATION
 var visParams = {min: -10000, max: 10000, palette: 'red,orange,white,green,blue'};
-Map.addLayer(largestLoss, null, "largest loss 3000");
 Map.addLayer(chaco_tc, {palette:"green"}, "Chaco TC"); 
 
 Map.addLayer(change_chaco, {palette:"red"}, "Largest Loss 2021-2024 (thr 3000)");
