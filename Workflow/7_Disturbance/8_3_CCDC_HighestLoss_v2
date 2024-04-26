@@ -1,12 +1,21 @@
-var chaco = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chaco_Pb_buf20_9cl");
 
-// Shows how you can see the change from one point in time to another.
+//***********************************************************
+// DRYFORM - Step 8.3 - Calculate Largest Loss
+//***********************************************************
 
+// Note that this script requires to load segments previously calculated in step 8.1
+
+
+// Require | Import required dependencies
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation'); // Load module
 
-var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/my_test_segments');// Load CCDC asset
-Map.centerObject(segmentsImage);
+// Load Classification produced in step 5.
+var chaco = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chaco_Pb_buf20_9cl");
 
+//Import segmented array created in step 8.1
+var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/my_test_segments');// Load CCDC asset
+
+//Preliminary variables. Dates within which you want to extract the largest loss
 var segments = temporalSegmentation.Segments(segmentsImage); // Create temporal segments
 var fromDate = '2021-01-01';
 var toDate = '2024-05-01';
@@ -14,8 +23,7 @@ var toDate = '2024-05-01';
 var from = segments.findByDate(fromDate).slice({harmonics: 0});
 var to = segments.findByDate(toDate).slice({harmonics: 0});
 
-// Example 4: Calculates largest loss from start of reporting peroid
-// Like example 3, but only considers loss.
+// Extract largest loss from start of reporting peroid.
 var tFrom = segments.toT(fromDate);
 var tTo = segments.toT(toDate);
 var largestLoss = segments.find()
@@ -39,19 +47,22 @@ var largestLoss = segments.find()
   .unmask(0).clip(segmentsImage.geometry());
 
 
+//
 
-var visParams = {min: -10000, max: 10000, palette: 'red,orange,white,green,blue'};
+// Once we extract the largest loss we can cross it with our own classification (e.g. Tree Cover, forest or shrubs)
+//    so that the losses are only shown for this classes
 
-print(largestLoss);
-largestLoss = largestLoss.multiply(-1);
-largestLoss = largestLoss.gte(3000);
+largestLoss = largestLoss.multiply(-1); //Just to make it more readable
+largestLoss = largestLoss.gte(3000); //Apply a threshold to NDFI loss
 largestLoss = largestLoss.updateMask(largestLoss);
-Map.addLayer(largestLoss, null, "largest loss 3000");
-
-var chaco_tc = chaco.eq(1);
+var chaco_tc = chaco.eq(1); // Example for tree cover.
 chaco_tc = chaco_tc.updateMask(chaco_tc);
-Map.addLayer(chaco_tc, null, "Chaco TC");
-
 var change_chaco = chaco_tc.multiply(largestLoss);
 
+//VISUALIZATION
+var visParams = {min: -10000, max: 10000, palette: 'red,orange,white,green,blue'};
+Map.addLayer(largestLoss, null, "largest loss 3000");
+Map.addLayer(chaco_tc, null, "Chaco TC");
+
 Map.addLayer(change_chaco, {palette:"red"}, "Largest Loss 2021-2024 (thr 3000)");
+Map.centerObject(segmentsImage);
