@@ -55,7 +55,7 @@ var largestLoss = segments.find()
 largestLoss = largestLoss.multiply(-1); //Just to make it more readable
 largestLoss = largestLoss.gte(10000); //Apply a threshold to NDFI loss
 largestLoss = largestLoss.updateMask(largestLoss);
-var chaco_tc = chaco.eq(0); // Example for tree cover. 
+var chaco_tc = chaco.eq(1); // Example for tree cover. 
 chaco_tc = chaco_tc.updateMask(chaco_tc);
 var change_chaco = chaco_tc.multiply(largestLoss);
 
@@ -64,5 +64,5 @@ var visParams = {min: -10000, max: 10000, palette: 'red,orange,white,green,blue'
 Map.addLayer(chaco_tc, {palette:"green"}, "Chaco TC"); 
 
 Map.addLayer(change_chaco, {palette:"red"}, "Largest Loss 2021-2024 (thr 3000)");
-Map.centerObject(segmentsImage)
+Map.centerObject(segmentsImage, 14)
 
