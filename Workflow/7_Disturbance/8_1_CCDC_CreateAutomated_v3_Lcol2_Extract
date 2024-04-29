@@ -12,6 +12,14 @@ Even if possible, it does not directly extract the CCD bands, coefficients, etc.
   - The mask could be changed to any other land cover class (e.g. shrubs or other wooded land)
   - In additiona to the thresholded band, three additional bands are also exported -> tBreak, ndfi magnitude and ndfi magnitude confidence.
   - These bands have also been masked by the same mask to create the thresholded band.
+  
+  - Note that the process can be also split in two parts:
+      - 1/ Export the CCD coefficients as assets and:
+      - 2/ Run the post-processing on the exported assets.
+      
+      - This might be necessary if the current process runs out of memory
+      - Alternativelly, the cg_scale parameter can be changed (e.g. 40000) to find the optimal scale and avoid memory errors
+          However, this creates many more tiles.
 
 */
 
