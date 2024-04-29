@@ -267,6 +267,7 @@ var sublegendTitle = ui.Label({
     }
 });
 
+/*
 var sublegendTitle2 = ui.Label({
   value: '& Valid Observations',
   style: {
@@ -275,7 +276,7 @@ var sublegendTitle2 = ui.Label({
     margin: '0 0 4px 0',
     padding: '0'
     }
-});
+});*/
 
 
 
@@ -1258,7 +1259,7 @@ RefineStep2 = RefineStep2.unmask();
 
 // n. Overall Trees 2020
 
-var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5).add(RefineStep2).add(metaWRI_gte5);
+var TotTreeFor = esa_Tree.add(dwM_Tree).add(esri_Tree).add(wri_Tree).add(glc10Loss).add(HTC_2020).add(gedi5).add(gedi5L_gte5).add(metaWRI_gte5).add(RefineStep2);
 var TotTF_c = TotTreeFor.where(cropmask_UMD,0);
 
 //Stack Tree/Forest
@@ -1279,7 +1280,7 @@ var TotTC_c_r = TotTreeFor.rename(['Total_TreeForest']); //TotTF_c.rename(['Tota
 
 //Image Collection of all Tree/Forest bands
 
-var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r, RefineStep2_r, metaWRI_r]);
+var allTF = ee.List([dwM_Tree_r, esri_Tree_r, esa_Tree_r, wri_Tree_r, Hansen_Tree_r, GLC_Forest_r, GEDI_gte5_r, gedi5L_gte5_r, metaWRI_r, RefineStep2_r]);
 //print(allFT)
 //system:index: 0, 1, 2, 3, 4, 5, 6, 7, 8
 
@@ -1411,7 +1412,7 @@ map.add(controlPanel);
 map.add(inspector);
 map.add(countChart);
 map.add(legend);
-legend.add(legendTitle).add(sublegendTitle).add(sublegendTitle2);
+legend.add(legendTitle).add(sublegendTitle) //.add(sublegendTitle2);
 
 map.setControlVisibility({layerList: true, fullscreenControl: true, zoomControl: false});
 
