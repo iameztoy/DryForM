@@ -145,7 +145,9 @@ var ccd_results = tilelist.map(processTiles);
 
 
 
-// Functions
+// Functions needed to create the landsat collections and calculate NDFI index
+// Only landsat-8 and 9 (Collection 2 - Tier1 and Tier2) are used to avoid scan-line-off issue with Landsat-7.
+// Thus, reporting period starts in 2013.
 
 function toNdfi(image) {
   var gv = [500, 900, 400, 6100, 3000, 1000];
