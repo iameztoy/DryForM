@@ -20,12 +20,23 @@ Even if possible, it does not directly extract the CCD bands, coefficients, etc.
       - This might be necessary if the current process runs out of memory
       - Alternativelly, the cg_scale parameter can be changed (e.g. 40000) to find the optimal scale and avoid memory errors
           However, this creates many more tiles.
+          
+  - Parameters that can be changed:
+      - aoi: area of interest
+      - cg_scale: Defines the size of the tiles
+      - tilelist: list of tiles that will be processed
+      - start | end: Dates to create the Landsat image collection
+      - daterange: Dates to define the CCD period over which the extraction will happen
+      - breakpoint variables contains a set of additional options (see in comments)
+      - ndfiMag_gte10k: See gte threshold. It is currently set to a drop of 10000.
+      - mmu_p: number of connected pixels that will be removed (currently 8)
 
 */
 
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
 
+// Areas of interest
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
@@ -35,7 +46,6 @@ var aoisel = cerrado; var expname = "Cerrado";
 var aoi = aoisel.geometry(); //.buffer(100000);
 
 var gfc20 = ee.ImageCollection("JRC/GFC2020/V1").mosaic();
-
 
 var cg_scale = 100000; // Scale for Covering Grid. Several tests done to see which is the optimal scale: 
                        // The objective is to see which scale does not give memory problems while still maximizing the area covered to reduce processing time.
