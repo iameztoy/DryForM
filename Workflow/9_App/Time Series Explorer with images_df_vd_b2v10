@@ -766,6 +766,8 @@ function renderGraphics(coords) {
   map.addLayer(gedilt5.selfMask(), {}, "GEDI Potapov < 5", 0);  
   map.addLayer(gedi5L_gte5.selfMask(), {}, "GEDI Lang => 5", 0);
   map.addLayer(gedi5Llt5.selfMask(), {}, "GEDI Lang < 5", 0);
+  map.addLayer(metaWRI_gte5.selfMask(), {}, "META/WRI => 5", 0);
+  map.addLayer(metaWRI_lt5.selfMask(), {}, "META/WRI < 5", 0);
   map.addLayer(dwM_Tree.selfMask(), {}, "DW Trees", 0);
   map.addLayer(esri_Tree.selfMask(), {}, "ESRI Tree", 0);
   map.addLayer(wri_Tree.selfMask(), {}, "WRI Tree => 10", 0); //Changed from 80 to 10
