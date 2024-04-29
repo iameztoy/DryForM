@@ -1275,7 +1275,7 @@ var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_Potapov_gte5']);
 var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5']);
 var RefineStep2_r = RefineStep2.rename(['JRC_BaselineM_2020']);
-var metaWRI_r = metaWRI_gte5.rename(['metaWRI_Trees'])
+var metaWRI_r = metaWRI_gte5.rename(['metaWRI_gte5'])
 var TotTC_c_r = TotTreeFor.rename(['Total_TreeForest']); //TotTF_c.rename(['Total_TreeForest']);
 
 
