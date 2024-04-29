@@ -89,8 +89,8 @@ var TC_wri = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover");
 var GLC10 = ee.ImageCollection("projects/sat-io/open-datasets/FROM-GLC10");
 var gfcImage = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
 var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
-var valcount7= ee.Image("projects/hardy-tenure-383607/assets/Count_AvailableObs/CountValid_7cl"); //Needs to be updated to include GEDI Lang (new max value is 8)
-var validCount = valcount7.add(1) //I added +1 to the previously calculated asset after including GEDI Lang (Global full coverage)
+//var valcount7= ee.Image("projects/hardy-tenure-383607/assets/Count_AvailableObs/CountValid_7cl"); //Needs to be updated to include GEDI Lang (new max value is 8)
+//var validCount = valcount7.add(1) //I added +1 to the previously calculated asset after including GEDI Lang (Global full coverage)
 var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var metaWRI = ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic() //1 meter canopy heights
 
@@ -759,7 +759,7 @@ function renderGraphics(coords) {
 
 
   //Add all Tree/Cover layers + shrub/scrub and grass
-  map.addLayer(validCount, vcVis, "Valid observations", 0); //Needs to be updated to include GEDI Lang (new max value is 8)
+  //map.addLayer(validCount, vcVis, "Valid observations", 0); //Needs to be updated to include GEDI Lang (new max value is 8)
   map.addLayer(TotalGrass2020sr, VisParam5cl, "Total Grass 2020", 0); //Range 0-4
   map.addLayer(TotalShrub2020sr,VisParam5cl, "Total Shrub 2020", 0); //Range 0-4
   map.addLayer(gedi5.selfMask(), {}, "GEDI Potapov => 5", 0);
@@ -1368,22 +1368,23 @@ var VisParam10cl = {min: 0, max: 9, palette: [
 var vp_metapal = require('users/gena/packages:palettes');
 var visParams_meta =  {min: 0,max: 25, palette: vp_metapal.matplotlib.viridis[7]}   
 //  Palette with legend colors
-var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '339825', '124429'];
+var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '339825', '217c4b', '124429'];
  
 // name of the legend
 var names8 = ["0", "1", "2", "3", "4", "5", "6", "7"];
 var names9 = ["0", "1", "2", "3", "4", "5", "6", "7", "8"];
 var names10 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+var names11 = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
 
 // Add color and names to legend
-for (var i = 0; i < 10; i++) {
-  legend.add(makeRow(palette[i], names10[i]));
+for (var i = 0; i < 11; i++) {
+  legend.add(makeRow(palette[i], names11[i]));
   }  
 
 // Palette for Valid Count 
 var vcVis = {min: 0, max: 9, palette: [
-    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '339825', '124429']};
+    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '339825', '217c4b', '124429']};
 
 
 // #############################################################################
