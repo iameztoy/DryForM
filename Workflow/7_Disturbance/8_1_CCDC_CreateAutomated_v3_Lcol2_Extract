@@ -1,4 +1,21 @@
 
+//***********************************************************
+// DRYFORM - Step 7 - Automated CCD
+//***********************************************************
+
+/* 
+This script runs a temporal segmentation process (CCD algorithm) to extract breakpoints from Landsat 8 and 9 time series (2013-2024)
+Even if possible, it does not directly extract the CCD bands, coefficients, etc. but it goes a step beyond:
+  - It postprocesses the CCD by stablishing NDFI thresholds and crosses the outcomes with the GFC20 dataset;
+  - It includes a step to remove noisy pixels. You can change the connected pixels parameter.
+  - This means that only significant changes (higher than the NDFI threshold) are visible within the forest limits stablished by the GFC20 datasets.
+  - The mask could be changed to any other land cover class (e.g. shrubs or other wooded land)
+  - In additiona to the thresholded band, three additional bands are also exported -> tBreak, ndfi magnitude and ndfi magnitude confidence.
+  - These bands have also been masked by the same mask to create the thresholded band.
+
+*/
+
+
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
@@ -142,8 +159,6 @@ var processTiles = function(tile){
 };
 
 var ccd_results = tilelist.map(processTiles);
-
-
 
 // Functions needed to create the landsat collections and calculate NDFI index
 // Only landsat-8 and 9 (Collection 2 - Tier1 and Tier2) are used to avoid scan-line-off issue with Landsat-7.
