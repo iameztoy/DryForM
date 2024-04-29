@@ -1368,7 +1368,7 @@ var VisParam10cl = {min: 0, max: 9, palette: [
 var vp_metapal = require('users/gena/packages:palettes');
 var visParams_meta =  {min: 0,max: 25, palette: vp_metapal.matplotlib.viridis[7]}   
 //  Palette with legend colors
-var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '339825', '217c4b', '124429'];
+var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '44ca31', '217c4b', '124429'];
  
 // name of the legend
 var names8 = ["0", "1", "2", "3", "4", "5", "6", "7"];
@@ -1384,7 +1384,7 @@ for (var i = 0; i < 11; i++) {
 
 // Palette for Valid Count 
 var vcVis = {min: 0, max: 9, palette: [
-    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '339825', '217c4b', '124429']};
+    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff',  '44ca31', '217c4b', '124429']};
 
 
 // #############################################################################
