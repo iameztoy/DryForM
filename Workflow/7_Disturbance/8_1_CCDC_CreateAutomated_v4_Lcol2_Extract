@@ -1,0 +1,309 @@
+
+//***********************************************************
+// DRYFORM - Step 7 - Automated CCD 
+//***********************************************************
+
+/* 
+This script runs a temporal segmentation process (CCD algorithm) to extract breakpoints from Landsat 8 and 9 time series (2013-2024)
+Even if possible, it does not directly extract the CCD bands, coefficients, etc. but it goes a step beyond:
+  - It postprocesses the CCD by stablishing NDFI thresholds and crosses the outcomes with the GFC20 dataset;
+  - It includes a step to remove noisy pixels. You can change the connected pixels parameter.
+  - This means that only significant changes (higher than the NDFI threshold) are visible within the forest limits stablished by the GFC20 datasets.
+  - The mask could be changed to any other land cover class (e.g. shrubs or other wooded land)
+  - In additiona to the thresholded band, three additional bands are also exported -> tBreak, ndfi magnitude and ndfi magnitude confidence.
+  - These bands have also been masked by the same mask to create the thresholded band.
+  
+  - Note that the process can be also split in two parts:
+      - 1/ Export the CCD coefficients as assets and:
+      - 2/ Run the post-processing on the exported assets in a separate script
+     
+      - This might be necessary if the current process runs out of memory
+      - The purpose of doing all in one step is to save storage memory. The CCD outputs are very heavy. For a cg_scale of 100000 = 8Gb approx. 
+      - Alternativelly, the cg_scale parameter can be changed (e.g. 40000) to find the optimal scale and avoid memory errors
+          However, this creates many more tiles.
+          
+  - Parameters that can be changed:
+      - aoi: area of interest
+      - cg_scale: Defines the size of the tiles. The greater the size, the more time will take the task to process. 
+      - tilelist: list of tiles that will be processed
+      - start | end: Dates to create the Landsat image collection
+      - daterange: Dates to define the CCD period over which the extraction will happen. Currently changes between 2021 and May 2024.
+      - breakpoint variables contains a set of additional options (see in comments)
+      - ndfiMag_gte10k: See gte threshold. It is currently set to identify a drop higher or equal than 10000.
+      - mmu_p: number of connected pixels that will be removed (currently 8)
+
+*/
+
+
+var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
+
+// Areas of interest
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+
+var aoisel = cerrado; var expname = "Cerrado";
+var aoi = aoisel.geometry(); //.buffer(100000);
+
+var gfc20 = ee.ImageCollection("JRC/GFC2020/V1").mosaic();
+
+var cg_scale = 100000; // Scale for Covering Grid. Several tests done to see which is the optimal scale: 
+                       // The objective is to see which scale does not give memory problems while still maximizing the area covered to reduce processing time.
+
+
+var Zones = aoi.coveringGrid({
+  	proj: "EPSG:4326", //EPSG:32720
+  	scale: cg_scale 
+});
+
+
+// CoveringGrid produces a strange ID so I make a new fc with proper
+// unique id. This way we can parse them to the name while running the Export Loop.
+// Take into account that we need to differentiate each tile so we do not have the same name while exporting; otherwise you get an error.
+
+// make a list of length of features
+var idList = ee.List.sequence(0,Zones.size().subtract(1)); 
+// featureCollection to a List
+var list = Zones.toList(Zones.size());
+// set the system:index
+var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
+  var feat = ee.Feature(list.get(newSysIndex));
+  // format number to string (system:index must be a string)
+  var indexString = ee.Number(newSysIndex).format('%03d'); //3 is until 999, increase if needed 
+                                                          // but big chance of client crash while exporting. 
+                                                          // Take into account that this is a loop on the client side.
+  return feat.set('system:index', indexString, 'ID', indexString);
+}));
+
+
+
+//print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
+print("Number of Tiles in AOI", zonesID.size());
+//var tl = zonesID.aggregate_array("ID"); 
+//print("Array Tile list", tl)
+
+
+// Automated method:
+// Build the final tiles to apply the function afterwards
+var n = Zones.size().getInfo()-1; //Get the tile size to the list afterwards
+var ns = n.toString();
+
+// May require to add more tiles (>1000) for very wide biomes
+// (e.g. Cerrado) if the covering grid is small (e.g. cgScale: 50000 for Cerrado are 1438 tiles) 
+
+var tilelist = ee.List(["338"]);
+tilelist = tilelist.filter(ee.Filter.lte('item', ns));
+//print("Manual tile list", tilelist)
+
+var tilelist = tilelist.getInfo();
+//print("NSC", nsc)
+
+
+var processTiles = function(tile){
+  
+  var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
+
+  var collection = createLandsatCollection({
+    region: interm_aoi,
+    start: '2013-01-01',
+    end: '2024-05-01', 
+    mapImage: function(image) { return image.addBands(toNdfi(image)) },
+  });
+  
+  var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
+    collection: collection,
+    breakpointBands: ['ndfi', 'blue', 'green', 'red', 'nir', 'swir1', 'swir2'], //These are needed to compute NDFI
+    tmaskBands: ['green', 'swir1'], // Typically necessary to mask clouds
+    dateFormat: 1, //Fractional years
+  });
+  
+  var segments = temporalSegmentation.Segments(ccdc);
+  segments = segments.toImage(); // Need to convert to image | Equivalent to export image if the process is split in two modules
+
+  var segments2 = temporalSegmentation.Segments(segments, 1);
+
+  var dateRange = segments2.dateRange('2021-01-01', '2024-05-01');
+  var breakpoint = dateRange.pickBreakpoint({ 
+    breakAnalysisBand: 'ndfi', // The band to use when analyzing which breakpoint to provide data for.
+    skipBreakInLastSegment: false, // CCDC sometimes detect breaks in the last segment. These can at times be unreliable.
+    breakMagnitudeDirection: 'ANY', // Specify which breakpoints to filtered out, based on weather the break magnitude for the break analysis band decrease or increase. One of ANY, DECREASE, INCREASE
+    minBreakConfidence: 6, // The minimum confidence of a breakpoint to be included. This is calculated by the break magnitude divided by the RMSE.
+    breakSelection: 'CONFIDENCE' // Specify which of the break points to provide data for. One of FIRST, LAST, MAGNITUDE, CONFIDENCE
+  });
+  
+  var tilemask = breakpoint.select('tBreak').gte(0); // Create a dummy mask for this tile
+  var gfc20_m = gfc20.updateMask(tilemask); //Mask gfc20 so that can be used to mask the target bands
+  
+  var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000); //We invert (not really needed) and set a threshold
+  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20_m).selfMask();
+
+  // Get rid off noise
+  var mmu_p = 8; //These can be any value (in pixels)
+  var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:true}); // Count of connected pixels
+  var mask_gte = fcount.lte(mmu_p); // Get connected pixels above threshold (mmu_p)
+  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte).not();
+  
+  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20).rename("ndfi_magnitue_thr10k"); // This is the NDFI thresholded with MMU applied and 
+                                                  // crossed with GFC20. Thus, only changes in Forest are shown, with "noise" removal.
+
+  //Implement the same mask to the other bands
+  var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte);
+  tBreak_m = tBreak_m.updateMask(gfc20_m);
+  var ndfiMagnitude_m = breakpoint.select('ndfi_magnitude').updateMask(mask_gte);
+  ndfiMagnitude_m = ndfiMagnitude_m.updateMask(gfc20_m);
+  var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_gte);
+  ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20_m);
+
+ //Make multiband image so each can be exported to an image collection
+  var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m); 
+  
+  //No need for loop here. Need to optimize, but it works so far. 
+  var featlist = interm_aoi.getInfo()["features"];
+  for (var f in featlist) {
+    var feat = ee.Feature(featlist[f]);
+    var dis = feat.get("ID");
+    var disS = dis.getInfo();
+    var name = "tile"; 
+
+  Export.image.toAsset({
+    image: ndfi_breaks,
+    description: name+disS+"_"+expname, //"test", //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_Extract/'+name+disS+"_"+expname, //.toString(),
+    pyramidingPolicy:{'.default': 'sample'}, 
+    crs: 'EPSG:4326',
+    region: interm_aoi,
+    scale: 30,
+    maxPixels: 1e13
+    });
+  }
+  
+  return ndfi_breaks;
+  
+};
+
+var ccd_results = tilelist.map(processTiles);
+
+// Functions needed to create the landsat collections and calculate NDFI index
+// Only landsat-8 and 9 (Collection 2 - Tier1 and Tier2) are used to avoid scan-line-off issue with Landsat-7.
+// Thus, reporting period starts in 2013.
+
+function toNdfi(image) {
+  var gv = [500, 900, 400, 6100, 3000, 1000];
+  var shade = [0, 0, 0, 0, 0, 0];
+  var npv = [1400, 1700, 2200, 3000, 5500, 3000];
+  var soil = [2000, 3000, 3400, 5800, 6000, 5800];
+  var cloud = [9000, 9600, 8000, 7800, 7200, 6500];
+  var unmixed = image
+    .select(['blue', 'green', 'red', 'nir', 'swir1', 'swir2'])
+    .unmix({
+      endmembers: [gv, shade, npv, soil, cloud],
+      sumToOne: true,
+      nonNegative: true
+    })
+    .rename(['gv', 'shade', 'npv', 'soil', 'cloud']);
+  return unmixed
+    .expression(
+      '((i.gv / (1 - i.shade)) - (i.npv + i.soil)) / ((i.gv / (1 - i.shade)) + i.npv + i.soil)',
+      {i: unmixed}
+    ) 
+    .multiply(10000)
+    .rename('ndfi');
+}
+
+function createLandsatCollection(params) {
+  var defaultParams = {
+    region: Map.getBounds(true), 
+    start: '2013-01-01', 
+    end: formatDate(new Date()), 
+    mapImage: function (image) { return image }
+  };
+  params = mergeObjects([defaultParams, params]);
+  
+  var filter = ee.Filter.and(
+      ee.Filter.bounds(params.region),
+      ee.Filter.date(params.start, params.end  )
+  );
+
+  var l8 = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').map(applyScaleFactors)
+    .merge(ee.ImageCollection('LANDSAT/LC08/C02/T2_L2').map(applyScaleFactors))
+    .filter(filter)
+    .select(
+      ['SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B6', 'SR_B7', 'QA_PIXEL'],
+      ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'QA_PIXEL']
+    );
+  var l9 = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').map(applyScaleFactors)
+    .merge(ee.ImageCollection('LANDSAT/LC09/C02/T2_L2').map(applyScaleFactors))
+    .filter(filter)
+    .select(
+      ['SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B6', 'SR_B7', 'QA_PIXEL'],
+      ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'QA_PIXEL']
+    );
+
+  return l8.merge(l9)
+    .map(mapImage)
+    .sort('system:time_start');
+  
+  function mapImage(image) {
+    return excludeBand('QA_PIXEL',
+      mask(
+        params.mapImage(image)
+      ).clip(params.region)
+    );
+  }
+  
+  function mask(image) {
+    var cloudFree = bitwiseExtract(image.select('QA_PIXEL'), 0, 5).eq(0); //See end of script bitwiseExtract function
+    return image
+      .updateMask(cloudFree);
+  }
+  
+  function excludeBand(bandName, image) {
+    var bandNames = image.bandNames();
+    var bandIndexes = ee.List.sequence(0, bandNames.size().subtract(1))
+      .filter(
+        ee.Filter.neq('item', bandNames.indexOf(bandName))
+      );
+    return image.select(bandIndexes);
+  }
+
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+  
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+  
+    return [year, month, day].join('-');
+  }
+
+  function mergeObjects(objects) {
+    return objects.reduce(function (acc, o) {
+      for (var a in o) { acc[a] = o[a] }
+      return acc;
+      }, {});
+  }
+} 
+
+// Function to select a range of bitmasks for cloud masking while building the collection
+function bitwiseExtract(value, fromBit, toBit) {
+  if (toBit === undefined)
+    toBit = fromBit;
+  var maskSize = ee.Number(1).add(toBit).subtract(fromBit);
+  var mask = ee.Number(1).leftShift(maskSize).subtract(1);
+  return value.rightShift(fromBit).bitwiseAnd(mask);
+  }
+
+// Applies scaling factors.
+function applyScaleFactors(image) {
+  var opticalBands = (image.select('SR_B.').multiply(0.0000275).add(-0.2)).multiply(10000);
+  //var thermalBands = image.select('ST_B.*').multiply(0.00341802).add(149.0);
+  return image.addBands(opticalBands, null, true);
+              //.addBands(thermalBands, null, true);
+}
+
+
