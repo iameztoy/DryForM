@@ -132,8 +132,7 @@ var processTiles = function(tile){
     breakSelection: 'CONFIDENCE' // Specify which of the break points to provide data for. One of FIRST, LAST, MAGNITUDE, CONFIDENCE
   });
   
-  var tilemask = breakpoint.select('tBreak').gte(0); // Create a dummy mask for this tile
-  var gfc20_m = gfc20.updateMask(tilemask); //Mask gfc20 so that can be used to mask the target bands
+  var gfc20_m = gfc20.clip(interm_aoi); //Clip gfc20 so that can be used to mask the target bands
   
   var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000); //We invert (not really needed) and set a threshold
   ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20_m).selfMask();
