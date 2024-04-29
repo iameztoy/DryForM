@@ -775,7 +775,7 @@ function renderGraphics(coords) {
   map.addLayer(esa_Tree.selfMask(), {}, "ESA Tree", 0);
   map.addLayer(glc10Loss.selfMask(), {}, "GLC 10 with Hansen Loss", 0);
   map.addLayer(RefineStep2.selfMask(), {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":'4D9221'}, 'EC JRC Global forest cover 2020 – V1', 1);
-  map.addLayer(TotTF_c, VisParam10cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
+  map.addLayer(TotTF_c, VisParam11cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
   map.addLayer(Fires2020, {palette:"red"}, "GABAM Fires 2020", 0);
   map.addLayer(lossYear, lossYearVis, 'Loss Year Hansen (2000-2022)', 0);
   map.addLayer(metaWRI, visParams_meta, "Meta/WRI Canopy Height", 0)
@@ -1364,8 +1364,8 @@ var VisParam8cl = {min: 0, max: 7, palette: [
 var VisParam9cl = {min: 0, max: 8, palette: [
     "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff", '339825'], opacity: 0.6}; //added one color more
     
-var VisParam10cl = {min: 0, max: 9, palette: [
-    "040404", "ff0c0c", "ffa41b", "ffec62", "9eff6c", "58f7ff", "6267ff", "c514ff", '339825', '124429']}; //added one color more after including BLM 2020
+var VisParam11cl = {min: 0, max: 9, palette: [
+    '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '44ca31', '217c4b', '124429'], opacity: 0.6}; //added one color more after including BLM 2020
 
 var vp_metapal = require('users/gena/packages:palettes');
 var visParams_meta =  {min: 0,max: 25, palette: vp_metapal.matplotlib.viridis[7], opacity: 0.6}   
