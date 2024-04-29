@@ -107,7 +107,7 @@ var cropmask_UMD = cropmask_UMD_2003.or(cropmask_UMD_2007).or(cropmask_UMD_2011)
 var gabam = ee.ImageCollection("projects/sat-io/open-datasets/GABAM"); //30m Global Annual Burned Area Maps (GABAM)
 
 // Tree Cover Loss - Hansen Global Forest Change
-var gfc2022 = ee.Image('UMD/hansen/global_forest_change_2022_v1_10');
+var gfc2023 = ee.Image('UMD/hansen/global_forest_change_2023_v1_11');
 
 // #############################################################################
 // ### GET URL PARAMS ###
@@ -777,7 +777,7 @@ function renderGraphics(coords) {
   map.addLayer(RefineStep2.selfMask(), {"opacity":0.70,"bands":["Map"],"min":1,"max":1,"palette":'4D9221'}, 'EC JRC Global forest cover 2020 – V1', 1);
   map.addLayer(TotTF_c, VisParam11cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
   map.addLayer(Fires2020, {palette:"red"}, "GABAM Fires 2020", 0);
-  map.addLayer(lossYear, lossYearVis, 'Loss Year Hansen (2000-2022)', 0);
+  map.addLayer(lossYear, lossYearVis, 'Loss Year Hansen (2000-2023)', 0);
   map.addLayer(metaWRI, visParams_meta, "Meta/WRI Canopy Height", 0)
   
   // Add new point to the Map.
@@ -1328,7 +1328,7 @@ var TotalGrass2020sr = TotalGrass2020sr.unmask();
 var Fires2020 = gabam.filterDate('2020-01-01','2021-01-01');
 
 //Hansen Loss
-var lossYear = gfc2022.select(['lossyear']);
+var lossYear = gfc2023.select(['lossyear']);
 
 // The lossYear image contains pixel values from 0 to 22
 // indicating the year in which the loss occurred
@@ -1342,7 +1342,7 @@ var palette_HL = [
 
 var lossYearVis = {
   min: 0,
-  max: 22,
+  max: 23,
   palette: palette_HL
 }
 
