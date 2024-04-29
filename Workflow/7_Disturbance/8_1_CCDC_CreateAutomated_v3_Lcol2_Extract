@@ -68,7 +68,6 @@ var processTiles = function(tile){
   
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
 
-
   var collection = createLandsatCollection({
     region: interm_aoi,
     start: '2013-01-01',
@@ -78,17 +77,16 @@ var processTiles = function(tile){
   
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
     collection: collection,
-    breakpointBands: ['ndfi', 'blue', 'green', 'red', 'nir', 'swir1', 'swir2'],
-    tmaskBands: ['green', 'swir1'],
+    breakpointBands: ['ndfi', 'blue', 'green', 'red', 'nir', 'swir1', 'swir2'], //These are needed to compute NDFI
+    tmaskBands: ['green', 'swir1'], // Typically necessary to mask clouds
     dateFormat: 1, //Fractional years
   });
   
   var segments = temporalSegmentation.Segments(ccdc);
-  segments = segments.toImage();
+  segments = segments.toImage(); // Need to convert to image | Equivalent to export image if the process is split in two modules
 
   var segments2 = temporalSegmentation.Segments(segments, 1);
 
-  
   var dateRange = segments2.dateRange('2021-01-01', '2024-05-01');
   var breakpoint = dateRange.pickBreakpoint({ 
     breakAnalysisBand: 'ndfi', // The band to use when analyzing which breakpoint to provide data for.
@@ -98,16 +96,17 @@ var processTiles = function(tile){
     breakSelection: 'CONFIDENCE' // Specify which of the break points to provide data for. One of FIRST, LAST, MAGNITUDE, CONFIDENCE
   });
   
-  var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000).selfMask();
+  var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000).selfMask(); //We invert (not really needed) and set a threshold
 
-  
-  var mmu_p = 8;
-  var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:true});
-  var mask_gte = fcount.gte(mmu_p);
+  // Get rid off noise
+  var mmu_p = 8; //These can be any value (in pixels)
+  var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:true}); // Count of connected pixels
+  var mask_gte = fcount.gte(mmu_p); // Get connected pixels above threshold (mmu_p)
   ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte);
   ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20).rename("ndfi_magnitue_thr10k"); // This is the NDFI thresholded with MMU applied and 
                                                   // crossed with GFC20. Thus, only changes in Forest are shown, with "noise" removal.
-                                                  
+
+  //Implement the same mask to the other bands
   var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte);
   tBreak_m = tBreak_m.updateMask(gfc20);
   var ndfiMagnitude_m = breakpoint.select('ndfi_magnitude').updateMask(mask_gte);
@@ -115,8 +114,8 @@ var processTiles = function(tile){
   var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_gte);
   ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20);
 
-
-  var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
+ //Make multiband image so each can be exported to an image collection
+  var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m); 
   
   //No need for loop here. Need to optimize, but it works so far. 
   var featlist = interm_aoi.getInfo()["features"];
