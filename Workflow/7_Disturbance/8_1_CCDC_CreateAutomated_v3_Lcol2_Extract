@@ -135,7 +135,7 @@ var processTiles = function(tile){
     });
   }
   
-  return  segments;
+  return ndfi_breaks;
   
 };
 
