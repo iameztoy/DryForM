@@ -23,12 +23,12 @@ Even if possible, it does not directly extract the CCD bands, coefficients, etc.
           
   - Parameters that can be changed:
       - aoi: area of interest
-      - cg_scale: Defines the size of the tiles
+      - cg_scale: Defines the size of the tiles. The greater the size, the more time will take the task to process. 
       - tilelist: list of tiles that will be processed
       - start | end: Dates to create the Landsat image collection
-      - daterange: Dates to define the CCD period over which the extraction will happen
+      - daterange: Dates to define the CCD period over which the extraction will happen. Currently changes between 2021 and May 2024.
       - breakpoint variables contains a set of additional options (see in comments)
-      - ndfiMag_gte10k: See gte threshold. It is currently set to a drop of 10000.
+      - ndfiMag_gte10k: See gte threshold. It is currently set to identify a drop higher or equal than 10000.
       - mmu_p: number of connected pixels that will be removed (currently 8)
 
 */
