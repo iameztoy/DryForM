@@ -108,7 +108,7 @@ var processTiles = function(tile){
     region: interm_aoi,
     start: '2013-01-01',
     end: '2024-05-01', 
-    mapImage: function(image) { return image.addBands(toNdfi(image)) },
+    mapImage: function(image) { return image.addBands(toNdfi(image)).clip(interm_aoi.geometry()) },
   });
   
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
