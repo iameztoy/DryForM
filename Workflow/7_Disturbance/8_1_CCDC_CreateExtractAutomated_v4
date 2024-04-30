@@ -10,7 +10,7 @@ Even if possible, it does not directly extract the CCD bands, coefficients, etc.
   - It includes a step to remove noisy pixels. You can change the connected pixels parameter.
   - This means that only significant changes (higher than the NDFI threshold) are visible within the forest limits stablished by the GFC20 datasets.
   - The mask could be changed to any other land cover class (e.g. shrubs or other wooded land)
-  - In additiona to the thresholded band, three additional bands are also exported -> tBreak, ndfi magnitude and ndfi magnitude confidence.
+  - In addition to the thresholded band, three additional bands are also exported -> tBreak, ndfi magnitude and ndfi magnitude confidence.
   - These bands have also been masked by the same mask to create the thresholded band.
   
   - Note that the process can be also split in two parts:
