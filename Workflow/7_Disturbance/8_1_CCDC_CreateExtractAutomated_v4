@@ -170,7 +170,7 @@ var processTiles = function(tile){
     assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_DirectExtract/'+name+disS+"_"+expname, //.toString(),
     pyramidingPolicy:{'.default': 'sample'}, 
     crs: 'EPSG:4326',
-    region: interm_aoi,
+    region: interm_aoi.geometry(),
     scale: 30,
     maxPixels: 1e13
     });
