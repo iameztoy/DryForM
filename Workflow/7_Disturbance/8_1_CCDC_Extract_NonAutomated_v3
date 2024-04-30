@@ -25,7 +25,7 @@ var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000)
 Map.addLayer(ndfiMag_gte10k, {min: 0, max: 1, palette:"red"}, 'ndfi_magnitude Masked')
 
 
-// Note! Need to create a dummy mask for gfc20. Modify or remove line 34
+// Note! Need to create a dummy mask for gfc20. 
 // I can create the dummy mask/geometry using one of the bands of the breakpoint IC.
 // E.g. breakpoint.select('ndfi_magnitude').gte(0).geometry() and use this to clip gfc20
 // Do this before applying MMU (remove lines 37/38)
