@@ -25,7 +25,7 @@ var collection = createLandsatCollection({
   region: region,
   start: '2013-01-01',
   end: '2024-05-01', 
-  mapImage: function(image) { return image.addBands(toNdfi(image)) },
+  mapImage: function(image) { return image.addBands(toNdfi(image)).clip(region) },
 })
 
 var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
