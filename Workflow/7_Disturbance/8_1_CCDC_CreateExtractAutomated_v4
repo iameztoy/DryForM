@@ -113,7 +113,7 @@ var processTiles = function(tile){
   
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
     collection: collection,
-    breakpointBands: ['ndfi', 'green', 'swir1'], //These are needed to compute NDFI
+    breakpointBands: ['ndfi', 'green', 'swir1'], //Green and SWIR-1 shall be added to implement tmaskBands option
     tmaskBands: ['green', 'swir1'], // Typically necessary to mask clouds
     dateFormat: 1, //Fractional years
   });
