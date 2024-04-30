@@ -113,17 +113,14 @@ var processTiles = function(tile){
   
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
     collection: collection,
-    breakpointBands: ['ndfi', 'blue', 'green', 'red', 'nir', 'swir1', 'swir2'], //These are needed to compute NDFI
+    breakpointBands: ['ndfi', 'green', 'swir1'], //These are needed to compute NDFI
     tmaskBands: ['green', 'swir1'], // Typically necessary to mask clouds
     dateFormat: 1, //Fractional years
   });
   
-  var segments = temporalSegmentation.Segments(ccdc);
-  segments = segments.toImage(); // Need to convert to image | Equivalent to export image if the process is split in two modules
+   var segments = temporalSegmentation.Segments(ccdc, 1);
 
-  var segments2 = temporalSegmentation.Segments(segments, 1);
-
-  var dateRange = segments2.dateRange('2021-01-01', '2024-05-01');
+  var dateRange = segments.dateRange('2021-01-01', '2024-05-01');
   var breakpoint = dateRange.pickBreakpoint({ 
     breakAnalysisBand: 'ndfi', // The band to use when analyzing which breakpoint to provide data for.
     skipBreakInLastSegment: false, // CCDC sometimes detect breaks in the last segment. These can at times be unreliable.
