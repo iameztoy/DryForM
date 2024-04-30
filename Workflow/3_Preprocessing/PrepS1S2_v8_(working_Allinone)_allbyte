@@ -164,6 +164,7 @@ var processTiles = function(tile){
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', tile))
   //var interm_aoi = zonesID.filter(ee.Filter.eq('ID', ee.List([tile])));
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
+  interm_aoi = interm_aoi.geometry()
   //print("interm aoi fx", interm_aoi)
   Map.addLayer(interm_aoi, {color: 'red'}, "Intermediate AOI/tile", 0);
 
