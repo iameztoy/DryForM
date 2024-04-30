@@ -141,8 +141,8 @@ var processTiles = function(tile){
   // Get rid off noise
   var mmu_p = 8; //These can be any value (in pixels)
   var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:true}); // Count of connected pixels
-  var mask_gte = fcount.lte(mmu_p); // Get connected pixels above threshold (mmu_p)
-  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte).not();
+  var mask_gte = fcount.gte(mmu_p); // Get connected pixels above threshold (mmu_p)
+  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte);
   
   ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20).rename("ndfi_magnitue_thr10k"); // This is the NDFI thresholded with MMU applied and 
                                                   // crossed with GFC20. Thus, only changes in Forest are shown, with "noise" removal.
