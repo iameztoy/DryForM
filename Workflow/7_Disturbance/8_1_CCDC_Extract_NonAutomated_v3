@@ -60,7 +60,7 @@ Export.image.toAsset({
     assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract/tile338_Cerrado",
 //	pyramidingPolicy:,
 //	dimensions:,
-//	region:,
+//  region: geometry,
     scale:30,
     crs:"EPSG:4326",
 //	crsTransform:,
