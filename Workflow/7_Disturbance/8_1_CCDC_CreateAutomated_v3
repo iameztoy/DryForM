@@ -52,7 +52,7 @@ var ns = n.toString();
 // May require to add more tiles (>1000) for very wide biomes
 // (e.g. Cerrado) if the covering grid is small (e.g. cgScale: 50000 for Cerrado are 1438 tiles) 
 
-var tilelist = ee.List(["338"])
+var tilelist = ee.List(["194", "195", "298", "299", "315", "316", "321", "322", "327", "328", "336", "337", "338", "339", "340"])
 tilelist = tilelist.filter(ee.Filter.lte('item', ns));
 //print("Manual tile list", tilelist)
 
