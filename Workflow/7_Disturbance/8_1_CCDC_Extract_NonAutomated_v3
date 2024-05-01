@@ -7,16 +7,16 @@ Map.addLayer(gfc20.selfMask(), {palette:"green"}, "GFC20");
 */
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
-var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile315_Cerrado');
+var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile194_Cerrado');
 print(segmentsImage)
 
 var geometry = segmentsImage.select("tBreak").geometry()
 print(geometry.getInfo())
-Map.addLayer(geometry)
+Map.addLayer(geometry, {color:"red"}, "Geometry")
 
 var segments = temporalSegmentation.Segments(segmentsImage, 1);
 
-var dateRange = segments.dateRange('2021-01-01', '2025-01-01');
+var dateRange = segments.dateRange('2020-01-01', '2024-05-01');
 var breakpoint = dateRange.pickBreakpoint({ 
   breakAnalysisBand: 'ndfi', // The band to use when analyzing which breakpoint to provide data for.
   skipBreakInLastSegment: false, // CCDC sometimes detect breaks in the last segment. These can at times be unreliable.
@@ -28,7 +28,7 @@ var breakpoint = dateRange.pickBreakpoint({
 //gfc20 = gfc20.clip(geometry);
 
 Map.centerObject(segmentsImage);
-Map.addLayer(breakpoint.select('tBreak'), {min: 2021, max: 2024, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'tBreak');
+Map.addLayer(breakpoint.select('tBreak'), {min: 2020, max: 2024, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'tBreak');
 Map.addLayer(breakpoint.select('ndfi_magnitude'), {min: -25000, max: 25000, palette: '#340D35, #9C3060, #DB8D77, #FFFFFF, #7EB390, #156C72, #151D44'}, 'ndfi_magnitude');
 Map.addLayer(breakpoint.select('ndfi_breakConfidence'), {min: 0, max: 20, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'ndfi_breakConfidence');
 
@@ -56,8 +56,8 @@ print(ndfi_breaks);
 
 Export.image.toAsset({
 		image: ndfi_breaks,
-    description: "tile315Cerrado",
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract/tile315_Cerrado",
+    description: "tile194Cerrado",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract/tile194_Cerrado",
     pyramidingPolicy:{'.default': 'sample'},
 //	dimensions:,
 //  region: geometry,
@@ -68,10 +68,4 @@ Export.image.toAsset({
 //	shardSize:,
 //	priority:,
 });
-
-
-
-
-
-
 
