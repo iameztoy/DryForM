@@ -8,8 +8,9 @@ Map.addLayer(gfc20.selfMask(), {palette:"green"}, "GFC20");
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
 var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile338_Cerrado_clipTest3');
+print(segmentsImage)
 
-var geometry = breakpoint.select('tBreak').geometry()
+var geometry = segmentsImage.select("tBreak").geometry()
 
 var segments = temporalSegmentation.Segments(segmentsImage, 1);
 
@@ -39,7 +40,7 @@ var mask_gte = fcount.gte(mmu_p);
 ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_f"); // This is the NDFI thresholded with MMU applied and 
                                                   // crossed with GFC20. Thus, only changes in Forest are shown, with "noise" removal.
 
-Map.addLayer(ndfiMag_gte10k_f, {palette:"orange"}, "Masked NDFI Mag 1000");
+Map.addLayer(ndfiMag_gte10k, {palette:"orange"}, "Masked NDFI Mag 1000");
 
 var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte);
 //tBreak_m = tBreak_m.updateMask(gfc20);
