@@ -41,7 +41,7 @@ var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:tr
 var mask_gte = fcount.gte(mmu_p);
 var ndfiMag_gte10k_m = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_m"); 
 
-Map.addLayer(ndfiMag_gte10k_m, {palette:"orange"}, "Masked NDFI Mag 10000 MMU");
+Map.addLayer(ndfiMag_gte10k_m.selfMask(), {palette:"orange"}, "Masked NDFI Mag 10000 MMU");
 
 var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte).clip(geometry);
 //tBreak_m = tBreak_m.updateMask(gfc20);
