@@ -53,7 +53,7 @@ var ns = n.toString();
 // May require to add more tiles (>1000) for very wide biomes
 // (e.g. Cerrado) if the covering grid is small (e.g. cgScale: 50000 for Cerrado are 1438 tiles) 
 
-var tilelist = ee.List(["338", "339"])
+var tilelist = ee.List(["338"])
 tilelist = tilelist.filter(ee.Filter.lte('item', ns));
 //print("Manual tile list", tilelist)
 
@@ -84,6 +84,8 @@ var processTiles = function(tile){
     dateFormat: 1, 
   });
   
+  ccdc = ccdc.clip(interm_aoi.geometry());
+
   var segments = temporalSegmentation.Segments(ccdc, 1);
   
   //No need for loop here. Need to optimize, but it works so far. 
