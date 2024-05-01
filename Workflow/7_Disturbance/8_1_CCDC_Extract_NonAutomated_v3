@@ -2,10 +2,16 @@
 
 var gfc20 = ee.ImageCollection("JRC/GFC2020/V1");
 gfc20 = gfc20.mosaic();
-Map.addLayer(gfc20.selfMask(), {palette:"green"}, "GFC20");
+
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
-var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile338_Cerrado_clipTest_AutoCreate_NDFIGSWIR');
+var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile338_Cerrado_clipTest3');
+
+
+var geometry = segmentsImage.select("tBreak").geometry();
+Map.addLayer(geometry)
+print(geometry.getInfo())
+
 
 var segments = temporalSegmentation.Segments(segmentsImage, 1);
 
@@ -18,11 +24,8 @@ var breakpoint = dateRange.pickBreakpoint({
   breakSelection: 'CONFIDENCE' // Specify which of the break points to provide data for. One of FIRST, LAST, MAGNITUDE, CONFIDENCE
 });
 
-var geom = breakpoint.select('tBreak').geometry();
-print(geom);
-
-
 gfc20 = gfc20.clip(geometry);
+Map.addLayer(gfc20.unmask(), null, "GFC20 clipped")
 
 Map.centerObject(segmentsImage);
 Map.addLayer(breakpoint.select('tBreak'), {min: 2021, max: 2024, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'tBreak');
@@ -47,6 +50,8 @@ var ndfiMagnitude_m = breakpoint.select('ndfi_magnitude').updateMask(mask_gte);
 ndfiMagnitude_m = ndfiMagnitude_m.updateMask(gfc20);
 var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_gte);
 ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20);
+
+
 
 
 var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k_f, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
