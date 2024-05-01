@@ -7,7 +7,7 @@ Map.addLayer(gfc20.selfMask(), {palette:"green"}, "GFC20");
 */
 
 var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
-var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile299_Cerrado');
+var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile321_Cerrado');
 print(segmentsImage)
 
 var geometry = segmentsImage.select("tBreak").geometry()
@@ -56,8 +56,8 @@ print(ndfi_breaks);
 
 Export.image.toAsset({
 		image: ndfi_breaks,
-    description: "tile299Cerrado",
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract/tile299_Cerrado",
+    description: "tile321Cerrado",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract/tile321_Cerrado",
     pyramidingPolicy:{'.default': 'sample'},
 //	dimensions:,
 //  region: geometry,
