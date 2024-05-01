@@ -118,6 +118,7 @@ var processTiles = function(tile){
     dateFormat: 1, //Fractional years
   });
   
+   ccdc = ccdc.clip(interm_aoi.geometry());
    var segments = temporalSegmentation.Segments(ccdc, 1); //1 refers to fractional years mode. See req. file
 
   var dateRange = segments.dateRange('2021-01-01', '2024-05-01');
