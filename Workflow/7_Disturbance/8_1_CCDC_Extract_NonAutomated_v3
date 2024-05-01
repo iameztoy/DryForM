@@ -37,7 +37,7 @@ Map.addLayer(ndfiMag_gte10k, {min: 0, max: 1, palette:"red"}, 'ndfi_magnitude Ma
 var mmu_p = 8;
 var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:true});
 var mask_gte = fcount.gte(mmu_p);
-ndfiMag_gte10k_m = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_m"); 
+var ndfiMag_gte10k_m = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_m"); 
 
 Map.addLayer(ndfiMag_gte10k_m, {palette:"orange"}, "Masked NDFI Mag 1000");
 
