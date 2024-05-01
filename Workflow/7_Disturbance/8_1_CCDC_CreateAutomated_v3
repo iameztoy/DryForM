@@ -99,8 +99,8 @@ var processTiles = function(tile){
 
   Export.image.toAsset({
     image: ccdc,
-    description: name+disS+"_"+expname + "_clipTest", //"test", //.toString(), Now the ID is already a string
-    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/'+name+disS+"_"+expname + "_clipTest", //.toString(),
+    description: name+disS+"_"+expname, //"test", //.toString(), Now the ID is already a string
+    assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/'+name+disS+"_"+expname, //.toString(),
     pyramidingPolicy:{'.default': 'sample'}, 
     crs: 'EPSG:4326',
     region: interm_aoi.geometry(),
