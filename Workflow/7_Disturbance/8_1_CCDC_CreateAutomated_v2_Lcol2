@@ -79,12 +79,12 @@ var processTiles = function(tile){
   
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
     collection: collection,
-    breakpointBands: ['ndfi', 'blue', 'green', 'red', 'nir', 'swir1', 'swir2'],
+    breakpointBands: ['ndfi', 'green','swir1'],
     tmaskBands: ['green', 'swir1'],
     dateFormat: 1, 
   });
   
-  var segments = temporalSegmentation.Segments(ccdc);
+  var segments = temporalSegmentation.Segments(ccdc, 1);
   
   //No need for loop here. Need to optimize, but it works so far. 
   var featlist = interm_aoi.getInfo()["features"];
