@@ -11,6 +11,8 @@ var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Projec
 print(segmentsImage)
 
 var geometry = segmentsImage.select("tBreak").geometry()
+print(geometry.getInfo())
+Map.addLayer(geometry)
 
 var segments = temporalSegmentation.Segments(segmentsImage, 1);
 
@@ -39,7 +41,7 @@ var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:tr
 var mask_gte = fcount.gte(mmu_p);
 var ndfiMag_gte10k_m = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_m"); 
 
-Map.addLayer(ndfiMag_gte10k_m, {palette:"orange"}, "Masked NDFI Mag 1000");
+Map.addLayer(ndfiMag_gte10k_m.unmask(), {palette:"orange"}, "Masked NDFI Mag 10000");
 
 var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte);
 //tBreak_m = tBreak_m.updateMask(gfc20);
