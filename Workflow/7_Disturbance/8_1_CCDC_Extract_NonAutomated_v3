@@ -37,10 +37,9 @@ Map.addLayer(ndfiMag_gte10k, {min: 0, max: 1, palette:"red"}, 'ndfi_magnitude Ma
 var mmu_p = 8;
 var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:true});
 var mask_gte = fcount.gte(mmu_p);
-ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_f"); // This is the NDFI thresholded with MMU applied and 
-                                                  // crossed with GFC20. Thus, only changes in Forest are shown, with "noise" removal.
+ndfiMag_gte10k_m = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_m"); 
 
-Map.addLayer(ndfiMag_gte10k, {palette:"orange"}, "Masked NDFI Mag 1000");
+Map.addLayer(ndfiMag_gte10k_m, {palette:"orange"}, "Masked NDFI Mag 1000");
 
 var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte);
 //tBreak_m = tBreak_m.updateMask(gfc20);
@@ -50,7 +49,7 @@ var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_
 //ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20);
 
 
-var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
+var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k_m, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
 print(ndfi_breaks);
 
 Export.image.toAsset({
