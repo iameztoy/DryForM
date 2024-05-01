@@ -86,7 +86,7 @@ var processTiles = function(tile){
   
   ccdc = ccdc.clip(interm_aoi.geometry());
 
-  var segments = temporalSegmentation.Segments(ccdc, 1);
+  var segments = temporalSegmentation.Segments(ccdc, 1); //1 Makes reference for fractional years. See required script.
   
   //No need for loop here. Need to optimize, but it works so far. 
   var featlist = interm_aoi.getInfo()["features"];
