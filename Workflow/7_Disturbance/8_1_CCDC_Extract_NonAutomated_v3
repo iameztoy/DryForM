@@ -32,7 +32,7 @@ Map.addLayer(breakpoint.select('tBreak'), {min: 2021, max: 2024, palette: '#0000
 Map.addLayer(breakpoint.select('ndfi_magnitude'), {min: -25000, max: 25000, palette: '#340D35, #9C3060, #DB8D77, #FFFFFF, #7EB390, #156C72, #151D44'}, 'ndfi_magnitude');
 Map.addLayer(breakpoint.select('ndfi_breakConfidence'), {min: 0, max: 20, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'ndfi_breakConfidence');
 
-var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000).selfMask();
+var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000).selfMask().clip(geometry);
 Map.addLayer(ndfiMag_gte10k, {min: 0, max: 1, palette:"red"}, 'ndfi_magnitude Masked');
 //var ndfiMag_gte10k_f = ndfiMag_gte10k.updateMask(gfc20);
 
@@ -41,13 +41,13 @@ var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:tr
 var mask_gte = fcount.gte(mmu_p);
 var ndfiMag_gte10k_m = ndfiMag_gte10k.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_m"); 
 
-Map.addLayer(ndfiMag_gte10k_m.unmask(), {palette:"orange"}, "Masked NDFI Mag 10000");
+Map.addLayer(ndfiMag_gte10k_m, {palette:"orange"}, "Masked NDFI Mag 10000");
 
-var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte);
+var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte).clip(geometry);
 //tBreak_m = tBreak_m.updateMask(gfc20);
-var ndfiMagnitude_m = breakpoint.select('ndfi_magnitude').updateMask(mask_gte);
+var ndfiMagnitude_m = breakpoint.select('ndfi_magnitude').updateMask(mask_gte).clip(geometry);
 //ndfiMagnitude_m = ndfiMagnitude_m.updateMask(gfc20);
-var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_gte);
+var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_gte).clip(geometry);
 //ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20);
 
 
