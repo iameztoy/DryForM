@@ -114,8 +114,6 @@ var processTiles = function(tile){
 
 var ccd_results = tilelist.map(processTiles);
 
-
-
 // Functions
 
 function toNdfi(image) {
