@@ -1,69 +1,75 @@
+//Manual version - Need to add a geometry for the tile
+
 var gfc20 = ee.ImageCollection("JRC/GFC2020/V1");
-gfc20 = gfc20.mosaic()
-Map.addLayer(gfc20.selfMask(), {palette:"green"}, "GFC20")
+gfc20 = gfc20.mosaic();
+Map.addLayer(gfc20.selfMask(), {palette:"green"}, "GFC20");
 
-var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation') 
-var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile103_Chaco')
+var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
+var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile338_Cerrado_clipTest_AutoCreate_NDFIGSWIR');
 
-var segments = temporalSegmentation.Segments(segmentsImage, 1)
+var segments = temporalSegmentation.Segments(segmentsImage, 1);
 
-var dateRange = segments.dateRange('2021-01-01', '2025-01-01')
+var dateRange = segments.dateRange('2021-01-01', '2025-01-01');
 var breakpoint = dateRange.pickBreakpoint({ 
   breakAnalysisBand: 'ndfi', // The band to use when analyzing which breakpoint to provide data for.
   skipBreakInLastSegment: false, // CCDC sometimes detect breaks in the last segment. These can at times be unreliable.
   breakMagnitudeDirection: 'ANY', // Specify which breakpoints to filtered out, based on weather the break magnitude for the break analysis band decrease or increase. One of ANY, DECREASE, INCREASE
   minBreakConfidence: 6, // The minimum confidence of a breakpoint to be included. This is calculated by the break magnitude divided by the RMSE.
   breakSelection: 'CONFIDENCE' // Specify which of the break points to provide data for. One of FIRST, LAST, MAGNITUDE, CONFIDENCE
-})
+});
 
-Map.centerObject(segmentsImage)
-Map.addLayer(breakpoint.select('tBreak'), {min: 2021, max: 2024, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'tBreak')
-Map.addLayer(breakpoint.select('ndfi_magnitude'), {min: -25000, max: 25000, palette: '#340D35, #9C3060, #DB8D77, #FFFFFF, #7EB390, #156C72, #151D44'}, 'ndfi_magnitude')
-Map.addLayer(breakpoint.select('ndfi_breakConfidence'), {min: 0, max: 20, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'ndfi_breakConfidence')
-
-var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000).selfMask()
-Map.addLayer(ndfiMag_gte10k, {min: 0, max: 1, palette:"red"}, 'ndfi_magnitude Masked')
+var geom = breakpoint.select('tBreak').geometry();
+print(geom);
 
 
-// Note! Need to create a dummy mask for gfc20. 
-// I can create the dummy mask/geometry using one of the bands of the breakpoint IC.
-// E.g. breakpoint.select('ndfi_magnitude').gte(0).geometry() and use this to clip gfc20
-// Do this before applying MMU (remove lines 37/38)
+gfc20 = gfc20.clip(geometry);
+
+Map.centerObject(segmentsImage);
+Map.addLayer(breakpoint.select('tBreak'), {min: 2021, max: 2024, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'tBreak');
+Map.addLayer(breakpoint.select('ndfi_magnitude'), {min: -25000, max: 25000, palette: '#340D35, #9C3060, #DB8D77, #FFFFFF, #7EB390, #156C72, #151D44'}, 'ndfi_magnitude');
+Map.addLayer(breakpoint.select('ndfi_breakConfidence'), {min: 0, max: 20, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'ndfi_breakConfidence');
+
+var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000).selfMask();
+Map.addLayer(ndfiMag_gte10k, {min: 0, max: 1, palette:"red"}, 'ndfi_magnitude Masked');
+var ndfiMag_gte10k_f = ndfiMag_gte10k.updateMask(gfc20);
 
 var mmu_p = 8;
-var fcount = ndfiMag_gte10k.connectedPixelCount({maxSize: 200, eightConnected:true})
+var fcount = ndfiMag_gte10k_f.connectedPixelCount({maxSize: 200, eightConnected:true});
 var mask_gte = fcount.gte(mmu_p);
-ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte)
-ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20).rename("ndfi_magnitue_thr10k") // This is the NDFI thresholded with MMU applied and 
+ndfiMag_gte10k_f = ndfiMag_gte10k_f.updateMask(mask_gte).rename("ndfi_magnitue_thr10k_f"); // This is the NDFI thresholded with MMU applied and 
                                                   // crossed with GFC20. Thus, only changes in Forest are shown, with "noise" removal.
 
-Map.addLayer(ndfiMag_gte10k, {palette:"orange"}, "Masked NDFI Mag 1000")
+Map.addLayer(ndfiMag_gte10k_f, {palette:"orange"}, "Masked NDFI Mag 1000");
 
-var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte)
-tBreak_m = tBreak_m.updateMask(gfc20)
-var ndfiMagnitude_m = breakpoint.select('ndfi_magnitude').updateMask(mask_gte)
-ndfiMagnitude_m = ndfiMagnitude_m.updateMask(gfc20)
-var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_gte)
-ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20)
+var tBreak_m = breakpoint.select('tBreak').updateMask(mask_gte);
+tBreak_m = tBreak_m.updateMask(gfc20);
+var ndfiMagnitude_m = breakpoint.select('ndfi_magnitude').updateMask(mask_gte);
+ndfiMagnitude_m = ndfiMagnitude_m.updateMask(gfc20);
+var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_gte);
+ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20);
 
 
-var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m)
-print(ndfi_breaks)
+var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k, ndfiMag_gte10k_f, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
+print(ndfi_breaks);
 
 Export.image.toAsset({
-		image: ndfiMag_gte10k,
-    description: "Test_CCD",
-    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Change/Test_CCD_process/Test2",
+		image: ndfi_breaks,
+    description: "tile338Cerrado",
+    assetId: "projects/hardy-tenure-383607/assets/DryForm_Project/Change/Test_CCD_process/tile338_Cerrado",
 //	pyramidingPolicy:,
 //	dimensions:,
 //	region:,
-    scale:10,
+    scale:30,
     crs:"EPSG:4326",
 //	crsTransform:,
     maxPixels:1e13,
 //	shardSize:,
 //	priority:,
-})
+});
+
+
+
+
 
 
 
