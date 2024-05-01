@@ -49,7 +49,7 @@ var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_
 ndfiBreakConf_m = ndfiBreakConf_m.updateMask(gfc20);
 
 
-var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k, ndfiMag_gte10k_f, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
+var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k_f, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
 print(ndfi_breaks);
 
 Export.image.toAsset({
