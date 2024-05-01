@@ -134,7 +134,7 @@ var processTiles = function(tile){
   //Map.addLayer(gfc20_m); Map.centerObject(gfc20_m)
   
   var ndfiMag_gte10k = breakpoint.select('ndfi_magnitude').multiply(-1).gte(10000); //We invert (not really needed) and set a threshold
-  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20_m).selfMask();
+  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20_m);
 
   // Get rid off noise
   var mmu_p = 8; //These can be any value (in pixels)
@@ -142,7 +142,7 @@ var processTiles = function(tile){
   var mask_gte = fcount.gte(mmu_p); // Get connected pixels above threshold (mmu_p)
   ndfiMag_gte10k = ndfiMag_gte10k.updateMask(mask_gte);
   
-  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20).rename("ndfi_magnitue_thr10k"); // This is the NDFI thresholded with MMU applied and 
+  ndfiMag_gte10k = ndfiMag_gte10k.updateMask(gfc20_m).rename("ndfi_magnitue_thr10k"); // This is the NDFI thresholded with MMU applied and 
                                                   // crossed with GFC20. Thus, only changes in Forest are shown, with "noise" removal.
   //Map.addLayer(ndfiMag_gte10k)
   
