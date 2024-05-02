@@ -109,6 +109,10 @@ var gabam = ee.ImageCollection("projects/sat-io/open-datasets/GABAM"); //30m Glo
 // Tree Cover Loss - Hansen Global Forest Change
 var gfc2023 = ee.Image('UMD/hansen/global_forest_change_2023_v1_11');
 
+// CCDC-SMA change analysis - NDFI
+var ccdc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract").mosaic()
+ccdc = ccdc.updateMask(RefineStep2)
+
 // #############################################################################
 // ### GET URL PARAMS ###
 // #############################################################################
@@ -778,7 +782,8 @@ function renderGraphics(coords) {
   map.addLayer(TotTF_c, VisParam11cl, "Total Tree/Forest", 0); //Range 0-7 //Original TotTF_c
   map.addLayer(Fires2020, {palette:"red"}, "GABAM Fires 2020", 0);
   map.addLayer(lossYear, lossYearVis, 'Loss Year Hansen (2000-2023)', 0);
-  map.addLayer(metaWRI, visParams_meta, "Meta/WRI Canopy Height", 0)
+  map.addLayer(metaWRI, visParams_meta, "Meta/WRI Canopy Height", 0);
+  map.addLayer(ccdc, vp_ccdc, "CCDC-SMA | NDFI > 10000")
   
   // Add new point to the Map.
   map.addLayer(aoiCircle, {color: AOI_COLOR});
@@ -1371,6 +1376,9 @@ var vp_metapal = require('users/gena/packages:palettes');
 var visParams_meta =  {min: 0,max: 25, palette: vp_metapal.matplotlib.viridis[7], opacity: 0.6}   
 //  Palette with legend colors
 var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '44ca31', '217c4b', '124429'];
+
+// Vis param. CCDC
+var vp_ccdc = {"opacity":1,"bands":["tBreak"],"min":2020.0000,"max":2024.9999,"palette":["ffffff","ffc09b","ff8c6a","ff6868","ff563b"]};
  
 // name of the legend
 var names8 = ["0", "1", "2", "3", "4", "5", "6", "7"];
