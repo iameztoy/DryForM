@@ -783,7 +783,7 @@ function renderGraphics(coords) {
   map.addLayer(Fires2020, {palette:"red"}, "GABAM Fires 2020", 0);
   map.addLayer(lossYear, lossYearVis, 'Loss Year Hansen (2000-2023)', 0);
   map.addLayer(metaWRI, visParams_meta, "Meta/WRI Canopy Height", 0);
-  map.addLayer(ccdc, vp_ccdc, "CCDC-SMA | NDFI > 10000")
+  map.addLayer(ccdc, vp_ccdc, "CCDC-SMA 2020-2024 | NDFI > 10000", 1)
   
   // Add new point to the Map.
   map.addLayer(aoiCircle, {color: AOI_COLOR});
