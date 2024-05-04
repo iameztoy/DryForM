@@ -1,5 +1,3 @@
-
-
 //AOI
 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
@@ -18,9 +16,8 @@ var zones_biome = Zones.filterBounds(caatinga);
 
 // Target Land Cover
 
-var target = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl')
-var target_tc = target.eq(0).or(target.eq(3)).selfMask().clip(caatinga);
-Map.addLayer(target_tc, null, "Target Tc")
+var targeti = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl')
+var target_tc = targeti.eq(0).or(targeti.eq(3)).selfMask().clip(caatinga);
 
 
 //ee.ImageCollection('JRC/GFC2020/V1').mosaic().clip(caatinga).rename("Tree Cover");
