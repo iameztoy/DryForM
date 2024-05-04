@@ -1,5 +1,3 @@
-
-
 //AOI
 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
@@ -7,9 +5,9 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var aoi = caatinga
-var aoi_name = "Caatinga"
-var target = "potapov"
+var aoi = cerrado
+var aoi_name = "Cerrado"
+var target = "gfc20"
 
 // GRID to calculate areas
 var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');
@@ -18,17 +16,20 @@ var zones_biome = Zones.filterBounds(caatinga);
 
 // Target Land Cover
 
-var targeti = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
-var target_tc = targeti.gte(5).selfMask().clip(aoi);
+var targeti = ee.ImageCollection('JRC/GFC2020/V1').mosaic();
+var target_tc = targeti.selfMask().clip(aoi);
 
 
-//ee.ImageCollection('JRC/GFC2020/V1').mosaic().clip(aoi).rename("Tree Cover");
-//ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl')
 
-
-//My class Caatinga
+//My class
 //var targeti = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl')
 //var target_tc = targeti.eq(0).or(targeti.eq(3)).selfMask().clip(aoi);
+
+//projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_cerrado_Pb_buf20_9cl
+
+//GFC20
+var targeti = ee.ImageCollection('JRC/GFC2020/V1').mosaic();
+var target_tc = targeti.selfMask().clip(aoi);
 
 //WorldCover
 //var targeti = ee.ImageCollection("ESA/WorldCover/v100").mosaic()
