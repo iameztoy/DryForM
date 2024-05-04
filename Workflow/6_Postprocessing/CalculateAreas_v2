@@ -1,3 +1,5 @@
+
+
 //AOI
 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
@@ -5,24 +7,76 @@ var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
+var aoi = caatinga
 var aoi_name = "Caatinga"
-var target = "MyClass"
+var target = "DW"
 
 // GRID to calculate areas
-var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');//
+var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');
 var zones_biome = Zones.filterBounds(caatinga);
-
 
 
 // Target Land Cover
 
-var targeti = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl')
-var target_tc = targeti.eq(0).or(targeti.eq(3)).selfMask().clip(caatinga);
+var targeti = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var treeCover = targeti.select(['treecover2000']);
+var treeCover10 = treeCover.gte(10);
+var lossYear = targeti.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var HTC_2020 = treeCover10.subtract(lossb2020);
+
+var target_tc = HTC_2020.selfMask().clip(aoi);
 
 
-//ee.ImageCollection('JRC/GFC2020/V1').mosaic().clip(caatinga).rename("Tree Cover");
-//var target_tc = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl').clip(caatinga).rename("Tree Cover"); 
+//ee.ImageCollection('JRC/GFC2020/V1').mosaic().clip(aoi).rename("Tree Cover");
+//ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl')
 
+
+//My class Caatinga
+//var targeti = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl')
+//var target_tc = targeti.eq(0).or(targeti.eq(3)).selfMask().clip(aoi);
+
+//WorldCover
+//var targeti = ee.ImageCollection("ESA/WorldCover/v100").mosaic()
+//var target_tc = targeti.eq(10).or(targeti.eq(95)).selfMask().clip(aoi);
+
+//WRI
+//var targeti = ee.ImageCollection("projects/wri-datalab/TropicalTreeCover").mosaic();
+//var target_tc = targeti.gte(80).selfMask().clip(aoi);
+
+
+//ESRI
+//var targeti = ee.ImageCollection("projects/sat-io/open-datasets/landcover/ESRI_Global-LULC_10m").mosaic()
+//var target_tc = targeti.eq(2).selfMask().clip(aoi);
+
+//Dynamic World
+/*
+var targeti = ee.ImageCollection("GOOGLE/DYNAMICWORLD/V1");
+var srt = '2020-01-01'; var end = '2021-01-01'; //For DW processing
+var dwl = targeti.filterDate(srt, end).select("label");
+var dwMode = dwl.reduce(ee.Reducer.mode()); 
+
+var target_tc = dwMode.eq(1).selfMask().clip(aoi);
+*/
+
+// GFC 2020 | Hansen
+/*
+var targeti = ee.Image("UMD/hansen/global_forest_change_2021_v1_9"); 
+var treeCover = targeti.select(['treecover2000']);
+var treeCover10 = treeCover.gte(10);
+var lossYear = targeti.select(['lossyear']).unmask(); //2001=1, 2015=15
+var lossb2020 = lossYear.gte(1).and(lossYear.lte(20));
+//var lossYearGFC2000_2020 = (treeCover.gte(10)).and(lossb2020);
+var HTC_2020 = treeCover10.subtract(lossb2020);
+
+var target_tc = HTC_2020.selfMask().clip(aoi);
+*/
+
+
+//*********************************
+//*********************************
+//*********************************
 
 // Loope functions and area calculation
 var LOOPsamples= function(feature) {
