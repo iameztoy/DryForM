@@ -9,7 +9,7 @@ var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania")
 
 var aoi = cerrado
 var aoi_name = "Cerrado"
-var target = "MetaWRI"
+var target = "MyClass"
 
 // GRID to calculate areas
 var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');
@@ -17,9 +17,8 @@ var zones_biome = Zones.filterBounds(aoi);
 
 
 // Target Land Cover
-
-var targeti = ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic()
-var target_tc = targeti.gte(5).selfMask().clip(aoi);
+var targeti = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_cerrado_Pb_buf20_9cl')
+var target_tc = targeti.eq(0).or(targeti.eq(3)).selfMask().clip(aoi);
 
 
 /*
@@ -114,4 +113,5 @@ Export.table.toDrive({
 	folder: 'AreaEstimates',
 	fileNamePrefix: 'AreaEstimates_' + aoi_name + "_" + target,
 });
+
 
