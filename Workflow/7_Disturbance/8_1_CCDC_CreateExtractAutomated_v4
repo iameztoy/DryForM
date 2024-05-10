@@ -123,7 +123,7 @@ var processTiles = function(tile){
    ccdc = ccdc.clip(interm_aoi.geometry());
    var segments = temporalSegmentation.Segments(ccdc, 1); //1 refers to fractional years mode. See req. file
 
-  var dateRange = segments.dateRange('2021-01-01', '2024-05-01');
+  var dateRange = segments.dateRange('2020-01-01', '2024-05-01');
   var breakpoint = dateRange.pickBreakpoint({ 
     breakAnalysisBand: 'ndfi', // The band to use when analyzing which breakpoint to provide data for.
     skipBreakInLastSegment: false, // CCDC sometimes detect breaks in the last segment. These can at times be unreliable.
