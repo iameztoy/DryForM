@@ -4,8 +4,11 @@
 //***********************************************************
 
 // Target imagery preprocessed in a previous step
-var s1s2_Cerrado = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Cerrado").mosaic();
+var s1s2_Cerrado = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Chaco").mosaic();
 
+var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Chaco");
+
+Map.addLayer(a)
 
 // Prepare the classifier
 var RF_ChacCaat = 'projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/ClassPB_chaco_caatinga_b20_nT130';
