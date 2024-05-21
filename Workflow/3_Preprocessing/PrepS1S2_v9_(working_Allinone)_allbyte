@@ -15,16 +15,18 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
+var fao_ecoz = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones");
+var ecoz = fao_ecoz.filter(ee.Filter.eq('ECO_ZONE_I', 12708));
+//Chaco: 12487, Cerrado: 11045, Caatinga: 11271 | Tanzania was extracted from GDAM
+
+
+//Already extracted Features for the 4 AOIs of DryForM Project:
+/*
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
 var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
-
-var fao_ecoz = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones");
-var ecoz = fao_ecoz.filter(ee.Filter.eq('ECO_ZONE_I', 12708));
-
-//Chaco: 12487, Cerrado: 11045, Caatinga: 11271
-
+*/ 
 
 var aoisel = ecoz; var expname = "Ecoz_12708"
 var aoi = aoisel.geometry() //.buffer(100000);
