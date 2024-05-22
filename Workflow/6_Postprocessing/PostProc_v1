@@ -118,7 +118,7 @@ Map.addLayer(tanzania_trees, null, "Tanzania Trees", 0);
 
 Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata", 0);
 Map.addLayer(ic_tree_c, null, "Trees Corrected", 0);
-Map.addLayer(ic_tree_cc, {"opacity":0.7,"bands":["Classified_Trees"],"max":1,"palette":["000000","39b12a"]}, "Corrected and Cliped to target AOI");
+Map.addLayer(ic_tree_cc, {"opacity":0.4,"bands":["Classified_Trees"],"max":1,"palette":["000000","39b12a"]}, "Corrected and Cliped to target AOI");
 Map.addLayer(eq0.selfMask(), {"palette":["ff0000"]}, "Originally Nodata");
 
 Map.addLayer(zonesID, null, "Zones ID", 0);
