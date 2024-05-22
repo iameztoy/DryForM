@@ -1,6 +1,6 @@
 
 //************************************************************************** 
-// Correcting nodata in the pre-processed imagery
+// Correcting nodata in the classification outcome
 //************************************************************************** 
 
 // Target Images to be corrected. This are the classifications of the best performing models.
