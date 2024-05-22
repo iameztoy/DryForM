@@ -49,6 +49,12 @@ Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata");
 var ic_tree_c = ic_trees.unmask().add(lc_refine_trees_m.unmask())
 Map.addLayer(ic_tree_c, null, "Trees Corrected")
 
+// Export
+
+
+
+
+
 // Visualization
 
 Map.addLayer(chaco_trees, null, "Chaco Trees");
