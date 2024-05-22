@@ -126,5 +126,5 @@ Map.addLayer(ic_tree_cc, {"palette":["000000","39b12a"]}, "Corrected and Cliped 
 Map.addLayer(zonesID, null, "Zones ID");
 Map.addLayer(aoi, null, "AOI Boundary");
 
-//Map.centerObject(aoi);
+Map.centerObject(aoi);
 Map.setOptions("SATELLITE");
