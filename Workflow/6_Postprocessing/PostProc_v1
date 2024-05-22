@@ -24,7 +24,12 @@ var gte0 = ic.gte(0).unmask(); // We first identify all valid pixels and set 0 f
 var eq0 = gte0.eq(0); // We create a mask for 0 (nodata)
 
 // LC_Refine (iteration 2)
-var lc_refine = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine").mosaic();
+// We use this to fill the gaps (artifacts)
+var lc_refine = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine4PostProc").mosaic();
 
 
 
+var chaco_trees = chaco.eq(1)
+var caatinga_trees = caatinga.eq(1)
+Map.addLayer(chaco_trees)
+Map.addLayer(caatinga_trees)
