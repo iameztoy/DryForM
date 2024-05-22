@@ -2,11 +2,11 @@
 var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones"),
     tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
     chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    clasif = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_PiBa_cl9_chaco_buf20");
+    clasif = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 var aoi = chaco
-var image = clasif.eq(1).selfMask().clip(chaco)
+var image = clasif.mosaic().selfMask()
 
 var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 var h = image.multiply(gedil)
