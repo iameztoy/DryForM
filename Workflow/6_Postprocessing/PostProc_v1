@@ -121,7 +121,7 @@ Map.addLayer(eq0.selfMask(), {"palette":["ff0000"]}, "Originally Nodata");
 
 Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata");
 Map.addLayer(ic_tree_c, null, "Trees Corrected");
-Map.addLayer(ic_tree_cc, {"opacity":1,"bands":["Classified_Trees"],"max":1,"palette":["000000","39b12a"]}, "Corrected and Cliped to target AOI");
+Map.addLayer(ic_tree_cc, {"palette":["000000","39b12a"]}, "Corrected and Cliped to target AOI");
 
 Map.addLayer(zonesID, null, "Zones ID");
 Map.addLayer(aoi, null, "AOI Boundary");
