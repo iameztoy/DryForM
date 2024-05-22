@@ -111,18 +111,18 @@ for (var f in featlist) {
 
 // Visualization
 
-Map.addLayer(chaco_trees, null, "Chaco Trees");
-Map.addLayer(caatinga_trees, null, "Caatinga Trees");
-Map.addLayer(cerrado_trees, null, "Cerrado Trees");
-Map.addLayer(tanzania_trees, null, "Tanzania Trees");
+Map.addLayer(chaco_trees, null, "Chaco Trees", 0);
+Map.addLayer(caatinga_trees, null, "Caatinga Trees", 0);
+Map.addLayer(cerrado_trees, null, "Cerrado Trees", 0);
+Map.addLayer(tanzania_trees, null, "Tanzania Trees", 0);
 
-Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata");
-Map.addLayer(ic_tree_c, null, "Trees Corrected");
+Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata", 0);
+Map.addLayer(ic_tree_c, null, "Trees Corrected", 0);
 Map.addLayer(ic_tree_cc, {"opacity":1,"bands":["Classified_Trees"],"max":1,"palette":["000000","39b12a"]}, "Corrected and Cliped to target AOI");
 Map.addLayer(eq0.selfMask(), {"palette":["ff0000"]}, "Originally Nodata");
 
-Map.addLayer(zonesID, null, "Zones ID");
-Map.addLayer(aoi, null, "AOI Boundary");
+Map.addLayer(zonesID, null, "Zones ID", 0);
+Map.addLayer(aoi, null, "AOI Boundary", 0);
 
 Map.centerObject(aoi);
 Map.setOptions("SATELLITE");
