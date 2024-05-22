@@ -96,7 +96,7 @@ Map.addLayer(aoi, null, "AOI Boundary");
 Map.centerObject(aoi);
 
 var ic_tree_cc = ic_tree_c.clip(aoi); //We clip to each AOI
-ic_tree_cc = ic_tree_cc.gt(0).toByte() //While correcting, the range is 0-2. We convert to 0-1 and cast to Byte.
+ic_tree_cc = ic_tree_cc.gt(0).toByte() //While correcting, the range is 0-2. Perhaps due to small overlaps (1+1). We convert to 0-1 and cast to Byte.
 print(ic_tree_cc)
 Map.addLayer(ic_tree_cc, null, "Corrected and Cliped to target AOI")
 
