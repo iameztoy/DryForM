@@ -27,12 +27,11 @@ final = final.updateMask(image.eq(1));
 
 // Visu
 
+Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 0);
+Map.addLayer(final, null, "Final filtered MMU");
 Map.addLayer(image, null, "TC", 0);
 Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights");
-Map.addLayer(m5, {palette: "orange"}, "Mask height <5");
 
-Map.addLayer(area, null, "area");
-Map.addLayer(final, null, "Final filtered MMU");
 
 Map.setOptions("SATELLITE");
 
