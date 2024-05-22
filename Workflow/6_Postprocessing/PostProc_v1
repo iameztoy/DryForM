@@ -1,6 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //************************************************************************** 
 // Correcting nodata in the classification outcome
@@ -37,10 +34,10 @@ var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
 var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
 
 // Set the targets
-var aoi = tanzania_b; //or caatinga_b; cerrado_b; tanzania_b
-var aoi_n = "tanzania"; //or caatinga; cerrado; tanzania
-var target_class = tanzania
-var target_trees = tanzania_trees
+var aoi = chaco_b; //or caatinga_b; cerrado_b; tanzania_b
+var aoi_n = "chaco"; //or caatinga; cerrado; tanzania
+var target_class = chaco;
+var target_trees = chaco_trees;
 
 // Get the nodatas
 //var list = [chaco, caatinga, cerrado, tanzania];
