@@ -43,7 +43,7 @@ var target_trees = chaco_trees;
 //var list = [chaco, caatinga, cerrado, tanzania];
 //var ic = ee.ImageCollection.fromImages(list).mosaic();
 var gte0 = target_class.gte(0).unmask(); // We first identify all valid pixels and set 0 for those that were nodata. Value 1: valid pixels | value 0: originally nodata (artifact)
-var eq0 = gte0.eq(0); // We create a mask for 0 (nodata)
+var eq0 = gte0.eq(0).clip(aoi); // We create a mask for 0 (nodata)
 
 // LC_Refine (iteration 2)
 // We use this to fill the gaps (artifacts)
