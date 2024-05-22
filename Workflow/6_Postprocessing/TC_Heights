@@ -1,7 +1,5 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var clasif = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
+var clasif = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
 
 var image = clasif.mosaic().selfMask();
 
