@@ -10,7 +10,7 @@ var image = clasif.mosaic().selfMask()
 
 var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 //ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic()
-//
+//ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
 
 var h = image.multiply(gedil)
 var palettes = require('users/gena/packages:palettes');
