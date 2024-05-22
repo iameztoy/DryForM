@@ -62,7 +62,7 @@ Map.addLayer(ic_tree_c, null, "Trees Corrected")
 
 
 
-
+ic_tree_c = ic_tree_c.clip(aoi)
 
 var aoi = aoi.geometry();
 var Zones = aoi.coveringGrid({
