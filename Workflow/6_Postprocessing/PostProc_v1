@@ -89,7 +89,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 
 
 var ic_tree_cc = ic_tree_c.clip(aoi); //We clip to each AOI
-ic_tree_cc = ic_tree_cc.gt(0).toByte().rename("Classified_Trees").selfMask(); //While correcting, the range is 0-2. Perhaps due to small overlaps (1+1). We convert to 0-1 and cast to Byte.
+ic_tree_cc = ic_tree_cc.gt(0).toByte().rename("Classified_Trees"); //While correcting, the range is 0-2. Perhaps due to small overlaps (1+1). We convert to 0-1 and cast to Byte.
 print(ic_tree_cc);
 
 
@@ -126,5 +126,5 @@ Map.addLayer(ic_tree_cc, {palette:"green"}, "Corrected and Cliped to target AOI"
 Map.addLayer(zonesID, null, "Zones ID");
 Map.addLayer(aoi, null, "AOI Boundary");
 
-Map.centerObject(aoi);
+//Map.centerObject(aoi);
 Map.setOptions("SATELLITE");
