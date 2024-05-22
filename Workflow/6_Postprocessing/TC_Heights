@@ -8,9 +8,9 @@ var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Pr
 var aoi = chaco
 var image = clasif.mosaic().selfMask()
 
-var gedil = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
-//ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic()
-//ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
+var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+//ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic(); //META/WRI
+//ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1'); //Lang
 
 var h = image.multiply(gedil)
 var palettes = require('users/gena/packages:palettes');
