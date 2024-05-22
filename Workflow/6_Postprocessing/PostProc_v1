@@ -16,6 +16,10 @@ var geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
 // This is just a method to mitigate the artifacts but they still remain; mainly as a consequence of Sentinel-1 overlapped areas.
 // Ideally this has to be corrected in the imagery pre-processing step.
 
+// Target AOI for export
+var aoi = chaco_b; //or caatinga_b; cerrado_b; tanzania_b
+var aoi_n = "chaco"; //or caatinga; cerrado; tanzania
+
 // Target Classification. This asset contains 9 classes:
 
 var chaco = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chaco_Pb_buf20_9cl");
@@ -57,9 +61,7 @@ var caatinga_b = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caat
 var cerrado_b = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
 var tanzania_b = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-// Target AOI for export
-var aoi = chaco_b;
-var aoi_n = "chaco";
+
 
 aoi = aoi.geometry();
 var Zones = aoi.coveringGrid({
