@@ -10,23 +10,12 @@ var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 var h = image.multiply(gedil);
 var m5 = h.lt(5).selfMask();
 
-// Need to further work on this.
-var mmu = 5000;
-
-var fcount = image.connectedPixelCount({maxSize: 250, eightConnected:true});
-var farea = ee.Image.pixelArea();
-var area = fcount.multiply(farea);
-
-var mask_gte = area.gte(mmu);
-var final = mask_gte.updateMask(mask_gte);
-final = final.updateMask(image.eq(1));
-
 // Visu
 
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.colorbrewer.YlGn[7];
 
-Map.addLayer(final, null, "Final filtered MMU", 0);
+
 Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights");
 Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1);
 Map.addLayer(image, null, "TC", 0);
