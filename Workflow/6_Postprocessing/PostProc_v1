@@ -28,8 +28,16 @@ var eq0 = gte0.eq(0); // We create a mask for 0 (nodata)
 var lc_refine = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine4PostProc").mosaic();
 
 
+Map.addLayer(caatinga, null, "caatinga");
+var chaco_trees = chaco.eq(1);
+var caatinga_trees = caatinga.eq(0).or(caatinga.eq(3));
+var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
+var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
 
-var chaco_trees = chaco.eq(1)
-var caatinga_trees = caatinga.eq(1)
-Map.addLayer(chaco_trees)
-Map.addLayer(caatinga_trees)
+Map.addLayer(chaco_trees, null, "Chaco Trees");
+Map.addLayer(caatinga_trees, null, "Caatinga Trees");
+Map.addLayer(cerrado_trees, null, "Cerrado Trees");
+Map.addLayer(tanzania_trees, null, "Tanzania Trees");
+
+var vp_nodata = {"opacity":1,"bands":["classification"],"palette":["000000","ff0000"]};
+Map.addLayer(eq0, vp_nodata, "Originally Nodata")
