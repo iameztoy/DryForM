@@ -29,20 +29,19 @@ Map.addLayer(dataset.clip(aoi), visualization, 'World Cover v200', 0);
 
 Map.setOptions("SATELLITE")
 
+
+// Need to further work on this.
 var mmu = 5000
 
-
-var proj = clasif.projection();
-
-var fcount = clasif.connectedPixelCount({maxSize: 250, eightConnected:true}).reproject({crs:proj});
-var farea = ee.Image.pixelArea().reproject({crs:proj});
+var fcount = image.connectedPixelCount({maxSize: 250, eightConnected:true});
+var farea = ee.Image.pixelArea()
 var area = fcount.multiply(farea);
 
 Map.addLayer(area, null, "area")
 
 var mask_gte = area.gte(mmu);
 var final = mask_gte.updateMask(mask_gte);
-final = final.updateMask(clasif.eq(1))
+final = final.updateMask(image.eq(1))
 
 Map.addLayer(final, null, "Final filtered MMU")
 
