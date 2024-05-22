@@ -24,7 +24,7 @@ var cerrado = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Clas
 var tanzania = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_tanzania_Pb_buf20_9cl");
 
 var chaco_trees = chaco.eq(1); // Trees in Chaco are defined with a different value
-var caatinga_trees = caatinga.eq(0).or(caatinga.eq(3));
+var caatinga_trees = caatinga.eq(0).or(caatinga.eq(3)); // value 0: Trees | value 3: Mangroves
 var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
 var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
 
