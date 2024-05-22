@@ -34,10 +34,10 @@ var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
 var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
 
 // Set the targets
-var aoi = caatinga_b; //or caatinga_b; cerrado_b; tanzania_b
-var aoi_n = "caatinga"; //or caatinga; cerrado; tanzania
-var target_class = caatinga;
-var target_trees = caatinga_trees;
+var aoi = cerrado_b; //or caatinga_b; cerrado_b; tanzania_b
+var aoi_n = "cerrado"; //or caatinga; cerrado; tanzania
+var target_class = cerrado;
+var target_trees = cerrado_trees;
 
 // Get the nodatas
 //var list = [chaco, caatinga, cerrado, tanzania];
