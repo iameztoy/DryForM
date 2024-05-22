@@ -1,49 +1,38 @@
 /**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var table = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones"),
-    tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania"),
-    chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco"),
-    clasif = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
+var clasif = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-var aoi = chaco
-var image = clasif.mosaic().selfMask()
+
+var image = clasif.mosaic().selfMask();
 
 var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 //ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic(); //META/WRI
 //ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1'); //Lang
 
-var h = image.multiply(gedil)
+var h = image.multiply(gedil);
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.colorbrewer.YlGn[7];
-var m5 = h.lt(5).selfMask()
-
-Map.addLayer(image, null, "TC", 0)
-Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights")
-Map.addLayer(m5, {palette: "orange"}, "Mask height <5")
-
-// World Cover
-
-var dataset = ee.ImageCollection('ESA/WorldCover/v200').first();
-var visualization = {bands: ['Map']};
-Map.addLayer(dataset.clip(aoi), visualization, 'World Cover v200', 0);
-
-Map.setOptions("SATELLITE")
-
+var m5 = h.lt(5).selfMask();
 
 // Need to further work on this.
-var mmu = 5000
+var mmu = 5000;
 
 var fcount = image.connectedPixelCount({maxSize: 250, eightConnected:true});
-var farea = ee.Image.pixelArea()
+var farea = ee.Image.pixelArea();
 var area = fcount.multiply(farea);
-
-Map.addLayer(area, null, "area")
 
 var mask_gte = area.gte(mmu);
 var final = mask_gte.updateMask(mask_gte);
-final = final.updateMask(image.eq(1))
+final = final.updateMask(image.eq(1));
 
-Map.addLayer(final, null, "Final filtered MMU")
+// Visu
 
+Map.addLayer(image, null, "TC", 0);
+Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights");
+Map.addLayer(m5, {palette: "orange"}, "Mask height <5");
 
+Map.addLayer(area, null, "area");
+Map.addLayer(final, null, "Final filtered MMU");
+
+Map.setOptions("SATELLITE");
 
