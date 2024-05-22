@@ -33,11 +33,11 @@ var caatinga_trees = caatinga.eq(0).or(caatinga.eq(3)); // value 0: Trees | valu
 var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
 var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
 
-// Set the targets
-var aoi = cerrado_b; //or caatinga_b; cerrado_b; tanzania_b
-var aoi_n = "cerrado"; //or caatinga; cerrado; tanzania
-var target_class = cerrado;
-var target_trees = cerrado_trees;
+// Set the targets | change the names to the target biome.
+var aoi = tanzania_b; //or caatinga_b; cerrado_b; tanzania_b
+var aoi_n = "tanzania"; //or caatinga; cerrado; tanzania
+var target_class = tanzania;
+var target_trees = tanzania_trees;
 
 // Get the nodatas
 //var list = [chaco, caatinga, cerrado, tanzania];
@@ -119,7 +119,7 @@ Map.addLayer(eq0.selfMask(), {"palette":["ff0000"]}, "Originally Nodata");
 
 Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata");
 Map.addLayer(ic_tree_c, null, "Trees Corrected");
-Map.addLayer(ic_tree_cc, {"palette":["000000","39b12a"]}, "Corrected and Cliped to target AOI");
+Map.addLayer(ic_tree_cc, {var imageVisParam = {"opacity":1,"bands":["Classified_Trees"],"max":1,"palette":["000000","39b12a"]}, "Corrected and Cliped to target AOI");
 
 Map.addLayer(zonesID, null, "Zones ID");
 Map.addLayer(aoi, null, "AOI Boundary");
