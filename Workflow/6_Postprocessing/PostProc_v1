@@ -1,10 +1,13 @@
+/**** Start of imports. If edited, may not auto-convert in the playground. ****/
+var geometry = /* color: #d63000 */ee.Geometry.MultiPoint();
+/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //************************************************************************** 
 // Correcting nodata in the classification outcome
 //************************************************************************** 
 
-// Theseare the classifications of the best performing models.
-// The aim of this script is to correct the artifacts created by the imagery pre-processing step. 
+// These are the classifications of the best performing models.
+// The aim of this script is to partially correct the artifacts created by the imagery pre-processing step. 
 // Some areas remained as nodata (e.g. mountain shadows, border artifacts, etc.). 
 // The idea is to replace these nodata values (only for Tree Cover and mangroves) by the LC_Refine for post-processing layer (iteration 2)
 // The LC_Refine is already exported as an asset.
@@ -25,6 +28,9 @@ var caatinga_trees = caatinga.eq(0).or(caatinga.eq(3));
 var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
 var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
 
+var list_trees = [chaco_trees, caatinga_trees, cerrado_trees, tanzania_trees]
+var ic_trees = ee.ImageCollection.fromImages(list_trees).mosaic();
+
 var list = [chaco, caatinga, cerrado, tanzania];
 var ic = ee.ImageCollection.fromImages(list).mosaic();
 var gte0 = ic.gte(0).unmask(); // We first identify all valid pixels and set 0 for those that were nodata. Value 1: valid pixels | value 0: originally nodata (artifact)
@@ -40,8 +46,8 @@ var lc_refine_trees_m = lc_refine_trees.updateMask(eq0).unmask();
 Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata");
 
 // We correct the original classification by filling the nodata values
-var chaco_tree_c = chaco_trees.unmask().add(lc_refine_trees_m.unmask())
-Map.addLayer(chaco_tree_c, null, "Chaco Trees Corrected")
+var ic_tree_c = ic_trees.unmask().add(lc_refine_trees_m.unmask())
+Map.addLayer(ic_tree_c, null, "Trees Corrected")
 
 // Visualization
 
