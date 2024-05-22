@@ -1,0 +1,25 @@
+
+//************************************************************************** 
+// Correcting nodata in the pre-processed imagery
+//************************************************************************** 
+
+// Target Images to be corrected
+var chaco = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chaco_Pb_buf20_9cl")
+var caatinga = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl")
+var cerrado = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_cerrado_Pb_buf20_9cl")
+var tanzania = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_tanzania_Pb_buf20_9cl")
+
+var list = [chaco, caatinga, cerrado, tanzania]
+var ic = ee.ImageCollection.fromImages(list).mosaic()
+
+var gte0 = ic.gte(0).unmask()
+
+var eq0 = gte0.eq(0)
+
+Map.addLayer(ic)
+Map.addLayer(gte0)
+Map.addLayer(eq0)
+
+
+
+
