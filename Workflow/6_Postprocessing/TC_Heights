@@ -15,12 +15,9 @@ var m5 = h.lt(5).selfMask();
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.colorbrewer.YlGn[7];
 
-
+Map.addLayer(image, null, "TC", 0);
 Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights");
 Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1);
-Map.addLayer(image, null, "TC", 0);
-
-
 
 Map.setOptions("SATELLITE");
 
