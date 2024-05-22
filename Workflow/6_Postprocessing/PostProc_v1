@@ -62,7 +62,7 @@ Map.addLayer(ic_tree_c, null, "Trees Corrected")
 
 
 
-ic_tree_c = ic_tree_c.clip(aoi)
+
 
 var aoi = aoi.geometry();
 var Zones = aoi.coveringGrid({
@@ -95,6 +95,11 @@ Map.addLayer(zonesID, null, "Zones ID");
 Map.addLayer(aoi, null, "AOI Boundary");
 Map.centerObject(aoi);
 
+var ic_tree_cc = ic_tree_c.clip(aoi)
+ic_tree_cc = ic_tree_cc.gt(0).toByte()
+print(ic_tree_cc)
+Map.addLayer(ic_tree_cc, null, "Corrected and Cliped to target AOI")
+
 var featlist = zonesID.getInfo()["features"];
 for (var f in featlist) {
   var feat = ee.Feature(featlist[f]);
@@ -102,7 +107,7 @@ for (var f in featlist) {
   var disS = dis.getInfo();
   var name = "tile";  
   Export.image.toAsset({
-    image: ic_tree_c, // The target image that has been corrected
+    image: ic_tree_cc, // The target image that has been corrected
     description: name+disS+"_"+aoi_n, //"test", //.toString(), Now the ID is already a string
     assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc/' + name+disS+"_"+aoi_n, //.toString(),
     pyramidingPolicy:"mode", //Activate and select the Pyramiding Policy
