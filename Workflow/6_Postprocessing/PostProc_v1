@@ -10,6 +10,8 @@
 // The LC_Refine is already exported as an asset.
 
 // Note that LC_Refine (iteration 1) is prepared to get samples, so it should not be used in this step.
+// This is just a method to mitigate the artifacts but they still remain; mainly as a consequence of Sentinel-1 overlapped areas.
+// Ideally this has to be corrected in the imagery pre-processing step.
 
 // Target Classification. This asset contains 9 classes:
 
@@ -17,6 +19,11 @@ var chaco = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classi
 var caatinga = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl");
 var cerrado = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_cerrado_Pb_buf20_9cl");
 var tanzania = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_tanzania_Pb_buf20_9cl");
+
+var chaco_trees = chaco.eq(1);
+var caatinga_trees = caatinga.eq(0).or(caatinga.eq(3));
+var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
+var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
 
 var list = [chaco, caatinga, cerrado, tanzania];
 var ic = ee.ImageCollection.fromImages(list).mosaic();
@@ -26,18 +33,22 @@ var eq0 = gte0.eq(0); // We create a mask for 0 (nodata)
 // LC_Refine (iteration 2)
 // We use this to fill the gaps (artifacts)
 var lc_refine = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine4PostProc").mosaic();
+var lc_refine_trees = lc_refine.eq(1)
 
+// We cross the originally nodata values with LC_refine
+var lc_refine_trees_m = lc_refine_trees.updateMask(eq0).unmask();
+Map.addLayer(lc_refine_trees_m, null, "LC Refine for nodata");
 
-Map.addLayer(caatinga, null, "caatinga");
-var chaco_trees = chaco.eq(1);
-var caatinga_trees = caatinga.eq(0).or(caatinga.eq(3));
-var cerrado_trees = cerrado.eq(0).or(cerrado.eq(3));
-var tanzania_trees = tanzania.eq(0).or(tanzania.eq(3));
+// We correct the original classification by filling the nodata values
+var chaco_tree_c = chaco_trees.unmask().add(lc_refine_trees_m.unmask())
+Map.addLayer(chaco_tree_c, null, "Chaco Trees Corrected")
+
+// Visualization
 
 Map.addLayer(chaco_trees, null, "Chaco Trees");
 Map.addLayer(caatinga_trees, null, "Caatinga Trees");
 Map.addLayer(cerrado_trees, null, "Cerrado Trees");
 Map.addLayer(tanzania_trees, null, "Tanzania Trees");
 
-var vp_nodata = {"opacity":1,"bands":["classification"],"palette":["000000","ff0000"]};
-Map.addLayer(eq0, vp_nodata, "Originally Nodata")
+var vp_nodata = {"palette":["ff0000"]};
+Map.addLayer(eq0.selfMask(), vp_nodata, "Originally Nodata")
