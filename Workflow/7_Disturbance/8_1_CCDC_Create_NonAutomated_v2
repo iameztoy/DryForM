@@ -12,10 +12,23 @@ var geometry =
           [-46.70587970028839, -8.127879014320373],
           [-46.70587970028839, -7.6381676611159985]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
-// Creates an ImageCollection of Landsat scenes, runs CCDC, then exports the results.
 
-// Update the collection creation code and CCDC configuration to what you used when
-// inspecting individual pixels. Then run the script and finally the task.
+//***********************************************************
+// DRYFORM - Step 7.1 - Disturbances | CCD
+//***********************************************************
+
+/* This module is divided into two different blocks:
+
+  7.1 Create (current script) | Creates an ImageCollection of Landsat scenes, runs CCDC, then exports the results.
+      This includes also the calculation of the NDFI Index - Normalized Degradation Fraction Index (NDFI; Souza et al., 2005) | Spectrally unmixed data.
+      Endmembers are already available in the code
+  7.2 Extract | This script is run once 7.1 is finished and results exported as an asset. 
+      It calculates/extracts five different bands. The idea is to detect the break dates (disturbance dates) and apply a given threshold (e.g. 10000) to only the 
+      negative values of the NDFI magnitude change band.
+
+
+
+*/
 
 var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/7_Disturbance/req/temporalSegmentation');
 
