@@ -52,6 +52,7 @@
  *  3/ Add Planet (NICFI) | Only possible if you have access to it via NICFI Program
  *  4/ Possibility to choose buffer?
  *  5/ Possibilty to add majority threshold | Total valid observations should be taken into account
+ *  6/ Possibility to add a parcel and get statistics (e.g. number of products identifing the area as tree cover, forest and canopy height values)
  * 
  * 
  *    ###############
