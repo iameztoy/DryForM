@@ -4,6 +4,14 @@
  *    ## CHANGELOG
  *    ############### 
  * 
+ * 2024-04-20
+ *  Added spatially explicit raster files for disturbances - Only break dates have been added
+ *  The original CCD algorithm was fitted for Landsat 8 and 9 between 2013 and April 2024
+ *  NDFI threshold was implemented and all the corresponding bands extracted: See CCDC-SMA 2020-2024 layer.
+ * 
+ * 2024-01-10 
+ *  Added CCD on the fly - Graph the CCD breaks
+ * 
  * 2023-09-04
  *  Add new version of Baseline map 2020. Calculated as an asset in dryforestia session
  * 
