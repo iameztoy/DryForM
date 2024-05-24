@@ -121,6 +121,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
 
 
 
+
 //print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 print("Number of Tiles in AOI", zonesID.size());
 //var tl = zonesID.aggregate_array("ID"); 
@@ -197,7 +198,7 @@ var processTiles = function(tile){
       return img.updateMask(img.select(QA_BAND).gte(CLEAR_THRESHOLD))
         .select(bands)
         .divide(10000)
-        .clip(interm_aoi) // s2grid_f interm_aoi
+        .clip(interm_aoi.geometry()) // s2grid_f interm_aoi
         .copyProperties(img, ["system:time_start"]);
     });
   
