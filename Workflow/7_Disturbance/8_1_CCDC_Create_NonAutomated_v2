@@ -17,7 +17,7 @@ var geometry =
 // Update the collection creation code and CCDC configuration to what you used when
 // inspecting individual pixels. Then run the script and finally the task.
 
-var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation');
+var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/7_Disturbance/req/temporalSegmentation');
 
 var region = geometry;
 
