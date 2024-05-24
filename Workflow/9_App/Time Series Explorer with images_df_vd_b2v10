@@ -12,6 +12,8 @@
  *  This was calculated by implementing a NDFI threshold for NDFI => 10000 (integer values) for 2020-2024
  *  The anomalies or disturbances are crossed with the Global Forest Cover 2020 layer;
  *  Thus, the anomalies only correspond to those values which fall within the mentioned dataset - i.e. Disturbances in the forest domain.
+ * 
+ *  Added Meta/WRI Canopy Heights. Overlay Score was updated considering also this dataset and GFC20.
  *  
  * 
  * 2024-01-10 
