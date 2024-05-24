@@ -14,8 +14,7 @@
  *  Thus, the anomalies only correspond to those values which fall within the mentioned dataset - i.e. Disturbances in the forest domain.
  * 
  *  Added Meta/WRI Canopy Heights. Overlay Score was updated considering also this dataset and GFC20.
- *  
- * 
+ *   
  * 2024-01-10 
  *  Added CCD on the fly - Graph the CCD breaks
  * 
@@ -31,6 +30,12 @@
  * 
  * 2023-06-20 Current version comes from TSE branch.2 v.1 started in July 2022
  * 2023-10-04 Added BLM 20 maps version 1 and 2
+ * 
+ * 2023-05-01 About section updated
+ * 2023-04-10 Added legends and "Duration" parameter extended
+ * 2023-03-01 Overlay Scores and first version of Total Tree forest included.
+ * 
+ * 2023-02-20 Preliminary version adapted. 
  * 
  *    ###############
  *    ## TODO 
