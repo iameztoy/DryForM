@@ -30,6 +30,7 @@ var geometry =
 
 */
 
+// Load requirements | See req folder. This has been adapted from "Wiell".
 var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/7_Disturbance/req/temporalSegmentation');
 
 var region = geometry;
