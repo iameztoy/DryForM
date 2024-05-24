@@ -31,9 +31,10 @@
  * 2023-06-20 Current version comes from TSE branch.2 v.1 started in July 2022
  * 2023-10-04 Added BLM 20 maps version 1 and 2
  * 
+ * 2023-06-07 Chart added for different wall-to-wall products
  * 2023-05-01 About section updated
  * 2023-04-10 Added legends and "Duration" parameter extended
- * 2023-03-01 Overlay Scores and first version of Total Tree forest included.
+ * 2023-03-01 Overlay Scores and first version of Total Tree forest included | This is similar to the sampling framework layer (see module 1) but only for the Tree Cover class
  * 
  * 2023-02-20 Preliminary version adapted. 
  * 
