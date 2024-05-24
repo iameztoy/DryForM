@@ -16,7 +16,7 @@
  *  Added Meta/WRI Canopy Heights. Overlay Score was updated considering also this dataset and GFC20.
  *   
  * 2024-01-10 
- *  Added CCD on the fly - Graphs CCD breaks
+ *  Added CCD on the fly - Graphs CCD breaks based on NDFI
  * 
  * 2023-09-04
  *  Add new version of Baseline map 2020. Already available as an asset in Earth Engine Catalogue 
