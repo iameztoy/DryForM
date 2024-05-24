@@ -9,7 +9,7 @@ This script integrates different land cover datasets (only tree cover is shown),
   1. CCD algorithm for any individual pixel. Calculated on the fly;
   2. Calculates the overlay score for tree-cover by mixing different wall-to-wall land cover datasets;
   3. Plots a graph showing whether any given pixel is detected as a tree cover/forest/canopy height =>5;
-  4. It includes the spatially explicit disturbance product calculated for 2020 and April 2024. 
+  4. It includes the spatially explicit disturbance product calculated for 2020 and April 2024 | See module 7 for more details.
 
 */
 
