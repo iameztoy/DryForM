@@ -48,7 +48,7 @@
  *    ###############
  * 
  *  1/ Add possibility to add Sentinel-2 for a given date range (2020 or reduced version)
- *  2/ Add more Vegetation Indexes (e.g. MSAVI-2)
+ *  2/ Add more Vegetation Indexes (e.g. MSAVI-2 or NDFI)
  *  3/ Add Planet (NICFI) | Only possible if you have access to it via NICFI Program
  *  4/ Possibility to choose buffer?
  *  5/ Possibilty to add majority threshold | Total valid observations should be taken into account
