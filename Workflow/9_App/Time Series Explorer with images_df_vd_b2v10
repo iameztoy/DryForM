@@ -7,13 +7,19 @@
  * 2024-04-20
  *  Added spatially explicit raster files for disturbances - Only break dates have been added
  *  The original CCD algorithm was fitted for Landsat 8 and 9 between 2013 and April 2024
- *  NDFI threshold was implemented and all the corresponding bands extracted: See CCDC-SMA 2020-2024 layer.
+ *  NDFI threshold was implemented and all the corresponding bands extracted.
+ *  This app only shows the tBreak band - See CCDC-SMA 2020-2024 layer. 
+ *  This was calculated by implementing a NDFI threshold for NDFI => 10000 (integer values) for 2020-2024
+ *  The anomalies or disturbances are crossed with the Global Forest Cover 2020 layer;
+ *  Thus, the anomalies only correspond to those values which fall within the mentioned dataset - i.e. Disturbances in the forest domain.
+ *  
  * 
  * 2024-01-10 
  *  Added CCD on the fly - Graph the CCD breaks
  * 
  * 2023-09-04
- *  Add new version of Baseline map 2020. Calculated as an asset in dryforestia session
+ *  Add new version of Baseline map 2020. Already available as an asset in Earth Engine Catalogue 
+ *    See: https://developers.google.com/earth-engine/datasets/catalog/JRC_GFC2020_V1 or ee.ImageCollection("JRC/GFC2020/V1") 
  * 
  * 2023-07-23
  *  Added GEDI Lang Layer (For Total Tree count)
