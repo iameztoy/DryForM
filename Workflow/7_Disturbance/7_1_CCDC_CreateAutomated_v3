@@ -1,4 +1,4 @@
-var temporalSegmentation = require('users/wiell/temporalSegmentation:temporalSegmentation')
+var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/7_Disturbance/req/temporalSegmentation')
 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
