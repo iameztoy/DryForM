@@ -3,24 +3,29 @@
 // DRYFORM - Step 2.2 - Ground Truth Balance
 //***********************************************************
 
-// Notes:
 
-// ** visu_lc attribute is the original disaggregated version of the visual interpretation step
-//        
-//        It includes 13 classes:
-//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
-//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
-//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
-// ** visulcrec attribute is the reclassified version of the disaggregated version (visu_lc). 
-//        It includes 9 classes:
-//          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
-//          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
-//          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+   
+   Notes:
 
-// For pixel based classification: We consider the TC class as a single set (TC1 + TC2 + TC3) -> Therefore, we should downsample the sample set.
-// Exporting the filtered features as assets avoids to implement this repetitively in the Training phase. Thus, getting a consistent 
-// and unique sample set and avoiding iterative randomness in the filtering process. This is needed to use always the same set while 
-// implementing the hyperparameter tuning and training phase.
+ ** visu_lc attribute is the original disaggregated version of the visual interpretation step
+        
+        It includes 13 classes:
+          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+ ** visulcrec attribute is the reclassified version of the disaggregated version (visu_lc). 
+        It includes 9 classes:
+          tc1	1, tc2	1, tc3	1, shrub	2, owl	2, grass	3, grasstree	3, mangroves	4, Flooded Veg.	5
+          built	6, PWater	7, SWater	0, Bare	9,  Crops	10
+          Not Included: tc4, tc5, tc67, Snow, moss/lichen
+
+ For pixel based classification: We consider the TC class as a single set (TC1 + TC2 + TC3) -> Therefore, we should downsample the sample set.
+ Exporting the filtered features as assets avoids to implement this repetitively in the Training phase. Thus, getting a consistent 
+ and unique sample set and avoiding iterative randomness in the filtering process. This is needed to use always the same set while 
+ implementing the hyperparameter tuning and training phase.
+*/
 
 var chaco_n = "chaco";
 var caatinga_n = "caatinga";
