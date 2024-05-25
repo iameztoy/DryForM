@@ -11,6 +11,12 @@ Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exp
 
 This script implementes different separability measures for any given ground truth input.
 Only Jeffries-Matusite is enabled.
+It requires: 
+  1/ to precompute the imagery over which the distances will be calculated;
+  2/ to have ground truth data
+
+*************************************************
+*************************************************
 
 Processing outside GEE:
 
