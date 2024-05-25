@@ -22,7 +22,6 @@ This script processes Sentinel-1 and Sentinel-2 imagery for year 2020. It export
 
     - Target Year can be changed to any other year. If changed, parameters str, end, str0, end0 shall be also modified;
     
-    
 The processing is divided in tiles to avoid processing memory issues.
     - All the processing is included within a big function that runs over each tile;
     - Tiles are build upon FAO ecozones areas and using the covering grid method;
@@ -38,6 +37,12 @@ The processing is divided in tiles to avoid processing memory issues.
         
 Clouds and shadows are masked using CloudScore+. A threshold of 0.55 is used over the "cs" band. 
     - See documentation: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_CLOUD_SCORE_PLUS_V1_S2_HARMONIZED
+    - Sentinel-2 image collection is filtered beforehand:
+      - Cloud presence is allowed: 65%. This parameter can be changed. 
+      - The initial filtering dates go beyond target year (2020). This is to allow the interpolation step to find valid pixels outside the target year.
+          - It should be taken into account that certain areas remain cloudy even if running the quarterly median reducer.
+          
+Once clouds and shadows are masked, a interpolation method is implemented per image. Based on: https://spatialthoughts.com/courses/google-earth-engine/
     
         
 
