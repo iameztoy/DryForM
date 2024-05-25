@@ -22,12 +22,19 @@ This script processes Sentinel-1 and Sentinel-2 imagery for year 2020. It export
 
     - Target Year can be changed to any other year. If changed, parameters str, end, str0, end0 shall be also modified;
     
+    
 The processing is divided in tiles to avoid processing memory issues.
     - All the processing is included within a big function that runs over each tile;
     - Tiles are build upon FAO ecozones areas and using the covering grid method;
         - Scale parameter can be changed to get smaller or bigger tiles;
         - The current parameter value (i.e. 100000 or 100x100 km tiles) was tested to optimize the process;
         - The tiles are further processed to adequate the IDs. This is necessary to get proper names while exporting;
+        
+        - This method can be further optimized (.evaluate). 
+            - While running, the browser may throw an error as the process is run on the client side;
+            - If this happens, wait until the tasks are loaded in the Task tab;
+            - The process will load as many tasks as tiles are available: It is recommended to install OEEex plugin - https://www.open-geocomputing.org/OEEex/
+              - This allows to "Run all" processes at once.
         
 Clouds and shadows are masked using CloudScore+. A threshold of 0.55 is used over the "cs" band. 
     - See documentation: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_CLOUD_SCORE_PLUS_V1_S2_HARMONIZED
