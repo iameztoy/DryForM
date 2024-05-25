@@ -25,6 +25,8 @@ Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exp
  Exporting the filtered features as assets avoids to implement this repetitively in the Training phase. Thus, getting a consistent 
  and unique sample set and avoiding iterative randomness in the filtering process. This is needed to use always the same set while 
  implementing the hyperparameter tuning and training phase.
+ 
+ The script shall be adequated if different ground truth data is used as an input.
 */
 
 var chaco_n = "chaco";
