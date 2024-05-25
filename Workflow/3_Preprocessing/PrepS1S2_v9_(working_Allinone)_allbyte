@@ -585,7 +585,7 @@ var processTiles = function(tile){
   var ren = blist.map(cat);
 
   var s1s2final = s1s2_final.select(blist).rename(ren);
- print("S1S2 final", s1s2final);
+  //print("S1S2 final", s1s2final);
 
   ////////////// EXPORT ///////////////////////
 
