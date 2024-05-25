@@ -11,6 +11,8 @@ This script processes Sentinel-1 and Sentinel-2 imagery for year 2020. It export
     - Different Indexes: MSAVI-2, gNDVI, BI and SI | Additional indexes are also added but not computed;
     - GLCM textures. Not all are calculated; only 7 indexes are calculated. The input for the GLCM is the "gray" band;
     - VH and VV polarizations from Sentinel-1 (Need to tackle artifacts, not included in this version);
+          Based on Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J. | Version: v1.2 | Date: 2021-04-01 |  
+
     
     - Quarters are JAN-MAR, APR-JUN, JUL-SEP, OCT-DEC. This can be easily change to monthly, bimonthly,... composites. See t_int parameters;
     - Outcomes are casted to 8 bits to avoid storage capacity issues;
@@ -23,6 +25,8 @@ The processing is divided in tiles to avoid processing memory issues.
         - Scale parameter can be changed to get smaller or bigger tiles;
         - The current parameter value (i.e. 100000 or 100x100 km tiles) was tested to optimize the process;
         - The tiles are further processed to adequate the IDs. This is necessary to get proper names while exporting;
+        
+Clouds and shadows are masked 
         
 
 
