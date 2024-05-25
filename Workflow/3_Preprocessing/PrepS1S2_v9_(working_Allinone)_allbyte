@@ -42,7 +42,13 @@ Clouds and shadows are masked using CloudScore+. A threshold of 0.55 is used ove
       - The initial filtering dates go beyond target year (2020). This is to allow the interpolation step to find valid pixels outside the target year.
           - It should be taken into account that certain areas remain cloudy even if running the quarterly median reducer.
           
-Once clouds and shadows are masked, a interpolation method is implemented per image. Based on: https://spatialthoughts.com/courses/google-earth-engine/
+After masking louds and shadows, a interpolation method is implemented per image. Based on: https://spatialthoughts.com/courses/google-earth-engine/
+    -   Interpolation Formula: y = y1 + (y2-y1)*((t – t1) / (t2 – t1))
+
+Once we get all the images interpolated, the following processes are implemented:
+    - quarterly median composites for year 2020 (str, end), 
+    - indexes
+    - Gray band and GLCM textures
     
         
 
