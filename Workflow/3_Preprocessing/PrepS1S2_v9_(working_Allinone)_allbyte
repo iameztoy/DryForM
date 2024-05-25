@@ -28,18 +28,19 @@ The processing is divided in tiles to avoid processing memory issues.
     - All the processing is included within a big function that runs over each tile;
     - Tiles are build upon FAO ecozones areas and using the covering grid method;
         - Scale parameter can be changed to get smaller or bigger tiles;
+            - However, big tiles may throw a memory problem while small tiles generate a very big number of processing tasks;
         - The current parameter value (i.e. 100000 or 100x100 km tiles) was tested to optimize the process;
         - The tiles are further processed to adequate the IDs. This is necessary to get proper names while exporting;
         
         - This method can be further optimized (.evaluate). 
-            - While running, the browser may throw an error as the process is run on the client side;
+            - While running the current version, the browser may throw an error as the process is run on the client side;
             - If this happens, wait until the tasks are loaded in the Task tab;
             - The process will load as many tasks as tiles are available: It is recommended to install OEEex plugin - https://www.open-geocomputing.org/OEEex/
               - This allows to "Run all" processes at once.
 
 ** Sentinel-2         
 Clouds and shadows are masked using CloudScore+. A threshold of 0.55 is used over the "cs" band. 
-    - See documentation: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_CLOUD_SCORE_PLUS_V1_S2_HARMONIZED
+    - See documentation for more details: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_CLOUD_SCORE_PLUS_V1_S2_HARMONIZED
     - Sentinel-2 image collection is filtered beforehand:
       - Cloud presence is allowed: 65%. This parameter can be changed. 
       - The initial filtering dates go beyond target year (2020). This is to allow the interpolation step to find valid pixels outside the target year.
@@ -57,6 +58,8 @@ Once we get all the images interpolated, the following processes are implemented
 
     - Based on Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J. | Version: v1.2 | Date: 2021-04-01
           Different parameters can be modified depending on processing needs. See  "DEFINE SENTINEL-1 PARAMETERS" section.
+          
+If replicated, the user shall create an empty image collection where all tiles will be stored.
 
 
 */
