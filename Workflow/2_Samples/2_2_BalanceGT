@@ -6,6 +6,8 @@
 
 /*
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+ The script shall be adequated if different ground truth data is used as an input.
    
    Notes:
 
@@ -26,7 +28,6 @@ Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exp
  and unique sample set and avoiding iterative randomness in the filtering process. This is needed to use always the same set while 
  implementing the hyperparameter tuning and training phase.
  
- The script shall be adequated if different ground truth data is used as an input.
 */
 
 var chaco_n = "chaco";
