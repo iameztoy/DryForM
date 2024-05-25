@@ -1,18 +1,3 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var aoi = 
-    /* color: #d63000 */
-    /* shown: false */
-    /* displayProperties: [
-      {
-        "type": "rectangle"
-      }
-    ] */
-    ee.Geometry.Polygon(
-        [[[-66.00915825165262, -32.35661891946061],
-          [-66.00915825165262, -33.22016492034472],
-          [-64.90503227509012, -33.22016492034472],
-          [-64.90503227509012, -32.35661891946061]]], null, false);
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
 
 //***********************************************************
 // DRYFORM - Step 5.2 - Auto-training
@@ -94,4 +79,4 @@ Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water", 0);
 Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
 Map.addLayer(bare,{palette: "b4b4b4"}, "Bare", 0);
 Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
-Map.addLayer(aoi, {color: "red"}, "AOI Boundary", 0);
+//Map.addLayer(aoi, {color: "red"}, "AOI Boundary", 0);
