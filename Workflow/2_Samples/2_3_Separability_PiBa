@@ -2,14 +2,14 @@
 var imageCollection = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania");
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
 
-//***********************************************************
-// DRYFORM - Step 2.3 - Separability | Distances
-//***********************************************************  
+//**************************************************************************
+// DRYFORM - Step 2.3 - Separability | Distances - Pixel based version
+//**************************************************************************
 
 /*
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-This script implementes different separability measures for any given ground truth input.
+This script implementes different separability measures
 Only Jeffries-Matusite is enabled.
 It requires: 
   1/ to precompute the imagery over which the distances will be calculated;
