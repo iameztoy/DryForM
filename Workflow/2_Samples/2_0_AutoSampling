@@ -4,6 +4,9 @@
 //***********************************************************
 
 /*
+
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
  This scripts generates ground sampling points automatically based on the sampling framework
     created in Step 1. Point 2 below. The idea of the sampling framework is twofold:
       1/ To generate a preliminary land cover proxy layer that is used to extract preliminary sampling points. These are visually interpreted afterwards
