@@ -27,7 +27,7 @@ The fc export option generates a file on Drive that can be further processed e.g
 
 
 let
-    Source = Folder.Files("C:\Users\ibana\Desktop\Separability"),
+    Source = Folder.Files("[path]\Separability"),
     #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
     #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
     #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
@@ -44,9 +44,6 @@ in
 
 Additinal Notes about the distance options: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
 */
-
-
-
 
 
 
