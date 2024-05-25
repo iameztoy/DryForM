@@ -15,7 +15,9 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
+// FAO Ecozones dataset | This has been used as a basis to define AOI boundaries
 var fao_ecoz = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones");
+// Filter the AOI of interest
 var ecoz = fao_ecoz.filter(ee.Filter.eq('ECO_ZONE_I', 12708));
 //Chaco: 12487, Cerrado: 11045, Caatinga: 11271 | Tanzania was extracted from GDAM
 
@@ -28,8 +30,8 @@ var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 */ 
 
-var aoisel = ecoz; var expname = "Ecoz_12708"
-var aoi = aoisel.geometry() //.buffer(100000);
+var aoisel = ecoz; var expname = "Ecoz_12708";
+var aoi = aoisel.geometry(); //.buffer(100000);
 
 //Time intervals for composites
 var year = 2020;
