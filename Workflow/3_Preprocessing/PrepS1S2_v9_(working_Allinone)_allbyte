@@ -11,6 +11,7 @@ version 0.9. Preliminary notes: The entire process can be further optimized. The
                               These artifacts should be further fine tuned as to avoid inheritance in the classification process.
                               This is being developed under version 1.1. (not yet available as of May 2024)
 
+
 This script processes Sentinel-1 and Sentinel-2 imagery for year 2020. It exports as an asset a cloud free stack of 72 bands, 18 per quarter:
 
     - MS bands 3, 4, 5, 8, 11 and 12
@@ -59,6 +60,7 @@ Once we get all the images interpolated, the following processes are implemented
 
     - Based on Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J. | Version: v1.2 | Date: 2021-04-01
           Different parameters can be modified depending on processing needs. See  "DEFINE SENTINEL-1 PARAMETERS" section.
+          Required scripts are already included within the End-to-end module (e.g. Workflow/3_Preprocessing/s1_code/wrapper). See require section.
           
 If replicated, the user shall create an empty image collection where all tiles will be stored.
 
