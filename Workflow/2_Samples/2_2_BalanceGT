@@ -27,6 +27,11 @@ var caatinga_n = "caatinga";
 var cerrado_n = "cerrado";
 var tanzania_n = "tanzania";
 
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+
 // Change this to filter the points in the target AOI
 var aoi_n = tanzania_n;
 
