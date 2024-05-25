@@ -620,7 +620,8 @@ var processTiles = function(tile){
   var s1int = s1db.map(int16);
   */
   
-  var clamp_min=-50;
+  //These values can be changed
+  var clamp_min=-50; 
   var clamp_max=-5;
   
   function s1byte(img) {
