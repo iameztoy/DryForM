@@ -7,7 +7,7 @@
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
 This script is to export the LCRefine layer to Drive.
-Currently it takes the dataset that has been previously exported as an asset.
+Currently it takes the dataset that has been previously exported as an asset | See Step 1
 Alternativelly, export to drive can be directly executed within the same script used to derive the layer (step 1)
 */
 
