@@ -3,10 +3,9 @@
 // DRYFORM - Step 3 - Data/Imagery preprocessing
 //***********************************************************
 
-
 /*
 
-Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
 version 1. Preliminary notes: The entire process can be further optimized. The outcomes still generate some artifacts mainly because some Sentinel-1 overlapping areas
                               These artifacts should be further fine tuned as to avoid inheritance in the classification process.
@@ -52,9 +51,9 @@ After masking clouds and shadows, a interpolation method is implemented per imag
     - The script that allows this has not been included in this End-to-end processing workflow
 
 Once we get all the images interpolated, the following processes are implemented:
-    - quarterly median composites for year 2020 (str, end), 
-    - indexes
-    - Gray band and GLCM textures
+    - quarterly median composites for year 2020 (str, end);
+    - indexes;
+    - Gray band and GLCM textures;
     
 ** Sentinel-1
 
