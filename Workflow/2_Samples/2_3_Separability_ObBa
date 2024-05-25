@@ -6,7 +6,7 @@
 /*
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-This script implementes different separability measures for any given ground truth input.
+This script implementes different separability measures
 Only Jeffries-Matusite is enabled.
 It requires: 
   1/ to precompute the imagery over which the distances will be calculated;
