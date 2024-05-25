@@ -3,16 +3,17 @@
 // DRYFORM - Step 5.1 - Hyperparameter Tunning for RF
 //***********************************************************
 
-// pb = Pixel Based
-// oo = Object Oriented
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-// Variables that need to be changed. Some are optional:
-// Area of Interest | landcover | bands | composite | buffer
 
-// The code contains different sections:
-// Setting variables, fine tuning of number of Trees, Feature Importance and accuracies, tuning of different hyperparameters and
-// selection of optimal parameters and implementation of RF based on the previous. Alternativelly, the latter can be implemented 
-// running section 5.2 Training.
+Variables that need to be changed. Some are optional:
+    Area of Interest | landcover | bands | composite | buffer
+
+The code contains different sections:
+    Setting variables, fine tuning of number of Trees, Feature Importance and accuracies, tuning of different hyperparameters and
+    selection of optimal parameters and implementation of RF based on the previous. Alternativelly, the latter can be implemented running section 5.2 Training.
+*/
 
 //Areas of Interest | Included within the Ground Truth 
 var chaco = "chaco";
