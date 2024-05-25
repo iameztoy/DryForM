@@ -13,6 +13,16 @@ var aoi =
           [-64.90503227509012, -33.22016492034472],
           [-64.90503227509012, -32.35661891946061]]], null, false);
 /***** End of imports. If edited, may not auto-convert in the playground. *****/
+
+//***********************************************************
+// DRYFORM - Step 5.2 - Auto-training
+//***********************************************************
+
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+*/
+
+
 var lc = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine/tile000_chaco");
 var img = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
 
