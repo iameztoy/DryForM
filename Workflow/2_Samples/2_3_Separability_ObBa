@@ -3,6 +3,53 @@
 // DRYFORM - Step 2.3 - Separability | Distances
 //***********************************************************  
 
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+This script implementes different separability measures
+
+Processing outside GEE:
+
+The fc export option generates a file on Drive that can be further processed e.g. in Excel.
+ If JF is calculated for different bands, the following code is useful to merge all the outcomes together 
+  and get a unique table with all the values. The steps are as follows:
+  
+  - Data -> From File -> From folder (where all the files are located) -> select folder
+  - Combine -> Combine and transfor data -> ok
+  - Open the Advanced Editor -> Paste the code below ->
+  - Note that:
+      * the source folder will be different. 
+      * you may not want to combine files
+      * delimiters are probably the same
+      * I have removed a column and replaced [ and ]
+  - Close and Load
+  - The result is a new table which combines all the JF metrics per band. The source name (band) is also included
+
+
+let
+    Source = Folder.Files("C:\Users\ibana\Desktop\Separability"),
+    #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
+    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"system:index", Int64.Type}, {"prop", type text}, {".geo", type text}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{".geo"}),
+    #"Replaced Value" = Table.ReplaceValue(#"Removed Columns","[","",Replacer.ReplaceText,{"prop"}),
+    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","]","",Replacer.ReplaceText,{"prop"}),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Replaced Value1", "prop", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), {"prop.1", "prop.2", "prop.3", "prop.4", "prop.5", "prop.6", "prop.7", "prop.8", "prop.9", "prop.10"})
+in
+    #"Split Column by Delimiter"
+
+
+Additinal Notes about the distance options: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
+*/
+
+
+
+
+
+
 //Areas of Interest | Included within the Ground Truth 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
