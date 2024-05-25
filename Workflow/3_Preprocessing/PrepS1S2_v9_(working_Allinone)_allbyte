@@ -48,6 +48,8 @@ Clouds and shadows are masked using CloudScore+. A threshold of 0.55 is used ove
           
 After masking clouds and shadows, a interpolation method is implemented per image. Based on: https://spatialthoughts.com/courses/google-earth-engine/
     - Interpolation Formula: y = y1 + (y2-y1)*((t – t1) / (t2 – t1))
+    - This method can be also fine tunned to interpolate only on those areas where pixels remain masked after calculating the median composite;
+    - The script that allows this has not been included in this End-to-end processing workflow
 
 Once we get all the images interpolated, the following processes are implemented:
     - quarterly median composites for year 2020 (str, end), 
