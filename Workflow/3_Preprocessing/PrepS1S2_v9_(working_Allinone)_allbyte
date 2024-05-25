@@ -3,6 +3,8 @@
 // DRYFORM - Step 3 - Data/Imagery preprocessing
 //***********************************************************
 
+// Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024
+
 /*
 
 This script processes Sentinel-1 and Sentinel-2 imagery for year 2020. It exports as an asset a cloud free stack of 72 bands, 18 per quarter:
@@ -11,12 +13,13 @@ This script processes Sentinel-1 and Sentinel-2 imagery for year 2020. It export
     - Different Indexes: MSAVI-2, gNDVI, BI and SI | Additional indexes are also added but not computed;
     - GLCM textures. Not all are calculated; only 7 indexes are calculated. The input for the GLCM is the "gray" band;
     - VH and VV polarizations from Sentinel-1 (Need to tackle artifacts, not included in this version);
-          Based on Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J. | Version: v1.2 | Date: 2021-04-01 |  
+          Based on Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J. | Version: v1.2 | Date: 2021-04-01
+          Different parameters can be modified depending on processing needs. See  "DEFINE SENTINEL-1 PARAMETERS" section.
 
     
     - Quarters are JAN-MAR, APR-JUN, JUL-SEP, OCT-DEC. This can be easily change to monthly, bimonthly,... composites. See t_int parameters;
     - Outcomes are casted to 8 bits to avoid storage capacity issues;
-    
+
     - Target Year can be changed to any other year. If changed, parameters str, end, str0, end0 shall be also modified;
     
 The processing is divided in tiles to avoid processing memory issues.
@@ -26,7 +29,9 @@ The processing is divided in tiles to avoid processing memory issues.
         - The current parameter value (i.e. 100000 or 100x100 km tiles) was tested to optimize the process;
         - The tiles are further processed to adequate the IDs. This is necessary to get proper names while exporting;
         
-Clouds and shadows are masked 
+Clouds and shadows are masked using CloudScore+. A threshold of 0.55 is used over the "cs" band. 
+    - See documentation: https://developers.google.com/earth-engine/datasets/catalog/GOOGLE_CLOUD_SCORE_PLUS_V1_S2_HARMONIZED
+    
         
 
 
