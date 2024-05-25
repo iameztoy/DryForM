@@ -139,6 +139,7 @@ print("DISTANCE MEASURES FOR " +bands+ " --->");
 // Implement distance measures.
 var classes = ee.List.sequence(0, 8);
 
+/*
 var block = classes.map(function(i) {
   return classes.map(function(j) {
     var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
@@ -173,7 +174,7 @@ var mahalanobis = classes.map(function(i) {
   });
 });
 print('Mahalanobis', mahalanobis);
-
+*/
 
 var bhattacharyya = classes.map(function(i) {
   return classes.map(function(j) {
