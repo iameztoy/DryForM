@@ -5,7 +5,17 @@
 
 /*
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+This script implements a Random Forest classifier. Hyperparameter values can be changed and may depend on the hyperparameter fine-tunning step.
+The script also prints:
+
+    1/ All the accuracy metrics (i.e. Confusion matrix, overall accuracy, user and producer accuracy, F1-Score and Kappa index)
+    2/ Feature importances tables
+    
+The classifier or model can be exported as an asset as well as the classified image.
 */
+
+
 
 // pb = Pixel Based
 
