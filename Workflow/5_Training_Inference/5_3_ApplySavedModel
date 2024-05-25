@@ -3,7 +3,15 @@
 // DRYFORM - Step 5.3 - Apply Saved Model
 //***********************************************************
 
-// Target imagery preprocessed in a previous step
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+This script implements the RF saved model over the pre-processed imagery.
+It is an optional step thought to implement the model over areas where the model has not been trained.
+Step 5.2 already exports the classified image.
+*/
+
+// Target imagery preprocessed in a previous step. See section 3
 var s1s2_Cerrado = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Chaco").mosaic();
 
 var a = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Chaco");
