@@ -80,7 +80,7 @@ var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code
 //---------------------------------------------------------------------------//
 
 // FAO Ecozones dataset | This has been used as a basis to define AOI boundaries.
-// It can be changed by any other vector asset.
+// It can be replaced by any other vector asset.
 
 var fao_ecoz = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones");
 // Filter the AOI of interest
