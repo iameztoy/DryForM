@@ -7,7 +7,7 @@
 
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-version 1. Preliminary notes: The entire process can be further optimized. The outcomes still generate some artifacts mainly because some Sentinel-1 overlapping areas
+version 0.9. Preliminary notes: The entire process can be further optimized. The outcomes still generate some artifacts mainly because some Sentinel-1 overlapping areas
                               These artifacts should be further fine tuned as to avoid inheritance in the classification process.
                               This is being developed under version 1.1. (not yet available as of May 2024)
 
