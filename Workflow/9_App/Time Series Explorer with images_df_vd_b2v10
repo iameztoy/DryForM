@@ -5,6 +5,8 @@
 
 /*
 
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
 This script integrates different land cover datasets (only tree cover is shown), allows to plot spectral profiles, visualize image chips (Landsat and Sentinel-2) and also implements:
   1. CCD algorithm for any individual pixel. Calculated on the fly;
   2. Calculates the overlay score for tree-cover by mixing different wall-to-wall land cover datasets;
