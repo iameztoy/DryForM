@@ -86,6 +86,7 @@ var fao_ecoz = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm
 // Filter the AOI of interest
 var ecoz = fao_ecoz.filter(ee.Filter.eq('ECO_ZONE_I', 12708));
 //Chaco: 12487, Cerrado: 11045, Caatinga: 11271 | Tanzania was extracted from GDAM.
+//Amazonia: 9479
 
 
 //Already extracted Features for the 4 AOIs of DryForM Project:
