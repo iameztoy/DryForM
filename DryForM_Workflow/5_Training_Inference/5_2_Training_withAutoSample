@@ -74,6 +74,8 @@ var bands = ["t0_VV", "t0_VH", "t1_VV", "t1_VH", "t2_VV", "t2_VH", "t3_VV", "t3_
 // "t0_B3", "t1_B3", "t2_B3", "t3_B3"
 // "t0_gray_savg_glcm", "t1_gray_savg_glcm", "t2_gray_savg_glcm", "t3_gray_savg_glcm"
 
+//More GLCM textures are available.
+
 
 // Select target imager | pb = pixel based, oo = object oriented
 // Apply band selection if necessary (for testing purposes)
