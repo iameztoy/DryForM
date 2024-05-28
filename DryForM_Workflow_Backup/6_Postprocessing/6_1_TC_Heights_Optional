@@ -1,0 +1,37 @@
+
+//************************************************************************** 
+// DRYFORM - Step 6.0 - Correcting nodata in the classification outcome
+//**************************************************************************  
+
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+This script is optional and it is for visualization purposes. It crosses the post-processed classification with a Tree Canopy Height dataset.
+The tree cover layer can be crossed either with heights coming from Land, Potapov or Meta/WRI products.
+It also calculates the Tree Canoply Heights below 5 meters.
+This is to see which areas classified as tree cover that are not aligned to FAO´s forest definition.
+
+*/
+
+var clasif = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
+
+var image = clasif.mosaic().selfMask();
+
+var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+//ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic(); //META/WRI
+//ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1'); //Lang
+
+var h = image.multiply(gedil);
+var m5 = h.lt(5).selfMask();
+
+// Visu
+
+var palettes = require('users/gena/packages:palettes');
+var palette = palettes.colorbrewer.YlGn[7];
+
+Map.addLayer(image, null, "TC", 0);
+Map.addLayer(h, {min: 0, max: 30, palette: palette}, "TC heights");
+Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1);
+
+Map.setOptions("SATELLITE");
+
