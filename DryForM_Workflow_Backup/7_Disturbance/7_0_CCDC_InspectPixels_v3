@@ -7,6 +7,8 @@
 This script has been directly embedded within the TFT-Explorer App (See module 9) but it can be also run here. 
 
 Click on the map to inspect the CCDC results for any single pixel.
+For longer time series (i.e. before 2013), additional Landsat imagery should be added.
+It would be also possible to fit the harmonics to Sentinel-1 or Sentinel-2 imagery.
 Adapted from Wiell, GEE Forum
 */
 
