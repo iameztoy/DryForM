@@ -30,7 +30,6 @@ var AllClasses = ee.Image.cat(
       dataset_m.eq(1).rename('Forest'),  
       dataset_m.eq(0).rename('Nonforest'))
 
-//From Clement Bourgoin
 var LOOPsamples= function(feature) {
   var vals = AllClasses.multiply(ee.Image.pixelArea()).reduceRegion({
     reducer: ee.Reducer.sum(), 
