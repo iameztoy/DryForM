@@ -1,3 +1,8 @@
+
+//***********************************************************
+// DRYFORM - Step 7.2 - Extract bands of interest from 7.1
+//***********************************************************
+
 //Manual version - Need to add a geometry for the tile 
 
 /*
@@ -6,7 +11,7 @@ gfc20 = gfc20.mosaic();
 Map.addLayer(gfc20.selfMask(), {palette:"green"}, "GFC20");
 */
 
-var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/7_Disturbance/req/temporalSegmentation');
+var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
 var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile321_Cerrado');
 print(segmentsImage)
