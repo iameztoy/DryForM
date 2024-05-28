@@ -3,18 +3,20 @@
 // DRYFORM - Step 8.2 - Calculate Areas
 //*********************************************************** 
 
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+Adapted from a script by C. Bourgoin.
+*/
+
 var dataset = ee.ImageCollection('JRC/GFC2020/V1').mosaic(); //Replace this by the target dataset
 
 var visualization = {
   bands: ['Map'],
   palette: ['4D9221']};
 
-Map.setCenter(0.0, 0.0, 2);
-
-Map.addLayer(dataset, visualization, 'EC JRC Global forest cover 2020 – V1');
-
 var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');//From Clement Bourgoin
-Map.addLayer(Zones)
+
 
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
 Map.addLayer(WC2020)
@@ -48,6 +50,10 @@ Export.table.toDrive({
 	fileNamePrefix: 'JRC_GFC2020_V1_F_NF_AreaEstimates',
 });
 
+
+Map.addLayer(Zones)
+Map.setCenter(0.0, 0.0, 2);
+Map.addLayer(dataset, visualization, 'EC JRC Global forest cover 2020 – V1');
 
 
 
