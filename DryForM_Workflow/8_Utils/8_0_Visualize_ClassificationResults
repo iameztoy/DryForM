@@ -16,14 +16,13 @@ This is to check possible commission error and also areas classified as tree cov
     Beware of the uncertainty of the Tree Canopy Height Map products. 
       In some cases this uncertainty is big. Therefore, consider the commission error interpretation of the Tree Cover dataset with caution.
       
-CCD Extract (Step 7.2) is also loaded.
+CCD Extract (Results of Step 7.2) is also loaded.
   Take into account that this image collection contains 4 bands
       - ndfi_magnitue_thr10k_m | Threshold applied for NDFI negative anomaly of 10000
       - tBreak | Date of Break detection
       - ndfi_magnitude | NDFI magnitude, includes positive and negative anomalies
       - ndfi_breakConfidence
       
-
 */
 
 //Post-processed Tree Cover
@@ -54,5 +53,8 @@ Map.addLayer(pp_tc.selfMask(), vp_tc, "Post-processed Tree Cover", 1);
 Map.addLayer(h.selfMask(), {min: 0, max: 30, palette: palette}, "Post-processed Tree Cover & Heights", 0);
 Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1); //This is only in the Tree Cover domain.
 Map.addLayer(ccd_e_TC, vp_ccdc, "CCDC-SMA 2020-2024 | NDFI > 10000", 1);
+
+Map.setCenter(-60.2081, -20.7128, 12);
+Map.setOptions("SATELLITE")
 
 
