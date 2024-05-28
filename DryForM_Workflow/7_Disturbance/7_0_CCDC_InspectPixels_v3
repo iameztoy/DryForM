@@ -12,11 +12,8 @@ Adapted from Wiell, GEE Forum
 
 var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
-Map.style().set('cursor', 'crosshair')
+Map.style().set('cursor', 'crosshair');
 //Map.onClick(chartPoint)
-Map.setOptions('HYBRID')
-Map.centerObject(ee.Geometry.Point([-48.36648, -8.59744]), 17)
-
 
 var title = ui.Label('Click to inspect');
 title.style().set('position', 'top-center');
@@ -36,14 +33,14 @@ panel.style().set({
 Map.add(panel);
 
 var chartpoint = function(coords) {
-  var point = ee.Geometry.Point(coords.lon, coords.lat)
+  var point = ee.Geometry.Point(coords.lon, coords.lat);
   
   var collection = createLandsatCollection({
     region: point,
     start: '2013-01-01',
-    end: '2024-04-01', 
+    end: '2025-01-01', 
     mapImage: function(image) { return image.addBands(toNdfi(image)) }
-  })
+  });
   /*
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
     collection: collection,
@@ -60,7 +57,7 @@ var chartpoint = function(coords) {
 //	dateFormat:false,
 //	lambda:20,
 //	maxIterations:25000,
-})
+});
   
   temporalSegmentation.chartPoint({
     image: ccdc,
@@ -71,15 +68,15 @@ var chartpoint = function(coords) {
     collection: collection,
     callback: function (chart) {
       panel.clear();
-      panel.add(chart)
+      panel.add(chart);
     }
-  })  
-}
+  })  ;
+};
 
 
-
-
-Map.onClick(chartpoint)
+Map.centerObject(ee.Geometry.Point([-60.1645, -21.755]), 17);
+Map.setOptions("SATELLITE");
+Map.onClick(chartpoint);
 
 
 /////////////////////////////////////////////////
