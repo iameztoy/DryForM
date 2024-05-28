@@ -55,4 +55,4 @@ var visualization = {bands: ['Map'],};
 
 Map.centerObject(dataset);
 Map.setOptions("SATELLITE");
-Map.addLayer(dataset, visualization, 'Landcover', 0);
+Map.addLayer(dataset, visualization, 'World Cover 2021', 0);
