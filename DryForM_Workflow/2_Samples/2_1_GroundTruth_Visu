@@ -123,3 +123,5 @@ Map.addLayer(gtpol_vltanzania, {color: "orange"}, "Validation Polygons Tanzania"
 
 Map.addLayer(GTPoint_DF_Balanced_tanzania, {color: "red"}, "Training Points Tanzania Balanced", 0);
 //Map.addLayer(GTPol_DF_Balanced_tanzania, {color: "red"}, "Training Polygons Tanzania Balanced", 0);
+
+Map.setOptions("SATELLITE")
