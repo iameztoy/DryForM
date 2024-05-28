@@ -31,8 +31,9 @@ CCD Extract (Results of Step 7.2) is also loaded.
       
       CCD plots are also available. Click any pixel to get them. 
         The creation of the plot and the associated calculations are slightly different from CCD in section 7.1 (e.g. tmaskBand) and the production of the spatially explicit datasets.
-      The application in Module 9 (9_App), provides more information and visual evidence (among others, imagery chips and spectral profiles) to better interpret these disturbances and the drivers associated.
-        Take into account that in the App version, disturbances has been crossed with GFC20 instead of with the Tree Cover product shown in this script.
+      The application in Module 9 (9_App), provides more information and visual evidence (among others, imagery chips and spectral profiles) 
+          to better interpret these disturbances and the drivers associated.
+        Take into account that in the App version, disturbances has been crossed with GFC20 instead of the Tree Cover product shown in this script.
 
 Tree cover heights and CCD outcome values per band can be queried in the Inspector tab.
 */
