@@ -69,6 +69,7 @@ Map.setOptions("SATELLITE")
 ///////////////////////////////////////////
 // ****************************************
 // CCD Plot section - Same as section 7.0
+// ***************************************
 
 var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
