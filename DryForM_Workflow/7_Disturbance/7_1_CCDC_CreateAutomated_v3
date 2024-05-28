@@ -16,7 +16,8 @@ This module is divided into two different blocks:
       It calculates/extracts five different bands. The idea is to detect the break dates (disturbance dates) and apply a given threshold (e.g. 10000) to only the 
       negative values of the NDFI magnitude change band.
       
-  This method has not been automated -> Thus, there is still run to improve and automate the process. 
+  This method has not been automated -> Thus, there is still run to improve and automate the process by including the assets on an image collection rather than as separated images.
+      Then we could use the same grid as to automate the process to extract the desired bands and/or apply any other operation (e.g. apply thresholds on the NDFI magnitude)
 
 
   - Parameters that can be changed:
