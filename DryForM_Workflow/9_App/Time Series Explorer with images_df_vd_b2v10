@@ -114,9 +114,9 @@ This script integrates different land cover datasets (only tree cover is shown),
 
 
 // RGB time series charting module: https://github.com/jdbcode/ee-rgb-timeseries
-var rgbTs = require('users/iameztoy/DryForest:Workflow/9_App/req/rgb-timeseries');
+var rgbTs = require('users/iameztoy/DryForest:DryForM_Workflow/9_App/req/rgb-timeseries');
 // By Wiell | GEE Forum
-var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/9_App/req/temporalSegmentation');
+var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/9_App/req/temporalSegmentation');
 
 // #############################################################################
 // ### IMPORT DATASETS ###
@@ -137,7 +137,7 @@ var CH_GEDI = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 //var valcount7= ee.Image("projects/hardy-tenure-383607/assets/Count_AvailableObs/CountValid_7cl"); //Needs to be updated to include GEDI Lang (new max value is 8)
 //var validCount = valcount7.add(1) //I added +1 to the previously calculated asset after including GEDI Lang (Global full coverage)
 var GEDI_Lang = ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1');
-var metaWRI = ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic() //1 meter canopy heights
+var metaWRI = ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic(); //1 meter canopy heights
 
 ////Global land use UMD https://www.nature.com/articles/s43016-021-00429-z  https://glad.umd.edu/dataset/croplands
 
@@ -155,8 +155,8 @@ var gabam = ee.ImageCollection("projects/sat-io/open-datasets/GABAM"); //30m Glo
 var gfc2023 = ee.Image('UMD/hansen/global_forest_change_2023_v1_11');
 
 // CCDC-SMA change analysis - NDFI
-var ccdc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract").mosaic()
-ccdc = ccdc.updateMask(RefineStep2)
+var ccdc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract").mosaic();
+ccdc = ccdc.updateMask(RefineStep2);
 
 // #############################################################################
 // ### GET URL PARAMS ###
@@ -828,7 +828,7 @@ function renderGraphics(coords) {
   map.addLayer(Fires2020, {palette:"red"}, "GABAM Fires 2020", 0);
   map.addLayer(lossYear, lossYearVis, 'Loss Year Hansen (2000-2023)', 0);
   map.addLayer(metaWRI, visParams_meta, "Meta/WRI Canopy Height", 0);
-  map.addLayer(ccdc, vp_ccdc, "CCDC-SMA 2020-2024 | NDFI > 10000", 1)
+  map.addLayer(ccdc, vp_ccdc, "CCDC-SMA 2020-2024 | NDFI > 10000", 1);
   
   // Add new point to the Map.
   map.addLayer(aoiCircle, {color: AOI_COLOR});
@@ -1083,11 +1083,11 @@ var makeRow = function(color, name) {
 /////////////////////////////////////////////////////////
 
 function toNdfi(image) {
-  var gv = [500, 900, 400, 6100, 3000, 1000]
-  var shade = [0, 0, 0, 0, 0, 0]
-  var npv = [1400, 1700, 2200, 3000, 5500, 3000]
-  var soil = [2000, 3000, 3400, 5800, 6000, 5800]
-  var cloud = [9000, 9600, 8000, 7800, 7200, 6500]
+  var gv = [500, 900, 400, 6100, 3000, 1000];
+  var shade = [0, 0, 0, 0, 0, 0];
+  var npv = [1400, 1700, 2200, 3000, 5500, 3000];
+  var soil = [2000, 3000, 3400, 5800, 6000, 5800];
+  var cloud = [9000, 9600, 8000, 7800, 7200, 6500];
   var unmixed = image
     .select(['blue', 'green', 'red', 'nir', 'swir1', 'swir2'])
     .unmix({
@@ -1095,14 +1095,14 @@ function toNdfi(image) {
       sumToOne: true,
       nonNegative: true
     })
-    .rename(['gv', 'shade', 'npv', 'soil', 'cloud'])
+    .rename(['gv', 'shade', 'npv', 'soil', 'cloud']);
   return unmixed
     .expression(
       '((i.gv / (1 - i.shade)) - (i.npv + i.soil)) / ((i.gv / (1 - i.shade)) + i.npv + i.soil)',
       {i: unmixed}
     ) 
     .multiply(10000)
-    .rename('ndfi')
+    .rename('ndfi');
 }
 
 function createLandsatCollection(params) {
@@ -1111,84 +1111,84 @@ function createLandsatCollection(params) {
     start: '1982-01-01', 
     end: formatDate(new Date()), 
     mapImage: function (image) { return image }
-  }
-  params = mergeObjects([defaultParams, params])
+  };
+  params = mergeObjects([defaultParams, params]);
   
   var filter = ee.Filter.and(
       ee.Filter.bounds(params.region),
       ee.Filter.date(params.start, params.end  )
-  )
+  );
   var l8 = ee.ImageCollection('LANDSAT/LC08/C02/T1_L2').map(applyScaleFactors)
     .merge(ee.ImageCollection('LANDSAT/LC08/C02/T2_L2').map(applyScaleFactors))
     .filter(filter)
     .select(
       ['SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B6', 'SR_B7', 'QA_PIXEL'],
       ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'QA_PIXEL']
-    )
+    );
   var l9 = ee.ImageCollection('LANDSAT/LC09/C02/T1_L2').map(applyScaleFactors)
     .merge(ee.ImageCollection('LANDSAT/LC09/C02/T2_L2').map(applyScaleFactors))
     .filter(filter)
     .select(
       ['SR_B2', 'SR_B3', 'SR_B4', 'SR_B5', 'SR_B6', 'SR_B7', 'QA_PIXEL'],
       ['blue', 'green', 'red', 'nir', 'swir1', 'swir2', 'QA_PIXEL']
-    )
+    );
 
   return (l8).merge(l9)
     .map(mapImage)
-    .sort('system:time_start')
+    .sort('system:time_start');
   
   function mapImage(image) {
     return excludeBand('QA_PIXEL',
       mask(
         params.mapImage(image)
       ).clip(params.region)
-    )
+    );
   }
   
   function mask(image) {
-    var cloudFree = bitwiseExtract(image.select('QA_PIXEL'), 0, 5).eq(0) //See end of script bitwiseExtract function
+    var cloudFree = bitwiseExtract(image.select('QA_PIXEL'), 0, 5).eq(0); //See end of script bitwiseExtract function
     return image
-      .updateMask(cloudFree)
+      .updateMask(cloudFree);
   }
   
   function excludeBand(bandName, image) {
-    var bandNames = image.bandNames()
+    var bandNames = image.bandNames();
     var bandIndexes = ee.List.sequence(0, bandNames.size().subtract(1))
       .filter(
         ee.Filter.neq('item', bandNames.indexOf(bandName))
-      )
-    return image.select(bandIndexes)
+      );
+    return image.select(bandIndexes);
   }
 
   function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
-        year = d.getFullYear()
+        year = d.getFullYear();
   
     if (month.length < 2) 
-        month = '0' + month
+        month = '0' + month;
     if (day.length < 2) 
-        day = '0' + day
+        day = '0' + day;
   
-    return [year, month, day].join('-')
+    return [year, month, day].join('-');
   }
 
   function mergeObjects(objects) {
     return objects.reduce(function (acc, o) {
       for (var a in o) { acc[a] = o[a] }
-      return acc
-      }, {})
+      return acc;
+      }, {});
   }
 }
 
 // Function to select a range of bitmasks for cloud masking while building the collection
 function bitwiseExtract(value, fromBit, toBit) {
   if (toBit === undefined)
-    toBit = fromBit
-  var maskSize = ee.Number(1).add(toBit).subtract(fromBit)
-  var mask = ee.Number(1).leftShift(maskSize).subtract(1)
-  return value.rightShift(fromBit).bitwiseAnd(mask)
+    toBit = fromBit;
+  var maskSize = ee.Number(1).add(toBit).subtract(fromBit);
+  var mask = ee.Number(1).leftShift(maskSize).subtract(1);
+  return value.rightShift(fromBit).bitwiseAnd(mask);
   }
 
 // Applies scaling factors.
@@ -1325,7 +1325,7 @@ var GLC_Forest_r = glc10Loss.rename(['GLC_Forest']);
 var GEDI_gte5_r = gedi5.rename(['GEDI_Potapov_gte5']);
 var gedi5L_gte5_r = gedi5L_gte5.rename(['GEDI_Lang_gte5']);
 var RefineStep2_r = RefineStep2.rename(['JRC_GFC2020']);
-var metaWRI_r = metaWRI_gte5.rename(['metaWRI_gte5'])
+var metaWRI_r = metaWRI_gte5.rename(['metaWRI_gte5']);
 var TotTC_c_r = TotTreeFor.rename(['Total_TreeForest']); //TotTF_c.rename(['Total_TreeForest']);
 
 
@@ -1394,7 +1394,7 @@ var lossYearVis = {
   min: 0,
   max: 23,
   palette: palette_HL
-}
+};
 
 
 // #############################################################################
@@ -1418,7 +1418,7 @@ var VisParam11cl = {min: 0, max: 9, palette: [
     '040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '44ca31', '217c4b', '124429'], opacity: 0.6}; //added one color more after including BLM 2020
 
 var vp_metapal = require('users/gena/packages:palettes');
-var visParams_meta =  {min: 0,max: 25, palette: vp_metapal.matplotlib.viridis[7], opacity: 0.6}   
+var visParams_meta =  {min: 0,max: 25, palette: vp_metapal.matplotlib.viridis[7], opacity: 0.6};
 //  Palette with legend colors
 var palette =['040404', 'ff0c0c', 'ffa41b', 'ffec62', '9eff6c', '58f7ff', '6267ff', 'c514ff', '44ca31', '217c4b', '124429'];
 
@@ -1468,7 +1468,7 @@ map.add(controlPanel);
 map.add(inspector);
 map.add(countChart);
 map.add(legend);
-legend.add(legendTitle).add(sublegendTitle) //.add(sublegendTitle2);
+legend.add(legendTitle).add(sublegendTitle); //.add(sublegendTitle2);
 
 map.setControlVisibility({layerList: true, fullscreenControl: true, zoomControl: false});
 
