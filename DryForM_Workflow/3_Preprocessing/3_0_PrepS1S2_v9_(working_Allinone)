@@ -90,6 +90,8 @@ var ecoz = fao_ecoz.filter(ee.Filter.eq('ECO_ZONE_I', 12698));
 
 
 //Already extracted Features for the 4 AOIs of DryForM Project:
+//Use "ECO_ZONE_I" attribute otherwise | See ecoz variable
+
 /*
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
