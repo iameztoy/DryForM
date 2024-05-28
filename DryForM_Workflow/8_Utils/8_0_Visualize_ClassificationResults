@@ -24,12 +24,12 @@ pp_tc = pp_tc.mosaic().selfMask();
 
 // Load Tree Canopy Height Products
 var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
+// Alternativelly:
 //ee.ImageCollection("projects/meta-forest-monitoring-okw37/assets/CanopyHeight").mosaic(); //META/WRI
 //ee.Image('users/nlang/ETH_GlobalCanopyHeight_2020_10m_v1'); //Lang
 
 var h = pp_tc.multiply(gedil);
 var m5 = h.lt(5).selfMask();
-
 
 // Visualization
 var palettes = require('users/gena/packages:palettes');
