@@ -3,8 +3,43 @@
 // DRYFORM - Step 7.1 - Implement/Create CCD
 //***********************************************************
 
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+Adapted from Wienn - GEE Forum
+ 
+This script runs a temporal segmentation process (CCD algorithm) to extract breakpoints from Landsat 8 and 9 time series (2013-2024)
+Even if possible, it does not directly extract the CCD bands, coefficients, etc. but it goes a step beyond:
+  - It postprocesses the CCD by stablishing NDFI thresholds and crosses the outcomes with the GFC20 dataset;
+  - It includes a step to remove noisy pixels. You can change the connected pixels parameter.
+  - This means that only significant changes (higher than the NDFI threshold) are visible within the forest limits stablished by the GFC20 datasets.
+  - The mask could be changed to any other land cover class (e.g. shrubs or other wooded land)
+  - In addition to the thresholded band, three additional bands are also exported -> tBreak, ndfi magnitude and ndfi magnitude confidence.
+  - These bands have also been masked by the same mask to create the thresholded band.
+  
+  - Note that the process can be also split in two parts:
+      - 1/ Export the CCD coefficients as assets and:
+      - 2/ Run the post-processing on the exported assets in a separate script (7.2)
+     
+      - This might be necessary if the current process runs out of memory
+      - The purpose of doing all in one step is to save storage memory. The CCD outputs are very heavy. For a cg_scale of 100000 = 8Gb approx. 
+      - Alternativelly, the cg_scale parameter can be changed (e.g. 40000) to find the optimal scale and avoid memory errors
+          However, this creates many more tiles.
+          
+  - Parameters that can be changed:
+      - aoi: area of interest
+      - cg_scale: Defines the size of the tiles. The greater the size, the more time will take the task to process. 
+      - tilelist: list of tiles that will be processed
+      - start | end: Dates to create the Landsat image collection
+      - daterange: Dates to define the CCD period over which the extraction will happen. Currently changes between 2021 and May 2024.
+      - breakpoint variables contains a set of additional options (see in comments)
+      - ndfiMag_gte10k: See gte threshold. It is currently set to identify a drop higher or equal than 10000.
+      - mmu_p: number of connected pixels that will be removed (currently 8)
+
+*/
+
+
 //Require
-var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation')
+var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
 //Areas of Interest
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
