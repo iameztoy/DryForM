@@ -16,9 +16,9 @@ This is to check which areas classified as tree cover are not aligned to FAO´s 
 
 */
 
-
 //Post-processed Tree Cover
-var pp_tc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc").mosaic();
+var pp_tc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
+pp_tc = pp_tc.mosaic().selfMask();
 
 // Load Tree Canopy Height Products
 var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
@@ -28,6 +28,7 @@ var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 var h = pp_tc.multiply(gedil);
 var m5 = h.lt(5).selfMask();
 
+
 // Visualization
 var palettes = require('users/gena/packages:palettes');
 var palette = palettes.colorbrewer.YlGn[7];
@@ -35,7 +36,7 @@ var palette = palettes.colorbrewer.YlGn[7];
 var vp_tc = {palette:"green"};
 
 Map.addLayer(pp_tc.selfMask(), vp_tc, "Post-processed Tree Cover", 1);
-Map.addLayer(h, {min: 0, max: 30, palette: palette}, "Post-processed Tree Cover & Heights");
+Map.addLayer(h.selfMask(), {min: 0, max: 30, palette: palette}, "Post-processed Tree Cover & Heights");
 Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1); //This is only in the Tree Cover domain.
 
 
@@ -46,6 +47,6 @@ Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1); //This is only in th
 var wc2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
 var visualization = {bands: ['Map'],};
 
-Map.centerObject(dataset);
+Map.centerObject(pp_tc);
 Map.setOptions("SATELLITE");
 Map.addLayer(wc2021, visualization, 'World Cover 2021', 0);
