@@ -8,6 +8,8 @@ Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exp
 
 This script is optional and it is for visualization purposes. It crosses the post-processed classification with a Tree Canopy Height dataset.
 The tree cover layer can be crossed either with heights coming from Land, Potapov or Meta/WRI products.
+It also calculates the Tree Canoply Heights below 5 meters.
+This is to see which areas classified as tree cover that are not aligned to FAO´s forest definition.
 
 */
 
