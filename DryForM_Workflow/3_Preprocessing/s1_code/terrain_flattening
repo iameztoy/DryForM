@@ -4,7 +4,12 @@
 //---------------------------------------------------------------------------//
 /* Vollrath, A., Mullissa, A., & Reiche, J. (2020). Angular-Based Radiometric Slope Correction for Sentinel-1 on Google Earth Engine. 
 Remote Sensing, 12(11), [1867]. https://doi.org/10.3390/rs12111867
-*/ 
+
+Adapted from | Source: https://github.com/adugnag/gee_s1_ard
+    and
+Integrated for DryForM project | Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+*/
+ 
 exports.slope_correction = function(collection, TERRAIN_FLATTENING_MODEL, 
                                               DEM,
                                               TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER) {
