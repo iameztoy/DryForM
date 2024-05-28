@@ -6,7 +6,7 @@
 /* 
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-These is applied over the classifications of the best performing models.
+This process is applied over the classifications of the best performing models.
 The aim of this script is to partially correct the artifacts created by the imagery pre-processing step. 
 Some areas remained as nodata (e.g. mountain shadows, border artifacts, etc.). 
 The idea is to replace these nodata values (only for Tree Cover and mangroves) by the LC_Refine for post-processing layer (iteration 2)
