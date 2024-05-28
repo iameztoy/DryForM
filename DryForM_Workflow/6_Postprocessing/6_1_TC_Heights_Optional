@@ -1,4 +1,16 @@
 
+//************************************************************************** 
+// DRYFORM - Step 6.0 - Correcting nodata in the classification outcome
+//************************************************************************** 
+
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+This script is optional and it is for visualization purposes. It crosses the post-processed classification with a Tree Canopy Height dataset.
+The tree cover layer can be crossed either with heights coming from Land, Potapov or Meta/WRI products.
+
+*/
+
 var clasif = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc");
 
 var image = clasif.mosaic().selfMask();
