@@ -18,6 +18,13 @@ Ideally this has to be corrected in the imagery pre-processing step so the artif
     A preliminary version is available but not included in the current version release.
     
 Minimum Mapping Areas filtering was integrated within the GFC20 workflow. The same could be implemented here.
+  That was part of a parallel development. For more details see:
+      https://publications.jrc.ec.europa.eu/repository/handle/JRC136960
+      https://forobs.jrc.ec.europa.eu/GFC
+      https://forest-observatory.ec.europa.eu/forest
+      https://data.jrc.ec.europa.eu/collection/fise
+      https://developers.google.com/earth-engine/datasets/catalog/JRC_GFC2020_V1
+      
 Canopy Heights can be also further filtered. This has been partially implemented in script 8.0.
 
 */
