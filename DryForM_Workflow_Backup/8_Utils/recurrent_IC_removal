@@ -1,0 +1,25 @@
+
+//***********************************************************
+// DRYFORM - Step 8.1 - Recurrent removal of images in
+//                  Image Collections 
+//***********************************************************
+
+var asset = "projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania"
+
+var ic = ee.ImageCollection(asset);
+
+function deleteChildren(ImgCollection){
+var n = ImgCollection.size().getInfo();
+  var colList = ImgCollection.toList(n);
+  var assetFolder = asset +"/";
+  
+  for (var i = 0; i < n; i++) {
+    var img = ee.Image(colList.get(i));
+    var id = img.id().getInfo() || 'image_'+i.toString();
+    var assetId = assetFolder+id;
+    ee.data.deleteAsset(assetId);
+  }
+}
+
+
+deleteChildren(ic)
