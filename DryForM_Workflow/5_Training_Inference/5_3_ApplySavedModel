@@ -8,7 +8,6 @@ Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exp
 
 This script implements the RF saved model over the pre-processed imagery. Models can be saved in step 5.2.
 It is an optional step thought to implement the model over areas where the model has not been trained.
-Step 5.2 already exports the classified image.
 
 User should take into account that, as of May 2024, saved models cannot be "printed".
 See GEE forum thread: https://groups.google.com/g/google-earth-engine-developers/c/njOjzcRJMB8/m/UVZYizj4BQAJ
