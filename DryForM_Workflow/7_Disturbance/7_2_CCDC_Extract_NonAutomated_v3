@@ -4,18 +4,31 @@
 //              created in step 7.1
 //***********************************************************
 
-//Manual version - Need to add a geometry for the tile 
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+Adapted from Wienn - GEE Forum
+
+Extract | This script is run once 7.1 is finished and results exported as an asset. 
+      It calculates/extracts five different bands. The idea is to detect the break dates (disturbance dates) and apply a given threshold (e.g. 10000) to only the 
+      negative values of the NDFI magnitude change band.
+
+It is a non-automated version so each image created in 7.1 should be extracted manually.
+In order to automate the process, it would be necessary to (for example):
+  1/ Export the dataset created in 7.1. to an Image Collection using e.g. the zonesID grid system and
+  2/ Use the same grid system to set an automated procedure in 7.2 (Under development)
+
+*/
 
 
-
+//require
 var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
 var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile321_Cerrado');
-print(segmentsImage)
+print(segmentsImage);
 
-var geometry = segmentsImage.select("tBreak").geometry()
-print(geometry.getInfo())
-Map.addLayer(geometry, {color:"red"}, "Geometry")
+var geometry = segmentsImage.select("tBreak").geometry();
+print(geometry.getInfo());
+Map.addLayer(geometry, {color:"red"}, "Geometry");
 
 var segments = temporalSegmentation.Segments(segmentsImage, 1);
 
