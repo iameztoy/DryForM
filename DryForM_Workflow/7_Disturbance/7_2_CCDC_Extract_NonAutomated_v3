@@ -1,6 +1,7 @@
 
 //***********************************************************
-// DRYFORM - Step 7.2 - Extract bands of interest from 7.1
+// DRYFORM - Step 7.2 - Extract and calculate bands 
+//              created in step 7.1
 //***********************************************************
 
 //Manual version - Need to add a geometry for the tile 
