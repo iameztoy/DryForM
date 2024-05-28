@@ -9,10 +9,9 @@ Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exp
 This script implementes different separability measures
 Only Jeffries-Matusite is enabled.
 It requires: 
-  1/ to precompute the imagery over which the distances will be calculated;
+  1/ to precompute the imagery over which the distances will be calculated. **!!**See script 3.0 **!!**;
   2/ to have ground truth data
   
-**!!** Imagery should be first pre-processed and exported as an asset. See script 3.0 **!!**
 
 *************************************************
 *************************************************
