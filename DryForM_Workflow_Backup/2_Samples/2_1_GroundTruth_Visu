@@ -1,0 +1,125 @@
+
+//***********************************************************
+// DRYFORM - Step 2.1 - Ground Truth visualization
+//***********************************************************
+
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1 
+
+ These features have been directly imported as an asset in GEE.
+ They have been created through visual inspection in ArcGIS Pro 3.2
+ Stratified Random Sampling has been previously applied using AcATaMa plugin in QGIS.
+     See: https://plugins.qgis.org/plugins/AcATaMa/
+     Samples has been preliminarilly allocated using as a basis the Sampling Framework layer calculated in GEE (see step 1)
+
+*/
+
+//Areas of Interest
+var chaco = "chaco";
+var caatinga = "caatinga";
+var cerrado = "cerrado";
+var tanzania = "tanzania";
+
+// Assets
+var GroundTruthPoint_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF");
+var GroundTruthPol_DF = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF");
+var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco");
+var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
+var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
+var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
+
+//--------------------------
+//  CHACO
+//--------------------------
+
+// Chaco Points 
+var gtpoint_chaco = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', chaco));
+var gtpoint_trchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "training"));
+var gtpoint_vlchaco =  gtpoint_chaco.filter(ee.Filter.eq('purp', "validation"));
+
+// Chaco Polygons
+var gtpol_chaco = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', chaco));
+var gtpol_trchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "training"));
+var gtpol_vlchaco =  gtpol_chaco.filter(ee.Filter.eq('purp', "validation"));
+
+
+//--------------------------
+//  CAATINGA
+//--------------------------
+
+// Caatinga Points 
+var gtpoint_caatinga = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', caatinga));
+var gtpoint_trcaatinga =  gtpoint_caatinga.filter(ee.Filter.eq('purp', "training"));
+var gtpoint_vlcaatinga =  gtpoint_caatinga.filter(ee.Filter.eq('purp', "validation"));
+
+// Caatinga Polygons
+var gtpol_caatinga = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', caatinga));
+var gtpol_trcaatinga =  gtpol_caatinga.filter(ee.Filter.eq('purp', "training"));
+var gtpol_vlcaatinga =  gtpol_caatinga.filter(ee.Filter.eq('purp', "validation"));
+
+
+//--------------------------
+//  CERRADO
+//--------------------------
+
+// Cerrado Points 
+var gtpoint_cerrado = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', cerrado)); 
+var gtpoint_trcerrado =  gtpoint_cerrado.filter(ee.Filter.eq('purp', "training"));
+var gtpoint_vlcerrado =  gtpoint_cerrado.filter(ee.Filter.eq('purp', "validation"));
+
+// Cerrado Polygons
+var gtpol_cerrado = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', cerrado));
+var gtpol_trcerrado =  gtpol_cerrado.filter(ee.Filter.eq('purp', "training"));
+var gtpol_vlcerrado =  gtpol_cerrado.filter(ee.Filter.eq('purp', "validation"));
+
+
+//--------------------------
+//  TANZANIA
+//--------------------------
+
+// Tanzania Points 
+var gtpoint_tanzania = GroundTruthPoint_DF.filter(ee.Filter.eq('aoiname', tanzania));
+var gtpoint_trtanzania =  gtpoint_tanzania.filter(ee.Filter.eq('purp', "training"));
+var gtpoint_vltanzania =  gtpoint_tanzania.filter(ee.Filter.eq('purp', "validation"));
+
+// Tanzania Polygons
+var gtpol_tanzania = GroundTruthPol_DF.filter(ee.Filter.eq('aoiname', tanzania));
+var gtpol_trtanzania =  gtpol_tanzania.filter(ee.Filter.eq('purp', "training"));
+var gtpol_vltanzania =  gtpol_tanzania.filter(ee.Filter.eq('purp', "validation"));
+
+
+//--------------------------
+//  VISU
+//--------------------------
+
+Map.addLayer(gtpoint_trchaco, {color: "green"}, "Training Points Chaco", 0);
+Map.addLayer(gtpoint_vlchaco, {color: "orange"}, "Validation Points Chaco", 0);
+Map.addLayer(gtpol_trchaco, {color: "green"}, "Training Polygons Chaco", 0);
+Map.addLayer(gtpol_vlchaco, {color: "orange"}, "Validation Polygons Chaco", 0);
+
+Map.addLayer(GTPoint_DF_Balanced_chaco, {color: "red"}, "Training Points Chaco Balanced", 0);
+Map.addLayer(GTPol_DF_Balanced_chaco, {color: "red"}, "Training Polygons Chaco Balanced", 0);
+
+Map.addLayer(gtpoint_trcaatinga, {color: "green"}, "Training Points Caatinga", 0);
+Map.addLayer(gtpoint_vlcaatinga, {color: "orange"}, "Validation Points Caatinga", 0);
+Map.addLayer(gtpol_trcaatinga, {color: "green"}, "Training Polygons Caatinga", 0);
+Map.addLayer(gtpol_vlcaatinga, {color: "orange"}, "Validation Polygons Caatinga", 0);
+
+Map.addLayer(GTPoint_DF_Balanced_caatinga, {color: "red"}, "Training Points Caatinga Balanced", 0);
+Map.addLayer(GTPol_DF_Balanced_caatinga, {color: "red"}, "Training Polygons Caatinga Balanced", 0);
+
+Map.addLayer(gtpoint_trcerrado, {color: "green"}, "Training Points Cerrado", 0);
+Map.addLayer(gtpoint_vlcerrado, {color: "orange"}, "Validation Points Cerrado", 0);
+Map.addLayer(gtpol_trcerrado, {color: "green"}, "Training Polygons Cerrado", 0);
+Map.addLayer(gtpol_vlcerrado, {color: "orange"}, "Validation Polygons Cerrado", 0);
+
+Map.addLayer(GTPoint_DF_Balanced_cerrado, {color: "red"}, "Training Points Cerrado Balanced", 0);
+Map.addLayer(GTPol_DF_Balanced_cerrado, {color: "red"}, "Training Polygons Cerrado Balanced", 0);
+
+Map.addLayer(gtpoint_trtanzania, {color: "green"}, "Training Points Tanzania", 0);
+Map.addLayer(gtpoint_vltanzania, {color: "orange"}, "Validation Points Tanzania", 0);
+Map.addLayer(gtpol_trtanzania, {color: "green"}, "Training Polygons Tanzania", 0);
+Map.addLayer(gtpol_vltanzania, {color: "orange"}, "Validation Polygons Tanzania", 0);
+
+Map.addLayer(GTPoint_DF_Balanced_tanzania, {color: "red"}, "Training Points Tanzania Balanced", 0);
+Map.addLayer(GTPol_DF_Balanced_tanzania, {color: "red"}, "Training Polygons Tanzania Balanced", 0);
