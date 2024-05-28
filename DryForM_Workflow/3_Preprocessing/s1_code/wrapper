@@ -1,9 +1,14 @@
-// File: S1_ARD_TEST/wrapper.js
-// Version: v1.2
-// Date: 2021-04-01
-// Authors: Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J.
 
-// Adapted from | Source: https://github.com/adugnag/gee_s1_ard
+/*
+File: S1_ARD_TEST/wrapper.js
+Version: v1.2
+Date: 2021-04-01
+Authors: Mullissa A., Vollrath A., Braun, C., Slagter B., Balling J., Gou Y., Gorelick N.,  Reiche J.
+
+Adapted from | Source: https://github.com/adugnag/gee_s1_ard
+    and
+Integrated for DryForM project | Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+*/
 
 //****************************
 // ALL PREPROCESSING
