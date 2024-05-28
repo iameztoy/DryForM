@@ -49,10 +49,10 @@ Map.addLayer(tanzania_sh.selfMask(), vp_sh, "Tanzania Shrubs", 0);
 
 // Adding World Cover for comparison
 
-var dataset = ee.ImageCollection('ESA/WorldCover/v200').first();
+var wc2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
 
 var visualization = {bands: ['Map'],};
 
 Map.centerObject(dataset);
 Map.setOptions("SATELLITE");
-Map.addLayer(dataset, visualization, 'World Cover 2021', 0);
+Map.addLayer(wc2021, visualization, 'World Cover 2021', 0);
