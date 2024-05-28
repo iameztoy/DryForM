@@ -4,6 +4,12 @@ Date: 2021-03-11
 Authors: Adopted from Hird et al. 2017 Remote Sensing (supplementary material): http://www.mdpi.com/2072-4292/9/12/1315)
 Description: This script applied additional border noise correction */
 
+/*
+Adapted from | Source: https://github.com/adugnag/gee_s1_ard
+    and
+Integrated for DryForM project | Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+*/
+
 var helper = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/s1_code/utilities');
 
 //---------------------------------------------------------------------------//
