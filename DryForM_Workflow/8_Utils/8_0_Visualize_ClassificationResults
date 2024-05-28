@@ -15,6 +15,14 @@ This is to check possible commission error and also areas classified as tree cov
     Areas below 5 meters are shown in orange.
     Beware of the uncertainty of the Tree Canopy Height Map products. 
       In some cases this uncertainty is big. Therefore, consider the commission error interpretation of the Tree Cover dataset with caution.
+      
+CCD Extract (Step 7.2) is also loaded.
+  Take into account that this image collection contains 4 bands
+      - ndfi_magnitue_thr10k_m | Threshold applied for NDFI negative anomaly of 10000
+      - tBreak | Date of Break detection
+      - ndfi_magnitude | NDFI magnitude, includes positive and negative anomalies
+      - ndfi_breakConfidence
+      
 
 */
 
@@ -30,6 +38,11 @@ var gedil = ee.ImageCollection('users/potapovpeter/GEDI_V27').mosaic();
 
 var h = pp_tc.multiply(gedil);
 var m5 = h.lt(5).selfMask();
+
+// Continuous Change Detection | Extract
+
+var ccd_e = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract").mosaic();
+var tBreak = ccd_e.select("")
 
 // Visualization
 var palettes = require('users/gena/packages:palettes');
