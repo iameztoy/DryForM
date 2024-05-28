@@ -19,6 +19,7 @@ Printing Feature Importance and Out of Bag error might be implemented in the fut
 // Target imagery preprocessed in a previous step. See section 3.0
 
 var target = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Ecoz_12708").mosaic();
+// target can be replaced by the pre-processed image collections of other areas of interest (e.g. Chaco, Caatinga, etc.)
 
 
 // Prepare the classifier
