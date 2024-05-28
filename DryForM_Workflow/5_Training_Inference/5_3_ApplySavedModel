@@ -6,7 +6,7 @@
 /*
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-This script implements the RF saved model over the pre-processed imagery.
+This script implements the RF saved model over the pre-processed imagery. Models can be saved in step 5.2.
 It is an optional step thought to implement the model over areas where the model has not been trained.
 Step 5.2 already exports the classified image.
 
