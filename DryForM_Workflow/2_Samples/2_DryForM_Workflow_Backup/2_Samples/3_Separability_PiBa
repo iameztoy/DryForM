@@ -1,0 +1,242 @@
+
+//**************************************************************************
+// DRYFORM - Step 2.3 - Separability | Distances - Pixel based version
+//************************************************************************** 
+
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+This script implementes different separability measures
+Only Jeffries-Matusite is enabled.
+It requires: 
+  1/ to precompute the imagery over which the distances will be calculated;
+  2/ to have ground truth data
+
+*************************************************
+*************************************************
+
+Processing outside GEE:
+
+The fc export option generates a file on Drive that can be further processed e.g. in Excel.
+ If JF is calculated for different bands, the following code is useful to merge all the outcomes together 
+  and get a unique table with all the values. The steps are as follows:
+  
+  - Data -> From File -> From folder (where all the files are located) -> select folder
+  - Combine -> Combine and transfor data -> ok
+  - Open the Advanced Editor -> Paste the code below ->
+  - Note that:
+      * the source folder will be different. 
+      * you may not want to combine files
+      * delimiters are probably the same
+      * I have removed a column and replaced [ and ]
+  - Close and Load
+  - The result is a new table which combines all the JF metrics per band. The source name (band) is also included
+
+
+let
+    Source = Folder.Files("[path]\Separability"),
+    #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
+    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+    #"Changed Type" = Table.TransformColumnTypes(#"Expanded Table Column1",{{"Source.Name", type text}, {"system:index", Int64.Type}, {"prop", type text}, {".geo", type text}}),
+    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{".geo"}),
+    #"Replaced Value" = Table.ReplaceValue(#"Removed Columns","[","",Replacer.ReplaceText,{"prop"}),
+    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","]","",Replacer.ReplaceText,{"prop"}),
+    #"Split Column by Delimiter" = Table.SplitColumn(#"Replaced Value1", "prop", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), {"prop.1", "prop.2", "prop.3", "prop.4", "prop.5", "prop.6", "prop.7", "prop.8", "prop.9", "prop.10"})
+in
+    #"Split Column by Delimiter"
+
+
+Additinal Notes about the distance options: // https://gis.stackexchange.com/questions/313678/a-reproducible-example-for-the-use-of-separability-measures-in-improving-selecti
+*/
+
+// Image collection
+//var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/Preprocessing/s1s2_Chaco").mosaic();
+//var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Caatinga").mosaic();
+var composite = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania").mosaic();
+var aoi_n = "tanzania";
+
+
+
+// Training set | Already Balanced sample sets.
+    // Points
+
+var GTPoint_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco");
+var GTPoint_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga");
+var GTPoint_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_cerrado");
+var GTPoint_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
+
+    // Polygons
+var GTPol_DF_Balanced_chaco = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_chaco");
+var GTPol_DF_Balanced_caatinga = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_caatinga");
+var GTPol_DF_Balanced_cerrado = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_cerrado");
+var GTPol_DF_Balanced_tanzania = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania");
+
+// Target - Ground truth
+var labels = GTPoint_DF_Balanced_tanzania;
+
+// Reclass ground truth from 0 to the number of classes
+// For visulcrec:
+var landcover = "visulcrec";
+var classValues = [0, 1, 2, 3, 5, 6, 7, 9, 10];
+var remapValues = [6, 0, 1, 2, 3, 4, 5, 7, 8];
+
+labels = labels.remap(classValues, remapValues, landcover);
+
+var applybuffer = function(feature) {
+return feature.buffer(20)};
+labels = labels //.map(applybuffer);
+
+// Image Collection Band Names
+var bands = composite.bandNames();
+print("Band names", bands);
+
+var bands = ["t0_B3"];
+
+var training = composite.sampleRegions({
+  collection: labels, 
+  properties: ["visulcrec"], // Target column
+  scale: 10
+});
+
+// First, turn the prediction bands into vectors.
+training = training.map(function(f) {
+  // return f.set('vec', f.toArray(bands));
+  return f.set('vec', f.toDictionary(bands).values(bands));
+});
+
+print("Training Samples", training);
+
+// Make a list of objects where each object corresponds to a class.
+// Each object stores its label and a list of all the spectral
+// vectors that belong to that class.
+var lists = ee.List(training.reduceColumns({
+  reducer: ee.Reducer.toList().group(0, 'class'), 
+  selectors: ["visulcrec", 'vec']
+}).get('groups'));
+
+// Map over the lists to compute means and covariances.
+// Note that the mean reducer works on arrays, and the 
+// covariance reducer works on a list of 1D arrays.
+lists = lists.map(function(obj) {
+  var array = ee.Array(ee.Dictionary(obj).get('list'));
+  var list = ee.List(ee.Dictionary(obj).get('list')).map(function(l) {
+    return ee.Array(l);
+  });
+  var mean = array.reduce(ee.Reducer.mean(), [0]);
+  // Watch out with this reducer.  It is an approximate solution.
+  var covariance = list.reduce(ee.Reducer.covariance());
+  return ee.Dictionary(obj).combine({
+    mean: mean.transpose(),
+    covariance: covariance
+  });
+});
+
+print("DISTANCE MEASURES FOR " +bands+ " --->");
+
+// Implement distance measures.
+var classes = ee.List.sequence(0, 8);
+
+/*
+var block = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    return mean_i.subtract(mean_j).reduce('sum', [0]).project([0]);
+  });
+});
+print('Block', block);
+
+var euclidean = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    var diff = mean_i.subtract(mean_j).project([0]);
+    return diff.dotProduct(diff).sqrt();
+  });
+});
+print('Euclidean', euclidean);
+
+
+var mahalanobis = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    var sigma_i = ee.Array(ee.Dictionary(lists.get(i)).get('covariance'));
+    var sigma_j = ee.Array(ee.Dictionary(lists.get(j)).get('covariance'));
+    return mean_i.subtract(mean_j).transpose() // 1x6
+        .matrixMultiply(sigma_i.add(sigma_j).divide(2).matrixInverse()) // 6x6
+        .matrixMultiply(mean_i.subtract(mean_j))
+        .sqrt()
+        .get([0, 0]);
+  });
+});
+print('Mahalanobis', mahalanobis);
+*/
+
+var bhattacharyya = classes.map(function(i) {
+  return classes.map(function(j) {
+    var mean_i = ee.Array(ee.Dictionary(lists.get(i)).get('mean'));
+    var mean_j = ee.Array(ee.Dictionary(lists.get(j)).get('mean'));
+    var sigma_i = ee.Array(ee.Dictionary(lists.get(i)).get('covariance'));
+    var sigma_j = ee.Array(ee.Dictionary(lists.get(j)).get('covariance'));
+    var mh = mean_i.subtract(mean_j).transpose()
+        .matrixMultiply(sigma_i.add(sigma_j).divide(2).matrixInverse())
+        .matrixMultiply(mean_i.subtract(mean_j))
+        .get([0, 0])
+        .sqrt();
+    var t2 = sigma_i.add(sigma_j).divide(2).matrixDeterminant()
+        .divide(sigma_i.matrixDeterminant().sqrt())
+        .divide(sigma_j.matrixDeterminant().sqrt())
+        .log()
+        .divide(2);
+    return mh.divide(8).add(t2);
+  });
+});
+
+print('Bhattacharyya', bhattacharyya);
+
+var jm = ee.Array(bhattacharyya).multiply(-1).exp()
+    .multiply(-1).add(1).multiply(2).sqrt();
+print('Jeffries-Matusita', jm);
+
+
+// slice array
+//print(jm.length());
+//var line1 = jm.slice({axis: 1, start: 0, end: 10, step: 1});
+//print("line1", line1)
+
+/*
+print(list.map(function (innerList) {
+  return ee.List(innerList).get(0);
+}));*/
+
+var list = jm.toList();
+var fc = ee.FeatureCollection(list.map(function(element){
+            return ee.Feature(null,{prop:element})}));
+
+
+Export.table.toDrive({
+		collection:fc, 
+    description: "Separ_pb_"+ aoi_n + "_" + bands,
+    folder: "GEE_samples",
+    fileNamePrefix: "Sample_Separ_pb_" + aoi_n + "_" + bands,
+    fileFormat: "CSV",
+//	selectors:,
+//	maxVertices:,
+//	priority:,
+});
+
+Export.table.toDrive({
+		collection: training, 
+    description: "Sample_values_pb_" + aoi_n,
+    folder: "GEE_samples",
+    fileNamePrefix: "SampleValues_pb_" + aoi_n,
+    fileFormat: "CSV",
+//	selectors:,
+//	maxVertices:,
+//	priority:,
+});
+
