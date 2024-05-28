@@ -42,8 +42,6 @@ Map.addLayer(h.selfMask(), {min: 0, max: 30, palette: palette}, "Post-processed 
 Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1); //This is only in the Tree Cover domain.
 
 
-
-
 // Adding World Cover for comparison
 
 var wc2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
