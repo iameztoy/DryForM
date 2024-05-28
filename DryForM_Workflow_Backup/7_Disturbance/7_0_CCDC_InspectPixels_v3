@@ -4,9 +4,9 @@
 //*********************************************************** 
 
 /*
-This script has been directly embedded within the TFT-Explorer App but it can also be run here. See module 9.
+This script has been directly embedded within the TFT-Explorer App (See module 9) but it can be also run here. 
 
-Click on the map to inspect the CCDC results for a single pixel.
+Click on the map to inspect the CCDC results for any single pixel.
 Adapted from Wiell, GEE Forum
 */
 
