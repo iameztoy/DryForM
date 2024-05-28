@@ -100,7 +100,7 @@ var chartpoint = function(coords) {
   var collection = createLandsatCollection({
     region: point,
     start: '2013-01-01',
-    end: '2025-01-01', 
+    end: '2030-01-01', 
     mapImage: function(image) { return image.addBands(toNdfi(image)) }
   });
   /*
