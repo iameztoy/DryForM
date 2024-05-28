@@ -42,7 +42,7 @@ var m5 = h.lt(5).selfMask();
 // Continuous Change Detection | Extract
 
 var ccd_e = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_ManualExtract").mosaic();
-var tBreak = ccd_e.select("")
+var ccd_e_TC = ccd_e.updateMask(pp_tc); //CCD only in the Tree Cover domain
 
 // Visualization
 var palettes = require('users/gena/packages:palettes');
