@@ -72,7 +72,7 @@ var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
   return feat.set('system:index', indexString, 'ID', indexString);
 }));
 
-Map.addLayer(zonesID)
+Map.addLayer(zonesID);
 
 //print("Zones ID", zonesID) //This contain the tile list over which the function should be applied.
 print("Number of Tiles in AOI", zonesID.size());
@@ -97,8 +97,7 @@ tilelist = tilelist.filter(ee.Filter.lte('item', ns));
 var tilelist = tilelist.getInfo(); 
 //print("NSC", nsc)
 
-
-
+//Functions
 var processTiles = function(tile){
   
   var interm_aoi = zonesID.filter(ee.Filter.inList('ID', ee.List([tile])));
