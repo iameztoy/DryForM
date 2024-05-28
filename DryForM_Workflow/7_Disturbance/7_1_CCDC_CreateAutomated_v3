@@ -19,7 +19,6 @@ This module is divided into two different blocks:
   This method has not been automated -> Thus, there is still run to improve and automate the process by including the assets on an image collection rather than as separated images.
       Then we could use the same grid as to automate the process to extract the desired bands and/or apply any other operation (e.g. apply thresholds on the NDFI magnitude)
 
-
   - Parameters that can be changed:
       - aoi: area of interest
       - cg_scale: Defines the size of the tiles. The greater the size, the more time will take the task to process. 
