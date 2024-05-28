@@ -6,7 +6,7 @@
 /*
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-All four AOIs are loaded together (Chaco, Caatinga and Cerrado Biomes + Tanzania)
+All four AOIs are loaded together (Chaco, Caatinga and Cerrado Biomes (FAO Ecozones) + Tanzania (GDAM dataset)
 This classification version does not include any MMU filtering, it is the outcome of step 6.0 where artifacts have been partially corrected.
 
 The tree cover is also crossed with tree cover heights coming from Lang (Potapov & Meta/WRI products are also available).
