@@ -54,4 +54,5 @@ var dataset = ee.ImageCollection('ESA/WorldCover/v200').first();
 var visualization = {bands: ['Map'],};
 
 Map.centerObject(dataset);
+Map.setOptions("SATELLITE");
 Map.addLayer(dataset, visualization, 'Landcover', 0);
