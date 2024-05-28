@@ -64,7 +64,6 @@ Once we get all the images interpolated, the following processes are implemented
           
 If replicated, the user shall create an empty image collection where all tiles will be stored.
 
-
 */
 
 //---------------------------------------------------------------------------//
