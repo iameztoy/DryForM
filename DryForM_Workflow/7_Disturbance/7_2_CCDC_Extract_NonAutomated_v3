@@ -19,7 +19,6 @@ In order to automate the process, it would be necessary to (for example):
 
 */
 
-
 //require
 var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
