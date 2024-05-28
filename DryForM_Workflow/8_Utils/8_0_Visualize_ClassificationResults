@@ -18,7 +18,7 @@ This is to check possible commission error and also areas classified as tree cov
       
 CCD Extract (Results of Step 7.2) is also loaded.
   Take into account that this image collection contains 4 bands. 
-      - ndfi_magnitue_thr10k_m | Threshold applied for NDFI negative anomaly of 10000 (originally ranging 0 to 1, casted to integer values)
+      - ndfi_magnitue_thr10k_m | Threshold applied for NDFI negative anomaly of 10000 (originally floating point ranging 0 to 1, casted to integer values)
       - tBreak | Date of Break detection
       - ndfi_magnitude | NDFI magnitude, includes positive and negative anomalies
       - ndfi_breakConfidence
