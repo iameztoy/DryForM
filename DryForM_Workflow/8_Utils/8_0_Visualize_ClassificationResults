@@ -60,7 +60,7 @@ var vp_ccdc = {"opacity":1,"bands":["tBreak"],"min":2020.0000,"max":2024.9999,"p
 
 Map.addLayer(pp_tc.selfMask(), vp_tc, "Post-processed Tree Cover", 1);
 Map.addLayer(h.selfMask(), {min: 0, max: 30, palette: palette}, "Post-processed Tree Cover & Heights", 0);
-Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1); //This is only in the Tree Cover domain.
+Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 0); //This is only in the Tree Cover domain.
 Map.addLayer(ccd_e_TC, vp_ccdc, "CCDC-SMA 2020-2024 | NDFI > 10000", 1);
 
 Map.setCenter(-60.2081, -20.7128, 12);
