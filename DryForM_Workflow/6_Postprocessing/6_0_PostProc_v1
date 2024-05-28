@@ -59,7 +59,7 @@ var lc_refine_trees = lc_refine.eq(1); //Get only trees
 var lc_refine_trees_m = lc_refine_trees.updateMask(eq0).unmask().clip(aoi);
 
 // We correct the original classification by filling the nodata values
-var ic_tree_c = target_trees.unmask().add(lc_refine_trees_m.unmask())
+var ic_tree_c = target_trees.unmask().add(lc_refine_trees_m.unmask());
 
 
 // Export with covering grid
