@@ -72,8 +72,8 @@ If replicated, the user shall create an empty image collection where all tiles w
 //---------------------------------------------------------------------------//
 
 //var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
-var helper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/utilities');
-var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/wrapper');
+var helper = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/s1_code/utilities');
+var wrapper = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/s1_code/wrapper');
 
 //---------------------------------------------------------------------------//
 // DEFINE GENERAL PARAMETERS
