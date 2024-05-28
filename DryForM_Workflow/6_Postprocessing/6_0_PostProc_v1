@@ -16,6 +16,9 @@ Note that LC_Refine (iteration 1) is prepared to get samples, so it should not b
 This is just a method to mitigate the artifacts but they still remain; mainly as a consequence of overlapping areas of Sentinel-1 passes.
 Ideally this has to be corrected in the imagery pre-processing step so the artifacts are not inherited in the classification outcome.
     A preliminary version is available but not included in the current version release.
+    
+Minimum Mapping Areas filtering was integrated within the GFC20 workflow. The same could be implemented here.
+Canopy Heights can be also further filtered. This has been partially implemented in script 8.0.
 
 */
 
