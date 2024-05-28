@@ -1,20 +1,25 @@
 
 //************************************************************************** 
-// Correcting nodata in the classification outcome
+// DRYFORM - Step 6.0 - Correcting nodata in the classification outcome
 //************************************************************************** 
 
-// These are the classifications of the best performing models.
-// The aim of this script is to partially correct the artifacts created by the imagery pre-processing step. 
-// Some areas remained as nodata (e.g. mountain shadows, border artifacts, etc.). 
-// The idea is to replace these nodata values (only for Tree Cover and mangroves) by the LC_Refine for post-processing layer (iteration 2)
-// The LC_Refine is already exported as an asset.
+/* 
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-// Note that LC_Refine (iteration 1) is prepared to get samples, so it should not be used in this step.
-// This is just a method to mitigate the artifacts but they still remain; mainly as a consequence of Sentinel-1 overlapped areas.
-// Ideally this has to be corrected in the imagery pre-processing step.
+These is applied over the classifications of the best performing models.
+The aim of this script is to partially correct the artifacts created by the imagery pre-processing step. 
+Some areas remained as nodata (e.g. mountain shadows, border artifacts, etc.). 
+The idea is to replace these nodata values (only for Tree Cover and mangroves) by the LC_Refine for post-processing layer (iteration 2)
+The LC_Refine is already exported as an asset.
+
+Note that LC_Refine (iteration 1) is prepared to get samples, so it should not be used in this step.
+This is just a method to mitigate the artifacts but they still remain; mainly as a consequence of overlapping areas of Sentinel-1 passes.
+Ideally this has to be corrected in the imagery pre-processing step so the artifacts are not inherited in the classification outcome.
+    A preliminary version is available but not included in the current version release.
+
+*/
 
 // Target AOI for export | All go to the same asset
-
 var chaco_b = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var caatinga_b = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado_b = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
