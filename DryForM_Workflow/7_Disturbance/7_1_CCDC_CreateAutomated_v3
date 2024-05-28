@@ -7,24 +7,18 @@
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 Adapted from Wienn - GEE Forum
  
-This script runs a temporal segmentation process (CCD algorithm) to extract breakpoints from Landsat 8 and 9 time series (2013-2024)
-Even if possible, it does not directly extract the CCD bands, coefficients, etc. but it goes a step beyond:
-  - It postprocesses the CCD by stablishing NDFI thresholds and crosses the outcomes with the GFC20 dataset;
-  - It includes a step to remove noisy pixels. You can change the connected pixels parameter.
-  - This means that only significant changes (higher than the NDFI threshold) are visible within the forest limits stablished by the GFC20 datasets.
-  - The mask could be changed to any other land cover class (e.g. shrubs or other wooded land)
-  - In addition to the thresholded band, three additional bands are also exported -> tBreak, ndfi magnitude and ndfi magnitude confidence.
-  - These bands have also been masked by the same mask to create the thresholded band.
-  
-  - Note that the process can be also split in two parts:
-      - 1/ Export the CCD coefficients as assets and:
-      - 2/ Run the post-processing on the exported assets in a separate script (7.2)
-     
-      - This might be necessary if the current process runs out of memory
-      - The purpose of doing all in one step is to save storage memory. The CCD outputs are very heavy. For a cg_scale of 100000 = 8Gb approx. 
-      - Alternativelly, the cg_scale parameter can be changed (e.g. 40000) to find the optimal scale and avoid memory errors
-          However, this creates many more tiles.
-          
+This module is divided into two different blocks:
+
+  7.1 Create (current script) | Creates an ImageCollection of Landsat scenes and runs CCDC. Results are stored as an asset
+      This includes also the calculation of the NDFI Index - Normalized Degradation Fraction Index (NDFI; Souza et al., 2005) | Spectrally unmixed data.
+      Endmembers are already available in the code
+  7.2 Extract | This script is run once 7.1 is finished and results exported as an asset. 
+      It calculates/extracts five different bands. The idea is to detect the break dates (disturbance dates) and apply a given threshold (e.g. 10000) to only the 
+      negative values of the NDFI magnitude change band.
+      
+  This method has not been automated -> Thus, there is still run to improve and automate the process. 
+
+
   - Parameters that can be changed:
       - aoi: area of interest
       - cg_scale: Defines the size of the tiles. The greater the size, the more time will take the task to process. 
