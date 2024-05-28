@@ -98,7 +98,7 @@ Map.addLayer(gtpol_trchaco, {color: "green"}, "Training Polygons Chaco", 0);
 Map.addLayer(gtpol_vlchaco, {color: "orange"}, "Validation Polygons Chaco", 0);
 
 Map.addLayer(GTPoint_DF_Balanced_chaco, {color: "red"}, "Training Points Chaco Balanced", 0);
-Map.addLayer(GTPol_DF_Balanced_chaco, {color: "red"}, "Training Polygons Chaco Balanced", 0);
+//Map.addLayer(GTPol_DF_Balanced_chaco, {color: "red"}, "Training Polygons Chaco Balanced", 0);
 
 Map.addLayer(gtpoint_trcaatinga, {color: "green"}, "Training Points Caatinga", 0);
 Map.addLayer(gtpoint_vlcaatinga, {color: "orange"}, "Validation Points Caatinga", 0);
@@ -106,7 +106,7 @@ Map.addLayer(gtpol_trcaatinga, {color: "green"}, "Training Polygons Caatinga", 0
 Map.addLayer(gtpol_vlcaatinga, {color: "orange"}, "Validation Polygons Caatinga", 0);
 
 Map.addLayer(GTPoint_DF_Balanced_caatinga, {color: "red"}, "Training Points Caatinga Balanced", 0);
-Map.addLayer(GTPol_DF_Balanced_caatinga, {color: "red"}, "Training Polygons Caatinga Balanced", 0);
+//Map.addLayer(GTPol_DF_Balanced_caatinga, {color: "red"}, "Training Polygons Caatinga Balanced", 0);
 
 Map.addLayer(gtpoint_trcerrado, {color: "green"}, "Training Points Cerrado", 0);
 Map.addLayer(gtpoint_vlcerrado, {color: "orange"}, "Validation Points Cerrado", 0);
@@ -114,7 +114,7 @@ Map.addLayer(gtpol_trcerrado, {color: "green"}, "Training Polygons Cerrado", 0);
 Map.addLayer(gtpol_vlcerrado, {color: "orange"}, "Validation Polygons Cerrado", 0);
 
 Map.addLayer(GTPoint_DF_Balanced_cerrado, {color: "red"}, "Training Points Cerrado Balanced", 0);
-Map.addLayer(GTPol_DF_Balanced_cerrado, {color: "red"}, "Training Polygons Cerrado Balanced", 0);
+//Map.addLayer(GTPol_DF_Balanced_cerrado, {color: "red"}, "Training Polygons Cerrado Balanced", 0);
 
 Map.addLayer(gtpoint_trtanzania, {color: "green"}, "Training Points Tanzania", 0);
 Map.addLayer(gtpoint_vltanzania, {color: "orange"}, "Validation Points Tanzania", 0);
@@ -122,4 +122,4 @@ Map.addLayer(gtpol_trtanzania, {color: "green"}, "Training Polygons Tanzania", 0
 Map.addLayer(gtpol_vltanzania, {color: "orange"}, "Validation Polygons Tanzania", 0);
 
 Map.addLayer(GTPoint_DF_Balanced_tanzania, {color: "red"}, "Training Points Tanzania Balanced", 0);
-Map.addLayer(GTPol_DF_Balanced_tanzania, {color: "red"}, "Training Polygons Tanzania Balanced", 0);
+//Map.addLayer(GTPol_DF_Balanced_tanzania, {color: "red"}, "Training Polygons Tanzania Balanced", 0);
