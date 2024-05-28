@@ -6,14 +6,16 @@
 /*
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
-This script implements a Random Forest classifier. Hyperparameter values can be changed and may depend on the hyperparameter fine-tunning step See section 5.1
-The input bands to train the RF can be easily changed within the "bands" variable.
-The script also prints:
-
-    1/ All the accuracy metrics (i.e. Confusion matrix, overall accuracy, user and producer accuracy, F1-Score and Kappa index)
-    2/ Feature importances tables
+The objective of this script is to implement a Random Forest Classifier. Consider that:
     
-The classifier or model can be exported as an asset as well as the classified image.
+    Ground truth has been created by visual interpretation.
+    Satellite imagery should be processed and exported as an asset beforehand (see section 3);
+    Random Forest parameters can be fine tunned in step 5.1. Please replace them accordingly;
+    The script provides as an outcome all the necessary accuracy metrics;
+    The model can be saved as an asset for posterior use;
+    The classified image can be exported as an asset. 
+
+Note that Object oriented approach was also implemented in the frame of DryForM project. 
 */
 
 
