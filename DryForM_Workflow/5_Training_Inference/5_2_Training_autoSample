@@ -3,7 +3,14 @@
 // DRYFORM - Step 5.2 - Training - Pixel Based
 //***********************************************************
 
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+The objective of this script is the same as step "5.2. Training" but implementing samples that were automatically extracted from the Sampling Framework
+
 // pb = Pixel Based
+*/
+
 
 //Areas of Interest | Included within the Ground Truth 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
