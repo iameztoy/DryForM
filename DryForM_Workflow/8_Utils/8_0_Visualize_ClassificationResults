@@ -38,15 +38,7 @@ var palette = palettes.colorbrewer.YlGn[7];
 var vp_tc = {palette:"green"};
 
 Map.addLayer(pp_tc.selfMask(), vp_tc, "Post-processed Tree Cover", 1);
-Map.addLayer(h.selfMask(), {min: 0, max: 30, palette: palette}, "Post-processed Tree Cover & Heights");
+Map.addLayer(h.selfMask(), {min: 0, max: 30, palette: palette}, "Post-processed Tree Cover & Heights", 0);
 Map.addLayer(m5, {palette: "orange"}, "Mask height <5", 1); //This is only in the Tree Cover domain.
 
 
-// Adding World Cover for comparison
-
-var wc2021 = ee.ImageCollection('ESA/WorldCover/v200').first();
-var visualization = {bands: ['Map'],};
-
-Map.centerObject(pp_tc);
-Map.setOptions("SATELLITE");
-Map.addLayer(wc2021, visualization, 'World Cover 2021', 0);
