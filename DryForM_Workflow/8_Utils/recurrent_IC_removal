@@ -1,3 +1,9 @@
+
+//***********************************************************
+// DRYFORM - Step 8.1 - Recurrent removal of images in
+//                  Image Collections
+//***********************************************************
+
 var asset = "projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania"
 
 var ic = ee.ImageCollection(asset);
