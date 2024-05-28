@@ -1,0 +1,95 @@
+
+//***********************************************************
+// DRYFORM - Step 1.1 | OPTIONAL | Export to Drive
+//*********************************************************** 
+
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+This script is to export the LCRefine layer to Drive.
+Currently it takes the dataset that has been previously exported as an asset | See Step 1
+Alternativelly, export to drive can be directly executed within the same script used to derive the layer (step 1)
+*/
+
+var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
+var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
+var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
+var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
+
+var aoi = caatinga;
+var aoi_n = "caatinga";
+
+var lcrefine = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Framework/LC_Refine").mosaic().clip(aoi);
+
+//
+
+aoi = aoi.geometry();
+var Zones = aoi.coveringGrid({
+  	proj: "EPSG:4326", //EPSG:32720
+  	scale: 300000
+});
+
+// CoveringGrid produces a strange ID so I make a new fc with proper
+// unique id. This way we can parse them to the name while running the Export Loop.
+// Take into account that we need to differentiate each tile so we do not have the same name while exporting; otherwise you get an error.
+
+// make a list of length of features
+var idList = ee.List.sequence(0,Zones.size().subtract(1)); 
+// featureCollection to a List
+var list = Zones.toList(Zones.size());
+// set the system:index
+var zonesID = ee.FeatureCollection(idList.map(function(newSysIndex){
+  var feat = ee.Feature(list.get(newSysIndex));
+  // format number to string (system:index must be a string)
+  var indexString = ee.Number(newSysIndex).format('%03d'); //3 is until 999, increase if needed 
+                                                          // but big chance of client crash while exporting. 
+                                                          // Take into account that this is a loop on the client side.
+  return feat.set('system:index', indexString, 'ID', indexString);
+}));
+//Set 30° N/S Aoi
+//var tropic = ee.Geometry.Polygon([[[-120, 30],[-120, -30],[165, -30],[165, 30]]], null, false);
+
+Map.addLayer(lcrefine,{"min":0,"max":10}, "LC Refine");
+Map.addLayer(zonesID, null, "Zones ID");
+Map.addLayer(aoi, null, "AOI Boundary");
+Map.centerObject(aoi);
+
+var featlist = zonesID.getInfo()["features"];
+for (var f in featlist) {
+  var feat = ee.Feature(featlist[f]);
+  var dis = feat.get("ID");
+  var disS = dis.getInfo();
+  var name = "tile";  
+  Export.image.toDrive({
+      image: lcrefine,
+      description: "AutoSamples_" + name+disS+"_"+aoi_n,
+      folder: "GEE_forAutoSamples",
+      fileNamePrefix: "AutoSamples_" + name+disS+"_"+aoi_n,
+      //	dimensions:,
+      region: aoi,
+      scale: 10,
+      crs: 'EPSG:4326',
+      //	crsTransform:,
+      maxPixels: 1e13,
+      //	shardSize:,
+      //	fileDimensions:,
+      //	skipEmptyTiles:,
+      fileFormat: 'GeoTIFF',
+      //	formatOptions:,
+      //	priority:,
+      
+      /* 
+      // Export to Asset
+      image: lcrefine,
+      description: name+disS+"_"+aoi_n, //"test", //.toString(), Now the ID is already a string
+      assetId: 'GEE_forAutoSamples/' + name+disS+"_"+aoi_n, //.toString(),
+      crs: 'EPSG:4326',
+      region: feat.geometry().bounds(),
+      scale: 10,
+      maxPixels: 1e13
+      */
+    });
+  }
+  
+
+
