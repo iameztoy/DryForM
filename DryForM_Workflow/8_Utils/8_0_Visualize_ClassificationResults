@@ -9,6 +9,7 @@ var cerrado_aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cer
 var tanzania_aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
 
+//Raw dataset
 var chaco = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_chaco_Pb_buf20_9cl").clip(chaco_aoi);
 var caatinga = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_caatinga_Pb_buf20_9cl").clip(caatinga_aoi);
 var cerrado = ee.Image("projects/hardy-tenure-383607/assets/DryForm_Project/Classification/Class_cerrado_Pb_buf20_9cl").clip(cerrado_aoi);
@@ -20,12 +21,16 @@ var caatinga_tc = caatinga.eq(0).or(caatinga.eq(3));
 var cerrado_tc = cerrado.eq(0).or(cerrado.eq(3));
 var tanzania_tc = tanzania.eq(0).or(tanzania.eq(3));
 
+//Post-processed Tree Cover
+var pp_tc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc").mosaic();
+
 var vp_tc = {palette:"green"};
 
-Map.addLayer(chaco_tc.selfMask(), vp_tc, "Chaco TC", 1);
-Map.addLayer(caatinga_tc.selfMask(), vp_tc, "Caatinga TC", 1);
-Map.addLayer(cerrado_tc.selfMask(), vp_tc, "Cerrado TC", 1);
-Map.addLayer(tanzania_tc.selfMask(), vp_tc, "Tanzania TC", 1);
+Map.addLayer(pp_tc.selfMask(), vp_tc, "Post-processed Tree Cover", 1);
+Map.addLayer(chaco_tc.selfMask(), vp_tc, "Chaco TC", 0);
+Map.addLayer(caatinga_tc.selfMask(), vp_tc, "Caatinga TC", 0);
+Map.addLayer(cerrado_tc.selfMask(), vp_tc, "Cerrado TC", 0);
+Map.addLayer(tanzania_tc.selfMask(), vp_tc, "Tanzania TC", 0);
 
 // Shrubs
 
@@ -36,20 +41,17 @@ var tanzania_sh = tanzania.eq(1);
 
 var vp_sh = {palette:"orange"};
 
-Map.addLayer(chaco_sh.selfMask(), vp_sh, "Chaco Shrubs", 1);
-Map.addLayer(caatinga_sh.selfMask(), vp_sh, "Caatinga Shrubs", 1);
-Map.addLayer(cerrado_sh.selfMask(), vp_sh,"Cerrado Shrubs", 1);
-Map.addLayer(tanzania_sh.selfMask(), vp_sh, "Tanzania Shrubs", 1);
+Map.addLayer(chaco_sh.selfMask(), vp_sh, "Chaco Shrubs", 0);
+Map.addLayer(caatinga_sh.selfMask(), vp_sh, "Caatinga Shrubs", 0);
+Map.addLayer(cerrado_sh.selfMask(), vp_sh,"Cerrado Shrubs", 0);
+Map.addLayer(tanzania_sh.selfMask(), vp_sh, "Tanzania Shrubs", 0);
 
 
-/////// World Cover
+// Adding World Cover for comparison
 
 var dataset = ee.ImageCollection('ESA/WorldCover/v200').first();
 
-var visualization = {
-  bands: ['Map'],
-};
+var visualization = {bands: ['Map'],};
 
 Map.centerObject(dataset);
-
-Map.addLayer(dataset, visualization, 'Landcover');
+Map.addLayer(dataset, visualization, 'Landcover', 0);
