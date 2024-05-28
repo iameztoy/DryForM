@@ -12,7 +12,7 @@ This classification version does not include any MMU filtering, it is the outcom
 The tree cover is also crossed with tree cover heights coming from Lang (Potapov & Meta/WRI products are also available).
 It also calculates the Tree Canoply Heights below 5 meters.
 This is to check which areas classified as tree cover are not aligned to FAO´s forest definition (only in terms of canopy height)
-    Areas below 5 meters are shown in orange.
+    Areas below 5 meters are shown in orange. This could be probalby classified as shrubs.
 
 */
 
