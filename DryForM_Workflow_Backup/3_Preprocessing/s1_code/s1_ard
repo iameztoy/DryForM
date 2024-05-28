@@ -59,8 +59,8 @@ References
     Remote Sensing of Environment2222015,156, 1–10.
 **/
 
-var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper'); 
-var helper = require('users/adugnagirma/gee_s1_ard:utilities');
+var wrapper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/wrapper'); 
+var helper = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/utilities');
 
 //Original:
 //var wrapper = require('users/adugnagirma/gee_s1_ard:wrapper');
