@@ -15,9 +15,9 @@ var terrain_flattening = require('users/adugnagirma/gee_s1_ard:terrain_flattenin
 var border_noise_correction = require('users/adugnagirma/gee_s1_ard:border_noise_correction');
 */
 
-var speckle_filter = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/speckle_filter');
-var terrain_flattening = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/terrain_flattening');
-var border_noise_correction = require('users/iameztoy/DryForest:Workflow/3_Preprocessing/s1_code/border_noise_correction');
+var speckle_filter = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/s1_code/speckle_filter');
+var terrain_flattening = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/s1_code/terrain_flattening');
+var border_noise_correction = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/s1_code/border_noise_correction');
 
 exports.s1_preproc = function(params) {
   
