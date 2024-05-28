@@ -1,14 +1,16 @@
-// This script has been directly embedded within the TFT-Explorer App.
 
-// Click on the map to inspect the CCDC results for a single pixel (in the console).
+//***********************************************************
+// DRYFORM - Step 7.0 - CCD Inspect Pixels
+//***********************************************************
 
-// Tweak the collection creation as you want (add additional bands or use Sentinel 1?).
-// You might need to update the CCDC configuration to pick up missed breaks.
-// Look at ee.Algorithms.TemporalSegmentation.Ccdc() in the EE docs.
-// Change config -> rerun -> change config -> rerun, until you're happy
-// Then continue to the next example script, which exports the CCDC product as an asset.
+/*
+This script has been directly embedded within the TFT-Explorer App but it can also be run here. See module 9.
 
-var temporalSegmentation = require('users/iameztoy/DryForest:Workflow/7_Disturbance/req/temporalSegmentation');
+Click on the map to inspect the CCDC results for a single pixel.
+Adapted from Wiell, GEE Forum
+*/
+
+var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
 Map.style().set('cursor', 'crosshair')
 //Map.onClick(chartPoint)
