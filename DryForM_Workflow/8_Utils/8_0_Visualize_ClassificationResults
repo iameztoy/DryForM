@@ -26,6 +26,7 @@ CCD Extract (Results of Step 7.2) is also loaded.
       It shows the disturbances between 2020 and 2024. 
       NDFI threshold was established as to detect full LC conversion. 
       However, any kind of disturbance might be included (e.g. fires, droughts, floods, deforestation, etc.)
+      This product has not been validated.
       
       The application in Module 9 (9_App), provides more information (among others, CCD plots and imagery chips) to better interpret these disturbances and the drivers behind them.
       
