@@ -1,6 +1,6 @@
 
 //***********************************************************
-// DRYFORM - Step 8.0 - Data/Imagery preprocessing
+// DRYFORM - Step 8.0 - Visualize Classification Results
 //***********************************************************
 
 var chaco_aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
