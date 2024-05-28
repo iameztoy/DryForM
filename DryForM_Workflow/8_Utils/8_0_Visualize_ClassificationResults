@@ -17,11 +17,17 @@ This is to check possible commission error and also areas classified as tree cov
       In some cases this uncertainty is big. Therefore, consider the commission error interpretation of the Tree Cover dataset with caution.
       
 CCD Extract (Results of Step 7.2) is also loaded.
-  Take into account that this image collection contains 4 bands
+  Take into account that this image collection contains 4 bands. 
       - ndfi_magnitue_thr10k_m | Threshold applied for NDFI negative anomaly of 10000
       - tBreak | Date of Break detection
       - ndfi_magnitude | NDFI magnitude, includes positive and negative anomalies
       - ndfi_breakConfidence
+      
+      It shows the disturbances between 2020 and 2024. 
+      NDFI threshold was established as to detect full LC conversion. 
+      However, any kind of disturbance might be included (e.g. fires, droughts, floods, deforestation, etc.)
+      
+      The application in Module 9 (9_App), provides more information (CCD plots and imagery chips) to better interpret these disturbances.
       
 */
 
