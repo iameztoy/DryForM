@@ -3,6 +3,12 @@
 // DRYFORM - Step 8.0 - Visualize Classification Results
 //***********************************************************
 
+/*
+Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
+
+All four AOIs are loaded together.
+
+*/
 //Post-processed Tree Cover
 var pp_tc = ee.ImageCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Classification_PostProc/Classification_PostProc").mosaic();
 
