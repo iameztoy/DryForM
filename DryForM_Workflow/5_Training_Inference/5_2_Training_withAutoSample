@@ -9,8 +9,15 @@ Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exp
 The objective of this script is the same as step "5.2. Training" but implementing samples that were automatically extracted from the Sampling Framework
 Note that Object oriented approach was also implemented in the frame of DryForM project.
 
-Satellite imagery should be processed and exported as an asset beforehand.
-Random Forest parameters can be fine tunned in step 5.1. Please replace them accordingly.
+    Satellite imagery should be processed and exported as an asset beforehand;
+
+    Random Forest parameters can be fine tunned in step 5.1. Please replace them accordingly;
+
+    The script provides as an outcome all the necessary accuracy metrics;
+
+    The model can be saved as an asset for posterior use;
+
+    The classified image can be exported as an asset. 
 
 */
 
