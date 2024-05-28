@@ -88,7 +88,7 @@ Map.add(title);
 // Create a panel to hold the chart.
 var panel = ui.Panel();
 panel.style().set({
-  width: '400px',
+  width: '800px',
   position: 'bottom-right'
 });
 Map.add(panel);
