@@ -23,6 +23,7 @@ In order to automate the process, it would be necessary to (for example):
 //require
 var temporalSegmentation = require('users/iameztoy/DryForest:DryForM_Workflow/7_Disturbance/req/temporalSegmentation');
 
+//The CCD outcome created in step 7.1.
 var segmentsImage = ee.Image('projects/hardy-tenure-383607/assets/DryForm_Project/Change/CCD_FractionalYears/tile321_Cerrado');
 print(segmentsImage);
 
@@ -32,7 +33,7 @@ Map.addLayer(geometry, {color:"red"}, "Geometry");
 
 var segments = temporalSegmentation.Segments(segmentsImage, 1);
 
-var dateRange = segments.dateRange('2020-01-01', '2024-05-01');
+var dateRange = segments.dateRange('2020-01-01', '2024-05-01'); //Target date range (it should be always within the range used in 7.1)
 var breakpoint = dateRange.pickBreakpoint({ 
   breakAnalysisBand: 'ndfi', // The band to use when analyzing which breakpoint to provide data for.
   skipBreakInLastSegment: false, // CCDC sometimes detect breaks in the last segment. These can at times be unreliable.
@@ -41,7 +42,6 @@ var breakpoint = dateRange.pickBreakpoint({
   breakSelection: 'CONFIDENCE' // Specify which of the break points to provide data for. One of FIRST, LAST, MAGNITUDE, CONFIDENCE
 });
 
-//gfc20 = gfc20.clip(geometry);
 
 Map.centerObject(segmentsImage);
 Map.addLayer(breakpoint.select('tBreak'), {min: 2020, max: 2024, palette: '#000000, #781C81, #3F60AE, #539EB6, #6DB388, #CAB843, #E78532, #D92120'}, 'tBreak');
@@ -70,6 +70,7 @@ var ndfiBreakConf_m = breakpoint.select('ndfi_breakConfidence').updateMask(mask_
 var ndfi_breaks = ee.Image.cat(ndfiMag_gte10k_m, tBreak_m, ndfiMagnitude_m, ndfiBreakConf_m);
 print(ndfi_breaks);
 
+//Again, this is not automated, thus each tile should be run manually (Automated version under development)
 Export.image.toAsset({
 		image: ndfi_breaks,
     description: "tile321Cerrado",
