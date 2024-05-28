@@ -1,4 +1,8 @@
 
+//***********************************************************
+// DRYFORM - Step 8.0 - Data/Imagery preprocessing
+//***********************************************************
+
 var chaco_aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var caatinga_aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado_aoi = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
