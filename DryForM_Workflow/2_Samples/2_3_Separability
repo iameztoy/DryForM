@@ -10,7 +10,7 @@ This script implementes different separability measures
 Only Jeffries-Matusite is enabled.
 It requires: 
   1/ to precompute the imagery over which the distances will be calculated. **!!**See script 3.0 **!!**;
-  2/ to have ground truth data
+  2/ to have ground truth data stored as an asset
   
 
 *************************************************
