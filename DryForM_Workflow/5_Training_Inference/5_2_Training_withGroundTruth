@@ -15,7 +15,7 @@ The objective of this script is to implement a Random Forest Classifier. Conside
     The model can be saved as an asset for posterior use;
     The classified image can be exported as an asset. 
 
-Note that Object oriented approach was also implemented in the frame of DryForM project. 
+Note that Object oriented approach was also implemented in the frame of DryForM project.
 */
 
 
