@@ -29,7 +29,8 @@ CCD Extract (Results of Step 7.2) is also loaded.
       However, any kind of disturbance might be included (e.g. fires, droughts, floods, deforestation, etc.)
       This product has not been validated.
       
-      CCD plots are also available. Click any pixel to get them.
+      CCD plots are also available. Click any pixel to get them. 
+        The creation of the plot and the associated calculations are slightly different from CCD in section 7.1 (e.g. tmaskBand)
       The application in Module 9 (9_App), provides more information (among others, imagery chips and spectral profiles) to better interpret these disturbances and the drivers behind them.
         Take into account that in the App version, disturbances has been crossed with GFC20 instead of with the Tree Cover product shown in this script.
 
@@ -116,7 +117,7 @@ var chartpoint = function(coords) {
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
 		collection:collection,
     breakpointBands:["ndfi"],
-//	tmaskBands:null,
+//	tmaskBands:null, //Section 7.0 is different from this
 //  minObservations:6,
 //  chiSquareProbability:0.95,
 //	minNumOfYearsScaler:1.33,
