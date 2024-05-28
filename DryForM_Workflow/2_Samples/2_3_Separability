@@ -12,7 +12,7 @@ It requires:
   1/ to precompute the imagery over which the distances will be calculated;
   2/ to have ground truth data
   
-Imagery should be first pre-processed and exported as an asset. See script 3.0
+**!!** Imagery should be first pre-processed and exported as an asset. See script 3.0 **!!**
 
 *************************************************
 *************************************************
