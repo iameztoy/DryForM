@@ -7,6 +7,9 @@
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
 This script implements the RF saved model over the pre-processed imagery. Models can be saved in step 5.2.
+    This can be used to run inference over the same or different Area of Interest;
+    The final/definitive model was trained using all the available bands (72)
+      Therefore, if you intend to re-use this model, you should use all the bands created in the pre-processing step (section 3)
 
 User should take into account that, as of May 2024, saved models cannot be "printed".
 See GEE forum thread: https://groups.google.com/g/google-earth-engine-developers/c/njOjzcRJMB8/m/UVZYizj4BQAJ
