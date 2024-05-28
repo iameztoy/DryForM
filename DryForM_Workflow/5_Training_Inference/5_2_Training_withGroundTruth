@@ -19,9 +19,6 @@ Note that Object oriented approach was also implemented in the frame of DryForM 
 */
 
 
-
-// pb = Pixel Based
-
 //Areas of Interest | Included within the Ground Truth 
 var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
 var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
