@@ -47,6 +47,8 @@ var chartpoint = function(coords) {
     breakpointBands: ["ndfi"]
   })
   */
+  
+//Change parameters if required
   var ccdc = ee.Algorithms.TemporalSegmentation.Ccdc({
 		collection:collection,
     breakpointBands:["ndfi"],
