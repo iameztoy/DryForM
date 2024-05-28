@@ -1,4 +1,4 @@
-var dataset = ee.ImageCollection('JRC/GFC2020/V1').mosaic(); 
+var dataset = ee.ImageCollection('JRC/GFC2020/V1').mosaic(); //Replace this by the target dataset
 
 var visualization = {
   bands: ['Map'],
@@ -8,7 +8,7 @@ Map.setCenter(0.0, 0.0, 2);
 
 Map.addLayer(dataset, visualization, 'EC JRC Global forest cover 2020 – V1');
 
-var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');//
+var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');//From Clement Bourgoin
 Map.addLayer(Zones)
 
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
@@ -23,8 +23,7 @@ var AllClasses = ee.Image.cat(
       dataset_m.eq(1).rename('Forest'),  
       dataset_m.eq(0).rename('Nonforest'))
 
-
-
+//From Clement Bourgoin
 var LOOPsamples= function(feature) {
   var vals = AllClasses.multiply(ee.Image.pixelArea()).reduceRegion({
     reducer: ee.Reducer.sum(), 
