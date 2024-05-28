@@ -4,7 +4,7 @@
 //                  Image Collections
 //***********************************************************
 
-var asset = "projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania"
+var asset = "projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanzania" //IC you want to remove
 
 var ic = ee.ImageCollection(asset);
 
