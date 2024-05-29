@@ -19,16 +19,16 @@ var Zones=ee.FeatureCollection('users/bourgoinclement2/World_UNctry_grid');//Fro
 
 
 var WC2020 = ee.ImageCollection("ESA/WorldCover/v100").first().unmask();
-Map.addLayer(WC2020)
-var WC2020_land = (WC2020.gte(1)).and(WC2020.neq(80))
-Map.addLayer(WC2020_land.updateMask(WC2020_land))
+Map.addLayer(WC2020);
+var WC2020_land = (WC2020.gte(1)).and(WC2020.neq(80));
+Map.addLayer(WC2020_land.updateMask(WC2020_land));
 
-var dataset_m = dataset.unmask().updateMask(WC2020_land)
+var dataset_m = dataset.unmask().updateMask(WC2020_land);
 Map.addLayer(dataset_m.updateMask(dataset_m), {}, 'EC JRC Global forest cover 2020 – V1 m');
 
 var AllClasses = ee.Image.cat(
       dataset_m.eq(1).rename('Forest'),  
-      dataset_m.eq(0).rename('Nonforest'))
+      dataset_m.eq(0).rename('Nonforest'));
 
 var LOOPsamples= function(feature) {
   var vals = AllClasses.multiply(ee.Image.pixelArea()).reduceRegion({
@@ -50,7 +50,7 @@ Export.table.toDrive({
 });
 
 
-Map.addLayer(Zones)
+Map.addLayer(Zones);
 Map.setCenter(0.0, 0.0, 2);
 Map.addLayer(dataset, visualization, 'EC JRC Global forest cover 2020 – V1');
 
