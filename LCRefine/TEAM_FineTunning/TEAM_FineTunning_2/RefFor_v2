@@ -1,5 +1,0 @@
-/**** Start of imports. If edited, may not auto-convert in the playground. ****/
-var ic = ee.ImageCollection("projects/ee-dryforestia/assets/Global_forest_step1v2"),
-    visp = {"opacity":1,"bands":["Map"],"max":1,"gamma":1};
-/***** End of imports. If edited, may not auto-convert in the playground. *****/
-Map.addLayer(ic, visp)
