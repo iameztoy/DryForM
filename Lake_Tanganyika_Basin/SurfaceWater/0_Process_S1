@@ -336,7 +336,7 @@ var processTiles = function(tile){
     });
   }
   
-  return  s1s2final;
+  return  s1_final;
 
 };
 
