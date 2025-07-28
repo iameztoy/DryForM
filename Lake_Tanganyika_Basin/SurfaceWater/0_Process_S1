@@ -275,13 +275,14 @@ var processTiles = function(tile){
   var s1_comp = ee.ImageCollection.fromImages(compList_s1);
   var s1db_c = s1_comp.map(helper.lin_to_db);
   
-  /*
+  /* //28/07/2025 I am disabling this to test the output size of the images without conversion to byte
+  
   function int16(imgsc) {
     return imgsc.multiply(1000).int16();
   }
   
   var s1int = s1db.map(int16);
-  */
+  
   
   //These values can be changed
   var clamp_min=-50; 
@@ -292,8 +293,9 @@ var processTiles = function(tile){
   }
   
   var s1db = s1db_c.map(s1byte);
+  */
   
-  var s1_final = s1db.toBands();
+  var s1_final = s1db_c.toBands(); //s1db.toBands();
   
   //Map.addLayer(s1_final)
   //print("s1 final (to db)", s1db.first());
