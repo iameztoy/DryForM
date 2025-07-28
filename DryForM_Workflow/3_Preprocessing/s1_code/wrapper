@@ -121,7 +121,7 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
   })}
   else {s1 = s1}
   
-  print('Number of images in S1 collection: ', s1.size());
+  //print('Number of images in S1 collection: ', s1.size());
   
   /************************************  
    * 2. Additional Border Noise Correction  
@@ -129,7 +129,8 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
   
   if (params.APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION) {
     var s1_1 = s1.map(border_noise_correction.f_mask_edges) 
-    print('ADDITIONAL BORDER NOISE CORRECTION COMPLETED') }
+    //print('ADDITIONAL BORDER NOISE CORRECTION COMPLETED')
+    }
   else {s1_1 = s1}
 
 
@@ -139,11 +140,11 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
  if (params.APPLY_SPECKLE_FILTERING) {
     if (params.SPECKLE_FILTER_FRAMEWORK == 'MONO') {
         s1_1 = ee.ImageCollection(speckle_filter.MonoTemporal_Filter(s1_1, params.SPECKLE_FILTER_KERNEL_SIZE, params.SPECKLE_FILTER ))
-        print('MONO-TEMPORAL SPECKLE FILTERING COMPLETED') 
+        //print('MONO-TEMPORAL SPECKLE FILTERING COMPLETED') 
   }
     else {
         s1_1 = ee.ImageCollection(speckle_filter.MultiTemporal_Filter(s1_1, params.SPECKLE_FILTER_KERNEL_SIZE, params.SPECKLE_FILTER,params.SPECKLE_FILTER_NR_OF_IMAGES ));
-        print('MULTI-TEMPORAL SPECKLE FILTERING COMPLETED') 
+        //print('MULTI-TEMPORAL SPECKLE FILTERING COMPLETED') 
   }    
  }  
  
@@ -153,7 +154,7 @@ var s1 = ee.ImageCollection('COPERNICUS/S1_GRD_FLOAT')
   
   if (params.APPLY_TERRAIN_FLATTENING) {
       s1_1 = ee.ImageCollection(terrain_flattening.slope_correction(s1_1, params.TERRAIN_FLATTENING_MODEL, params.DEM, params.TERRAIN_FLATTENING_ADDITIONAL_LAYOVER_SHADOW_BUFFER)); 
-      print('RADIOMETRIC TERRAIN NORMALIZATION COMPLETED')
+      //print('RADIOMETRIC TERRAIN NORMALIZATION COMPLETED')
   }
   
       //Clip to roi (input)
