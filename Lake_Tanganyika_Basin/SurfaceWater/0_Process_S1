@@ -5,6 +5,8 @@
 
 /*
 
+// ADAPTED from DryForM project to Tanganyika - Only S1
+
 Author: Iban Ameztoy | Joint Research Center - European Commission | DryForM Exploratory Research Project 2022-2024 - Units S.4/D.1
 
 version 0.9. Preliminary notes: The entire process can be further optimized. The outcomes still generate some artifacts mainly because some Sentinel-1 overlapping areas
@@ -78,27 +80,9 @@ var wrapper = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing
 // DEFINE GENERAL PARAMETERS
 //---------------------------------------------------------------------------//
 
-// FAO Ecozones dataset | This has been used as a basis to define AOI boundaries.
-// It can be replaced by any other vector asset or area of interest.
 
-//var fao_ecoz = ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/Ancillary/FAO_ecozones");
-// Filter the AOI of interest
-//var ecoz = fao_ecoz.filter(ee.Filter.eq('ECO_ZONE_I', 12698));
-//Chaco: 12487, Cerrado: 11045, Caatinga: 11271 | Tanzania was extracted from GDAM.
-//Currently processing: 12708, 12698, 
-//Amazonia: 9479, etc.
 
 var tanganyika = ee.FeatureCollection("projects/ee-iameztoy/assets/Lake_Tanganyika_Basin/AOI/Tanganyika_AOI");
-
-//Already extracted Features for the 4 AOIs of DryForM Project:
-//Use "ECO_ZONE_I" attribute otherwise | See ecoz variable
-
-/*
-var caatinga = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Caatinga");
-var cerrado = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrado");
-var chaco = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
-var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
-*/ 
 
 var aoisel = tanganyika; var expname = "Tanganyika";
 var aoi = aoisel.geometry(); //.buffer(100000);
@@ -106,52 +90,27 @@ var aoi = aoisel.geometry(); //.buffer(100000);
 
 //Time intervals for composites
 var year = 2020;
-var str0 = "2019-07-01"; var end0 = "2021-04-01"; // Initial Image Collection dates to allow extended imagery search for interpolation
+var str0 = "2023-01-01"; var end0 = "2025-07-01"; // Initial Image Collection dates to allow extended imagery search for interpolation
 var str = year.toString()+"-01-01"; var end = (year+1).toString()+"-01-01"; // Second Image Collection dates to calculate medians within the months of interest (see year and t_int parameter)
 
 var t_int4 = ee.List([[1,3], [4,6], [7,9], [10, 12]]); //quarterly composites
 var t_int6 = ee.List([[1,2], [3,4], [5,6], [7, 8], [9, 10], [11, 12]]); //bimonthly composites
 var t_int12 = ee.List([[1,1], [2,2], [3,3], [4, 4], [5, 5], [6, 6], [7,7], [8,8], [9,9], [10, 10], [11, 11], [12, 12]]); //monthly composites
-var t_int = t_int4;
+var t_int = t_int12;
 
 var cg_scale = 100000; // Scale for Covering Grid. Several tests done to see which is the optimal scale: 
                        // The objective is to see which scale does not give memory problems while still maximizing the area covered to reduce processing time.
                       
-var s1s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "iBI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
 
-    //---------------------------------------------------------------------------//
-    // DEFINE SENTINEL-2 PARAMETERS
-    //---------------------------------------------------------------------------//
 
-    var collection = "2A";
-    var bands = ["B2", "B3","B4", "B8", "B11", "B12"]; // bands to filter the S2 collection
-    var glcm_bands = ["gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"];
-    var s2_fbands = ["B3", "B4", "B8", "B11", "B12", "gNDVI", "MSAVI", "iBI", "SI", "gray_asm_glcm","gray_contrast_glcm","gray_corr_glcm","gray_ent_glcm","gray_var_glcm","gray_idm_glcm","gray_savg_glcm"]; //final bands to export
+//---------------------------------------------------------------------------//
+// DEFINE SENTINEL-1 PARAMETERS
+//---------------------------------------------------------------------------// 
     
-    var cloud_per = 65; //Still want to take advantage of cloud free regions in the 45% of area with no clouds.
-    var QA_BAND = 'cs'; // Use 'cs' or 'cs_cdf', depending on your use case; see docs for guidance.
-    var CLEAR_THRESHOLD = 0.55; // The threshold for masking; values between 0.50 and 0.65 generally work well.
-                            // Higher values will remove thin clouds, haze & cirrus shadows.
-
-    // GLCM Texture parameters
-    var glcm_band = "gray";
-    var glcm_size = 2; // Higher values generalize the textures too much.
-
-    var days = 540; // How many days go backward/forward in the interpolation process? Original 30. For quarters: From Nov 15 2019 to March 31 2020: 140.
-                                                                                                            //From Nov 15 2020 to Feb 15 2021: 140
-
-
-    if (collection == "2A"){var col = 'COPERNICUS/S2_SR_HARMONIZED'}
-    if (collection == "1C"){var col = 'COPERNICUS/S2_HARMONIZED'}
-   
-    //---------------------------------------------------------------------------//
-    // DEFINE SENTINEL-1 PARAMETERS
-    //---------------------------------------------------------------------------// 
-    
-    // ****!!*** Take a look within the function  ****!!***
-    //
-    // I have moved the parameters section to the function so the tiles "aoi_interm" can be iterated.
-    // Alternatively bring the wrapper here but it makes the code very long.
+// ****!!*** Take a look within the function  ****!!***
+//
+// I have moved the parameters section to the function so the tiles "aoi_interm" can be iterated.
+// Alternatively bring the wrapper here but it makes the code very long.
 
 
 //---------------------------------------------------------------------------//
@@ -266,7 +225,7 @@ var processTiles = function(tile){
               //GEOMETRY: ee.Geometry.Polygon([[[104.80, 11.61],[104.80, 11.36],[105.16, 11.36],[105.16, 11.61]]], null, false), //Uncomment if providing coordinates
               //GEOMETRY: ee.Geometry.Polygon([[[112.05, -0.25],[112.05, -0.45],[112.25, -0.45],[112.25, -0.25]]], null, false),
               //2. Additional Border noise correction
-              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: true,
+              APPLY_ADDITIONAL_BORDER_NOISE_CORRECTION: false,
               //3.Speckle filter
               APPLY_SPECKLE_FILTERING: true,
               SPECKLE_FILTER_FRAMEWORK: 'MULTI',
@@ -306,7 +265,7 @@ var processTiles = function(tile){
     var endMonth = ee.List(months).get(1);
     var monthFilter = ee.Filter.calendarRange(startMonth, endMonth, 'month');
     var seasonFiltered = s1_preprocces.filter(monthFilter);
-    var composite = seasonFiltered.mean()
+    var composite = seasonFiltered.min() // This has been changed for the Tanganyika project (before was mean)
     //var toDB = seasonFiltered.map(helper.lin_to_db);
     //if (parameter.FORMAT=='DB'){var s1_composite = composite.log10().multiply(10.0)}
     return composite.select("VV", "VH").clip(interm_aoi);
@@ -344,13 +303,13 @@ var processTiles = function(tile){
   // MERGE S1 AND S2 COMPOSITES | Rename for export as asset
   //---------------------------------------------------------------------------//
   
-  var s1s2_final = s2final_i.addBands(s1_final);
   
-  var blist = s1s2_final.bandNames();
+  
+  var blist = s1_final.bandNames();
   var cat = function(ele){return ee.String("t").cat(ele)};
   var ren = blist.map(cat);
 
-  var s1s2final = s1s2_final.select(blist).rename(ren);
+  var s1_final = s1_final.select(blist).rename(ren);
   //print("S1S2 final", s1s2final); // You may get an error if you turn this on.
 
   ////////////// EXPORT ///////////////////////
@@ -364,7 +323,7 @@ var processTiles = function(tile){
     var name = "tile"; 
 
   Export.image.toAsset({
-    image: s1s2final,
+    image: s1final,
     description: name+disS+"_"+expname, //"test", //.toString(), Now the ID is already a string
     assetId: 'projects/hardy-tenure-383607/assets/DryForm_Project/PreprocessedImagery/s1s2_Tanganyika/' + name+disS+"_"+expname, //.toString(),
     pyramidingPolicy:"mean", //Activate and select the Pyramiding Policy
