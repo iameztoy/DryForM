@@ -25,12 +25,12 @@ var maskAngLT452 = function(image) {
  * (mask out angles <= 30.63993) */
 var maskAngGT30 = function(image) {
  var ang = image.select(['angle']);
- return image.updateMask(ang.gt(30.63993)).set('system:time_start', image.get('system:time_start')); //original 30.63993
+ return image.updateMask(ang.gt(45.23993)).set('system:time_start', image.get('system:time_start')); //original 30.63993
 };
 
 /** Remove edges.*/
 var maskEdge = function(image) {
-  var mask = image.select(0).unitScale(-25, 5).multiply(255).toByte()//.connectedComponents(ee.Kernel.rectangle(1,1), 100);
+  var mask = image.select(0).unitScale(-25, 5).multiply(255).toByte().connectedComponents(ee.Kernel.rectangle(1,1), 100);
   return image.updateMask(mask.select(0)).set('system:time_start', image.get('system:time_start'));  
 };
 
@@ -39,7 +39,7 @@ exports.f_mask_edges = function(image) {
   var db_img = helper.lin_to_db(image)
   var output = maskAngGT30(db_img);
   output = maskAngLT452(output);
-  //output = maskEdge(output); //originally commented
-  //output = helper.db_to_lin(output);
+  output = maskEdge(output); //originally commented
+  output = helper.db_to_lin(output);
   return output.set('system:time_start', image.get('system:time_start'));
 };
