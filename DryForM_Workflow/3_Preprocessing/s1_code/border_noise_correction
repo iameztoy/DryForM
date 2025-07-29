@@ -18,14 +18,14 @@ var helper = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/
 /** (mask out angles >= 45.23993) */
 var maskAngLT452 = function(image) {
  var ang = image.select(['angle']);
- return image.updateMask(ang.lt(45.23993)).set('system:time_start', image.get('system:time_start')); //original 45.23993
+ return image.updateMask(ang.lt(45)).set('system:time_start', image.get('system:time_start')); //original 45.23993
 };
 
 /** Function to mask out edges of images using angle.
  * (mask out angles <= 30.63993) */
 var maskAngGT30 = function(image) {
  var ang = image.select(['angle']);
- return image.updateMask(ang.gt(30.63993)).set('system:time_start', image.get('system:time_start')); //original 30.63993
+ return image.updateMask(ang.gt(31)).set('system:time_start', image.get('system:time_start')); //original 30.63993
 };
 
 /** Remove edges.*/
@@ -39,7 +39,7 @@ exports.f_mask_edges = function(image) {
   var db_img = helper.lin_to_db(image)
   var output = maskAngGT30(db_img);
   output = maskAngLT452(output);
-  output = maskEdge(output); //originally commented
+  //output = maskEdge(output); //originally commented
   output = helper.db_to_lin(output);
   return output.set('system:time_start', image.get('system:time_start'));
 };
