@@ -18,7 +18,7 @@ var helper = require('users/iameztoy/DryForest:DryForM_Workflow/3_Preprocessing/
 /** (mask out angles >= 45.23993) */
 var maskAngLT452 = function(image) {
  var ang = image.select(['angle']);
- return image.updateMask(ang.lt(43)).set('system:time_start', image.get('system:time_start')); //original 45.23993
+ return image.updateMask(ang.lt(45)).set('system:time_start', image.get('system:time_start')); //original 45.23993
 };
 
 /** Function to mask out edges of images using angle.
