@@ -817,4 +817,3 @@ if (BENCHMARK_MODE) {
     }
   }
 }
-
