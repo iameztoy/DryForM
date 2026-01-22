@@ -2,16 +2,14 @@
  * AlphaEarth / Satellite Embeddings + Supervised LC
  * SINGLE MODE  OR  BENCHMARK MODE (AOIs x Algorithms)
  *
- * FIX IN THIS VERSION:
- *  - Removed ee.Boolean(...) wrapper (caused: "ee.Boolean is not a function")
- *  - Uses plain JS boolean for hasMangroves in SINGLE MODE.
+ * NEW IN THIS VERSION:
+ *  - SINGLE MODE: optional export of a SINGLE CLASS MASK image
+ *    (binary mask), enabled by default, default class = 0 (Tree Cover).
+ *  - Per-class visualization layers restored and made AOI-aware
+ *    using the remap arrays (so Chaco also displays correct classes).
  *
- * FEATURES:
- *  - Benchmark mode: NO prints, NO map layers, exports Drive CSV only.
- *  - Single mode: prints (explain, train CM, importance, validation CM, metrics)
- *               + embeddings + AOI + classified layer
- *               + per-class mask layers with original palettes
- *               + short task names for exports
+ * BENCHMARK MODE:
+ *  - No prints, no map layers. Exports Drive CSV table only.
  *******************************************************/
 
 
@@ -19,7 +17,7 @@
 // 0) MASTER MODE SWITCH
 // ======================================================
 
-var BENCHMARK_MODE = false; // true -> benchmark; false -> single mode with prints + class layers
+var BENCHMARK_MODE = false; // true -> benchmark table only; false -> single mode
 
 
 // ======================================================
@@ -30,7 +28,7 @@ var YEAR = 2020;
 var landcover = "visulcrec"; // or "visu_lc"
 var SCALE = 10;
 
-var USE_TILE_SCALE   = false; // tiling for sampleRegions only (no accuracy impact)
+var USE_TILE_SCALE   = false; // affects sampleRegions memory only (no math/accuracy change)
 var TRAIN_TILE_SCALE = 8;
 var TEST_TILE_SCALE  = 16;
 
@@ -56,6 +54,23 @@ var SHOW_CLASS_LAYERS  = true;   // per-class masks like original script
 
 
 // ======================================================
+// 1B) SINGLE-CLASS EXPORT OPTION (NEW)
+// ======================================================
+
+// Enabled by default (as requested)
+var DO_EXPORT_SELECTED_CLASS_ASSET = true;
+
+// Class to export (AFTER REMAP). Default: Tree Cover = 0.
+var EXPORT_CLASS_ID = 0;
+
+// Exported mask is binary: pixels of that class = 1, other pixels masked out.
+var EXPORT_CLASS_MASK_AS_BYTE = true; // true -> toByte()
+
+// Optional: if selected class is outside AOI class range, skip export
+var SKIP_MASK_EXPORT_IF_OUT_OF_RANGE = true;
+
+
+// ======================================================
 // 2) EXPORT SETTINGS
 // ======================================================
 
@@ -64,7 +79,7 @@ var DO_EXPORT_BENCHMARK = true;
 var BENCHMARK_AOIS = ['caatinga', 'cerrado', 'chaco', 'tanzania'];
 var BENCHMARK_METHODS = ['RF', 'CART', 'GTB', 'KNN', 'NB', 'SVM', 'MIN_DIST'];
 var BENCHMARK_DRIVE_FOLDER = "GEE_Benchmarks";
-var BENCHMARK_RUN_ID = "bench_v7_fixBool";
+var BENCHMARK_RUN_ID = "bench_v8_maskExport";
 
 // include heavy columns?
 var BENCH_INCLUDE_CONFUSION_AND_PERCLASS = true;
@@ -77,8 +92,11 @@ var SINGLE_TABLE_DRIVE_FOLDER = "GEE_Benchmarks";
 // --- Single-mode raster/model exports (Assets) ---
 var DO_EXPORT_CLASSIFIED_ASSET = true;
 var DO_EXPORT_MODEL_ASSET      = true;   // RF/CART only
+
 var EXPORT_CLASS_FOLDER = "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/";
+var EXPORT_MASK_FOLDER  = "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/ClassMasks/";
 var EXPORT_MODEL_FOLDER = "projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/";
+
 var EXPORT_CRS = "EPSG:4326";
 
 // --- Tiled raster export mitigation (single mode) ---
@@ -120,7 +138,7 @@ function taskLabelBase(aoiName, method) {
   return base;
 }
 function taskLabel(type, aoiName, method) {
-  return type + '_' + taskLabelBase(aoiName, method); // TAB/IMG/MOD
+  return type + '_' + taskLabelBase(aoiName, method); // TAB/IMG/MOD/MSK
 }
 
 
@@ -163,11 +181,11 @@ var GTPol_DF_Balanced = {
 // 6) REMAP LOGIC (AOI-dependent)
 // ======================================================
 
-// Non-chaco (includes Mangroves orig 4) -> output 0..9
+// Default (cerrado, caatinga, tanzania)
 var classValues_default = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10];
 var remapValues_default = [6, 0, 1, 2, 3, 4, 5, 7, 8, 9];
 
-// Chaco (no Mangroves orig 4) -> output 0..8
+// Chaco (no Mangroves orig 4)
 var classValues_chaco = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues_chaco = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 
@@ -178,6 +196,14 @@ function getRemapForAOI(aoiName) {
     remapValues: isChaco ? remapValues_chaco : remapValues_default,
     hasMangroves: !isChaco
   };
+}
+
+// Helper: get OUTPUT class id (after remap) for an ORIGINAL class code
+function outIdForOrig(origCode, classValues, remapValues) {
+  for (var i = 0; i < classValues.length; i++) {
+    if (classValues[i] === origCode) return remapValues[i];
+  }
+  return null; // class not present in this AOI remap
 }
 
 
@@ -305,7 +331,7 @@ function eeJsonFrom2DArray(arrObj) {
   return ee.String.encodeJSON(ee.Array(arrObj).toList());
 }
 
-// Validation: classify only samples (safe)
+// Validation: classify only samples (safe for big AOIs)
 function computeValidationMetrics(classifier, compositeForTraining, validationGcp, fixedOrder) {
 
   var testArgs = { collection: validationGcp, properties: [landcover], scale: SCALE, geometries: false };
@@ -371,7 +397,7 @@ function runOneAOIMethod(aoiName, method) {
   var remap = getRemapForAOI(aoiName);
   var classValues = remap.classValues;
   var remapValues = remap.remapValues;
-  var hasMangroves = remap.hasMangroves; // plain JS boolean
+  var hasMangroves = remap.hasMangroves; // JS boolean
 
   var nClasses = remapValues.length;
   var fixedOrder = ee.List.sequence(0, nClasses - 1);
@@ -412,7 +438,6 @@ function runOneAOIMethod(aoiName, method) {
 
   var v = computeValidationMetrics(classifier, compositeForTraining, validationGcp, fixedOrder);
 
-  // Short metadata tag
   var runTag = 'AE' + YEAR + '_' + aoiName + '_' + method.toUpperCase() +
                '_' + lcShortName(landcover) + '_' + geomShortName(TRAIN_GEOM_MODE) +
                '_s' + GLOBAL_SEED;
@@ -469,51 +494,49 @@ function runOneAOIMethod(aoiName, method) {
     classifier: classifier,
     composite: compositeForTraining,
     validationDict: v,
-    hasMangroves: hasMangroves
+    classValues: classValues,      // JS arrays (for single-mode viz)
+    remapValues: remapValues,      // JS arrays (for single-mode viz)
+    nClasses: nClasses             // JS int
   });
 }
 
 
 // ======================================================
-// 11) CLASS VISUALIZATION (RESTORED)
+// 11) CLASS VISUALIZATION (AOI-aware via remap)
 // ======================================================
 
-function addClassLayers(classifiedByte, hasMangroves) {
-  // class indices after remap:
-  // 0 TC, 1 Shrub, 2 Grass, 3 Mangroves (except Chaco), 4 FloodedVeg,
-  // 5 Built, 6 PWater, 7 SWater, 8 Bare, 9 Crops (except Chaco max is 8)
+function addClassLayersFromRemap(classifiedByte, classValues, remapValues) {
+  // ORIGINAL class codes (as per your notes):
+  // 1 TC, 2 Shrub, 3 Grass, 4 Mangroves, 5 FloodedVeg, 6 Built, 7 PWater, 0 SWater, 9 Bare, 10 Crops
 
-  var tc     = classifiedByte.eq(0).selfMask();
-  var shrub  = classifiedByte.eq(1).selfMask();
-  var grass  = classifiedByte.eq(2).selfMask();
-  var fveg   = classifiedByte.eq(4).selfMask();
-  var built  = classifiedByte.eq(5).selfMask();
-  var pwater = classifiedByte.eq(6).selfMask();
-  var swater = classifiedByte.eq(7).selfMask();
-  var bare   = classifiedByte.eq(8).selfMask();
-  var crop   = classifiedByte.eq(9).selfMask();
+  var idTC     = outIdForOrig(1,  classValues, remapValues);
+  var idShrub  = outIdForOrig(2,  classValues, remapValues);
+  var idGrass  = outIdForOrig(3,  classValues, remapValues);
+  var idMang   = outIdForOrig(4,  classValues, remapValues); // null for Chaco
+  var idFveg   = outIdForOrig(5,  classValues, remapValues);
+  var idBuilt  = outIdForOrig(6,  classValues, remapValues);
+  var idPwater = outIdForOrig(7,  classValues, remapValues);
+  var idSwater = outIdForOrig(0,  classValues, remapValues);
+  var idBare   = outIdForOrig(9,  classValues, remapValues);
+  var idCrop   = outIdForOrig(10, classValues, remapValues);
 
-  Map.addLayer(swater, {palette: "99d9ea"}, "Seasonal Water", 0);
-  Map.addLayer(tc,     {palette: "005200"}, "Tree Cover",     1);
-  Map.addLayer(shrub,  {palette: "eabe44"}, "Shrubs",         0);
-  Map.addLayer(grass,  {palette: "ffff4c"}, "Grass",          0);
-
-  if (hasMangroves) {
-    var mangroves = classifiedByte.eq(3).selfMask();
-    Map.addLayer(mangroves, {palette: "00cf75"}, "Mangroves", 0);
+  function addIf(id, palette, name, shown) {
+    if (id === null || id === undefined) return;
+    var layer = classifiedByte.eq(id).selfMask();
+    Map.addLayer(layer, {palette: palette}, name, shown);
   }
 
-  Map.addLayer(fveg,   {palette: "0096a0"}, "Flooded Vegetation", 0);
-  Map.addLayer(built,  {palette: "fa0000"}, "Built",             0);
-  Map.addLayer(pwater, {palette: "0064c8"}, "Permanent Water",   0);
-  Map.addLayer(bare,   {palette: "b4b4b4"}, "Bare",              0);
-
-  // Only add crop if class 9 exists (non-chaco)
-  if (hasMangroves) {
-    Map.addLayer(crop, {palette: "f096ff"}, "Crops", 0);
-  } else {
-    // chaco has max class 8; do nothing
-  }
+  // Same palettes as your original script:
+  addIf(idSwater, "99d9ea", "Seasonal Water", 0);
+  addIf(idTC,     "005200", "Tree Cover",     1);
+  addIf(idShrub,  "eabe44", "Shrubs",         0);
+  addIf(idGrass,  "ffff4c", "Grass",          0);
+  addIf(idMang,   "00cf75", "Mangroves",      0);
+  addIf(idFveg,   "0096a0", "Flooded Vegetation", 0);
+  addIf(idBuilt,  "fa0000", "Built",              0);
+  addIf(idPwater, "0064c8", "Permanent Water",    0);
+  addIf(idBare,   "b4b4b4", "Bare",               0);
+  addIf(idCrop,   "f096ff", "Crops",              0);
 }
 
 
@@ -569,32 +592,37 @@ if (BENCHMARK_MODE) {
 
 } else {
 
-  // SINGLE MODE: prints + layers + exports
+  // SINGLE MODE
   if (!AOIS[AOI_NAME]) {
     throw new Error('AOI_NAME must be one of: caatinga|cerrado|chaco|tanzania. Got: ' + AOI_NAME);
   }
 
   var aoi = AOIS[AOI_NAME];
 
-  var out = runOneAOIMethod(AOI_NAME, CLASSIFIER_METHOD);
-  out = ee.Dictionary(out);
+  var out = ee.Dictionary(runOneAOIMethod(AOI_NAME, CLASSIFIER_METHOD));
 
   var row = ee.Feature(out.get('feature'));
   var classifier = ee.Classifier(out.get('classifier'));
   var compositeForTraining = ee.Image(out.get('composite'));
   var v = ee.Dictionary(out.get('validationDict'));
-  var hasMangroves = out.get('hasMangroves'); // plain JS boolean stored in server dict => evaluated client-side when needed
 
-  // Prints restored
+  // These are JS arrays/ints returned by runOneAOIMethod
+  // (they are not ee.Objects)
+  var remapLocal = getRemapForAOI(AOI_NAME);
+  var classValuesJS = remapLocal.classValues;
+  var remapValuesJS = remapLocal.remapValues;
+  var nClassesJS = remapValuesJS.length;
+
+  // ------------------------
+  // SINGLE: PRINTS
+  // ------------------------
   if (SHOW_DEBUG_PRINTS) {
     print("Classifier explain()", classifier.explain());
 
-    // Training CM (supported for many classifiers; if a specific method errors, disable this print)
     var trainCm = classifier.confusionMatrix();
     print('Training error matrix', trainCm);
     print('Training overall accuracy', trainCm.accuracy());
 
-    // Importance
     var imp = getImportanceDict(classifier);
     print('Importance (raw)', imp);
     var relImp = importanceToRelative(imp);
@@ -618,7 +646,9 @@ if (BENCHMARK_MODE) {
     print('F1-Score: ', cmVal.fscore());
   }
 
-  // Map layers + per-class layers restored
+  // ------------------------
+  // SINGLE: MAP LAYERS
+  // ------------------------
   if (SHOW_MAP_LAYERS) {
     Map.setOptions('SATELLITE');
     Map.centerObject(aoi, 6);
@@ -628,23 +658,21 @@ if (BENCHMARK_MODE) {
     Map.addLayer(aoi, {color: "red"}, "AOI Boundary", 0);
   }
 
-  // Classified image (single mode)
+  // Classified image (all classes)
   var classifiedByte = compositeForTraining.classify(classifier).toByte().clip(aoi);
 
   if (SHOW_MAP_LAYERS) {
     Map.addLayer(classifiedByte, null, 'LC ' + YEAR + ' (' + CLASSIFIER_METHOD + ')', 0);
   }
 
+  // Per-class masks (visualization only)
   if (SHOW_CLASS_LAYERS) {
-    // hasMangroves is a server-side value (stored in the dictionary),
-    // but it is derived from AOI_NAME and is effectively constant.
-    // We convert it to client bool via evaluate:
-    ee.Number(hasMangroves ? 1 : 0).evaluate(function(hm01) {
-      addClassLayers(classifiedByte, hm01 === 1);
-    });
+    addClassLayersFromRemap(classifiedByte, classValuesJS, remapValuesJS);
   }
 
-  // Export table CSV (single model)
+  // ------------------------
+  // SINGLE: Export TABLE CSV (selected model)
+  // ------------------------
   if (DO_EXPORT_SINGLE_TABLE_TO_DRIVE) {
     var tabTask = taskLabel("TAB", AOI_NAME, CLASSIFIER_METHOD);
 
@@ -677,7 +705,9 @@ if (BENCHMARK_MODE) {
     });
   }
 
-  // Export model (RF/CART)
+  // ------------------------
+  // SINGLE: Export MODEL (RF/CART)
+  // ------------------------
   if (DO_EXPORT_MODEL_ASSET && canExportClassifier(CLASSIFIER_METHOD)) {
     var modTask = taskLabel("MOD", AOI_NAME, CLASSIFIER_METHOD);
     Export.classifier.toAsset({
@@ -687,7 +717,9 @@ if (BENCHMARK_MODE) {
     });
   }
 
-  // Export classified image (asset) (optional tiling)
+  // ------------------------
+  // SINGLE: Export CLASSIFIED IMAGE (all classes)
+  // ------------------------
   if (DO_EXPORT_CLASSIFIED_ASSET) {
     var imgTaskBase = taskLabel("IMG", AOI_NAME, CLASSIFIER_METHOD);
 
@@ -703,6 +735,7 @@ if (BENCHMARK_MODE) {
         maxPixels: 1e13
       });
     } else {
+      // Optional tiling (unchanged)
       var bounds = aoi.geometry().bounds(1);
       var ring = ee.List(bounds.coordinates().get(0));
       var xmin = ee.Number(ee.List(ring.get(0)).get(0));
@@ -744,6 +777,42 @@ if (BENCHMARK_MODE) {
           crs: EXPORT_CRS,
           maxPixels: 1e13
         });
+      }
+    }
+  }
+
+  // ------------------------
+  // SINGLE: Export SELECTED CLASS MASK (NEW)
+  // ------------------------
+  if (DO_EXPORT_SELECTED_CLASS_ASSET) {
+
+    var outOfRange = (EXPORT_CLASS_ID < 0) || (EXPORT_CLASS_ID >= nClassesJS);
+
+    if (outOfRange && SKIP_MASK_EXPORT_IF_OUT_OF_RANGE) {
+      if (SHOW_DEBUG_PRINTS) {
+        print('WARNING: EXPORT_CLASS_ID=' + EXPORT_CLASS_ID +
+              ' is outside [0..' + (nClassesJS - 1) + '] for AOI=' + AOI_NAME +
+              '. Skipping class mask export.');
+      }
+    } else {
+      var maskTask = taskLabel("MSK", AOI_NAME, CLASSIFIER_METHOD) + '_c' + String(EXPORT_CLASS_ID);
+
+      var classMask = classifiedByte.eq(EXPORT_CLASS_ID).selfMask();
+      if (EXPORT_CLASS_MASK_AS_BYTE) classMask = classMask.toByte();
+
+      Export.image.toAsset({
+        image: classMask,
+        description: maskTask,
+        assetId: EXPORT_MASK_FOLDER + maskTask,
+        pyramidingPolicy: {'.default': 'mode'},
+        region: aoi.geometry(),
+        scale: SCALE,
+        crs: EXPORT_CRS,
+        maxPixels: 1e13
+      });
+
+      if (SHOW_DEBUG_PRINTS) {
+        print('Exporting selected class mask:', maskTask, ' (class id = ' + EXPORT_CLASS_ID + ')');
       }
     }
   }
