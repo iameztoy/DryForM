@@ -1,22 +1,30 @@
 /*******************************************************
  * AlphaEarth / Satellite Embeddings + Supervised LC
- * Single-run OR Benchmark mode (AOIs x Algorithms)
+ * SINGLE MODE  OR  BENCHMARK MODE (AOIs x Algorithms)
  *
- * KEY FEATURES
- *  - AOIs: caatinga, cerrado, chaco, tanzania
- *  - AOI-dependent remap (Chaco has no mangroves)
- *  - Multi-classifier support: RF, CART, GTB, KNN, NB, SVM, MIN_DIST
- *  - Optional tileScale (does NOT change math; helps avoid memory/timeouts)
- *  - Exports:
- *      * Single mode: classified image + model (if supported) + run metadata
- *      * Benchmark mode: ONE table comparing validation metrics for all AOIs & algorithms
+ * AOIs: caatinga, cerrado, chaco, tanzania
+ * YEAR default: 2020
  *
- * REPRODUCIBILITY
- *  - Tree-based models use GLOBAL_SEED (RF, GTB)
- *  - Other models are deterministic given identical inputs.
- *  - To reproduce identical outputs between Benchmark vs Single:
- *      use the SAME YEAR, AOI_NAME, CLASSIFIER_METHOD, params, buffer, NB preprocess toggle,
- *      and GLOBAL_SEED.
+ * CLASS NOTES (handled):
+ *  - Chaco has NO Mangroves (orig class 4) -> 9 output classes (0..8)
+ *  - Other AOIs have Mangroves -> 10 output classes (0..9)
+ *  - There is NO original class 8 anywhere (fine; output index 8 is used after remap in some AOIs)
+ *
+ * BENCHMARK MODE:
+ *  - Runs ALL AOIs x ALL methods and exports ONE comparison table.
+ *  - Default export: CSV to Google Drive.
+ *  - No prints / no map layers in benchmark mode.
+ *
+ * CSV STRUCTURE:
+ *  - One row per (AOI, method)
+ *  - Scalar metrics in columns (OA, Kappa, macroF1, etc.)
+ *  - Per-class arrays stored as JSON strings in single cells (1D JSON arrays)
+ *  - Confusion matrix stored as JSON string in a single cell (2D JSON array)
+ *
+ * FIX FOR ERROR:
+ *  - Removed ee.Array.reduce(...).get([0]) pattern which caused:
+ *      "Array.get: Expected 2 coordinates, but found 1."
+ *  - Macro metrics computed via flattened lists instead.
  *******************************************************/
 
 
@@ -24,62 +32,73 @@
 // 0) MASTER MODE SWITCH
 // ======================================================
 
-var BENCHMARK_MODE = false; // true -> run all AOIs x all algorithms -> export comparison table only
+var BENCHMARK_MODE = true; // true -> export benchmark CSV only (no prints/layers)
 
 
 // ======================================================
 // 1) USER SETTINGS (Single mode)
 // ======================================================
 
-// Single-mode selectors
 var AOI_NAME = 'cerrado';        // 'caatinga' | 'cerrado' | 'chaco' | 'tanzania'
 var CLASSIFIER_METHOD = 'RF';    // 'RF'|'CART'|'GTB'|'KNN'|'NB'|'SVM'|'MIN_DIST'
-
-// Default requested
 var YEAR = 2020;
 
-// Ground truth label property
 var landcover = "visulcrec"; // or "visu_lc"
-
-// Sampling / processing
 var SCALE = 10;
 
-// TileScale (OPTIONAL)
-var USE_TILE_SCALE   = false;  // true -> pass tileScale to sampleRegions
+// tileScale optional (does NOT change math; helps avoid memory/timeouts)
+var USE_TILE_SCALE   = false;
 var TRAIN_TILE_SCALE = 8;
 var TEST_TILE_SCALE  = 16;
 
-// Buffer settings (points)
+// Training geometry mode
 var TRAIN_GEOM_MODE = 'POINTS'; // 'POINTS' | 'POLYGONS'
-var BUFFER_METERS   = 20;       // used only for POINTS
+var BUFFER_METERS   = 20;
 
-// NaiveBayes preprocessing (OPTIONAL; keep same in benchmark & single if you want identical results)
+// NaiveBayes preprocessing (optional)
 var NB_ENABLE_PREPROCESS = false;
 var NB_SCALE  = 1000;
 var NB_OFFSET = 1000;
 
-// Global seed used by tree-based stochastic learners (RF/GTB)
+// Global seed for stochastic methods (RF, GTB)
 var GLOBAL_SEED = 6769;
+
+// Single-mode debug toggles (ignored in benchmark mode)
+var SHOW_DEBUG_PRINTS = true;
+var SHOW_MAP_LAYERS   = true;
 
 
 // ======================================================
 // 2) EXPORT SETTINGS
 // ======================================================
 
-// Single-mode exports
+// Single-mode exports (Assets)
 var DO_EXPORT_CLASSIFIED_ASSET = true;
-var DO_EXPORT_MODEL_ASSET      = true;   // only supported for RF/CART
-var DO_EXPORT_RUN_METADATA     = true;   // recommended
+var DO_EXPORT_MODEL_ASSET      = true;   // only RF/CART
+var DO_EXPORT_RUN_METADATA     = true;
 
 var EXPORT_CLASS_FOLDER = "projects/hardy-tenure-383607/assets/DryForm_Project/Classification/";
 var EXPORT_MODEL_FOLDER = "projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/";
 var EXPORT_META_FOLDER  = "projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/RunMetadata/";
 var EXPORT_CRS = "EPSG:4326";
 
-// Benchmark export (ONE table)
-var DO_EXPORT_BENCHMARK_TABLE = true;
-var BENCHMARK_RUN_ID = "bench_v1"; // change to avoid overwriting / to version runs
+// Benchmark exports (DEFAULT: Drive CSV)
+var DO_EXPORT_BENCHMARK = true;
+
+// Export targets: 'DRIVE' (default), 'ASSET', 'BOTH'
+var BENCHMARK_EXPORT_TARGET = 'DRIVE';
+
+// Drive export settings
+var BENCHMARK_DRIVE_FOLDER = "GEE_Benchmarks";  // Drive folder name
+var BENCHMARK_RUN_ID = "bench_v3_driveCSV_fixMacro"; // version label
+var BENCHMARK_FILE_PREFIX = null;               // optional, if null uses benchTag
+
+// Asset export settings (optional)
 var EXPORT_BENCH_FOLDER = "projects/hardy-tenure-383607/assets/DryForm_Project/ClassifierModels/BenchmarkTables/";
+
+// Include heavy fields in benchmark table?
+var BENCH_INCLUDE_CONFUSION_AND_PERCLASS = true;  // confusion matrix + per-class arrays
+var BENCH_INCLUDE_CLASSIFIER_EXPLAIN     = false; // explain() can be large; CSV can get huge
 
 
 // ======================================================
@@ -99,19 +118,13 @@ var cerrado  = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Cerrad
 var chaco    = ee.FeatureCollection("users/iameztoy/dryform/AOIs/eco_zone_Chaco");
 var tanzania = ee.FeatureCollection("users/iameztoy/dryform/AOIs/zone_Tanzania");
 
-var AOIS = {
-  caatinga: caatinga,
-  cerrado:  cerrado,
-  chaco:    chaco,
-  tanzania: tanzania
-};
+var AOIS = { caatinga: caatinga, cerrado: cerrado, chaco: chaco, tanzania: tanzania };
 
 
 // ======================================================
 // 5) GROUND TRUTH ASSETS
 // ======================================================
 
-// Original sample sets
 var GroundTruthPoint_DF = ee.FeatureCollection(
   "projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPoint_DF"
 );
@@ -119,7 +132,6 @@ var GroundTruthPol_DF = ee.FeatureCollection(
   "projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GroundTruthPol_DF"
 );
 
-// Balanced training sets (Points)
 var GTPoint_DF_Balanced = {
   chaco:    ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_chaco"),
   caatinga: ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_caatinga"),
@@ -127,8 +139,7 @@ var GTPoint_DF_Balanced = {
   tanzania: ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPoint_DF_Balanced_tanzania")
 };
 
-// Balanced training sets (Polygons)
-// NOTE: your previous Tanzania polygon path looked like a point asset. Kept as-is to avoid breaking.
+// NOTE: Tanzania polygon path looked like a point asset in your previous versions; kept as-is.
 var GTPol_DF_Balanced = {
   chaco:    ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_chaco"),
   caatinga: ee.FeatureCollection("projects/hardy-tenure-383607/assets/DryForm_Project/GroundTruth/GTPol_DF_Balanced_caatinga"),
@@ -141,11 +152,11 @@ var GTPol_DF_Balanced = {
 // 6) REMAP LOGIC (AOI-dependent)
 // ======================================================
 
-// Default (cerrado, caatinga, tanzania)
+// Default (cerrado, caatinga, tanzania) — includes Mangroves (orig 4)
 var classValues_default = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10];
 var remapValues_default = [6, 0, 1, 2, 3, 4, 5, 7, 8, 9];
 
-// Chaco (no mangroves class 4)
+// Chaco — excludes Mangroves (orig 4) => 9 classes (0..8)
 var classValues_chaco = [0, 1, 2, 3, 5, 6, 7, 9, 10];
 var remapValues_chaco = [6, 0, 1, 2, 3, 4, 5, 7, 8];
 
@@ -156,20 +167,6 @@ function getRemapForAOI(aoiName) {
     remapValues: isChaco ? remapValues_chaco : remapValues_default
   };
 }
-
-// Original IDs (as per your notes)
-var ORIG = {
-  TC: 1,
-  SHRUB: 2,
-  GRASS: 3,
-  MANGROVES: 4,
-  FVEG: 5,
-  BUILT: 6,
-  PWATER: 7,
-  SWATER: 0,
-  BARE: 9,
-  CROPS: 10
-};
 
 var ORIG_NAME = {
   0:  "SWater",
@@ -185,16 +182,11 @@ var ORIG_NAME = {
 };
 
 function buildLegendJSON(classValues, remapValues) {
-  // client-side JSON legend sorted by output class index
   var items = [];
   for (var i = 0; i < classValues.length; i++) {
     var origId = classValues[i];
     var outId  = remapValues[i];
-    items.push({
-      orig: origId,
-      out: outId,
-      name: ORIG_NAME[origId]
-    });
+    items.push({orig: origId, out: outId, name: ORIG_NAME[origId]});
   }
   items.sort(function(a,b){ return a.out - b.out; });
   return JSON.stringify(items);
@@ -208,10 +200,10 @@ function buildLegendJSON(classValues, remapValues) {
 var EMBED_IC = ee.ImageCollection('GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL');
 
 function getCompositeForAOIYear(aoiFc, year) {
-  var ic = EMBED_IC
+  return EMBED_IC
     .filterDate(year + '-01-01', (year + 1) + '-01-01')
-    .filterBounds(aoiFc);
-  return ic.mosaic();
+    .filterBounds(aoiFc)
+    .mosaic();
 }
 
 
@@ -219,33 +211,33 @@ function getCompositeForAOIYear(aoiFc, year) {
 // 8) CLASSIFIERS + PARAMS (defaults exposed)
 // ======================================================
 
-// ---- RF (SMILE) ----
-var RF_numberOfTrees      = 90;    // required
+// RF
+var RF_numberOfTrees      = 90;
 var RF_variablesPerSplit  = null;
 var RF_minLeafPopulation  = 1;
 var RF_bagFraction        = 0.5;
 var RF_maxNodes           = null;
 
-// ---- CART (SMILE) ----
+// CART
 var CART_maxNodes          = null;
 var CART_minLeafPopulation = 1;
 
-// ---- GTB (SMILE) ----
-var GTB_numberOfTrees = 200;       // required
+// GTB
+var GTB_numberOfTrees = 200;
 var GTB_shrinkage     = 0.005;
 var GTB_samplingRate  = 0.7;
 var GTB_maxNodes      = null;
 var GTB_loss          = "LeastAbsoluteDeviation";
 
-// ---- KNN (SMILE) ----
+// KNN
 var KNN_k            = 1;
 var KNN_searchMethod = "AUTO";
 var KNN_metric       = "EUCLIDEAN";
 
-// ---- NB (SMILE) ----
+// NB
 var NB_lambda = 0.000001;
 
-// ---- SVM (libsvm) ----
+// SVM
 var SVM_decisionProcedure  = "Voting";
 var SVM_svmType            = "C_SVC";
 var SVM_kernelType         = "LINEAR";
@@ -259,7 +251,7 @@ var SVM_terminationEpsilon = null;
 var SVM_lossEpsilon        = null;
 var SVM_oneClass           = null;
 
-// ---- Minimum Distance ----
+// Minimum Distance
 var MIN_metric   = "euclidean";
 var MIN_kNearest = 1;
 
@@ -268,12 +260,8 @@ function getClassifier(method) {
 
   if (method === 'RF') {
     return ee.Classifier.smileRandomForest(
-      RF_numberOfTrees,
-      RF_variablesPerSplit,
-      RF_minLeafPopulation,
-      RF_bagFraction,
-      RF_maxNodes,
-      GLOBAL_SEED
+      RF_numberOfTrees, RF_variablesPerSplit, RF_minLeafPopulation,
+      RF_bagFraction, RF_maxNodes, GLOBAL_SEED
     );
   }
   if (method === 'CART') {
@@ -281,12 +269,8 @@ function getClassifier(method) {
   }
   if (method === 'GTB') {
     return ee.Classifier.smileGradientTreeBoost(
-      GTB_numberOfTrees,
-      GTB_shrinkage,
-      GTB_samplingRate,
-      GTB_maxNodes,
-      GTB_loss,
-      GLOBAL_SEED
+      GTB_numberOfTrees, GTB_shrinkage, GTB_samplingRate,
+      GTB_maxNodes, GTB_loss, GLOBAL_SEED
     );
   }
   if (method === 'KNN') {
@@ -297,18 +281,9 @@ function getClassifier(method) {
   }
   if (method === 'SVM') {
     return ee.Classifier.libsvm(
-      SVM_decisionProcedure,
-      SVM_svmType,
-      SVM_kernelType,
-      SVM_shrinking,
-      SVM_degree,
-      SVM_gamma,
-      SVM_coef0,
-      SVM_cost,
-      SVM_nu,
-      SVM_terminationEpsilon,
-      SVM_lossEpsilon,
-      SVM_oneClass
+      SVM_decisionProcedure, SVM_svmType, SVM_kernelType, SVM_shrinking,
+      SVM_degree, SVM_gamma, SVM_coef0, SVM_cost, SVM_nu,
+      SVM_terminationEpsilon, SVM_lossEpsilon, SVM_oneClass
     );
   }
   if (method === 'MIN_DIST') {
@@ -333,7 +308,6 @@ function token(x) {
 
 function paramSuffix(method) {
   method = method.toUpperCase();
-
   if (method === 'RF') {
     return 'nT' + token(RF_numberOfTrees) +
            '_vps' + token(RF_variablesPerSplit) +
@@ -382,7 +356,6 @@ function paramSuffix(method) {
 
 function canExportClassifier(method) {
   method = method.toUpperCase();
-  // Keep conservative: RF/CART are safe for Export.classifier.toAsset
   return (method === 'RF' || method === 'CART');
 }
 
@@ -396,12 +369,20 @@ function buildRunTag(aoiName, method) {
          '_' + paramSuffix(method);
 }
 
-// server-side JSON helpers
+// Convert ee.Array (any shape) into a flat ee.List of numbers
+function arrayToFlatList(arr) {
+  return ee.List(ee.Array(arr).toList()).flatten();
+}
+
+// JSON helpers for export-friendly strings
 function eeJsonFromList(listObj) {
   return ee.String.encodeJSON(listObj);
 }
-function eeJsonFromArray(arrObj) {
-  return ee.String.encodeJSON(ee.Array(arrObj).toList());
+function eeJsonFromFlatArray(arrObj) {
+  return ee.String.encodeJSON(arrayToFlatList(arrObj)); // 1D JSON array
+}
+function eeJsonFrom2DArray(arrObj) {
+  return ee.String.encodeJSON(ee.Array(arrObj).toList()); // 2D JSON array
 }
 
 
@@ -413,18 +394,24 @@ function runOneAOIMethod(aoiName, method) {
 
   var aoiFc = AOIS[aoiName];
 
-  // Remap settings
+  // Remap arrays (client)
   var remap = getRemapForAOI(aoiName);
-  var classValues = remap.classValues; // client arrays
-  var remapValues = remap.remapValues; // client arrays
+  var classValues = remap.classValues;
+  var remapValues = remap.remapValues;
+
+  var hasMangroves = (aoiName !== 'chaco');
+
+  // Fixed label order => stable confusion matrices/arrays per AOI
+  var nClasses = remapValues.length;                 // 9 (chaco) or 10 (others)
+  var fixedOrder = ee.List.sequence(0, nClasses - 1);
+
   var legendJSON  = buildLegendJSON(classValues, remapValues);
 
-  // Training set selection
+  // Training and validation collections
   var trainingGcp = (TRAIN_GEOM_MODE === 'POLYGONS')
     ? GTPol_DF_Balanced[aoiName]
     : GTPoint_DF_Balanced[aoiName];
 
-  // Validation points filtered by AOI and purpose
   var validationGcp = GroundTruthPoint_DF
     .filter(ee.Filter.eq('aoiname', aoiName))
     .filter(ee.Filter.eq('purp', "validation"));
@@ -447,23 +434,20 @@ function runOneAOIMethod(aoiName, method) {
   // Optional NB preprocessing
   if (method.toUpperCase() === 'NB' && NB_ENABLE_PREPROCESS) {
     compositeForTraining = composite
-      .multiply(NB_SCALE)
-      .add(NB_OFFSET)
-      .round()
-      .toInt();
+      .multiply(NB_SCALE).add(NB_OFFSET).round().toInt();
   }
 
-  // Training samples (optional tileScale)
-  var trainingArgs = {
-    collection: trainingGcp,
-    properties: [landcover],
-    scale: SCALE
-  };
+  // sampleRegions args
+  var trainingArgs = { collection: trainingGcp, properties: [landcover], scale: SCALE };
   if (USE_TILE_SCALE) trainingArgs.tileScale = TRAIN_TILE_SCALE;
 
+  var testArgs = { collection: validationGcp, properties: [landcover], scale: SCALE };
+  if (USE_TILE_SCALE) testArgs.tileScale = TEST_TILE_SCALE;
+
+  // Train samples
   var training = compositeForTraining.sampleRegions(trainingArgs);
 
-  // Train
+  // Train classifier
   var classifier = getClassifier(method).train({
     features: training,
     classProperty: landcover,
@@ -473,165 +457,203 @@ function runOneAOIMethod(aoiName, method) {
   // Classify
   var classified = compositeForTraining.classify(classifier).toByte();
 
-  // Validation samples (optional tileScale)
-  var testArgs = {
-    collection: validationGcp,
-    properties: [landcover],
-    scale: SCALE
-  };
-  if (USE_TILE_SCALE) testArgs.tileScale = TEST_TILE_SCALE;
-
+  // Validate
   var test = classified.sampleRegions(testArgs);
 
-  // Confusion matrix & metrics
-  var cm = test.errorMatrix(landcover, 'classification');
+  // Confusion matrix with FIXED ORDER
+  var cm = test.errorMatrix(landcover, 'classification', fixedOrder);
 
+  // Scalar metrics
   var oa    = cm.accuracy();
   var kappa = cm.kappa();
 
-  var usersAcc = cm.consumersAccuracy(); // precision per class
-  var prodAcc  = cm.producersAccuracy(); // recall per class
-  var f1Arr    = cm.fscore();            // f1 per class
+  // Per-class metrics
+  var usersAcc = cm.consumersAccuracy(); // precision per class (array)
+  var prodAcc  = cm.producersAccuracy(); // recall per class (array)
+  var f1Arr    = cm.fscore();            // f1 per class (array)
 
-  // Macro averages
-  var macroPrecision = ee.Array(usersAcc).reduce(ee.Reducer.mean(), [0]).get([0]);
-  var macroRecall    = ee.Array(prodAcc).reduce(ee.Reducer.mean(), [0]).get([0]);
-  var macroF1        = ee.Array(f1Arr).reduce(ee.Reducer.mean(), [0]).get([0]);
+  // ---- FIX: compute macros from flat lists (no Array.get) ----
+  var usersList = arrayToFlatList(usersAcc);
+  var prodList  = arrayToFlatList(prodAcc);
+  var f1List    = arrayToFlatList(f1Arr);
 
-  // Class order + confusion matrix array + support (ref counts)
-  var order   = cm.order();      // list of class labels in cm
-  var cmArr   = cm.array();      // 2D array
-  var support = ee.Array(cmArr).reduce(ee.Reducer.sum(), [1]); // row sums (reference totals)
+  var macroPrecision = ee.Number(usersList.reduce(ee.Reducer.mean()));
+  var macroRecall    = ee.Number(prodList.reduce(ee.Reducer.mean()));
+  var macroF1        = ee.Number(f1List.reduce(ee.Reducer.mean()));
 
-  // Explain (optional — store as string; can be large)
+  // Confusion matrix + support
+  var order   = cm.order();   // equals fixedOrder
+  var cmArr   = cm.array();   // 2D
+  var support = ee.Array(cmArr).reduce(ee.Reducer.sum(), [1]); // row sums (array)
+
+  // Explain (optional; can be large)
   var explainStr = ee.Dictionary(classifier.explain()).serialize();
 
-  // Feature row
   var runTag = buildRunTag(aoiName, method);
 
-  return ee.Feature(null, {
+  // Base properties always included
+  var props = ee.Dictionary({
     runTag: runTag,
     benchmarkRunId: BENCHMARK_RUN_ID,
     year: YEAR,
     aoi: aoiName,
     method: method.toUpperCase(),
     landcover: landcover,
+
     trainGeomMode: TRAIN_GEOM_MODE,
     bufferMeters: (TRAIN_GEOM_MODE === 'POINTS') ? BUFFER_METERS : 0,
     scale: SCALE,
+
     useTileScale: USE_TILE_SCALE,
     trainTileScale: TRAIN_TILE_SCALE,
     testTileScale: TEST_TILE_SCALE,
+
     seed: GLOBAL_SEED,
+
+    hasMangroves: hasMangroves,
+    nClasses: nClasses,
 
     // dataset info
     bandsCount: compositeForTraining.bandNames().size(),
     trainCount: trainingGcp.size(),
     validCount: validationGcp.size(),
 
-    // mapping/legend
+    // remap / legend
     classValues: JSON.stringify(classValues),
     remapValues: JSON.stringify(remapValues),
     legend: legendJSON,
 
-    // validation metrics
+    // scalar validation metrics
     val_overallAccuracy: oa,
     val_kappa: kappa,
     val_macroPrecision: macroPrecision,
     val_macroRecall: macroRecall,
     val_macroF1: macroF1,
 
-    // per-class metrics + confusion matrix
-    val_labelOrder: eeJsonFromList(order),
-    val_supportByClass: eeJsonFromArray(support),
-    val_usersAccuracy: eeJsonFromArray(usersAcc),
-    val_producersAccuracy: eeJsonFromArray(prodAcc),
-    val_f1ByClass: eeJsonFromArray(f1Arr),
-    val_confusionMatrix: eeJsonFromArray(cmArr),
-
-    // classifier explain (string)
-    classifierExplain: explainStr
+    // handy score for sorting
+    score: macroF1
   });
+
+  // Add heavy fields conditionally (export-safe JSON strings)
+  if (BENCH_INCLUDE_CONFUSION_AND_PERCLASS) {
+    props = props.combine(ee.Dictionary({
+      val_labelOrder: eeJsonFromList(order),
+      val_supportByClass: eeJsonFromFlatArray(support),
+      val_usersAccuracy: eeJsonFromFlatArray(usersAcc),
+      val_producersAccuracy: eeJsonFromFlatArray(prodAcc),
+      val_f1ByClass: eeJsonFromFlatArray(f1Arr),
+      val_confusionMatrix: eeJsonFrom2DArray(cmArr)
+    }), true);
+  }
+
+  if (BENCH_INCLUDE_CLASSIFIER_EXPLAIN) {
+    props = props.combine(ee.Dictionary({ classifierExplain: explainStr }), true);
+  }
+
+  // Null geometry => export as clean table
+  return ee.Feature(null, props);
 }
 
 
 // ======================================================
-// 11) BENCHMARK MODE (AOIs x METHODS -> ONE export table, NO prints/layers)
+// 11) BENCHMARK MODE (AOIs x METHODS -> CSV to Drive by default)
 // ======================================================
 
 if (BENCHMARK_MODE) {
 
-  // Build server-side list of features (AOIs x METHODS)
-  var aoiList = ee.List(BENCHMARK_AOIS);
-  var methodList = ee.List(BENCHMARK_METHODS);
+  if (DO_EXPORT_BENCHMARK) {
 
-  var featureList = aoiList.map(function(aoiName) {
-    aoiName = ee.String(aoiName);
-    return methodList.map(function(method) {
-      method = ee.String(method);
-      // Convert to client strings inside runOneAOIMethod call:
-      // We must call with client strings, so we wrap with getInfo() is not allowed.
-      // Instead, we implement a dispatch using ee.Algorithms.If to pass plain JS
-      // is not possible. Therefore, for benchmark we keep BENCHMARK_AOIS and
-      // BENCHMARK_METHODS as JS arrays and build FC in client-side loop below.
-      return ee.Feature(null); // placeholder; replaced below
-    });
-  }).flatten();
-
-  // NOTE:
-  // Earth Engine server-side mapping cannot call a function that expects client-side
-  // arrays (remap arrays, legend JSON) cleanly without extra complexity.
-  // For reliability, we build the FeatureCollection in a CLIENT loop (28 rows).
-  // This still creates only ONE export task.
-
-  var featuresClient = [];
-  for (var i = 0; i < BENCHMARK_AOIS.length; i++) {
-    for (var j = 0; j < BENCHMARK_METHODS.length; j++) {
-      featuresClient.push(runOneAOIMethod(BENCHMARK_AOIS[i], BENCHMARK_METHODS[j]));
+    // Build FeatureCollection (28 rows) with a client loop => ONE export task
+    var featuresClient = [];
+    for (var i = 0; i < BENCHMARK_AOIS.length; i++) {
+      for (var j = 0; j < BENCHMARK_METHODS.length; j++) {
+        featuresClient.push(runOneAOIMethod(BENCHMARK_AOIS[i], BENCHMARK_METHODS[j]));
+      }
     }
-  }
+    var benchFc = ee.FeatureCollection(featuresClient);
 
-  var benchFc = ee.FeatureCollection(featuresClient);
+    // Build a safe tag (letters/numbers/_/- only)
+    var benchTag =
+      'Bench_' + token(BENCHMARK_RUN_ID) +
+      '_AE' + token(YEAR) +
+      '_' + token(landcover) +
+      '_' + ((TRAIN_GEOM_MODE === 'POINTS') ? ('buf' + token(BUFFER_METERS)) : 'poly') +
+      '_se' + token(GLOBAL_SEED) +
+      '_ts' + token(USE_TILE_SCALE ? 1 : 0);
 
-  if (DO_EXPORT_BENCHMARK_TABLE) {
-    var benchTag = 'Bench_' + token(BENCHMARK_RUN_ID) +
-                   '_AE' + token(YEAR) +
-                   '_' + token(landcover) +
-                   '_' + ((TRAIN_GEOM_MODE === 'POINTS') ? ('buf' + token(BUFFER_METERS)) : 'poly') +
-                   '_se' + token(GLOBAL_SEED) +
-                   '_ts' + token(USE_TILE_SCALE ? 1 : 0);
+    // Selectors => clean CSV columns (no .geo, no system:index)
+    var selectors = [
+      'benchmarkRunId','runTag','year','aoi','method','landcover',
+      'trainGeomMode','bufferMeters','scale',
+      'useTileScale','trainTileScale','testTileScale',
+      'seed',
+      'hasMangroves','nClasses',
+      'bandsCount','trainCount','validCount',
+      'classValues','remapValues','legend',
+      'val_overallAccuracy','val_kappa','val_macroPrecision','val_macroRecall','val_macroF1',
+      'score'
+    ];
 
-    Export.table.toAsset({
-      collection: benchFc,
-      description: benchTag,
-      assetId: EXPORT_BENCH_FOLDER + benchTag
-    });
+    if (BENCH_INCLUDE_CONFUSION_AND_PERCLASS) {
+      selectors = selectors.concat([
+        'val_labelOrder',
+        'val_supportByClass',
+        'val_usersAccuracy',
+        'val_producersAccuracy',
+        'val_f1ByClass',
+        'val_confusionMatrix'
+      ]);
+    }
+
+    if (BENCH_INCLUDE_CLASSIFIER_EXPLAIN) {
+      selectors = selectors.concat(['classifierExplain']);
+    }
+
+    // ---- EXPORT TO DRIVE (DEFAULT) ----
+    if (BENCHMARK_EXPORT_TARGET === 'DRIVE' || BENCHMARK_EXPORT_TARGET === 'BOTH') {
+      Export.table.toDrive({
+        collection: benchFc,
+        description: benchTag,
+        folder: BENCHMARK_DRIVE_FOLDER,
+        fileNamePrefix: (BENCHMARK_FILE_PREFIX ? BENCHMARK_FILE_PREFIX : benchTag),
+        fileFormat: 'CSV',
+        selectors: selectors
+      });
+    }
+
+    // ---- EXPORT TO ASSET (OPTIONAL) ----
+    if (BENCHMARK_EXPORT_TARGET === 'ASSET' || BENCHMARK_EXPORT_TARGET === 'BOTH') {
+      Export.table.toAsset({
+        collection: benchFc,
+        description: benchTag,
+        assetId: EXPORT_BENCH_FOLDER + benchTag
+      });
+    }
   }
 
 } else {
 
   // ======================================================
-  // 12) SINGLE MODE (original behavior, WITH prints/layers as desired)
+  // 12) SINGLE MODE (prints/layers optional + asset exports)
   // ======================================================
 
-  // Basic checks
   if (!AOIS[AOI_NAME]) {
     throw new Error('AOI_NAME must be one of: caatinga|cerrado|chaco|tanzania. Got: ' + AOI_NAME);
   }
 
   var aoi = AOIS[AOI_NAME];
 
-  // Run one (single)
+  // Run one for metrics
   var outFeat = runOneAOIMethod(AOI_NAME, CLASSIFIER_METHOD);
 
-  // --- PRINTS (allowed in single mode) ---
-  print('Single runTag', outFeat.get('runTag'));
-  print('Single validation OA', outFeat.get('val_overallAccuracy'));
-  print('Single validation Kappa', outFeat.get('val_kappa'));
-  print('Single validation macroF1', outFeat.get('val_macroF1'));
+  if (SHOW_DEBUG_PRINTS) {
+    print('Single runTag', outFeat.get('runTag'));
+    print('Single validation OA', outFeat.get('val_overallAccuracy'));
+    print('Single validation Kappa', outFeat.get('val_kappa'));
+    print('Single validation macroF1', outFeat.get('val_macroF1'));
+  }
 
-  // Build composite and classified again for visualization + exports
-  // (We re-compute here to keep script readable; same deterministic pipeline)
+  // Recompute for visualization + exports (deterministic)
   var remap = getRemapForAOI(AOI_NAME);
   var classValues = remap.classValues;
   var remapValues = remap.remapValues;
@@ -660,25 +682,20 @@ if (BENCHMARK_MODE) {
     compositeForTraining = composite.multiply(NB_SCALE).add(NB_OFFSET).round().toInt();
   }
 
-  // Visualize embeddings
-  var visParams = {min: -0.3, max: 0.3, bands: ['A01', 'A50', 'A20']};
-  Map.addLayer(composite.clip(aoi), visParams, YEAR + ' embeddings');
-  Map.setOptions('SATELLITE');
-  Map.centerObject(aoi, 6);
-  Map.addLayer(aoi, {color: "red"}, "AOI Boundary", 0);
-  Map.addLayer(trainingGcp, null, "Training GCP", 1);
+  if (SHOW_MAP_LAYERS) {
+    var visParams = {min: -0.3, max: 0.3, bands: ['A01', 'A50', 'A20']};
+    Map.addLayer(composite.clip(aoi), visParams, YEAR + ' embeddings');
+    Map.setOptions('SATELLITE');
+    Map.centerObject(aoi, 6);
+    Map.addLayer(aoi, {color: "red"}, "AOI Boundary", 0);
+    Map.addLayer(trainingGcp, null, "Training GCP", 1);
+  }
 
-  // Sampling for training
-  var trainingArgs = {
-    collection: trainingGcp,
-    properties: [landcover],
-    scale: SCALE
-  };
+  var trainingArgs = { collection: trainingGcp, properties: [landcover], scale: SCALE };
   if (USE_TILE_SCALE) trainingArgs.tileScale = TRAIN_TILE_SCALE;
 
   var training = compositeForTraining.sampleRegions(trainingArgs);
 
-  // Train & classify
   var classifier = getClassifier(CLASSIFIER_METHOD).train({
     features: training,
     classProperty: landcover,
@@ -687,10 +704,10 @@ if (BENCHMARK_MODE) {
 
   var classifiedByte = compositeForTraining.classify(classifier).toByte().clip(aoi);
 
-  // Display classified
-  Map.addLayer(classifiedByte, null, 'LC ' + YEAR + ' (' + CLASSIFIER_METHOD + ')', 0);
+  if (SHOW_MAP_LAYERS) {
+    Map.addLayer(classifiedByte, null, 'LC ' + YEAR + ' (' + CLASSIFIER_METHOD + ')', 0);
+  }
 
-  // Exports
   var runTag = buildRunTag(AOI_NAME, CLASSIFIER_METHOD);
 
   if (DO_EXPORT_CLASSIFIED_ASSET) {
@@ -713,34 +730,14 @@ if (BENCHMARK_MODE) {
         description: 'Model_' + runTag,
         assetId: EXPORT_MODEL_FOLDER + 'Model_' + runTag
       });
-    } else {
-      print('INFO: Export.classifier.toAsset not supported for method ' + CLASSIFIER_METHOD +
-            '. (RF/CART supported).');
+    } else if (SHOW_DEBUG_PRINTS) {
+      print('INFO: Export.classifier.toAsset not supported for method ' + CLASSIFIER_METHOD + '. (RF/CART supported).');
     }
   }
 
   if (DO_EXPORT_RUN_METADATA) {
-    var explainStr = ee.Dictionary(classifier.explain()).serialize();
-
-    // store one-row metadata table for single run
-    var meta = ee.Feature(null, {
-      runTag: runTag,
-      year: YEAR,
-      aoi: AOI_NAME,
-      method: CLASSIFIER_METHOD.toUpperCase(),
-      landcover: landcover,
-      trainGeomMode: TRAIN_GEOM_MODE,
-      bufferMeters: (TRAIN_GEOM_MODE === 'POINTS') ? BUFFER_METERS : 0,
-      scale: SCALE,
-      useTileScale: USE_TILE_SCALE,
-      trainTileScale: TRAIN_TILE_SCALE,
-      testTileScale: TEST_TILE_SCALE,
-      seed: GLOBAL_SEED,
-      classValues: JSON.stringify(classValues),
-      remapValues: JSON.stringify(remapValues),
-      classifierExplain: explainStr
-    });
-
+    // Single-run metadata table (asset)
+    var meta = ee.Feature(null, ee.Dictionary(outFeat.toDictionary()));
     Export.table.toAsset({
       collection: ee.FeatureCollection([meta]),
       description: 'RunMeta_' + runTag,
