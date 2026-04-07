@@ -2,7 +2,7 @@
 
 DryForM is a **Google Earth Engine (GEE) workflow** for dry-forest and tree-cover mapping, model training, post-processing, disturbance analysis, and interactive time-series exploration.
 
-The repository contains the script pipeline developed in the DryForM exploratory work (2022–2024), organized as numbered modules that can be run step-by-step in GEE.
+The repository contains the script pipeline developed in the DryForM exploratory work (2022–2024), organized as numbered modules that can be run step-by-step in GEE. AlphaEarth modules have been added a posteriori, between 2025 & 2026.
 
 ---
 
