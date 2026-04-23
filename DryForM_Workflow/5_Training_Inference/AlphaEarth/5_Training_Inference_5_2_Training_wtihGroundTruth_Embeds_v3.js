@@ -989,3 +989,83 @@ if (!RUN_ALL_AOIS) {
   });
   print(metricsChart);
 }
+
+/*Setup: what to change
+Lowest-file recommendation
+
+This gives you 4 files total:
+
+var RUN_ALL_AOIS = true;
+var RUN_MULTI_METHODS = true;
+
+var EXPORT_SCOPE_A_PER_RUN = false;
+var EXPORT_SCOPE_B_PER_AOI = false;
+var EXPORT_SCOPE_C_GLOBAL = true;
+
+Output:
+
+one global summary file
+one global per-class file
+one global importance file
+one global confusion file
+
+This is the cleanest setup for later updating your DryForm workbook.
+
+Option A: separate exports per AOI + method
+
+This is the most disaggregated:
+
+var RUN_ALL_AOIS = true;
+var RUN_MULTI_METHODS = true;
+
+var EXPORT_SCOPE_A_PER_RUN = true;
+var EXPORT_SCOPE_B_PER_AOI = false;
+var EXPORT_SCOPE_C_GLOBAL = false;
+
+For each AOI × method, it exports:
+
+Summary_Run_...
+ClassMetrics_Run_...
+Importance_Run_...
+Confusion_Run_...
+
+So this creates many files.
+
+Option B: one export set per AOI
+
+This creates 4 files per AOI:
+
+var RUN_ALL_AOIS = true;
+var RUN_MULTI_METHODS = true;
+
+var EXPORT_SCOPE_A_PER_RUN = false;
+var EXPORT_SCOPE_B_PER_AOI = true;
+var EXPORT_SCOPE_C_GLOBAL = false;
+
+For each AOI:
+
+one summary file with all methods
+one class-metrics file with all methods
+one importance file with all methods
+one confusion file with all methods
+Option C: one global export set
+
+This creates only 4 files total:
+
+var RUN_ALL_AOIS = true;
+var RUN_MULTI_METHODS = true;
+
+var EXPORT_SCOPE_A_PER_RUN = false;
+var EXPORT_SCOPE_B_PER_AOI = false;
+var EXPORT_SCOPE_C_GLOBAL = true;
+
+This is the setup I recommend first.
+
+Run A + B + C together
+
+You can enable all of them:
+
+var EXPORT_SCOPE_A_PER_RUN = true;
+var EXPORT_SCOPE_B_PER_AOI = true;
+var EXPORT_SCOPE_C_GLOBAL = true;
+*/
