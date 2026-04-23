@@ -2,7 +2,7 @@
 
 DryForM is a **Google Earth Engine (GEE) workflow** for dry-forest and tree-cover mapping, model training, post-processing, disturbance analysis, and interactive time-series exploration.
 
-The repository contains the script pipeline developed in the DryForM exploratory work (2022–2024), organized as numbered modules that can be run step-by-step in GEE. AlphaEarth modules have been added a posteriori, between 2025 & 2026.
+The repository contains the script pipeline developed in the DryForM exploratory work (2022–2024), organized as numbered modules that can be run step-by-step in GEE.
 
 ---
 
@@ -23,44 +23,53 @@ All major modules are under `DryForM_Workflow/` and are prefixed with step numbe
 
 ---
 
-## Repository structure
+## Repository structure (full map, excluding `req/` contents)
 
 ```text
-DryForM_Workflow/
-├── 1_SamplingFramework/
-│   ├── 1_0_LCProc_v3_2
-│   └── 1_1_Export2Drive_Optional
-├── 2_Samples/
-│   ├── 2_0_AutoSampling
-│   ├── 2_1_GroundTruth_Visu
-│   ├── 2_2_BalanceGT
-│   └── 2_3_Separability
-├── 3_Preprocessing/
-│   ├── 3_0_PrepS1S2_v9_(working_Allinone)
-│   └── s1_code/
-├── 4_Segmentation/
-│   └── 4_0_SNIC_Segmentation_ObjectOriented
-├── 5_Training_Inference/
-│   ├── 5_1_HyperparameterTunning
-│   ├── 5_2_Training_withAutoSample
-│   ├── 5_2_Training_withGroundTruth
-│   ├── 5_3_ApplySavedModel_Optional
-│   ├── 5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds
-│   └── 5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode
-├── 6_Postprocessing/
-│   └── 6_0_PostProc_v1
-├── 7_Disturbance/
-│   ├── 7_0_CCDC_InspectPixels_v3
-│   ├── 7_1_CCDC_CreateAutomated_v3
-│   ├── 7_2_CCDC_Extract_NonAutomated_v3
-│   └── req/
-├── 8_Utils/
-│   ├── 8_0_Visualize_ClassificationResults
-│   ├── 8_1_recurrent_IC_removal
-│   └── 8_2_CalculateAreas
-└── 9_App/
-    ├── Time Series Explorer with images_df_vd_b2v10
-    └── req/
+.
+├── .gitignore
+├── README.md
+└── DryForM_Workflow/
+    ├── 1_SamplingFramework/
+    │   ├── 1_0_LCProc_v3_2
+    │   └── 1_1_Export2Drive_Optional
+    ├── 2_Samples/
+    │   ├── 2_0_AutoSampling
+    │   ├── 2_1_GroundTruth_Visu
+    │   ├── 2_2_BalanceGT
+    │   └── 2_3_Separability
+    ├── 3_Preprocessing/
+    │   ├── 3_0_PrepS1S2_v9_(working_Allinone)
+    │   └── s1_code/
+    │       ├── wrapper
+    │       ├── s1_ard
+    │       ├── utilities
+    │       ├── speckle_filter
+    │       ├── terrain_flattening
+    │       └── border_noise_correction
+    ├── 4_Segmentation/
+    │   └── 4_0_SNIC_Segmentation_ObjectOriented
+    ├── 5_Training_Inference/
+    │   ├── 5_1_HyperparameterTunning
+    │   ├── 5_2_Training_withAutoSample
+    │   ├── 5_2_Training_withGroundTruth
+    │   ├── 5_3_ApplySavedModel_Optional
+    │   ├── 5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds
+    │   └── 5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode
+    ├── 6_Postprocessing/
+    │   └── 6_0_PostProc_v1
+    ├── 7_Disturbance/
+    │   ├── 7_0_CCDC_InspectPixels_v3
+    │   ├── 7_1_CCDC_CreateAutomated_v3
+    │   ├── 7_2_CCDC_Extract_NonAutomated_v3
+    │   └── req/
+    ├── 8_Utils/
+    │   ├── 8_0_Visualize_ClassificationResults
+    │   ├── 8_1_recurrent_IC_removal
+    │   └── 8_2_CalculateAreas
+    └── 9_App/
+        ├── Time Series Explorer with images_df_vd_b2v10
+        └── req/
 ```
 
 > Note: scripts are stored without `.js` extensions, but are intended for Google Earth Engine JavaScript workflows.
@@ -81,7 +90,7 @@ DryForM_Workflow/
 
 ### 3) S1/S2 preprocessing
 - **`3_0_PrepS1S2_v9_(working_Allinone)`** prepares multi-temporal Sentinel-1/Sentinel-2 composites and exports tiled assets.
-- `s1_code/` includes helper modules required by preprocessing.
+- Uses helper modules in `3_Preprocessing/s1_code/` for Sentinel-1 ARD processing.
 
 ### 4) (Optional) object-based segmentation
 - **`4_0_SNIC_Segmentation_ObjectOriented`** runs SNIC segmentation for object-oriented workflows.
@@ -91,9 +100,9 @@ DryForM_Workflow/
 - **`5_2_Training_withGroundTruth`** runs supervised RF training with visual GT.
 - **`5_2_Training_withAutoSample`** alternative training with auto-sampled GT.
 - **`5_3_ApplySavedModel_Optional`** applies previously exported model assets.
-- Embedding-based variants are provided in:
-  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds`
-  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode`
+- **AlphaEarth/Satellite-Embeddings variants**:
+  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds` (single AOI run with embedding-based classification support),
+  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode` (benchmark mode across AOIs/algorithms with table export logic).
 
 ### 6) Post-processing
 - **`6_0_PostProc_v1`** mitigates no-data artifacts in classification outputs.
@@ -102,12 +111,40 @@ DryForM_Workflow/
 - **`7_1_CCDC_CreateAutomated_v3`** creates CCDC outputs.
 - **`7_2_CCDC_Extract_NonAutomated_v3`** extracts disturbance-relevant bands.
 - **`7_0_CCDC_InspectPixels_v3`** interactive per-pixel inspection.
+- Uses reusable helper module under `7_Disturbance/req/`.
 
 ### 8) Utilities
-- visualization, image collection maintenance helpers, and area statistics.
+- Visualization, image collection maintenance helpers, and area statistics.
 
 ### 9) App / integration
 - **`Time Series Explorer with images_df_vd_b2v10`** integrates classification, imagery chips, temporal profiles, and disturbance layers.
+- Uses helper modules under `9_App/req/`.
+
+---
+
+## Helper and support files
+
+### `3_Preprocessing/s1_code/`
+These files implement the Sentinel-1 ARD chain used by step 3:
+
+- `wrapper`: orchestrates the S1 preprocessing workflow and calls the other helper modules.
+- `s1_ard`: core ARD routine and parameter-driven S1 preprocessing logic.
+- `utilities`: shared math/conversion functions (e.g., dB-linear conversions).
+- `speckle_filter`: mono/multi-temporal speckle filtering implementations.
+- `terrain_flattening`: slope/radiometric terrain correction functions.
+- `border_noise_correction`: additional Sentinel-1 border noise masking.
+
+### `5_Training_Inference/` additions (AlphaEarth)
+The repository includes two embedding-oriented scripts in addition to the classic RF pipeline:
+
+- `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds`: multi-AOI configurable workflow using satellite embeddings for supervised land-cover classification, with export paths for model outputs/metadata.
+- `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode`: supports **single mode** and **benchmark mode** to compare classifiers/AOIs and export benchmark tables.
+
+### `req/` folders
+Both `7_Disturbance/req/` and `9_App/req/` contain reusable helper modules required by the main scripts in those directories.
+
+### `.gitignore`
+Includes `.DS_Store` ignore rule for macOS metadata files.
 
 ---
 
@@ -158,6 +195,7 @@ Depending on the executed path and options, outputs may include:
 - This repo captures working research scripts; variable names, comments, and assumptions are tuned to DryForM processing context.
 - Some modules are explicitly marked as optional or experimental.
 - Several scripts note known limitations (e.g., Sentinel-1 overlap artifacts, non-automated extraction steps) and ongoing optimization ideas.
+- Some helper modules were adapted from external community/academic code and are integrated here for workflow reproducibility.
 
 ---
 
