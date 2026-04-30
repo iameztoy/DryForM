@@ -9,6 +9,9 @@
  * Default target:
  *   - Tree cover + mangroves where applicable.
  *
+ * Chaco:
+ *   - Tree cover only, because mangroves are not applicable.
+ *
  * Default export:
  *   - One combined CSV table with one row per dataset.
  *
@@ -32,7 +35,7 @@ var INCLUDE_EXTRA_CLASSES = true;
 
 // Default: calculate over the full image-derived AOI.
 // Set to true if you get memory or timeout errors.
-var USE_GRID = true;
+var USE_GRID = false;
 
 // If true, the AOI is the bounding box of the image footprint.
 // If false, the AOI is the actual image footprint geometry.
@@ -78,12 +81,11 @@ var DEFAULT_SCALE = 10;
 //   - class 0 = tree cover
 //   - class 3 = mangroves in the 10-class AOI schema
 //
-// If an AOI does not contain mangroves, class 3 simply contributes zero area.
-// If you later add Chaco, where mangroves are absent in the 9-class schema,
-// set extra_class_values: [].
+// Chaco:
+//   - mangroves are not applicable, so extra_class_values is empty.
 //
-// You can also include any other class by adding its value to extra_class_values,
-// for example: extra_class_values: [3, 4]
+// To include another class in any AOI, add its class value to
+// extra_class_values and its name to extra_class_names.
 
 var DATASETS = [
   {
@@ -150,20 +152,20 @@ var DATASETS = [
     scale: DEFAULT_SCALE,
     extra_class_values: [3],
     extra_class_names: ['mangroves']
+  },
+  {
+    dataset_id: 'chaco_AE2020_RF_nT90',
+    aoi_name: 'Chaco',
+    method_name: 'RF',
+    image: ee.Image(
+      'projects/hardy-tenure-383607/assets/DryForm_Project/Classification/' +
+      'Class_AE2020_chaco_buf20_vbuf20_visulcrec_RF_nT90_vpsdef_mlp1_bf0p5_mNdef_se6769'
+    ),
+    band: null,
+    scale: DEFAULT_SCALE,
+    extra_class_values: [],
+    extra_class_names: []
   }
-
-  // Example for a future Chaco dataset:
-  //
-  // {
-  //   dataset_id: 'chaco_example',
-  //   aoi_name: 'Chaco',
-  //   method_name: 'RF',
-  //   image: ee.Image('projects/.../your_chaco_asset'),
-  //   band: null,
-  //   scale: DEFAULT_SCALE,
-  //   extra_class_values: [],
-  //   extra_class_names: []
-  // }
 ];
 
 
@@ -280,7 +282,9 @@ function getImageAOIFeature(cfg) {
 
 
 // Creates a binary mask for the target classes.
-// By default: class 0 + class 3 where configured.
+// By default:
+//   - Caatinga, Cerrado, Tanzania: class 0 + class 3
+//   - Chaco: class 0 only
 function makeTargetClassMask(cfg) {
   var classImage = getClassImage(cfg);
   var targetClasses = getTargetClasses(cfg);
@@ -713,7 +717,7 @@ var TILE_SELECTORS = [
 // ======================================================
 
 // Option A: one combined task.
-// With your current list, this should create 1 task and 5 rows.
+// With the current list, this should create 1 task and 6 rows.
 if (!EXPORT_SEPARATE_TASKS) {
   Export.table.toDrive({
     collection: summaryResults,
@@ -727,7 +731,7 @@ if (!EXPORT_SEPARATE_TASKS) {
 
 
 // Option B: one task per dataset.
-// With your current list, this should create 5 tasks.
+// With the current list, this should create 6 tasks.
 if (EXPORT_SEPARATE_TASKS) {
   DATASETS.forEach(function(cfg) {
     var oneResult = ee.FeatureCollection([
