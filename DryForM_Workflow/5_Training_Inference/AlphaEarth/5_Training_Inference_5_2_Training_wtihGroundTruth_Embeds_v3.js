@@ -30,7 +30,7 @@
 // 0.1 AOI selection
 // ------------------------------
 var RUN_ALL_AOIS = true;
-var AOI_NAME = 'cerrado';   // used only if RUN_ALL_AOIS = false
+var AOI_NAME = 'chaco';   // used only if RUN_ALL_AOIS = false
 
 // ------------------------------
 // 0.2 Year and label property
@@ -43,7 +43,7 @@ var landcover = "visulcrec"; // or "visu_lc"
 // ------------------------------
 var RUN_MULTI_METHODS = true;
 var CLASSIFIER_METHOD = 'RF'; // used only if RUN_MULTI_METHODS = false
-var METHODS_TO_RUN = ['RF', 'CART', 'GTB', 'KNN', 'NB', 'SVM', 'MIN_DIST'];
+var METHODS_TO_RUN = ['RF', 'KNN', 'SVM', 'MIN_DIST'];
 
 // ------------------------------
 // 0.4 Sampling / buffering
@@ -89,7 +89,7 @@ var EXPORT_SCOPE_A_PER_RUN = false;
 var EXPORT_SCOPE_B_PER_AOI = false;
 
 // C) one global export set (all AOIs + all methods together)
-var EXPORT_SCOPE_C_GLOBAL = true;
+var EXPORT_SCOPE_C_GLOBAL = false;
 
 // ------------------------------
 // 0.8 Export destinations
@@ -102,8 +102,8 @@ var DO_EXPORT_TABLES_TO_ASSET = false;
 // ------------------------------
 // These are still per AOI + method.
 // Use carefully if RUN_ALL_AOIS=true and RUN_MULTI_METHODS=true.
-var DO_EXPORT_CLASSIFIED_ASSET = false;
-var DO_EXPORT_MODEL_ASSET      = false;
+var DO_EXPORT_CLASSIFIED_ASSET = true;
+var DO_EXPORT_MODEL_ASSET      = true;
 var DO_EXPORT_RUN_METADATA     = false;
 
 // ------------------------------
@@ -192,7 +192,7 @@ var GTB_loss          = "LeastAbsoluteDeviation";
 var GTB_seed          = 0;
 
 var KNN_k            = 1;
-var KNN_searchMethod = "AUTO";
+var KNN_searchMethod = "LINEAR_SEARCH";
 var KNN_metric       = "EUCLIDEAN";
 
 var NB_lambda = 0.000001;
