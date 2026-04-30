@@ -14,6 +14,7 @@ This project is a scripted workflow (mostly JavaScript for GEE Code Editor) cove
 - ground-truth preparation and balancing,
 - Sentinel-1/Sentinel-2 preprocessing,
 - Random Forest training and inference,
+- AlphaEarth embedding-based training experiments,
 - optional object-based segmentation,
 - post-processing and area summaries,
 - disturbance detection with CCDC,
@@ -23,7 +24,7 @@ All major modules are under `DryForM_Workflow/` and are prefixed with step numbe
 
 ---
 
-## Repository structure (full map, excluding `req/` contents)
+## Repository structure (full map, excluding `req/` internals)
 
 ```text
 .
@@ -100,9 +101,9 @@ All major modules are under `DryForM_Workflow/` and are prefixed with step numbe
 - **`5_2_Training_withGroundTruth`** runs supervised RF training with visual GT.
 - **`5_2_Training_withAutoSample`** alternative training with auto-sampled GT.
 - **`5_3_ApplySavedModel_Optional`** applies previously exported model assets.
-- **AlphaEarth/Satellite-Embeddings variants**:
-  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds` (single AOI run with embedding-based classification support),
-  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode` (benchmark mode across AOIs/algorithms with table export logic).
+- **AlphaEarth/Satellite-Embeddings scripts currently present in this repository root of step 5**:
+  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds`
+  - `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode`
 
 ### 6) Post-processing
 - **`6_0_PostProc_v1`** mitigates no-data artifacts in classification outputs.
@@ -114,7 +115,9 @@ All major modules are under `DryForM_Workflow/` and are prefixed with step numbe
 - Uses reusable helper module under `7_Disturbance/req/`.
 
 ### 8) Utilities
-- Visualization, image collection maintenance helpers, and area statistics.
+- **`8_0_Visualize_ClassificationResults`** for visual QA/QC.
+- **`8_1_recurrent_IC_removal`** for recurrent deletion of images in image collections.
+- **`8_2_CalculateAreas`** calculates **Forest / Non-forest** area totals by zone (`World_UNctry_grid`) using pixel-area summaries and exports table results to Drive.
 
 ### 9) App / integration
 - **`Time Series Explorer with images_df_vd_b2v10`** integrates classification, imagery chips, temporal profiles, and disturbance layers.
@@ -134,11 +137,10 @@ These files implement the Sentinel-1 ARD chain used by step 3:
 - `terrain_flattening`: slope/radiometric terrain correction functions.
 - `border_noise_correction`: additional Sentinel-1 border noise masking.
 
-### `5_Training_Inference/` additions (AlphaEarth)
-The repository includes two embedding-oriented scripts in addition to the classic RF pipeline:
+### `5_Training_Inference/` (AlphaEarth note)
+The currently tracked repository structure contains **two** embedding-oriented scripts in `5_Training_Inference/`.
 
-- `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds`: multi-AOI configurable workflow using satellite embeddings for supervised land-cover classification, with export paths for model outputs/metadata.
-- `5_Training_Inference_5_2_Training_wtihGroundTruth_Embeds_BenchmarkMode`: supports **single mode** and **benchmark mode** to compare classifiers/AOIs and export benchmark tables.
+If additional files now exist in another branch/path (for example an `AlphaEarth/` subfolder or `*_Embeds_v3.js` variants), they are not present in this checked-out tree and should be added/committed so they can be documented here precisely.
 
 ### `req/` folders
 Both `7_Disturbance/req/` and `9_App/req/` contain reusable helper modules required by the main scripts in those directories.
@@ -186,6 +188,7 @@ Depending on the executed path and options, outputs may include:
 - trained classifier assets and classified rasters,
 - post-processed classification maps,
 - CCDC disturbance layers,
+- area-estimation tables,
 - summary tables and visualization layers.
 
 ---
