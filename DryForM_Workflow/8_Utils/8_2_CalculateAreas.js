@@ -165,6 +165,19 @@ var DATASETS = [
     scale: DEFAULT_SCALE,
     extra_class_values: [],
     extra_class_names: []
+  },
+  {
+    dataset_id: 'chaco_AE2020_SVM_LINEAR',
+    aoi_name: 'Chaco',
+    method_name: 'SVM_LINEAR',
+    image: ee.Image(
+      'projects/hardy-tenure-383607/assets/DryForm_Project/Classification/' +
+      'Class_AE2020_chaco_buf20_vbuf20_visulcrec_SVM_svmC_SVC_kLINEAR_cdef_gdef_nudef_dpVoting'
+    ),
+    band: null,
+    scale: DEFAULT_SCALE,
+    extra_class_values: [],
+    extra_class_names: []
   }
 ];
 
@@ -717,7 +730,7 @@ var TILE_SELECTORS = [
 // ======================================================
 
 // Option A: one combined task.
-// With the current list, this should create 1 task and 6 rows.
+// With the current list, this should create 1 task and 7 rows.
 if (!EXPORT_SEPARATE_TASKS) {
   Export.table.toDrive({
     collection: summaryResults,
@@ -731,7 +744,7 @@ if (!EXPORT_SEPARATE_TASKS) {
 
 
 // Option B: one task per dataset.
-// With the current list, this should create 6 tasks.
+// With the current list, this should create 7 tasks.
 if (EXPORT_SEPARATE_TASKS) {
   DATASETS.forEach(function(cfg) {
     var oneResult = ee.FeatureCollection([
